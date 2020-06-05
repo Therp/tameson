@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend" name="tms_procurement_purchase_no_grouping assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/tms_procurement_purchase_no_grouping/static/src/js/tms_procurement_purchase_no_grouping.js"></script>
+                <link rel="stylesheet" href="/tms_procurement_purchase_no_grouping/static/src/css/tms_procurement_purchase_no_grouping.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>
