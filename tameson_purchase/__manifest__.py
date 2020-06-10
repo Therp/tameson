@@ -5,14 +5,13 @@
     "version": "13.0.1.0.0",
     "author": "Therp BV",
     "license": "AGPL-3",
-    "category": "",
-    "summary": "",
+    "category": "purchase",
     "depends": [
         'procurement_purchase_no_grouping',
     ],
     "data": [
-        'views/templates.xml',
-        'security/ir.model.access.csv',
+        'views/purchase_order.xml',
+        'views/res_partner.xml',
     ],
     "installable": True,
 }
