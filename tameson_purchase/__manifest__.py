@@ -7,6 +7,7 @@
     "license": "AGPL-3",
     "category": "purchase",
     "depends": [
+        'sale',
         'procurement_purchase_no_grouping',
     ],
     "data": [

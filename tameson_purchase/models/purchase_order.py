@@ -13,23 +13,18 @@ class PurchaseOrderLine(models.Model):
                 a sales order"""
     )
 
-    def _find_candidate(
-           self, product_id, product_qty, product_uom, location_id, name,
-           origin, company_id, values):
+    def _find_candidate(self, product_id, product_qty, product_uom,
+                        location_id, name, origin, company_id, values):
         if (values.get("grouping") == "line_specific" and
                 self.order_id.partner_id.no_grouping_po_lines):
-            origin_rec = self.env['sale.order'].search([
-                ('name', '=', origin)], limit=1)
-            if origin_rec:
-                self.write({'ungrouped_origin': origin_rec.id})
             return False
         return super()._find_candidate(
-                product_id,
-                product_qty,
-                product_uom,
-                location_id,
-                name,
-                origin,
-                company_id,
-                values,
-            )
+            product_id,
+            product_qty,
+            product_uom,
+            location_id,
+            name,
+            origin,
+            company_id,
+            values,
+        )
