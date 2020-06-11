@@ -8,9 +8,8 @@ class PurchaseOrderLine(models.Model):
 
     ungrouped_origin = fields.Many2one(
         'sale.order',
-        help="""the origin of this purchase order line,
-                is set only for ungrouped lines deriving from sales orders
-                a sales order"""
+        help="The origin of this purchase order line,"
+             "is set only for ungrouped lines deriving from sales orders"
     )
 
     def _find_candidate(self, product_id, product_qty, product_uom,
