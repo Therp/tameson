@@ -18,10 +18,10 @@ class PurchaseOrderLine(models.Model):
            origin, company_id, values):
         if (values.get("grouping") == "line_specific" and
                 self.order_id.partner_id.no_grouping_po_lines):
-            origin = self.env['sale.order'].search([
+            origin_rec = self.env['sale.order'].search([
                 ('name', '=', origin)], limit=1)
-            if origin:
-                self.write({'ungrouped_origin': origin.id})
+            if origin_rec:
+                self.write({'ungrouped_origin': origin_rec.id})
             return False
         return super()._find_candidate(
                 product_id,
