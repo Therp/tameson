@@ -4,7 +4,8 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = "res.partner"
 
     no_grouping_po_lines = fields.Boolean(
-        help="Do not group Purchase order lines for this partner")
+        help="Do not group Purchase order lines for this partner"
+    )

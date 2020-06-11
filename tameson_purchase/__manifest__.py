@@ -6,13 +6,7 @@
     "author": "Therp BV",
     "license": "AGPL-3",
     "category": "purchase",
-    "depends": [
-        'sale',
-        'procurement_purchase_no_grouping',
-    ],
-    "data": [
-        'views/purchase_order.xml',
-        'views/res_partner.xml',
-    ],
+    "depends": ["sale", "procurement_purchase_no_grouping", ],
+    "data": ["views/purchase_order.xml", "views/res_partner.xml", ],
     "installable": True,
 }
