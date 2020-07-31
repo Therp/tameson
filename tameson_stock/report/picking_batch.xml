@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+        id="batch_stock_picking_invoices"
+        string="Picking invoices"
+        model="stock.picking.batch"
+        report_type="qweb-pdf"
+        name="tameson_stock.report_batch_picking_invoice"
+        file="tameson_stock.report_batch_picking_invoice"
+        print_report_name="'Picking Invoices - %s' % object.name"
+        />
+
+    <template id="report_picking_batch"
+              inherit_id="stock_picking_batch.report_picking_batch">
+        <xpath expr="//th[@width='27%']" position="replace">
+            <th width="27%">Location</th>
+        </xpath>
+        <xpath expr="//span[@t-esc=&quot;move_operation.mapped('location_dest_id').display_name&quot;]" position="replace">
+            <span t-esc="move_operation.product_id.t_location"/>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <p style="page-break-after: always;"/>
+        </xpath>
+        <xpath expr="//t[@t-foreach='docs']" position="after">
+            <t t-foreach="docs" t-as="b">
+              <t t-set="docs" t-value="b.picking_ids"/>
+              <t t-call="stock.report_deliveryslip"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="report_batch_picking_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="spb">
+                <t t-foreach="spb.picking_ids" t-as="sp">
+                    <!-- SO-44999 Print only when out of EU -->
+                    <t t-if="sp.t_partner_outside_eu">
+                        <t t-foreach="sp.t_invoice_ids_to_report" t-as="o">
+                            <!-- NOTE: invoice needs to be included 3 times -->
+                            <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang" />
+                            <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang" />
+                            <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang" />
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

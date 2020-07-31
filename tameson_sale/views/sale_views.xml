@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_order_form">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='%(sale.action_view_sale_advance_payment_inv)d'][2]"
+                   position="replace">
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                        type="action" context="{'default_advance_payment_method': 'percentage'}"
+                        attrs="{'invisible': ['|',('invoice_status', '!=', 'no'),
+                               ('state', 'not in', ['draft', 'sale'])]}" />
+            </xpath>
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="t_done_pickings" invisible="1" />
+                <field name="t_invoice_policy"
+                       attrs="{'readonly': [('t_done_pickings', '!=', [])]}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

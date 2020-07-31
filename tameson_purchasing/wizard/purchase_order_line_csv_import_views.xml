@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="purchase_orderline_csv_import_form" model="ir.ui.view">
+            <field name="name">purchase.orderline.csv.import.form</field>
+            <field name="model">purchase.orderline.csv.import</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order Line Import" create="false" edit="false">
+                    <header>
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
+                    <br/>
+                    <p class="oe_grey">
+                        Please upload a .csv file:<br/>
+                    </p>
+                    <group>
+	                    <field name="csv_file" filename="filename" placeholder="Upload a .csv file."/>
+	                    <field name="filename" invisible="1"/>
+                    </group>
+                    <br/>
+                    <notebook>
+                        <page string="Purchase Order Lines To Import">
+                            <field name="line_ids" nolabel="1">
+                                <tree string="Lines">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button type="object" name="action_import" string="Import Purchase Order Lines" class="btn btn-primary" state="loaded"/>
+                        <button string="Close" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="ir_purchase_orderline_csv_import_wizard"
+            name="Import Products from .csv"
+            binding_model="purchase.order"
+            res_model="purchase.orderline.csv.import"
+            view_mode="form" target="new"/>
+
+    </data>
+</odoo>

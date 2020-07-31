@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account.invoice_send" model="ir.actions.act_window">
+        <field name="context" eval="{
+                'default_template_id': ref('tameson_mail.email_template_edi_invoice_tameson'),
+                'mark_invoice_as_sent': True,
+            }"/>
+    </record>
+</odoo>
