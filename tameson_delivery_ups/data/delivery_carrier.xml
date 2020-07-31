@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- set notification defaults for the UPS methods-->
+        <function model="delivery.carrier" name="write">
+            <value model="delivery.carrier" eval="obj().search([('delivery_type', '=', 'ups')]).ids"/>
+            <value eval="{
+                'ups_send_notification_to_customer': True,
+                'ups_send_notification_email': 'archive@tameson.com',
+                'ups_send_notification_undelivered_email': 'archive@tameson.com',
+                }"/>
+        </function>
+    </data>
+</odoo>
