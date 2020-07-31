@@ -7,7 +7,6 @@ class ProductCategory(models.Model):
     _inherit = "product.category"
 
     procured_purchase_grouping = fields.Selection(
-        selection_add=[
-            ("line_specific", "No line grouping for specific suppliers.")],
+        selection_add=[("line_specific", "No line grouping for specific suppliers.")],
         default="line_specific",
     )
