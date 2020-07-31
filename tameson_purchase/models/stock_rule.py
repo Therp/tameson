@@ -15,8 +15,7 @@ class StockRule(models.Model):
         )
         origin = values.get("group_id") and values.get("group_id").name
         if origin:
-            origin_rec = self.env["sale.order"].search(
-                [("name", "=", origin)], limit=1)
+            origin_rec = self.env["sale.order"].search([("name", "=", origin)], limit=1)
             if origin_rec:
                 res["ungrouped_origin"] = origin_rec.id
         return res

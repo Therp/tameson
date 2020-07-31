@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="extend_report_picking" inherit_id="stock.report_picking">
+        <xpath expr="//th[@name='th_barcode']" position="after">
+            <th name="th_origin_so_picking_ids" 
+                    t-if="o.picking_type_id.code == 'incoming'" >
+                <strong>Origin SO picking</strong>
+            </th>
+        </xpath>
+        <xpath expr="//td[@t-if='has_barcode']" position="after">
+            <td t-if="o.picking_type_id.code == 'incoming'">
+                <t t-foreach="move.origin_so_picking_ids" t-as="origin_so_pick">
+                    <t t-esc="origin_so_pick.name"/>
+                </t>
+            </td>
+        </xpath>
+    </template>
+</odoo>

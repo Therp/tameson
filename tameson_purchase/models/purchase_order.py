@@ -1,40 +1,32 @@
 # Copyright 2020 Therp BV <https://therp.nl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-from odoo import models, fields
+from odoo import models
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = "purchase.order.line"
+class PurchaseOrder(models.Model):
+    _inherit = "purchase.order"
 
-    ungrouped_origin = fields.Many2one(
-        "sale.order",
-        help="The origin of this purchase order line,"
-        "is set only for ungrouped lines deriving from sales orders",
-    )
-
-    def _find_candidate(
-        self,
-        product_id,
-        product_qty,
-        product_uom,
-        location_id,
-        name,
-        origin,
-        company_id,
-        values,
-    ):
-        if (
-            values.get("grouping") == "line_specific"
-            and self.order_id.partner_id.no_grouping_po_lines
-        ):
-            return False
-        return super()._find_candidate(
-            product_id,
-            product_qty,
-            product_uom,
-            location_id,
-            name,
-            origin,
-            company_id,
-            values,
-        )
+    def find_and_refresh_picking_in_out_associations(self):
+        for this in self:
+            for line in this.order_line:
+                # PO of POL
+                # connected Sale for POL (only ongrouped origin)
+                sale = line.ungrouped_origin
+                if sale:
+                    # picking type code = incoming
+                    # we use the features from purchase_stock and sale_stock
+                    # get the move of the picking associated with current POL
+                    all_in_moves = this.picking_ids.move_lines
+                    in_moves = self.env["stock.move"].search(
+                        [
+                            ("id", "in", all_in_moves.ids),
+                            ("picking_code", "=", "incoming"),
+                            ("purchase_line_id", "=", line.id),
+                        ]
+                    )
+                    out_pickings = sale.picking_ids.filtered(
+                        lambda l: l.move_lines.sale_line_id.order_id == sale
+                    )
+                    in_moves.write(
+                        {"origin_so_picking_ids": [(6, 0, out_pickings.ids)]}
+                    )
