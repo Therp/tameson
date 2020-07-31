@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_search_view" model="ir.ui.view">
+        <field name="name">product.template.tree.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="minimal_qty_available" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_kanban_stock_view" model="ir.ui.view">
+        <field name="name">product.template.kanban.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.product_template_kanban_stock_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_kanban_details')]/ul[//li/field[@name='qty_available']]" position="after">
+                <ul position="inside">
+                    <li>Min qty: <field name="minimal_qty_available" /> <field name="uom_id" /></li>
+                </ul>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_form_view_procurement_button" model="ir.ui.view">
+        <field name="name">product.template.procurement</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.product_template_form_view_procurement_button" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']/button[@name='action_open_quants']" position="before">
+                <button attrs="{'invisible': [('type', '!=', 'product')]}"
+                        class="oe_stat_button"
+                        icon="fa-cubes">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value" widget="statinfo">
+                            <field name="minimal_qty_available"
+                                   widget="statinfo"
+                                   nolabel="1"
+                                   class="mr4" />
+                        </span>
+                        <span class="o_stat_text">Min Qty</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

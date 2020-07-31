@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_internal_search" model="ir.ui.view">
+        <field name="name">stock.picking.search</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='done']" position="after">
+                <filter name="t_partner_not_in_eu"
+                        string="Partner outside EU"
+                        domain="[('t_partner_outside_eu', '=', True)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_picking_form">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='button_validate'][last()]" position="after">
+                <button name="fill_done_qtys"
+                        states="draft,partially_available,assigned"
+                        string="Fill done QTYs"
+                        groups="stock.group_stock_user"
+                        type="object"
+                        class="oe_highlight" />
+            </xpath>
+
+            <xpath expr="//page[last()]" position="after">
+                <page name="tameson" string="Tameson">
+                    <group>
+                        <group name="general">
+                            <field name="t_delivery_allowed" />
+                            <field name="t_partner_outside_eu" />
+                            <field name="t_payment_status" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="vpicktree">
+        <field name="name">stock.picking.tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[last()]" position="after">
+                <field name="t_payment_status" optional="hide" />
+                <field name="t_delivery_allowed" optional="hide" />
+                <field name="t_partner_outside_eu" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

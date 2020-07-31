@@ -1,0 +1,319 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e-20200624\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-16 08:22+0000\n"
+"PO-Revision-Date: 2020-07-16 10:27+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: nl\n"
+"X-Generator: Poedit 2.3.1\n"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "+31 (0)40 750 5795"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "+44 (0)330 8080 502"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "<span>Intrastat</span>"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<span>Net Unit Price</span>"
+msgstr "<span>Netto stuksprijs</span>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid ""
+"<span>Page:</span>\n"
+"                        <span class=\"page\"/>\n"
+"                        <span>/</span>\n"
+"                        <span class=\"topage\"/>"
+msgstr ""
+"<span>Pagina:</span>\n"
+"                        <span class=\"page\"/>\n"
+"                        <span>/</span>\n"
+"                        <span class=\"topage\"/>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "<strong>Invoice Address:</strong>"
+msgstr "<strong>Factuuradres:</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Invoicing Address:</strong>"
+msgstr "<strong>Factuuradres:</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "<strong>Order Date:</strong>"
+msgstr "<strong>Order Datum:</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Payment Terms:</strong>"
+msgstr "<strong>Betaaltermijn:</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "<strong>Reference:</strong>"
+msgstr "<strong>Referentie:</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Shipping Address:</strong>"
+msgstr "<strong>Verzendadres:</strong>"
+
+#. module: tameson_sale
+#: model:ir.model.fields,help:tameson_sale.field_base_document_layout__report_header2
+#: model:ir.model.fields,help:tameson_sale.field_base_document_layout__report_header3
+#: model:ir.model.fields,help:tameson_sale.field_res_company__report_header2
+#: model:ir.model.fields,help:tameson_sale.field_res_company__report_header3
+msgid ""
+"Appears by default on the top right corner of your printed documents "
+"(report header)."
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "BIC/SWIFT:"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_base_document_layout
+msgid "Company Document Layout"
+msgstr "Bedrijf document lay-out"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "Contents:"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Create Invoice"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order__t_invoice_policy__delivery
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order_line__t_invoice_policy__delivery
+msgid "Delivered quantities"
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_done_pickings
+#, python-format
+msgid "Done pickings for this sale order"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__email
+#: model:ir.model.fields,field_description:tameson_sale.field_res_partner__email
+#: model:ir.model.fields,field_description:tameson_sale.field_res_users__email
+msgid "Email"
+msgstr "E-mail"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_base_document_layout_inherit
+msgid "Header 2"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_base_document_layout_inherit
+msgid "Header 3"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "IBAN:"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "INGBNL2A"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order__t_invoice_policy__cost
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order_line__t_invoice_policy__cost
+msgid "Invoice based on time and material"
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_invoice_policy
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order_line__t_invoice_policy
+#, python-format
+msgid "Invoicing Policy (overrides product invoice policies)"
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_is_delivery_invoice_policy
+#, python-format
+msgid "Is order delivery invoice policy?"
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_is_paid
+#, python-format
+msgid "Is order paid?"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "Logo"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "NL66INGB0007718965"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order__t_invoice_policy__order
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order_line__t_invoice_policy__order
+msgid "Ordered quantities"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__phone
+#: model:ir.model.fields,field_description:tameson_sale.field_res_partner__phone
+#: model:ir.model.fields,field_description:tameson_sale.field_res_users__phone
+msgid "Phone"
+msgstr "Telefoon"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "Please use the following communication for your payment :"
+msgstr "Gebruik de volgende mededeling bij uw betaling:"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_base_document_layout__report_header2
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__report_header2
+msgid "Report Header (2)"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_base_document_layout__report_header3
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__report_header3
+msgid "Report Header (3)"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkooporderregel"
+
+#. module: tameson_sale
+#: model:ir.actions.server,name:tameson_sale.cron_action_check_sale_order_has_invoice_for_done_pickings_ir_actions_server
+#: model:ir.cron,cron_name:tameson_sale.cron_action_check_sale_order_has_invoice_for_done_pickings
+#: model:ir.cron,name:tameson_sale.cron_action_check_sale_order_has_invoice_for_done_pickings
+msgid ""
+"Tameson: check if sale.orders with 'done' pickings have validated invoices"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.actions.server,name:tameson_sale.cron_confirm_orders_when_invoice_paid_ir_actions_server
+#: model:ir.cron,cron_name:tameson_sale.cron_confirm_orders_when_invoice_paid
+#: model:ir.cron,name:tameson_sale.cron_confirm_orders_when_invoice_paid
+msgid "Tameson: confirm sale.order for which an invoice was paid"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "Tax ID"
+msgstr "BTW no"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "VAT:"
+msgstr "BTW:"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__website
+#: model:ir.model.fields,field_description:tameson_sale.field_res_partner__website
+#: model:ir.model.fields,field_description:tameson_sale.field_res_users__website
+msgid "Website Link"
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid "You must configure your mail address."
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_base_document_layout_inherit
+msgid "only applies to Tameson layout"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "support@tameson.co.uk"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "support@tameson.com"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "support@tameson.nl"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid ""
+"<strong>Fiscal Position Remark: </strong>\n"
+"                <span>VAT reverse charge - export out of EU</span>"
+msgstr "<strong>Fiscale Positie Notitie: </strong>\n"
+"                <span>Export naar buiten EU</span>"
+
+#. module: tameson_sale
+#: model:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid ""
+"<strong>Fiscal Position Remark: </strong>\n"
+"                <span>intra-community transaction</span>"
+msgstr "<strong>Fiscale Positie Notitie: </strong>\n"
+"                <span>intra-communitaire transactie</span>"

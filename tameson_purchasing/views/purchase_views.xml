@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form" model="ir.ui.view">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_approve']" position="after">
+                <field name="t_done_pickings" invisible="1" />
+                <field name="t_purchase_method"
+                       attrs="{'readonly': [('t_done_pickings', '!=', [])]}" />
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="t_clipboard_text_handle" invisible="1"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="tameson_po_copy_clipboard" type="object" string="Copy Lines To Clipboard"
+                    attrs="{'invisible': [('t_clipboard_text_handle', '=', '/')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
