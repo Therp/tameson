@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="res_config_settings_view_form_channable_api" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.channable.api</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+	    <xpath expr="//div[@data-key='general_settings']" position="inside">
+                <h2>Channable API</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <group>
+                            <field name="channable_api_base_url" string="Base URL:"/>
+                        </group>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

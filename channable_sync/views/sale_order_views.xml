@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_form_inherit_channable" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.channable</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr=".//notebook" position="inside">
+                <page string="Channable" attrs="{'invisible': [('channable_order_id', '=', False)]}">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_in_channable"  type="object" icon="fa-bars"
+                                string="View In Channable"/>
+                        <button name="action_force_update_channable"  type="object" icon="fa-check"
+                                string="Force Shipped In Channable" confirm="Are you sure?"/>
+                        <button name="action_force_cancel_channable"  type="object" icon="fa-cancel"
+                                string="Force Cancel In Channable" confirm="Are you sure?"/>
+                    </div>
+                    <group>
+                        <field name="channable_order_id" readonly="1"/>
+                        <field name="channable_order_status" readonly="1" string="Channable Status"/>
+                        <field name="channable_extra_info"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_orders_channable" model="ir.actions.act_window">
+        <field name="name">Channable Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{}</field>
+        <field name="domain">[('channable_order_id', '!=', False)]</field>
+    </record>
+    <record id="action_orders_channable_to_shipped" model="ir.actions.act_window">
+        <field name="name">Channable Orders To Be Updated As Shipped</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{}</field>
+        <field name="domain">[('channable_order_id', '!=', False), ('channable_to_update_shipped', '=', True)]</field>
+    </record>
+    <record id="action_orders_channable_to_cancel" model="ir.actions.act_window">
+        <field name="name">Channable Orders To Be Cancelled</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{}</field>
+        <field name="domain">[('channable_order_id', '!=', False), ('channable_to_update_cancel', '=', True)]</field>
+    </record>
+    <record id="action_orders_channable_refused_cancel" model="ir.actions.act_window">
+        <field name="name">Refused Cancellations of Channable Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{}</field>
+        <field name="domain">[('channable_order_id', '!=', False), ('channable_refused_cancellation', '=', True)]</field>
+    </record>
+
+</odoo>
