@@ -58,15 +58,24 @@ class SaleOrder(models.Model):
         except Exception as e:
             _logger.warning('Error in converting the limit orders request size config parameter: %s' % str(e))
             limit_size = 20
-        # TODO after testing: limit orders to a date period?
-        # start_date = fields.Date.to_string((datetime.date.today() - relativedelta.relativedelta(days=6)))
-        # end_date = fields.Date.to_string((datetime.date.today() + relativedelta.relativedelta(days=1)))
+        orders_last_n_days_sync = self.env['ir.config_parameter'].sudo().get_param(
+            'channable_sync.orders_last_n_days_sync', default=0)
+        try:
+            orders_last_n_days_sync = int(orders_last_n_days_sync)
+        except Exception as e:
+            _logger.warning('Error in converting the number of days sync from the Channable order API: %s' % str(e))
+            orders_last_n_days_sync = 0
         payload = {
             'offset': offset,
             'limit': limit_size,
-            # 'start_date': start_date,
-            # 'end_date': end_date,
         }
+        if orders_last_n_days_sync:
+            start_date = fields.Date.to_string((datetime.date.today() - relativedelta.relativedelta(days=orders_last_n_days_sync)))
+            end_date = fields.Date.to_string((datetime.date.today() + relativedelta.relativedelta(days=1)))
+            payload.update({
+                'start_date': start_date,
+                'end_date': end_date,
+            })
         if not all([self.company_id.channable_orders_shipped, self.company_id.channable_orders_not_shipped,
                     self.company_id.channable_orders_cancelled, self.company_id.channable_orders_waiting]):
             # fetch only orders with the selected state
@@ -96,7 +105,6 @@ class SaleOrder(models.Model):
                     order_body = json.dumps(order)
                     celery_task_vals = {'ref': 'Import Channable Order: %s' % str(order.get('id'))}
                     CeleryTask.call_task(self._name, 'import_channable_order', order_body=order_body, celery=celery, celery_task_vals=celery_task_vals)
-                    self.import_channable_order(order)
                     imported_orders_count += 1
                 else:
                     # existing order, check for status change/cancellation
@@ -137,7 +145,6 @@ class SaleOrder(models.Model):
         price_data = order.get('data', {}).get('price', {})
         product_lines = order.get('data', {}).get('products', [])
         currency = price_data.get('currency')
-        # TODO check if all products exist first and report/add to exceptions before importing?
 
         # e-mail address is the unique identifier
         email = customer.get('email') or billing.get('email')
@@ -153,7 +160,7 @@ class SaleOrder(models.Model):
         new_record.onchange_partner_shipping_id()
         retval = self._convert_to_write({name: new_record[name] for name in new_record._cache})
 
-        fiscal_position_id = partner.property_account_position_id and partner.property_account_position_id or False
+        fiscal_position_id = partner.property_account_position_id and partner.property_account_position_id.id or False
         if not fiscal_position_id:
             fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id)
             if fp_id:
@@ -166,17 +173,20 @@ class SaleOrder(models.Model):
         date_order = order.get('created')
         if date_order:
             try:
-                datetime_obj = datetime.datetime.strptime(date_order, '%Y-%m-%dT%H:%M:%S')
+                datetime_obj = datetime.datetime.strptime(date_order.split('.')[0], '%Y-%m-%dT%H:%M:%S')
             except Exception as e:
                 _logger.warning('Datetime Parsing Error: %s' % (str(e), ))
                 datetime_obj = False
-            if self.env.user.tz:
+            if datetime_obj and self.env.user.tz:
                 user_timezone = pytz.timezone(self.env.user.tz)
                 datetime_obj = user_timezone.localize(datetime_obj)
                 datetime_obj = datetime_obj.astimezone(pytz.utc)
+                datetime_obj = datetime_obj.replace(tzinfo=None)
+                date_order = datetime_obj
+            elif datetime_obj:
                 date_order = datetime_obj
             else:
-                date_order = datetime_obj
+                date_order = fields.datetime.now()
         else:
             date_order = fields.datetime.now()
         values = {
@@ -201,17 +211,17 @@ class SaleOrder(models.Model):
 
         product_product = self.env['product.product']
         for line in product_lines:
-            product = product_product.search([('barcode', '=', line.get('ean'))], limit=1)
+            product_search_domain = ['|', ('barcode', '=', line.get('ean')), ('default_code', '=', line.get('id'))]
+            product = product_product.search(product_search_domain, limit=1)
             if not product:
-                # TODO raise a silent warning, add to exceptions?
-                continue
+                raise Warning(_("Product %s not available in Odoo (order %s)." % ((line.get('id') or line.get('ean')), order.get('id'))))
             created_line = self.create_order_line_from_channable(sale_order=sale_order,
                                                                  product=product,
                                                                  line_data=line,
                                                                  is_delivery=False)
 
         if price_data.get('shipping', 0):
-            product = product_product.search([('name', '=', 'Shipping cost'), ('type', '=', 'service')], limit=1)
+            product = self.env.ref('channable_sync.product_product_delivery_channable', raise_if_not_found=False)
             if product:
                 line = {
                     'price': float(price_data.get('shipping', 0)),
@@ -222,8 +232,13 @@ class SaleOrder(models.Model):
                                                                      product=product,
                                                                      line_data=line,
                                                                      is_delivery=True)
-
-        return sale_order
+            else:
+                raise Warning(_("Shipping cost service not available in Odoo, and shipping cost exists for this order."))
+        sale_order.recompute()
+        sale_order.flush()
+        msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
+        _logger.info(msg)
+        return msg
 
     def get_channable_customer(self, email, customer, billing, shipping, currency):
         partner = False
@@ -235,7 +250,7 @@ class SaleOrder(models.Model):
         partner = ResPartner.search([('email', '=', email)], limit=1)
         if partner:
             # existing partner, update applicable info
-            partner = self.update_partner_address(partner, customer)
+            partner = self.update_partner_address(partner, customer, billing)
 
             partner_invoice = ResPartner.search([('parent_id', '=', partner.id), ('type', '=', 'invoice')], limit=1)
             partner_invoice = self.update_partner_address(partner_invoice, billing, customer)
@@ -252,10 +267,10 @@ class SaleOrder(models.Model):
             partner = self.create_partner_address(data=customer, secondary_data=billing, address_type=False, is_company=is_company)
 
             # create a new invoice address
-            partner_invoice = self.create_partner_address(data=billing, secondary_data=customer, address_type='invoice')
+            partner_invoice = self.create_partner_address(data=billing, secondary_data=customer, address_type='invoice', is_company=False)
 
             # create a new delivery address
-            partner_shipping = self.create_partner_address(data=shipping, secondary_data=customer, address_type='delivery')
+            partner_shipping = self.create_partner_address(data=shipping, secondary_data=customer, address_type='delivery', is_company=False)
 
         if currency and not partner.property_product_pricelist:
             # set a pricelist property
@@ -270,24 +285,25 @@ class SaleOrder(models.Model):
         return partner, partner_invoice, partner_shipping
 
     def create_partner_address(self, data, secondary_data, address_type, is_company):
-        country = self.env['res.country'].search([('code', '=', data.get('country_code', ''))], limit=1)
-        address2 = data.get('address2', '')
-        address_supplement = data.get('address_supplement', '')
+        country_code = data.get('country_code', '') or secondary_data.get('country_code', '')
+        country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+        address2 = data.get('address2', '') or secondary_data.get('address2', '')
+        address_supplement = data.get('address_supplement', '') or secondary_data.get('address_supplement', '')
         street2 = '{address2} {address_supplement}'.format(address2=address2, address_supplement=address_supplement)
         values = {
             'name': '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
                                                                     middle_name=data.get('middle_name', ''),
                                                                     last_name=data.get('last_name', '')),
-            'email': data.get('email', ''),
+            'email': data.get('email', '') or secondary_data.get('email', ''),
             'phone': data.get('phone', '') or secondary_data.get('phone', ''),
             'mobile': data.get('mobile', '') or secondary_data.get('mobile', ''),
-            'street': data.get('address1', ''),
+            'street': data.get('address1', '') or secondary_data.get('address1', ''),
             'street2': street2,
-            'zip': data.get('zip_code', ''),
-            'city': data.get('city', ''),
+            'zip': data.get('zip_code', '') or secondary_data.get('zip_code', ''),
+            'city': data.get('city', '') or secondary_data.get('city', ''),
             'country_id': country and country.id or False,
             'is_company': is_company,
-            'comment': data.get('company', ''),
+            'comment': data.get('company', '') or secondary_data.get('company', ''),
             # TODO: eventually if needed:
             # lang
             # street_number and street_number2 instead if base_address_extended is installed?
@@ -299,11 +315,14 @@ class SaleOrder(models.Model):
         return self.env['res.partner'].create(values)
 
     def update_partner_address(self, partner, data, secondary_data):
+        # updates the partner data if anything in the address changed
+        # data is the primary source, secondary is used only if primary is empty (e.g. customer and billing sections)
+
         if not partner:
             return False
         create_new = False
 
-        # if invoice or delivery address changes, update the existing one to other
+        # if invoice or delivery address changes, update the existing one to type =other
         # and create a new one
         if partner.type and partner.type in ['invoice', 'delivery']:
             create_new = True
@@ -311,12 +330,13 @@ class SaleOrder(models.Model):
         name = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
                                                                middle_name=data.get('middle_name', ''),
                                                                last_name=data.get('last_name', ''))
-        zip_code = data.get('zip_code')
-        city = data.get('city', '')
-        country = self.env['res.country'].search([('code', '=', data.get('country_code', ''))], limit=1)
-        address1 = data.get('address1', '')
-        address2 = data.get('address2', '')
-        address_supplement = data.get('address_supplement', '')
+        zip_code = data.get('zip_code') or secondary_data.get('zip_code')
+        city = data.get('city', '') or secondary_data.get('city', '')
+        country_code = data.get('country_code', '') or secondary_data.get('country_code', '')
+        country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+        address1 = data.get('address1', '') or secondary_data.get('address1', '')
+        address2 = data.get('address2', '') or secondary_data.get('address2', '')
+        address_supplement = data.get('address_supplement', '') or secondary_data.get('address_supplement', '')
         street2 = '{address2} {address_supplement}'.format(address2=address2, address_supplement=address_supplement)
         phone = data.get('phone', '') or secondary_data.get('phone', '')
         mobile = data.get('mobile', '') or secondary_data.get('mobile', '')
@@ -336,7 +356,7 @@ class SaleOrder(models.Model):
                     'name': name or partner.name,
                     'phone': phone or partner.phone,
                     'mobile': mobile or partner.mobile,
-                    'street': address1 or partner.street1,
+                    'street': address1 or partner.street,
                     'street2': street2 or partner.street2,
                     'zip': zip_code or partner.zip,
                     'city': city or partner.city,
@@ -354,11 +374,14 @@ class SaleOrder(models.Model):
             'order_id': sale_order.id,
             'product_id': product and product.id or False,
             'company_id': sale_order.company_id.id,
+            'product_uom_qty': quantity,
             'product_uom': uom_id,
+            'price_unit': unit_price,
             'name': line_title,
         }
         temporary = SaleOrderLine.new(product_data)
         temporary.product_id_change()
+        temporary._onchange_discount()
         values = SaleOrderLine._convert_to_write({name: temporary[name] for name in temporary._cache})
         # if tax_ids:
         #     tax_ids = tax_ids and self.env['account.tax'].search([('id','in',tax_ids[0][2])])
@@ -373,6 +396,8 @@ class SaleOrder(models.Model):
             # 'tax_id': tax_ids and [(6, 0, tax_ids.ids)] or [(6, 0, [])],
         })
         line = SaleOrderLine.create(values)
+        line._compute_amount()
+        line._compute_tax_id()
         return line
 
     @api.model
@@ -445,6 +470,10 @@ class SaleOrder(models.Model):
                 tracking_code = tracking_code[:-1]
             if transporter:
                 transporter = transporter[:-1]
+        if not tracking_code:
+            tracking_code = 'null'
+        if not transporter:
+            transporter = 'null'
         payload = {
             'tracking_code': tracking_code,
             'transporter': transporter,
@@ -484,3 +513,9 @@ class SaleOrder(models.Model):
                     "url": url,
                     "target": "new",
                 }
+
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    channable_line_id = fields.Char(string="Channable Order Line ID", copy=False)
