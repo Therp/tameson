@@ -211,7 +211,7 @@ class SaleOrder(models.Model):
 
         product_product = self.env['product.product']
         for line in product_lines:
-            product_search_domain = ['|', ('barcode', '=', line.get('ean')), ('default_code', '=', line.get('id'))]
+            product_search_domain = ['|', ('barcode', '=ilike', line.get('ean')), ('default_code', '=ilike', line.get('id'))]
             product = product_product.search(product_search_domain, limit=1)
             if not product:
                 raise Warning(_("Product %s not available in Odoo (order %s)." % ((line.get('id') or line.get('ean')), order.get('id'))))
@@ -258,19 +258,19 @@ class SaleOrder(models.Model):
             partner_shipping = self.update_partner_address(partner_shipping, shipping, customer)
 
             if not partner_invoice:
-                partner_invoice = self.create_partner_address(data=billing, secondary_data=customer, address_type='invoice', is_company=False)
+                partner_invoice = self.create_partner_address(data=billing, secondary_data=customer, address_type='invoice', is_company=False, parent_id=partner and partner.id or False)
             if not partner_shipping:
-                partner_shipping = self.create_partner_address(data=shipping, secondary_data=customer, address_type='delivery', is_company=False)
+                partner_shipping = self.create_partner_address(data=shipping, secondary_data=customer, address_type='delivery', is_company=False, parent_id=partner and partner.id or False)
         else:
             # create a new partner
             is_company = False if not customer.get('company') else True
-            partner = self.create_partner_address(data=customer, secondary_data=billing, address_type=False, is_company=is_company)
+            partner = self.create_partner_address(data=customer, secondary_data=billing, address_type=False, is_company=is_company, parent_id=False)
 
             # create a new invoice address
-            partner_invoice = self.create_partner_address(data=billing, secondary_data=customer, address_type='invoice', is_company=False)
+            partner_invoice = self.create_partner_address(data=billing, secondary_data=customer, address_type='invoice', is_company=False, parent_id=partner and partner.id or False)
 
             # create a new delivery address
-            partner_shipping = self.create_partner_address(data=shipping, secondary_data=customer, address_type='delivery', is_company=False)
+            partner_shipping = self.create_partner_address(data=shipping, secondary_data=customer, address_type='delivery', is_company=False, parent_id=partner and partner.id or False)
 
         if currency and not partner.property_product_pricelist:
             # set a pricelist property
@@ -284,7 +284,7 @@ class SaleOrder(models.Model):
 
         return partner, partner_invoice, partner_shipping
 
-    def create_partner_address(self, data, secondary_data, address_type, is_company):
+    def create_partner_address(self, data, secondary_data, address_type, is_company, parent_id):
         country_code = data.get('country_code', '') or secondary_data.get('country_code', '')
         country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
         address2 = data.get('address2', '') or secondary_data.get('address2', '')
@@ -311,7 +311,10 @@ class SaleOrder(models.Model):
             # property_account_position_id, property_payment_term_id
         }
         if address_type:
-            values.update({'type': address_type})
+            values.update({
+                'type': address_type,
+                'parent_id': parent_id,
+            })
         return self.env['res.partner'].create(values)
 
     def update_partner_address(self, partner, data, secondary_data):
@@ -348,7 +351,11 @@ class SaleOrder(models.Model):
                 partner.mobile != mobile or \
                 partner.name != name:
             if create_new:
-                new_partner = self.create_partner_address(data=data, secondary_data=secondary_data, address_type=partner.type, is_company=False)
+                new_partner = self.create_partner_address(data=data,
+                                                          secondary_data=secondary_data,
+                                                          address_type=partner.type,
+                                                          is_company=False,
+                                                          parent_id=partner.parent_id and partner.parent_id.id or False)
                 partner.write({'type': 'other'})
                 partner = new_partner
             else:
@@ -427,12 +434,10 @@ class SaleOrder(models.Model):
 
         for order_to_cancel in self.search([('channable_order_id', '!=', False), ('channable_to_update_cancel', '=', True)]):
             result = order_to_cancel.update_status_canceled_channable()
-            if result:
-                updated_orders_count += 1
+            updated_orders_count += 1
         for order_to_update in self.search([('channable_order_id', '!=', False), ('channable_to_update_shipped', '=', True)]):
             result = order_to_update.update_status_shipped_channable()
-            if result:
-                updated_orders_count += 1
+            updated_orders_count += 1
 
         msg = 'Channable: updated status for %s orders.' % str(updated_orders_count)
         _logger.info(msg)
