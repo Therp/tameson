@@ -81,7 +81,7 @@ class ProductProduct(models.Model):
         for product in self:
             # section with bom calculations
             if product.bom_ids:
-                product.bom_calcultation()
+                product.bom_calculation()
 
             domain_product = [('product_id', '=', product.id)]
 
