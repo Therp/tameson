@@ -81,7 +81,38 @@ class ProductProduct(models.Model):
         for product in self:
             # section with bom calculations
             if product.bom_ids:
-                product.bom_calculation()
+                bom_products = self.env['product.product'].search([
+                    ['id', 'in', self.ids],
+                    ['bom_ids', '!=', False],
+                ])
+                non_bom_products = self.env['product.product'].search([
+                    ['id', 'in', self.ids],
+                    ['bom_ids', '=', False],
+                ])
+                components = bom_products.mapped(
+                    'bom_ids.bom_line_ids.product_id')
+                non_bom_products._minimal_qty_available()
+                components._minimal_qty_available()
+                for product in bom_products:
+                    bom_qtys = set([0.0])
+                    for bom in product.bom_ids:
+                        component_needs = product._get_min_components_needs(
+                            bom)
+                        if not component_needs:
+                            continue
+                        components_min_qty = min(
+                            component.minimal_qty_available // need
+                            for component, need in component_needs.items()
+                        )
+                        # Compute with bom quantity
+                        bom_qty = bom.product_uom_id._compute_quantity(
+                            bom.product_qty,
+                            bom.product_tmpl_id.uom_id
+                        )
+                        bom_qtys.add(bom_qty * components_min_qty)
+                    # NOTE: when more than 2 BOM is available we take max
+                    product.minimal_qty_available = max(bom_qtys)
+                continue
 
             domain_product = [('product_id', '=', product.id)]
 
@@ -121,38 +152,6 @@ class ProductProduct(models.Model):
                 precision_rounding=product.uom_id.rounding
             )
 
-    def bom_calculation(self):
-        bom_products = self.env['product.product'].search([
-            ['id', 'in', self.ids],
-            ['bom_ids', '!=', False],
-        ])
-        non_bom_products = self.env['product.product'].search([
-            ['id', 'in', self.ids],
-            ['bom_ids', '=', False],
-        ])
-        components = bom_products.mapped(
-            'bom_ids.bom_line_ids.product_id')
-        non_bom_products._minimal_qty_available()
-        components._minimal_qty_available()
-        for product in bom_products:
-            bom_qtys = set([0.0])
-            for bom in product.bom_ids:
-                component_needs = product._get_min_components_needs(
-                    bom)
-                if not component_needs:
-                    continue
-                components_min_qty = min(
-                    component.minimal_qty_available // need
-                    for component, need in component_needs.items()
-                )
-                # Compute with bom quantity
-                bom_qty = bom.product_uom_id._compute_quantity(
-                    bom.product_qty,
-                    bom.product_tmpl_id.uom_id
-                )
-                bom_qtys.add(bom_qty * components_min_qty)
-            # NOTE: when more than 2 BOM is available we take max
-            product.minimal_qty_available = max(bom_qtys)
 
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',
