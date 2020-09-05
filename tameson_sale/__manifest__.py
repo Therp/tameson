@@ -26,6 +26,7 @@
         'report/report_external_layout.xml',
         'data/report_layout.xml',
         'wizard/base_document_layout_views.xml',
+        'views/res_country_view.xml',
     ],
     'application': False,
     'license': u'OPL-1',

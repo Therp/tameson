@@ -276,6 +276,36 @@ class SaleOrder(models.Model):
             if self.env.context.get('raise_errors'):
                 raise Exception(wrong_sale_orders)
 
+    ##Add delivery method only if delivery_id is not set for new SO
+    @api.model_create_multi
+    def create(self, vals):
+        res = super(SaleOrder, self).create(vals)
+        for order in res:
+            if not order.carrier_id and order.order_line and order.partner_id.country_id and order.partner_id.country_id.select_shipment_id:
+                order._add_default_shipping()
+        return res
+    #Function for adding defaulr delivery method from partner country configuration.
+    def _add_default_shipping(self):
+        choose_carrier = self.env['choose.delivery.carrier'].with_context({
+                    'default_order_id': self.id,
+                    'default_carrier_id': self.partner_id.country_id.select_shipment_id.id,
+                    }).create({})
+        choose_carrier._onchange_carrier_id()
+        if choose_carrier.carrier_id.delivery_type not in ('fixed', 'base_on_rule'):
+            choose_carrier.update_price()
+        choose_carrier.button_confirm()
+        return True
+
+    #update default country delivery method if partner is changed.
+    def write(self, values):
+        result = super(SaleOrder, self).write(values)
+        if 'partner_id' in values:
+            for order in self:
+                order.order_line.filtered(lambda l: l.is_delivery).unlink()
+                if order.order_line and order.partner_id.country_id and order.partner_id.country_id.select_shipment_id:
+                    order._add_default_shipping()
+        return result
+    
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
