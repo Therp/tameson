@@ -39,7 +39,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty).sorted(key=lambda l: l.product_id.t_location)"/>
+                    <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty).sorted(key=lambda l: l.product_id.t_location or '')"/>
                     <tr t-foreach="lines" t-as="move">
                         <td>
                             <span t-field="move.product_uom_qty"/>
@@ -74,7 +74,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr t-foreach="o.move_line_ids.sorted(key=lambda l: l.product_id.t_location)" t-as="move_line">
+                    <tr t-foreach="o.move_line_ids.sorted(key=lambda l: l.product_id.t_location or '')" t-as="move_line">
                         <td class="text-center">
                             <span t-field="move_line.qty_done"/>
                             <span t-field="move_line.product_uom_id"/>
