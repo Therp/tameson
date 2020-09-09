@@ -27,7 +27,7 @@
                         <t t-set="partner_country_code" t-value="o and 'partner_id' in o and o.partner_id and o.partner_id.country_id.code" />
                         <t t-if="partner_country_code == 'GB'">
                             <div class="row">
-                                <div>+44 (0)330 8080 502</div>
+                                <div style="white-space: nowrap;">+44 (0)330 8080 502</div>
                             </div>
                             <div class="row">
                                 <div>support@tameson.co.uk</div>
@@ -35,15 +35,15 @@
                         </t>
                         <t t-if="partner_country_code in ['BE', 'NL']">
                             <div class="row">
-                                <div>+31 (0)40 750 5795</div>
+                                <div style="white-space: nowrap;">+31 (0)40 750 5795</div>
                             </div>
                             <div class="row">
-                                <div>support@tameson.nl</div>
+                                <div style="white-space: nowrap;">support@tameson.nl</div>
                             </div>
                         </t>
                         <t t-if="partner_country_code not in ['GB', 'BE', 'NL']">
                             <div class="row">
-                                <div>+31 (0)40 750 5795</div>
+                                <div style="white-space: nowrap;">+31 (0)40 750 5795</div>
                             </div>
                             <div class="row">
                                 <div>support@tameson.com</div>
