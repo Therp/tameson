@@ -33,6 +33,27 @@ class SaleOrder(models.Model):
         store=True
     )
 
+    all_qty_delivered = fields.Boolean(
+        compute="_compute_all_qty_delivered",
+        string="All quantities delivered",
+        store=True,
+    )
+
+    @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
+    def _compute_all_qty_delivered(self):
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of Measure"
+        )
+        for order in self:
+            order.all_qty_delivered = all(
+                line.product_id.type not in ("product", "consu")
+                or float_compare(
+                    line.qty_delivered, line.product_uom_qty, precision_digits=precision
+                )
+                == 0
+                for line in order.order_line
+            )
+
     @api.depends('t_invoice_policy')
     def _get_t_is_delivery_invoice_policy(self):
         for r in self:
@@ -163,7 +184,7 @@ class SaleOrder(models.Model):
 
         return ret
 
-    def _create_invoice(self, send_email=True):
+    def _create_invoice(self):
         if self.invoice_status == 'invoiced':
             return
 
@@ -182,37 +203,38 @@ class SaleOrder(models.Model):
         )
         new_invoice_ids.action_post()
 
-        if send_email:
-            view_data = new_invoice_ids.with_context(
-                active_id=self.id,
-                active_ids=self.ids,
-                active_model='sale.order',
-                default_invoice_origin=self.name,
-                default_partner_id=self.partner_id.id,
-            ).action_invoice_sent()
-            ctx = dict(
-                active_ids=new_invoice_ids.ids,
-                **view_data['context']
-            )
-            send_id = self.env[view_data['res_model']].with_context(**ctx).create({
-                'composition_mode': 'comment',
-                'invoice_ids': [(6, None, new_invoice_ids.ids)],
-                'is_email': True,
-                'partner_id': self.partner_id.id,
-                'template_id': ctx['default_template_id'],
-            })
-            # This is to trigger template_id change, to fill in template's
-            # subject and body
-            send_id.onchange_template_id()
-            print_data = send_id.with_context(**ctx).send_and_print_action()
-            if 'report_file' not in print_data:
-                return
-            report = self.env['ir.actions.report'].sudo().search([
-                ['report_file', '=', print_data['report_file']],
-                ['report_name', '=', print_data['report_name']],
-                ['report_type', '=', print_data['report_type']],
-            ])
-            report.render_qweb_pdf(new_invoice_ids.ids)
+    def _send_invoice(self):
+        new_invoice_ids = self.invoice_ids.filtered(lambda i: not i.invoice_sent)
+        view_data = new_invoice_ids.with_context(
+            active_id=self.id,
+            active_ids=self.ids,
+            active_model='sale.order',
+            default_invoice_origin=self.name,
+            default_partner_id=self.partner_id.id,
+        ).action_invoice_sent()
+        ctx = dict(
+            active_ids=new_invoice_ids.ids,
+            **view_data['context']
+        )
+        send_id = self.env[view_data['res_model']].with_context(**ctx).create({
+            'composition_mode': 'comment',
+            'invoice_ids': [(6, None, new_invoice_ids.ids)],
+            'is_email': True,
+            'partner_id': self.partner_id.id,
+            'template_id': ctx['default_template_id'],
+        })
+        # This is to trigger template_id change, to fill in template's
+        # subject and body
+        send_id.onchange_template_id()
+        print_data = send_id.with_context(**ctx).send_and_print_action()
+        if 'report_file' not in print_data:
+            return
+        report = self.env['ir.actions.report'].sudo().search([
+            ['report_file', '=', print_data['report_file']],
+            ['report_name', '=', print_data['report_name']],
+            ['report_type', '=', print_data['report_type']],
+        ])
+        report.render_qweb_pdf(new_invoice_ids.ids)
 
     @api.model
     def cron_check_sale_order_has_validated_invoice_for_done_pickings(self):
