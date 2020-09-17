@@ -221,7 +221,7 @@ class SaleOrder(models.Model):
             'invoice_ids': [(6, None, new_invoice_ids.ids)],
             'is_email': True,
             'partner_id': self.partner_id.id,
-            'template_id': ctx['default_template_id'],
+            'template_id': self.env.ref('tameson_mail.email_template_edi_invoice_tameson').id,
         })
         # This is to trigger template_id change, to fill in template's
         # subject and body
