@@ -13,7 +13,7 @@ class ResConfigSettings(models.TransientModel):
         param_obj = self.env['ir.config_parameter'].sudo()
         res.update(
             channable_api_base_url=param_obj.get_param('channable_api_base_url', default='') or '',
-            channable_orders_last_n_days_sync=param_obj.get_param('channable_sync.orders_last_n_days_sync', default=0) or 0,
+            channable_orders_last_n_days_sync=int(param_obj.get_param('channable_sync.orders_last_n_days_sync', default=0)) or 0,
         )
         return res
 
