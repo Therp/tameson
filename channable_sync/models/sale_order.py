@@ -109,7 +109,7 @@ class SaleOrder(models.Model):
                 else:
                     # existing order, check for status change/cancellation
                     channable_status = order.get('status_shipped')
-                    if channable_status == 'cancelled' and existing_order != 'cancel':
+                    if channable_status == 'cancelled' and existing_order.state != 'cancel':
                         if any(pick.state == 'done' for pick in existing_order.mapped('picking_ids')):
                             existing_order.write({
                                 'channable_refused_cancellation': True,
