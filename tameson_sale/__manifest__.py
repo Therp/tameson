@@ -16,7 +16,7 @@
     'author': "Tameson",
     'depends': [
         'sale_stock',
-        'tameson_account',
+        'tameson_account'
     ],
     'data': [
         'data/cron.xml',

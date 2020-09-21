@@ -96,8 +96,9 @@ class StockPicking(models.Model):
         # SO-44999 Create invoice for 'delivery' invoice policy
         for r in self:
             if r.sale_id:
-                if r.sale_id.t_invoice_policy == 'delivery':
+                if r.sale_id.t_invoice_policy == 'delivery' or r.sale_id.all_qty_delivered:
                     r.sale_id._create_invoice()
+                    r.sale_id._send_invoice()
             # SO-45007 don't do auto invoices for purchase orders
             # elif r.purchase_id:
             #     if r.purchase_id.t_purchase_method == 'receive':
