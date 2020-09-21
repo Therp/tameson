@@ -109,7 +109,7 @@ class SaleOrder(models.Model):
                 else:
                     # existing order, check for status change/cancellation
                     channable_status = order.get('status_shipped')
-                    if channable_status == 'cancelled' and existing_order != 'cancel':
+                    if channable_status == 'cancelled' and existing_order.state != 'cancel':
                         if any(pick.state == 'done' for pick in existing_order.mapped('picking_ids')):
                             existing_order.write({
                                 'channable_refused_cancellation': True,
@@ -377,6 +377,7 @@ class SaleOrder(models.Model):
         quantity = float(line_data.get('quantity', 0))
         line_title = line_data.get('title', '')
         uom_id = product and product.uom_id and product.uom_id.id or False
+
         product_data = {
             'order_id': sale_order.id,
             'product_id': product and product.id or False,
@@ -390,10 +391,6 @@ class SaleOrder(models.Model):
         temporary.product_id_change()
         temporary._onchange_discount()
         values = SaleOrderLine._convert_to_write({name: temporary[name] for name in temporary._cache})
-        # if tax_ids:
-        #     tax_ids = tax_ids and self.env['account.tax'].search([('id','in',tax_ids[0][2])])
-        # if fiscal_position:
-        #     tax_ids = fiscal_position.map_tax(tax_ids, product[0], order.partner_id) if fiscal_position else tax_ids
         values.update({
             'order_id': sale_order.id,
             'product_uom_qty': quantity,
@@ -405,6 +402,10 @@ class SaleOrder(models.Model):
         line = SaleOrderLine.create(values)
         line._compute_amount()
         line._compute_tax_id()
+        # compute the unit price from the total price that Channable sends (tax included)
+        if line.tax_id and line.tax_id.amount and sale_order.company_id and sale_order.company_id.channable_prices_contain_tax:
+            unit_price = line.price_unit / (1 + (line.tax_id.amount / 100.00))
+            line.price_unit = unit_price
         return line
 
     @api.model
