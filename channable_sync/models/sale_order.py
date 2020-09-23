@@ -100,7 +100,7 @@ class SaleOrder(models.Model):
         all_orders = response.get('orders', [])
         while all_orders:
             for order in all_orders:
-                existing_order = self.search([('channable_order_id', '=', order.get('id'))])
+                existing_order = self.search([('channable_order_id', '=', order.get('id'))], limit=1)
                 if not existing_order:
                     order_body = json.dumps(order)
                     celery_task_vals = {'ref': 'Import Channable Order: %s' % str(order.get('id'))}
@@ -138,6 +138,25 @@ class SaleOrder(models.Model):
         except Exception as e:
             _logger.error('Error on parsing order body/response: %s' % str(e))
             raise
+
+        # check if it's an existing order once more
+        existing_order = self.search([('channable_order_id', '=', order.get('id'))], limit=1)
+        if existing_order:
+            # check for status change/cancellation
+            channable_status = order.get('status_shipped')
+            if channable_status == 'cancelled' and existing_order.state != 'cancel':
+                if any(pick.state == 'done' for pick in existing_order.mapped('picking_ids')):
+                    existing_order.write({
+                        'channable_refused_cancellation': True,
+                        'channable_order_status': 'cancelled',
+                    })
+                    return 'Channable order import: order canceled in Channable, but unable to be cancelled in Odoo: %s' % str(existing_order.name)
+                existing_order.action_cancel()
+                existing_order.write({'channable_order_status': 'cancelled'})
+                return 'Channable order import: order cancelled after being cancelled in Channable: %s' % str(existing_order.name)
+            else:
+                return 'Channable order import: existing order, skipping: %s' % str(existing_order.name)
+
         billing = order.get('data', {}).get('billing', {})
         shipping = order.get('data', {}).get('shipping', {})
         customer = order.get('data', {}).get('customer', {})
@@ -236,6 +255,11 @@ class SaleOrder(models.Model):
                 raise Warning(_("Shipping cost service not available in Odoo, and shipping cost exists for this order."))
         sale_order.recompute()
         sale_order.flush()
+
+        if sale_order.company_id and sale_order.company_id.channable_auto_confirm_order:
+            # automatically confirm an order
+            sale_order.action_confirm()
+
         msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
         _logger.info(msg)
         return msg
