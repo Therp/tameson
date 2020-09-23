@@ -172,6 +172,8 @@ class SaleOrder(models.Model):
         if not partner:
             raise Warning(_("Customer not available in order %s." % (order.get('id'))))
 
+        res_currency = self.env['res.currency'].search([('name', '=', currency)], limit=1)
+
         new_record = self.new({'partner_id': partner.id})
         new_record.onchange_partner_id()
         retval = self._convert_to_write({name: new_record[name] for name in new_record._cache})
@@ -186,6 +188,13 @@ class SaleOrder(models.Model):
                 fiscal_position_id = fp_id
                 partner.property_account_position_id = fp_id
         pricelist_id = retval.get('pricelist_id', False)
+        # check the pricelist (coming from the partner) and the order currency
+        if pricelist_id and res_currency:
+            pricelist = self.env['product.pricelist'].browse(pricelist_id)
+            if pricelist.currency_id != res_currency:
+                pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)])
+                if pricelist and len(pricelist) == 1:
+                    pricelist_id = pricelist.id
         payment_term = retval.get('payment_term_id', False)
 
         # Adjust timezone for the order date (sent in CET from Channable)
