@@ -268,6 +268,27 @@ class SaleOrder(models.Model):
         if sale_order.company_id and sale_order.company_id.channable_auto_confirm_order:
             # automatically confirm an order
             sale_order.action_confirm()
+            if sale_order.company_id and sale_order.company_id.channable_auto_register_payment:
+                # and also register the payment on the invoice if applicable
+                for invoice in sale_order.invoice_ids:
+                    payment_journal = self.env['account.journal'].search([('channable_channel_name', '=', order.get('channel_name', ''))], limit=1) or False
+                    if payment_journal:
+                        PaymentObj = self.env['account.payment'].with_context(active_id=invoice.id, active_ids=invoice.ids)
+
+                        payment_method = self.env['account.payment.method'].search([('payment_type', '=', 'inbound')], limit=1)
+                        payment = PaymentObj.create({
+                            'invoice_ids': [(4, invoice.id, None)],
+                            'journal_id': payment_journal.id,
+                            'payment_method_id': payment_method and payment_method.id or False,
+                            'amount': invoice.amount_residual,
+                            'currency_id': invoice.currency_id.id,
+                            'payment_type': 'inbound',
+                            'communication': invoice.ref or invoice.name,
+                            'partner_type': 'customer',
+                            'partner_id': sale_order.partner_id.commercial_partner_id.id,
+                            'payment_date': invoice.invoice_date_due or invoice.invoice_date
+                        })
+                        payment.post()
 
         msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
         _logger.info(msg)

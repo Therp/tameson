@@ -22,6 +22,7 @@
                         <group string="Import Options" colspan="4" col="2">
                             <field name="channable_prices_contain_tax"/>
                             <field name="channable_auto_confirm_order"/>
+                            <field name="channable_auto_register_payment"/>
                         </group>
                     </page>
                 </xpath>

@@ -27,6 +27,7 @@ class ResCompany(models.Model):
     channable_orders_waiting = fields.Boolean(string="Channable Order - Fetch Waiting", default=True)
     channable_prices_contain_tax = fields.Boolean(string="Prices From Channable Are Tax-inclusive?", default=True)
     channable_auto_confirm_order = fields.Boolean(string="Auto-confirm an Order After Importing From Channable?", default=True)
+    channable_auto_register_payment = fields.Boolean(string="Auto-register Payment After Importing an Order From Channable?", default=True)
 
     def channable_request(self, method, endpoint, payload, headers={}, timeout=120):
         self.ensure_one()
