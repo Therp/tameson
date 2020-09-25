@@ -1,4 +1,5 @@
 import requests
+import json
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -54,7 +55,7 @@ class ResCompany(models.Model):
         request_headers, request_params, request_data = {}, {}, {}
         if method == "POST":
             request_headers = {'Content-Type': 'application/json'}
-            request_data = payload
+            request_data = json.dumps(payload)
         else:
             request_params = payload
         request_headers.update(headers)
