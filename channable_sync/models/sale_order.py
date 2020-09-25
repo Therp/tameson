@@ -192,9 +192,15 @@ class SaleOrder(models.Model):
         if pricelist_id and res_currency:
             pricelist = self.env['product.pricelist'].browse(pricelist_id)
             if pricelist.currency_id != res_currency:
-                pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)])
-                if pricelist and len(pricelist) == 1:
-                    pricelist_id = pricelist.id
+                if partner.country_id:
+                    # filter by country
+                    applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id), ('country_group_ids.country_ids', '=', partner.country_id.id)], limit=1)
+                    if not applicable_pricelist:
+                        applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)], limit=1)
+                else:
+                    applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)], limit=1)
+                if applicable_pricelist:
+                    pricelist_id = applicable_pricelist.id
         payment_term = retval.get('payment_term_id', False)
 
         # Adjust timezone for the order date (sent in CET from Channable)
@@ -276,19 +282,20 @@ class SaleOrder(models.Model):
                         PaymentObj = self.env['account.payment'].with_context(active_id=invoice.id, active_ids=invoice.ids)
 
                         payment_method = self.env['account.payment.method'].search([('payment_type', '=', 'inbound')], limit=1)
-                        payment = PaymentObj.create({
-                            'invoice_ids': [(4, invoice.id, None)],
+                        payment = PaymentObj.with_context(active_ids=self.ids, active_model='account.move', active_id=self.id).create({
+                            'invoice_ids': [(6, 0, [invoice.id])],
                             'journal_id': payment_journal.id,
                             'payment_method_id': payment_method and payment_method.id or False,
                             'amount': invoice.amount_residual,
                             'currency_id': invoice.currency_id.id,
                             'payment_type': 'inbound',
-                            'communication': invoice.ref or invoice.name,
+                            'communication': invoice.name,
                             'partner_type': 'customer',
-                            'partner_id': sale_order.partner_id.commercial_partner_id.id,
-                            'payment_date': invoice.invoice_date_due or invoice.invoice_date
+                            'partner_id': invoice.commercial_partner_id and invoice.commercial_partner_id.id or invoice.partner_id.id,
+                            'payment_date': invoice.invoice_date or invoice.invoice_date_due
                         })
                         payment.post()
+                        (payment.move_line_ids.mapped('move_id') + payment.invoice_ids).line_ids.filtered(lambda line: not line.reconciled and line.account_id == payment.destination_account_id).reconcile()
 
         msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
         _logger.info(msg)
@@ -301,7 +308,9 @@ class SaleOrder(models.Model):
 
         ResPartner = self.env['res.partner']
 
-        partner = ResPartner.search([('email', '=', email)], limit=1)
+        partner = ResPartner.search([('email', '=', email), ('type', 'not in', ['invoice', 'delivery', 'other']), ('parent_id', '=', False)], limit=1)
+        if not partner:
+            partner = ResPartner.search([('email', '=', email), ('partner_id', '=', False)], limit=1)
         if partner:
             # existing partner, update applicable info
             partner = self.update_partner_address(partner, customer, billing)
