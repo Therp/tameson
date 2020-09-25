@@ -39,6 +39,9 @@ class SaleOrder(models.Model):
         store=True,
     )
 
+    payment_term_name = fields.Char(related='payment_term_id.name')
+
+
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
     def _compute_all_qty_delivered(self):
         precision = self.env["decimal.precision"].precision_get(
