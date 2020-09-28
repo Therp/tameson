@@ -22,3 +22,6 @@ class ResPartner(models.Model):
                 if match:
                     raise ValidationError('Duplicate email for contact: %s'%match.name)    
 
+    def action_set_street(self):
+        self._set_street()
+        return True
