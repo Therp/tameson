@@ -15,6 +15,7 @@
     ],
     'data': [
         'views/account_views.xml',
+        'views/invoice_report.xml'
     ],
     'application': False,
     'license': u'OPL-1',

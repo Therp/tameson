@@ -22,6 +22,9 @@ class AccountMove(models.Model):
             pass
 
 
+    def get_picking_ids(self):
+        return self.mapped('line_ids').mapped('sale_line_ids').mapped('order_id').mapped('picking_ids')
+
 class AccountPaymentTerm(models.Model):
     _inherit = 'account.payment.term'
 
