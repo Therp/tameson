@@ -533,12 +533,12 @@ class SaleOrder(models.Model):
         for done_picking in self.mapped('picking_ids').filtered(lambda p: p.state == 'done'):
             if done_picking.carrier_tracking_ref:
                 tracking_code = tracking_code + done_picking.carrier_tracking_ref + ','
-            if done_picking.carrier_id:
-                transporter = transporter + done_picking.carrier_id.name + ','
+            if done_picking.carrier_id and done_picking.carrier_id.channable_transporter_code:
+                transporter = done_picking.carrier_id.channable_transporter_code
+            elif done_picking.carrier_id:
+                transporter = done_picking.carrier_id.name
             if tracking_code:
                 tracking_code = tracking_code[:-1]
-            if transporter:
-                transporter = transporter[:-1]
         if not tracking_code:
             tracking_code = 'null'
         if not transporter:
