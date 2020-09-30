@@ -310,7 +310,7 @@ class SaleOrder(models.Model):
 
         partner = ResPartner.search([('email', '=', email), ('type', 'not in', ['invoice', 'delivery', 'other']), ('parent_id', '=', False)], limit=1)
         if not partner:
-            partner = ResPartner.search([('email', '=', email), ('partner_id', '=', False)], limit=1)
+            partner = ResPartner.search([('email', '=', email), ('parent_id', '=', False)], limit=1)
         if partner:
             # existing partner, update applicable info
             partner = self.update_partner_address(partner, customer, billing)
