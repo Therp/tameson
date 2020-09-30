@@ -2,10 +2,10 @@
 <odoo>
     <data noupdate="0">
         <template id="report_invoice_document" inherit_id="account.report_invoice_document">
-            <xpath expr="//div[@id='total']/div[1]" position="before">
-                <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-5 col-md-6'}">
+            <xpath expr="//div[@id='qrcode']" position="after">
+                <div class="col-6">
                     <t t-set="picking" t-value="o.get_picking_ids()" />
-                    <t>
+                    <t t-if="picking and all(picking.mapped('carrier_tracking_ref'))" >
                         <t t-set="tracking" t-value="', '.join(picking.mapped('carrier_tracking_ref'))" />
                         <t t-set="method" t-value="', '.join(picking.mapped('carrier_id').mapped('name'))" />
                         <div t-if="method">
