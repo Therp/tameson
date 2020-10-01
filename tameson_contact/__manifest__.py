@@ -13,5 +13,4 @@
     'data': [
     ],
     'application': False,
-    'license': u'OPL-1',
 }
