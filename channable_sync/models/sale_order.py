@@ -100,7 +100,7 @@ class SaleOrder(models.Model):
         all_orders = response.get('orders', [])
         while all_orders:
             for order in all_orders:
-                existing_order = self.search([('channable_order_id', '=', order.get('id'))])
+                existing_order = self.search([('channable_order_id', '=', order.get('id'))], limit=1)
                 if not existing_order:
                     order_body = json.dumps(order)
                     celery_task_vals = {'ref': 'Import Channable Order: %s' % str(order.get('id'))}
@@ -138,6 +138,25 @@ class SaleOrder(models.Model):
         except Exception as e:
             _logger.error('Error on parsing order body/response: %s' % str(e))
             raise
+
+        # check if it's an existing order once more
+        existing_order = self.search([('channable_order_id', '=', order.get('id'))], limit=1)
+        if existing_order:
+            # check for status change/cancellation
+            channable_status = order.get('status_shipped')
+            if channable_status == 'cancelled' and existing_order.state != 'cancel':
+                if any(pick.state == 'done' for pick in existing_order.mapped('picking_ids')):
+                    existing_order.write({
+                        'channable_refused_cancellation': True,
+                        'channable_order_status': 'cancelled',
+                    })
+                    return 'Channable order import: order canceled in Channable, but unable to be cancelled in Odoo: %s' % str(existing_order.name)
+                existing_order.action_cancel()
+                existing_order.write({'channable_order_status': 'cancelled'})
+                return 'Channable order import: order cancelled after being cancelled in Channable: %s' % str(existing_order.name)
+            else:
+                return 'Channable order import: existing order, skipping: %s' % str(existing_order.name)
+
         billing = order.get('data', {}).get('billing', {})
         shipping = order.get('data', {}).get('shipping', {})
         customer = order.get('data', {}).get('customer', {})
@@ -153,6 +172,8 @@ class SaleOrder(models.Model):
         if not partner:
             raise Warning(_("Customer not available in order %s." % (order.get('id'))))
 
+        res_currency = self.env['res.currency'].search([('name', '=', currency)], limit=1)
+
         new_record = self.new({'partner_id': partner.id})
         new_record.onchange_partner_id()
         retval = self._convert_to_write({name: new_record[name] for name in new_record._cache})
@@ -167,6 +188,19 @@ class SaleOrder(models.Model):
                 fiscal_position_id = fp_id
                 partner.property_account_position_id = fp_id
         pricelist_id = retval.get('pricelist_id', False)
+        # check the pricelist (coming from the partner) and the order currency
+        if pricelist_id and res_currency:
+            pricelist = self.env['product.pricelist'].browse(pricelist_id)
+            if pricelist.currency_id != res_currency:
+                if partner.country_id:
+                    # filter by country
+                    applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id), ('country_group_ids.country_ids', '=', partner.country_id.id)], limit=1)
+                    if not applicable_pricelist:
+                        applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)], limit=1)
+                else:
+                    applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)], limit=1)
+                if applicable_pricelist:
+                    pricelist_id = applicable_pricelist.id
         payment_term = retval.get('payment_term_id', False)
 
         # Adjust timezone for the order date (sent in CET from Channable)
@@ -236,6 +270,33 @@ class SaleOrder(models.Model):
                 raise Warning(_("Shipping cost service not available in Odoo, and shipping cost exists for this order."))
         sale_order.recompute()
         sale_order.flush()
+
+        if sale_order.company_id and sale_order.company_id.channable_auto_confirm_order:
+            # automatically confirm an order
+            sale_order.action_confirm()
+            if sale_order.company_id and sale_order.company_id.channable_auto_register_payment:
+                # and also register the payment on the invoice if applicable
+                for invoice in sale_order.invoice_ids:
+                    payment_journal = self.env['account.journal'].search([('channable_channel_name', '=', order.get('channel_name', ''))], limit=1) or False
+                    if payment_journal:
+                        PaymentObj = self.env['account.payment'].with_context(active_id=invoice.id, active_ids=invoice.ids)
+
+                        payment_method = self.env['account.payment.method'].search([('payment_type', '=', 'inbound')], limit=1)
+                        payment = PaymentObj.with_context(active_ids=self.ids, active_model='account.move', active_id=self.id).create({
+                            'invoice_ids': [(6, 0, [invoice.id])],
+                            'journal_id': payment_journal.id,
+                            'payment_method_id': payment_method and payment_method.id or False,
+                            'amount': invoice.amount_residual,
+                            'currency_id': invoice.currency_id.id,
+                            'payment_type': 'inbound',
+                            'communication': invoice.name,
+                            'partner_type': 'customer',
+                            'partner_id': invoice.commercial_partner_id and invoice.commercial_partner_id.id or invoice.partner_id.id,
+                            'payment_date': invoice.invoice_date or invoice.invoice_date_due
+                        })
+                        payment.post()
+                        (payment.move_line_ids.mapped('move_id') + payment.invoice_ids).line_ids.filtered(lambda line: not line.reconciled and line.account_id == payment.destination_account_id).reconcile()
+
         msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
         _logger.info(msg)
         return msg
@@ -247,15 +308,18 @@ class SaleOrder(models.Model):
 
         ResPartner = self.env['res.partner']
 
-        partner = ResPartner.search([('email', '=', email)], limit=1)
+        partner = ResPartner.search([('email', '=', email), ('type', 'not in', ['invoice', 'delivery', 'other']), ('parent_id', '=', False)], limit=1)
+        if not partner:
+            partner = ResPartner.search([('email', '=', email), ('parent_id', '=', False)], limit=1)
         if partner:
+            is_company = False if not customer.get('company') else True
             # existing partner, update applicable info
-            partner = self.update_partner_address(partner, customer, billing)
+            partner = self.update_partner_address(partner, customer, billing, is_company)
 
             partner_invoice = ResPartner.search([('parent_id', '=', partner.id), ('type', '=', 'invoice')], limit=1)
-            partner_invoice = self.update_partner_address(partner_invoice, billing, customer)
+            partner_invoice = self.update_partner_address(partner_invoice, billing, customer, False)
             partner_shipping = ResPartner.search([('parent_id', '=', partner.id), ('type', '=', 'delivery')], limit=1)
-            partner_shipping = self.update_partner_address(partner_shipping, shipping, customer)
+            partner_shipping = self.update_partner_address(partner_shipping, shipping, customer, False)
 
             if not partner_invoice:
                 partner_invoice = self.create_partner_address(data=billing, secondary_data=customer, address_type='invoice', is_company=False, parent_id=partner and partner.id or False)
@@ -290,10 +354,18 @@ class SaleOrder(models.Model):
         address2 = data.get('address2', '') or secondary_data.get('address2', '')
         address_supplement = data.get('address_supplement', '') or secondary_data.get('address_supplement', '')
         street2 = '{address2} {address_supplement}'.format(address2=address2, address_supplement=address_supplement)
+        if is_company:
+            name = data.get('company', '')
+            comment = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
+                                                                      middle_name=data.get('middle_name', ''),
+                                                                      last_name=data.get('last_name', ''))
+        else:
+            name = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
+                                                                   middle_name=data.get('middle_name', ''),
+                                                                   last_name=data.get('last_name', ''))
+            comment = data.get('company', '') or secondary_data.get('company', '')
         values = {
-            'name': '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
-                                                                    middle_name=data.get('middle_name', ''),
-                                                                    last_name=data.get('last_name', '')),
+            'name': name,
             'email': data.get('email', '') or secondary_data.get('email', ''),
             'phone': data.get('phone', '') or secondary_data.get('phone', ''),
             'mobile': data.get('mobile', '') or secondary_data.get('mobile', ''),
@@ -303,7 +375,7 @@ class SaleOrder(models.Model):
             'city': data.get('city', '') or secondary_data.get('city', ''),
             'country_id': country and country.id or False,
             'is_company': is_company,
-            'comment': data.get('company', '') or secondary_data.get('company', ''),
+            'comment': comment,
             # TODO: eventually if needed:
             # lang
             # street_number and street_number2 instead if base_address_extended is installed?
@@ -317,7 +389,7 @@ class SaleOrder(models.Model):
             })
         return self.env['res.partner'].create(values)
 
-    def update_partner_address(self, partner, data, secondary_data):
+    def update_partner_address(self, partner, data, secondary_data, is_company=False):
         # updates the partner data if anything in the address changed
         # data is the primary source, secondary is used only if primary is empty (e.g. customer and billing sections)
 
@@ -330,9 +402,12 @@ class SaleOrder(models.Model):
         if partner.type and partner.type in ['invoice', 'delivery']:
             create_new = True
 
-        name = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
-                                                               middle_name=data.get('middle_name', ''),
-                                                               last_name=data.get('last_name', ''))
+        if is_company:
+            name = data.get('company', '')
+        else:
+            name = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
+                                                                   middle_name=data.get('middle_name', ''),
+                                                                   last_name=data.get('last_name', ''))
         zip_code = data.get('zip_code') or secondary_data.get('zip_code')
         city = data.get('city', '') or secondary_data.get('city', '')
         country_code = data.get('country_code', '') or secondary_data.get('country_code', '')
@@ -347,6 +422,7 @@ class SaleOrder(models.Model):
                 partner.city != data.get('city') or \
                 partner.street != address1 or \
                 partner.street2 != street2 or \
+                partner.country_id != country or \
                 partner.phone != phone or \
                 partner.mobile != mobile or \
                 partner.name != name:
@@ -470,12 +546,12 @@ class SaleOrder(models.Model):
         for done_picking in self.mapped('picking_ids').filtered(lambda p: p.state == 'done'):
             if done_picking.carrier_tracking_ref:
                 tracking_code = tracking_code + done_picking.carrier_tracking_ref + ','
-            if done_picking.carrier_id:
-                transporter = transporter + done_picking.carrier_id.name + ','
+            if done_picking.carrier_id and done_picking.carrier_id.channable_transporter_code:
+                transporter = done_picking.carrier_id.channable_transporter_code
+            elif done_picking.carrier_id:
+                transporter = done_picking.carrier_id.name
             if tracking_code:
                 tracking_code = tracking_code[:-1]
-            if transporter:
-                transporter = transporter[:-1]
         if not tracking_code:
             tracking_code = 'null'
         if not transporter:

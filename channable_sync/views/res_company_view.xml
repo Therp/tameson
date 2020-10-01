@@ -19,8 +19,10 @@
                             <field name="channable_orders_cancelled" string="Cancelled"/>
                             <field name="channable_orders_waiting" string="Waiting"/>
                         </group>
-                        <group colspan="4" col="2">
+                        <group string="Import Options" colspan="4" col="2">
                             <field name="channable_prices_contain_tax"/>
+                            <field name="channable_auto_confirm_order"/>
+                            <field name="channable_auto_register_payment"/>
                         </group>
                     </page>
                 </xpath>
