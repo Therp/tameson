@@ -6,13 +6,15 @@
                 <div class="col-6">
                     <t t-set="picking" t-value="o.get_picking_ids()" />
                     <t t-if="picking and all(picking.mapped('carrier_tracking_ref'))" >
-                        <t t-set="tracking" t-value="', '.join(picking.mapped('carrier_tracking_ref'))" />
-                        <t t-set="method" t-value="', '.join(picking.mapped('carrier_id').mapped('name'))" />
-                        <div t-if="method">
-                            Shipping method: <t t-esc="method" />
+                        <t t-set="picking" t-value="picking[0]" />
+                        <div>
+                            Shipping method: <t t-esc="picking.carrier_id.name" />
                         </div>
-                        <div t-if="tracking" >
-                            Tracking number: <t t-esc="tracking" />
+                        <div>
+                            Shipping date: <span t-field="picking.date_done" t-options="{'widget': 'date'}" />
+                        </div>
+                        <div>
+                            Tracking number: <t t-esc="picking.carrier_tracking_ref" />
                         </div>
                         <div>
                             <img alt="Signature" class="col-6 d-block img img-fluid" src="/tameson_account/static/src/img/signature.png"/>
