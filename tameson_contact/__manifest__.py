@@ -8,7 +8,7 @@
     """,
     'author': "Tameson",
     'depends': [
-        'base'
+        'base_address_extended'
     ],
     'data': [
     ],

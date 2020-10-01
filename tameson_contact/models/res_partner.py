@@ -6,7 +6,7 @@
 ###############################################################################
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 
 
@@ -20,7 +20,7 @@ class ResPartner(models.Model):
                 child_ids = self.search([('id','child_of',record.parent_id.id or record.id)])
                 match = self.search([('email','=',record.email),('id','not in',child_ids.ids)], limit=1)
                 if match:
-                    raise ValidationError('Duplicate email for contact: %s'%match.name)    
+                    raise ValidationError('Duplicate email for contact: %s' % match.name)
 
     def action_set_street(self):
         self._set_street()
