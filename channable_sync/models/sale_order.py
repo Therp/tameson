@@ -312,13 +312,14 @@ class SaleOrder(models.Model):
         if not partner:
             partner = ResPartner.search([('email', '=', email), ('parent_id', '=', False)], limit=1)
         if partner:
+            is_company = False if not customer.get('company') else True
             # existing partner, update applicable info
-            partner = self.update_partner_address(partner, customer, billing)
+            partner = self.update_partner_address(partner, customer, billing, is_company)
 
             partner_invoice = ResPartner.search([('parent_id', '=', partner.id), ('type', '=', 'invoice')], limit=1)
-            partner_invoice = self.update_partner_address(partner_invoice, billing, customer)
+            partner_invoice = self.update_partner_address(partner_invoice, billing, customer, False)
             partner_shipping = ResPartner.search([('parent_id', '=', partner.id), ('type', '=', 'delivery')], limit=1)
-            partner_shipping = self.update_partner_address(partner_shipping, shipping, customer)
+            partner_shipping = self.update_partner_address(partner_shipping, shipping, customer, False)
 
             if not partner_invoice:
                 partner_invoice = self.create_partner_address(data=billing, secondary_data=customer, address_type='invoice', is_company=False, parent_id=partner and partner.id or False)
@@ -353,10 +354,18 @@ class SaleOrder(models.Model):
         address2 = data.get('address2', '') or secondary_data.get('address2', '')
         address_supplement = data.get('address_supplement', '') or secondary_data.get('address_supplement', '')
         street2 = '{address2} {address_supplement}'.format(address2=address2, address_supplement=address_supplement)
+        if is_company:
+            name = data.get('company', '')
+            comment = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
+                                                                      middle_name=data.get('middle_name', ''),
+                                                                      last_name=data.get('last_name', ''))
+        else:
+            name = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
+                                                                   middle_name=data.get('middle_name', ''),
+                                                                   last_name=data.get('last_name', ''))
+            comment = data.get('company', '') or secondary_data.get('company', '')
         values = {
-            'name': '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
-                                                                    middle_name=data.get('middle_name', ''),
-                                                                    last_name=data.get('last_name', '')),
+            'name': name,
             'email': data.get('email', '') or secondary_data.get('email', ''),
             'phone': data.get('phone', '') or secondary_data.get('phone', ''),
             'mobile': data.get('mobile', '') or secondary_data.get('mobile', ''),
@@ -366,7 +375,7 @@ class SaleOrder(models.Model):
             'city': data.get('city', '') or secondary_data.get('city', ''),
             'country_id': country and country.id or False,
             'is_company': is_company,
-            'comment': data.get('company', '') or secondary_data.get('company', ''),
+            'comment': comment,
             # TODO: eventually if needed:
             # lang
             # street_number and street_number2 instead if base_address_extended is installed?
@@ -380,7 +389,7 @@ class SaleOrder(models.Model):
             })
         return self.env['res.partner'].create(values)
 
-    def update_partner_address(self, partner, data, secondary_data):
+    def update_partner_address(self, partner, data, secondary_data, is_company=False):
         # updates the partner data if anything in the address changed
         # data is the primary source, secondary is used only if primary is empty (e.g. customer and billing sections)
 
@@ -393,9 +402,12 @@ class SaleOrder(models.Model):
         if partner.type and partner.type in ['invoice', 'delivery']:
             create_new = True
 
-        name = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
-                                                               middle_name=data.get('middle_name', ''),
-                                                               last_name=data.get('last_name', ''))
+        if is_company:
+            name = data.get('company', '')
+        else:
+            name = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
+                                                                   middle_name=data.get('middle_name', ''),
+                                                                   last_name=data.get('last_name', ''))
         zip_code = data.get('zip_code') or secondary_data.get('zip_code')
         city = data.get('city', '') or secondary_data.get('city', '')
         country_code = data.get('country_code', '') or secondary_data.get('country_code', '')
@@ -410,6 +422,7 @@ class SaleOrder(models.Model):
                 partner.city != data.get('city') or \
                 partner.street != address1 or \
                 partner.street2 != street2 or \
+                partner.country_id != country or \
                 partner.phone != phone or \
                 partner.mobile != mobile or \
                 partner.name != name:
