@@ -5,7 +5,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     t_location = fields.Char(
-        string=_('Location'),
+        string=_('Location Tameson'),
         required=False)
     t_purchase_cost = fields.Float(
         string=_('Purchase Cost'),
