@@ -280,7 +280,6 @@ class SaleOrder(models.Model):
                     payment_journal = self.env['account.journal'].search([('channable_channel_name', '=', order.get('channel_name', ''))], limit=1) or False
                     if payment_journal:
                         PaymentObj = self.env['account.payment'].with_context(active_id=invoice.id, active_ids=invoice.ids)
-
                         payment_method = self.env['account.payment.method'].search([('payment_type', '=', 'inbound')], limit=1)
                         payment = PaymentObj.with_context(active_ids=self.ids, active_model='account.move', active_id=self.id).create({
                             'invoice_ids': [(6, 0, [invoice.id])],
@@ -295,7 +294,7 @@ class SaleOrder(models.Model):
                             'payment_date': invoice.invoice_date or invoice.invoice_date_due
                         })
                         payment.post()
-                        (payment.move_line_ids.mapped('move_id') + payment.invoice_ids).line_ids.filtered(lambda line: not line.reconciled and line.account_id == payment.destination_account_id).reconcile()
+                        invoice.post()  # post an invoice again, otherwise it won't be successfully reconciled
 
         msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
         _logger.info(msg)
