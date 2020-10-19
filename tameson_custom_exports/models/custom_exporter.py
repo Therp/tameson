@@ -2,7 +2,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import Warning, ValidationError
 from odoo.addons.web.controllers.main import Export, CSVExport, ExcelExport
 from odoo.tools import safe_eval
-from odoo.tools.misc import profile
+from odoo.tools.profiler import profile
 import ast
 import base64
 import io
@@ -155,10 +155,11 @@ class CustomExporter(models.Model):
             except Exception as e:
                 raise ValidationError('Custom export headers not defined correctly: %s!' % str(e))
 
-    @profile('/temp/custom_export.profile')
+    @profile
     def run_now(self):
         self._cron_run_custom_export()
 
+    @profile
     def _cron_run_custom_export(self, custom_exporter_id=None):
         if custom_exporter_id:
             custom_exporter = self.browse(custom_exporter_id)
@@ -222,6 +223,7 @@ class CustomExporter(models.Model):
             for field in export_fields_list
         ]
 
+    @profile
     def generate_custom_export(self, new_custom_export_file, recordset):
         export_format = self.export_format
         model_name = self.export_model_name
@@ -271,6 +273,7 @@ class CustomExporter(models.Model):
         else:
             return False
 
+    @profile
     def create_custom_export_file(self):
         self.ensure_one()
         filename = '%s_%s.%s' % (self.export_filename_prefix, str(int(time.time() * 1000)), self.export_format)
