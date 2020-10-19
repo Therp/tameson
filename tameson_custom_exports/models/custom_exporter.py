@@ -46,7 +46,7 @@ class CustomExporter(models.Model):
     fixed_filename = fields.Boolean(help="""
         Check if this exporter will always use the same file name and overwrite
         it on every run. If unchecked every generated file will be
-        differentiated with date at time of export."""
+        differentiated with date at time of export.""")
     export_model_name = fields.Selection(
         selection='_list_all_models',
         string='Model',
