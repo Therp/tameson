@@ -41,8 +41,17 @@ class CustomExporter(models.Model):
         default='csv',
         required=True
     )
-    export_filename_prefix = fields.Char(required=True, string='Filename Prefix')
-    export_model_name = fields.Selection(selection='_list_all_models', string='Model', required=True, default='product.template')
+    export_filename_prefix = fields.Char(
+        required=True, string='Filename Prefix')
+    fixed_filename = fields.Boolean(help="""
+        Check if this exporter will always use the same file name and overwrite
+        it on every run. If unchecked every generated file will be
+        differentiated with date at time of export."""
+    export_model_name = fields.Selection(
+        selection='_list_all_models',
+        string='Model',
+        required=True,
+        default='product.template')
     custom_export_format_id = fields.Many2one(
         string="Export format",
         comodel_name="ir.exports",
@@ -50,7 +59,9 @@ class CustomExporter(models.Model):
         required=True,
         help="Select a custom export format, or create one first in the default Export feature wizard for the model data.",
     )
-    custom_export_format_header = fields.Char(string="Header field names", help="Modify the header columns if needed.", required=True)
+    custom_export_format_header = fields.Char(
+        string="Header field names",
+        help="Modify the header columns if needed.", required=True)
     export_domain = fields.Text(default='[]', required=True)
     active = fields.Boolean(default=True)
     ir_cron_id = fields.Many2one(
@@ -276,7 +287,10 @@ class CustomExporter(models.Model):
     @profile
     def create_custom_export_file(self):
         self.ensure_one()
-        filename = '%s_%s.%s' % (self.export_filename_prefix, str(int(time.time() * 1000)), self.export_format)
+        if self.fixed_filename:
+            filename = '%s.%s' % (self.export_filename_prefix, self.export_format)
+        else:
+            filename = '%s_%s.%s' % (self.export_filename_prefix, str(int(time.time() * 1000)), self.export_format)
         vals = {
             'name': filename,
             'custom_exporter_id': self.id
