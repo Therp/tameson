@@ -47,7 +47,6 @@
                         </group>
                         <group name="export_filter">
                             <field name="custom_exporter_id" readonly="1" colspan="4"/>
-                            <field name="fixed_filename"  colspan="4"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -116,6 +115,7 @@
                             <group name="export_format" string="Format">
                                 <field name="export_format"/>
                                 <field name="export_model_name"/>
+                                <field name="fixed_filename"/>
                                 <field name="export_filename_prefix"/>
                                 <field name="custom_export_format_id" 
                                         domain="[('resource', '=', export_model_name)]" 
