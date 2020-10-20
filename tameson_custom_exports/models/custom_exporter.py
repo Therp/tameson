@@ -287,12 +287,14 @@ class CustomExporter(models.Model):
     @profile
     def create_custom_export_file(self):
         self.ensure_one()
+        name = '%s_%s.%s' % (self.export_filename_prefix, str(int(time.time() * 1000)), self.export_format)
         if self.fixed_filename:
             filename = '%s.%s' % (self.export_filename_prefix, self.export_format)
         else:
-            filename = '%s_%s.%s' % (self.export_filename_prefix, str(int(time.time() * 1000)), self.export_format)
+            filename = name
         vals = {
-            'name': filename,
+            'name': name,
+            'filename': filename,
             'custom_exporter_id': self.id
         }
         custom_export_file = self.env['custom.export.file'].create(vals)
@@ -313,6 +315,7 @@ class CustomExportFile(models.Model):
     _order = 'create_date DESC'
 
     name = fields.Char(required=True, string='Name')
+    filename = fields.Char(required=True, string='FileName')
     custom_exporter_id = fields.Many2one(
         string="Custom Exporter",
         comodel_name="custom.exporter",
@@ -329,15 +332,15 @@ class CustomExportFile(models.Model):
     )
     records_exported = fields.Integer(string="Records exported")
 
-    @api.constrains('state', 'name')
+    @api.constrains('state', 'name', 'filename')
     def _check_unique_running(self):
        active_exports = self.search([
-               ('name' , '=', self.name), ('state', '=', 'draft')])
+               ('filename' , '=', self.filename), ('state', '=', 'draft')])
        if active_exports:
            raise ValidationError("""
                 There is already an export writing file %s
                 running (%s), wait until it's done to write file or set the
-                exporter without a fixed filename""" % (self.name, self.id))
+                exporter without a fixed filename""" % (self.filename, self.id))
 
     def attach_and_export_file(self, file_obj, records_exported):
         for custom_export_file in self:

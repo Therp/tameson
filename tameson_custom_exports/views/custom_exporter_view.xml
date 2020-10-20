@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Exported Files" create="false" decoration-info="state == 'draft'" decoration-danger="state == 'failed'">
                     <field name="name"/>
+                    <field name="filename"/>
                     <field name="custom_exporter_id"/>
                     <field name="create_date"/>
                     <field name="records_exported"/>
@@ -22,6 +23,7 @@
             <field name="arch" type="xml">
                 <search string="Exported Files">
                     <field name="name"/>
+                    <field name="filename"/>
                     <field name="custom_exporter_id"/>
                     <field name="state"/>
                 </search>
@@ -40,6 +42,8 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" readonly="1"/></h1>
+                            <label for="filename" class="oe_edit_only"/>
+                            <h3><field name="filename" readonly="1"/></h3>
                         </div>
                         <group name="export_filter">
                             <field name="records_exported" readonly="1"/>
