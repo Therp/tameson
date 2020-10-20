@@ -330,7 +330,7 @@ class CustomExportFile(models.Model):
     records_exported = fields.Integer(string="Records exported")
 
     @api.constrains('state', 'name')
-    def _heck_unique_running(self)
+    def _check_unique_running(self):
        active_exports = self.search([
                ('name' , '=', self.name), ('state', '=', 'draft')])
        if active_exports:
