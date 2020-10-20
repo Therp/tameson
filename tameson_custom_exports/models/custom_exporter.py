@@ -329,9 +329,15 @@ class CustomExportFile(models.Model):
     )
     records_exported = fields.Integer(string="Records exported")
 
-    _sql_constraints = [
-        ('name_uniq', 'UNIQUE(name)', "Filename already exists!"),
-    ]
+    @api.constrains('state', 'name')
+    def _heck_unique_running(self)
+       active_exports = self.search([
+               ('name' , '=', self.name), ('state', '=', 'draft')])
+       if active_exports:
+           raise ValidationError("""
+                There is already an export writing file %s
+                running (%s), wait until it's done to write file or set the
+                exporter without a fixed filename""" % (self.name, self.id))
 
     def attach_and_export_file(self, file_obj, records_exported):
         for custom_export_file in self:
