@@ -223,7 +223,7 @@ class SaleOrder(models.Model):
             'composition_mode': 'comment',
             'invoice_ids': [(6, None, new_invoice_ids.ids)],
             'is_email': True,
-            'partner_id': self.partner_id.id,
+            'partner_ids': [(6, None, self.partner_id.ids)],
             'template_id': self.env.ref('tameson_mail.email_template_edi_invoice_tameson').id,
         })
         # This is to trigger template_id change, to fill in template's
