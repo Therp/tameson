@@ -178,10 +178,6 @@ class CustomExporter(models.Model):
             custom_exporter = self
         if not custom_exporter:
             raise ValidationError('Custom Exporter Not Specified!')
-
-
-
-
         new_custom_export_file = custom_exporter.create_custom_export_file()
         domain = safe_eval(custom_exporter.export_domain)
         try:
@@ -292,15 +288,15 @@ class CustomExporter(models.Model):
     def create_custom_export_file(self):
         self.ensure_one()
         if self.fixed_filename:
-            active_exports = self.env['custom.export.file'].search([
+            active_export = self.env['custom.export.file'].search([
                 ('custom_exporter_id' , '=', self.id),
-                ('state', '=', 'draft')])
-            if active_exports:
+                ('state', '=', 'draft')], limit=1)
+            if active_export:
                 raise ValidationError("""
                     There is already an export writing file %s running (ID %s)
                     wait until it's done to write file or set the
                     exporter without a fixed filename""" % (
-                        self.filename, self.id))
+                        active_export.filename, active_export.id))
         name = '%s_%s.%s' % (self.export_filename_prefix, str(int(time.time() * 1000)), self.export_format)
         if self.fixed_filename:
             filename = '%s.%s' % (self.export_filename_prefix, self.export_format)
