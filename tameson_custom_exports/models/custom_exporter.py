@@ -295,7 +295,7 @@ class CustomExporter(models.Model):
             active_exports = self.env['custom.export.file'].search([
                 ('custom_exporter_id' , '=', self.id),
                 ('state', '=', 'draft')])
-            if len(active_exports):
+            if active_exports:
                 raise ValidationError("""
                     There is already an export writing file %s running (ID %s)
                     wait until it's done to write file or set the
