@@ -439,7 +439,7 @@ class CustomExportFile(models.Model):
         attachment_obj = self.env['ir.attachment']
         for custom_export_file in self:
             vals = {
-                'name': custom_export_file.name,
+                'name': custom_export_file.filename,
                 'datas': file_obj,
                 'type': 'binary',
                 'res_model': 'custom.export.file',
