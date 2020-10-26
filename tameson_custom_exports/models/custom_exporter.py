@@ -41,8 +41,17 @@ class CustomExporter(models.Model):
         default='csv',
         required=True
     )
-    export_filename_prefix = fields.Char(required=True, string='Filename Prefix')
-    export_model_name = fields.Selection(selection='_list_all_models', string='Model', required=True, default='product.template')
+    export_filename_prefix = fields.Char(
+        required=True, string='Filename Prefix')
+    fixed_filename = fields.Boolean(help="""
+        Check if this exporter will always use the same file name and overwrite
+        it on every run. If unchecked every generated file will be
+        differentiated with date at time of export.""")
+    export_model_name = fields.Selection(
+        selection='_list_all_models',
+        string='Model',
+        required=True,
+        default='product.template')
     custom_export_format_id = fields.Many2one(
         string="Export format",
         comodel_name="ir.exports",
@@ -50,7 +59,9 @@ class CustomExporter(models.Model):
         required=True,
         help="Select a custom export format, or create one first in the default Export feature wizard for the model data.",
     )
-    custom_export_format_header = fields.Char(string="Header field names", help="Modify the header columns if needed.", required=True)
+    custom_export_format_header = fields.Char(
+        string="Header field names",
+        help="Modify the header columns if needed.", required=True)
     export_domain = fields.Text(default='[]', required=True)
     active = fields.Boolean(default=True)
     ir_cron_id = fields.Many2one(
@@ -276,9 +287,24 @@ class CustomExporter(models.Model):
     @profile
     def create_custom_export_file(self):
         self.ensure_one()
-        filename = '%s_%s.%s' % (self.export_filename_prefix, str(int(time.time() * 1000)), self.export_format)
+        if self.fixed_filename:
+            active_export = self.env['custom.export.file'].search([
+                ('custom_exporter_id' , '=', self.id),
+                ('state', '=', 'draft')], limit=1)
+            if active_export:
+                raise ValidationError("""
+                    There is already an export writing file %s running (ID %s)
+                    wait until it's done to write file or set the
+                    exporter without a fixed filename""" % (
+                        active_export.filename, active_export.id))
+        name = '%s_%s.%s' % (self.export_filename_prefix, str(int(time.time() * 1000)), self.export_format)
+        if self.fixed_filename:
+            filename = '%s.%s' % (self.export_filename_prefix, self.export_format)
+        else:
+            filename = name
         vals = {
-            'name': filename,
+            'name': name,
+            'filename': filename,
             'custom_exporter_id': self.id
         }
         custom_export_file = self.env['custom.export.file'].create(vals)
@@ -299,6 +325,7 @@ class CustomExportFile(models.Model):
     _order = 'create_date DESC'
 
     name = fields.Char(required=True, string='Name')
+    filename = fields.Char(required=True, string='FileName')
     custom_exporter_id = fields.Many2one(
         string="Custom Exporter",
         comodel_name="custom.exporter",
@@ -315,9 +342,16 @@ class CustomExportFile(models.Model):
     )
     records_exported = fields.Integer(string="Records exported")
 
-    _sql_constraints = [
-        ('name_uniq', 'UNIQUE(name)', "Filename already exists!"),
-    ]
+    @api.constrains('state', 'name', 'filename')
+    def _check_unique_running(self):
+
+       active_exports = self.search([
+               ('filename' , '=', self.filename), ('state', '=', 'draft')])
+       if len(active_exports) > 1:
+           raise ValidationError("""
+                There is already an export writing file %s
+                running (%s), wait until it's done to write file or set the
+                exporter without a fixed filename""" % (self.filename, self.id))
 
     def attach_and_export_file(self, file_obj, records_exported):
         for custom_export_file in self:
@@ -333,7 +367,7 @@ class CustomExportFile(models.Model):
                 custom_export_file.create_attachment(file_obj)
             if self._context.get('skip_sftp_transfer_when_testing'):
                 custom_export_file.state = 'sent'
-                _logger.info('Testing: {src_file} file successfully exported.'.format(src_file=custom_export_file.name))
+                _logger.info('Testing: {src_file} file successfully exported.'.format(src_file=custom_export_file.filename))
                 continue
             try:
                 key = None
@@ -345,11 +379,11 @@ class CustomExportFile(models.Model):
                         ftp.cwd('/')
                         ftp.cwd(sftp_server.export_path)
                         _logger.info('FTP Exporting: {src_path}/{src_file}'.format(src_path=sftp_server.export_path,
-                                                                                   src_file=custom_export_file.name))
+                                                                                   src_file=custom_export_file.filename))
                         filelike_obj = io.BytesIO(base64.decodebytes(file_obj))
-                        ftp.storbinary('STOR %s' % custom_export_file.name, filelike_obj)
+                        ftp.storbinary('STOR %s' % custom_export_file.filename, filelike_obj)
                         _logger.info('FTP Exported File: {src_path}/{src_file}'.format(src_path=sftp_server.export_path,
-                                                                                       src_file=custom_export_file.name))
+                                                                                       src_file=custom_export_file.filename))
                         custom_export_file.state = 'sent'
                 else:
                     if sftp_server.auth_type and sftp_server.auth_type == 'keyfile' and sftp_server.keyfile_type:
@@ -388,11 +422,11 @@ class CustomExportFile(models.Model):
                             sftp.chdir('/')
                             sftp.chdir(sftp_server.export_path)
                             _logger.info('SFTP Exporting: {src_path}/{src_file}'.format(src_path=sftp_server.export_path,
-                                                                                        src_file=custom_export_file.name))
+                                                                                        src_file=custom_export_file.filename))
                             filelike_obj = io.BytesIO(base64.decodebytes(file_obj))
-                            sftp.putfo(filelike_obj, custom_export_file.name)
+                            sftp.putfo(filelike_obj, custom_export_file.filename)
                             _logger.info('SFTP Exported File: {src_path}/{src_file}'.format(src_path=sftp_server.export_path,
-                                                                                            src_file=custom_export_file.name))
+                                                                                            src_file=custom_export_file.filename))
                             custom_export_file.state = 'sent'
             except Exception as e:
                 msg = str(e)
@@ -405,7 +439,7 @@ class CustomExportFile(models.Model):
         attachment_obj = self.env['ir.attachment']
         for custom_export_file in self:
             vals = {
-                'name': custom_export_file.name,
+                'name': custom_export_file.filename,
                 'datas': file_obj,
                 'type': 'binary',
                 'res_model': 'custom.export.file',
