@@ -367,7 +367,7 @@ class CustomExportFile(models.Model):
                 custom_export_file.create_attachment(file_obj)
             if self._context.get('skip_sftp_transfer_when_testing'):
                 custom_export_file.state = 'sent'
-                _logger.info('Testing: {src_file} file successfully exported.'.format(src_file=custom_export_file.name))
+                _logger.info('Testing: {src_file} file successfully exported.'.format(src_file=custom_export_file.filename))
                 continue
             try:
                 key = None
@@ -379,11 +379,11 @@ class CustomExportFile(models.Model):
                         ftp.cwd('/')
                         ftp.cwd(sftp_server.export_path)
                         _logger.info('FTP Exporting: {src_path}/{src_file}'.format(src_path=sftp_server.export_path,
-                                                                                   src_file=custom_export_file.name))
+                                                                                   src_file=custom_export_file.filename))
                         filelike_obj = io.BytesIO(base64.decodebytes(file_obj))
-                        ftp.storbinary('STOR %s' % custom_export_file.name, filelike_obj)
+                        ftp.storbinary('STOR %s' % custom_export_file.filename, filelike_obj)
                         _logger.info('FTP Exported File: {src_path}/{src_file}'.format(src_path=sftp_server.export_path,
-                                                                                       src_file=custom_export_file.name))
+                                                                                       src_file=custom_export_file.filename))
                         custom_export_file.state = 'sent'
                 else:
                     if sftp_server.auth_type and sftp_server.auth_type == 'keyfile' and sftp_server.keyfile_type:
@@ -422,11 +422,11 @@ class CustomExportFile(models.Model):
                             sftp.chdir('/')
                             sftp.chdir(sftp_server.export_path)
                             _logger.info('SFTP Exporting: {src_path}/{src_file}'.format(src_path=sftp_server.export_path,
-                                                                                        src_file=custom_export_file.name))
+                                                                                        src_file=custom_export_file.filename))
                             filelike_obj = io.BytesIO(base64.decodebytes(file_obj))
-                            sftp.putfo(filelike_obj, custom_export_file.name)
+                            sftp.putfo(filelike_obj, custom_export_file.filename)
                             _logger.info('SFTP Exported File: {src_path}/{src_file}'.format(src_path=sftp_server.export_path,
-                                                                                            src_file=custom_export_file.name))
+                                                                                            src_file=custom_export_file.filename))
                             custom_export_file.state = 'sent'
             except Exception as e:
                 msg = str(e)
