@@ -12,7 +12,7 @@
 
     <template id="report_picking_batch"
               inherit_id="stock_picking_batch.report_picking_batch">
-        <xpath expr="//th[@width='27%']" position="replace">
+        <!-- <xpath expr="//th[@width='27%']" position="replace">
             <th width="27%">Location</th>
         </xpath>
         <xpath expr="//span[@t-esc=&quot;move_operation.mapped('location_dest_id').display_name&quot;]" position="replace">
@@ -20,8 +20,8 @@
         </xpath>
         <xpath expr="//div[hasclass('page')]" position="inside">
             <p style="page-break-after: always;"/>
-        </xpath>
-        <xpath expr="//t[@t-foreach='docs']" position="after">
+        </xpath> -->
+        <xpath expr="//t[@t-foreach='docs']" position="replace">
             <t t-foreach="docs" t-as="b">
               <t t-set="docs" t-value="b.picking_ids"/>
               <t t-call="stock.report_deliveryslip"/>
