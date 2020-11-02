@@ -17,6 +17,7 @@
     ],
     'data': [
         'data/mail_template_data.xml',
+        'data/template.xml',
         'views/account_invoice_send_views.xml',
     ],
     'application': False,

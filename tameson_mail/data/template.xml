@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="mail_notification_paynow_tameson" inherit_id="mail.mail_notification_paynow">
+            <xpath expr="//div[@t-if=&quot;is_online and not record._context.get('proforma')&quot;]" position="replace"></xpath>
+            <xpath expr="//tbody/tr[last()]" position="replace">
+                <tr>
+                    <td style="padding: 0; font-size:11px;">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 32px 0px 4px 0px;" />
+                        <b t-esc="company.name" />
+                        <br />
+                        <div style="color: #999999">
+                            <t t-if="record.partner_id.lang == 'nl_NL'">
+                                <!-- <a href="http://tameson.nl" style="font-family:'Arial Black', Arial, sans-serif; text-decoration: none; color: #D00000; font-size: 18px;">
+                                    <img src="http://tameson.com/img/logo-tameson.png" alt="TAMESON" />
+                                </a> -->
+                                <br />
+                                <p></p>
+                                <p>
+                                    <span style="font-size: 14px; color:#555">
+                                        Your partner in fluid control
+                                        <br />
+                                    </span>
+                                </p>
+                                <p>
+                                    <span style="font-size: 12px; color:#555">
+                                        T: +31 (0)40 750 5795 | E:
+                                        <a href="mailto:support@tameson.nl" style="color: #000577">support@tameson.nl</a>
+                                        | W:
+                                        <a href="http://tameson.nl" target="_blank" style="color: #000577">tameson.nl</a>
+                                        |
+                                        <a target="_blank" href="http://tameson.nl/algemene-voorwaarden.html" style="color: #000577">algemene voorwaarden</a>
+                                        </span>
+                                    <br />
+                                    <span style="font-size: 12px; color:#555">Torenallee 20 - 5617BC Eindhoven (NL) | KVK: 57331332 | BTW: NL852534991B01</span>
+                                </p>
+                            </t>
+                            <t t-elif="record.partner_id.country_id.code == 'GB'">
+                                <!-- <a href="http://tameson.co.uk" style="font-family:'Arial Black', Arial, sans-serif; text-decoration: none; color: #D00000; font-size: 18px;">
+                                    <img src="http://tameson.com/img/logo-tameson.png" alt="TAMESON" />
+                                </a> -->
+                                <br />
+                                <p>
+                                    <span style="font-size: 14px; color:#555">Your partner in fluid control</span>
+                                    <br />
+                                </p>
+                                <p>
+                                    <span style="font-size: 12px; color:#555">
+                                        T: +44 (0)330 8080 502 | E:
+                                        <a href="mailto:support@tameson.co.uk" style="color: #000577">support@tameson.co.uk</a>
+                                        | W:
+                                        <a href="http://tameson.co.uk" target="_blank" style="color: #000577">tameson.co.uk</a>
+                                        |
+                                        <a target="_blank" href="http://tameson.co.uk/terms-and-conditions.html" style="color: #000577">terms and conditions</a>
+                                    </span>
+                                    <br/>
+                                    <span style="font-size: 12px; color:#555">Torenallee 20 - 5617BC Eindhoven (NL) | Reg. (NL): 57331332 | VAT: NL852534991B01</span>
+                                </p>
+                            </t>
+                            <t t-else="">
+                                <!-- <a href="http://tameson.com" style="font-family:'Arial Black', Arial, sans-serif; text-decoration: none; color: #D00000; font-size: 18px;">
+                                    <img src="http://tameson.com/img/logo-tameson.png" alt="TAMESON" />
+                                </a> -->
+                                <br />
+                                <p>
+                                    <span style="font-size: 14px; color:#555">Your partner in fluid control</span>
+                                    <br />
+                                </p>
+                                <p>
+                                    <span style="font-size: 12px; color:#555">
+                                        T: +31 (0)40 750 5795 | E:
+                                        <a href="mailto:support@tameson.com" style="color: #000577">support@tameson.com</a>
+                                        | W:
+                                        <a href="http://tameson.com" target="_blank" style="color: #000577">tameson.com</a>
+                                        |
+                                        <a target="_blank" href="http://tameson.com/terms-and-conditions.html" style="color: #000577">terms and conditions</a>
+                                    </span>
+                                    <br/>
+                                    <span style="font-size: 12px; color:#555">Torenallee 20 - 5617BC Eindhoven (NL) | Reg. (NL): 57331332 | VAT: NL852534991B01</span>
+                                </p>
+                            </t>
+                        </div>
+                    </td>
+                </tr>                
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
