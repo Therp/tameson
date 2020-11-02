@@ -12,11 +12,12 @@ class StockPicking(models.Model):
         # when it exists (non aggregated dale order lines)
         res = super(StockPicking, self).write(values)
         for this in self:
-            for origin in this.origin.split(","):
-                purchase = self.env["purchase.order"].search([("name", "=", origin)])
-                if purchase:
-                    purchase.find_and_refresh_picking_in_out_associations()
-                    break
+            if this.origin:
+                for origin in this.origin.split(","):
+                    purchase = self.env["purchase.order"].search([("name", "=", origin)])
+                    if purchase:
+                        purchase.find_and_refresh_picking_in_out_associations()
+                        break
         return res
 
     @api.model
