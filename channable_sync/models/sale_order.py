@@ -366,7 +366,7 @@ class SaleOrder(models.Model):
         values = {
             'name': name,
             'email': data.get('email', '') or secondary_data.get('email', ''),
-            'phone': data.get('phone', '') or secondary_data.get('phone', ''),
+            'phone': data.get('phone', '') or secondary_data.get('phone', '') or '0000000000',
             'mobile': data.get('mobile', '') or secondary_data.get('mobile', ''),
             'street': data.get('address1', '') or secondary_data.get('address1', ''),
             'street2': street2,
@@ -436,7 +436,7 @@ class SaleOrder(models.Model):
             else:
                 partner.write({
                     'name': name or partner.name,
-                    'phone': phone or partner.phone,
+                    'phone': phone or partner.phone or '0000000000',
                     'mobile': mobile or partner.mobile,
                     'street': address1 or partner.street,
                     'street2': street2 or partner.street2,
