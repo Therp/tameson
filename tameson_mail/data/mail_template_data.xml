@@ -26,9 +26,6 @@ Dear
        % if object.origin:
        Origin: ${object.origin}<br />
        % endif
-       % if object.user_id:
-       Contact person: <a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.user_id.name}</a>
-       % endif
     </p>
     <br/>
     <p>
