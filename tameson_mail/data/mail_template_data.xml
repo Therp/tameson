@@ -19,22 +19,19 @@ Dear
     <p>Here is your new invoice: </p>
     <br/>
     <p style="border-left: 1px solid #8e0000; margin-left: 30px; padding-left: 5px;">
-       <strong>REFERENCES</strong><br />
-       Invoice Number : <strong>${object.name}</strong><br />
-       Total Amount: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
-       Invoice Date: ${object.invoice_date}<br />
-       % if object.origin:
-       Origin: ${object.origin}<br />
-       % endif
-    </p>
-    <br/>
-    <p>
+        <strong>REFERENCES</strong><br />
+        Invoice Number : <strong>${object.name}</strong><br />
+        Total Amount: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
+        Invoice Date: ${object.invoice_date}<br />
+        % if object.origin:
+        Origin: ${object.origin}<br />
+        % endif
+        <br/>
         % set ref = object.get_so_ref()
         % if ref:
             <span>Order message: ${ref} </span>
             <br/>
         % endif
-        
         % if object.invoice_payment_state != 'paid' and object.payment_term_id:
             <span>Payment term: ${object.payment_term_id.name}</span>
             <br/>
