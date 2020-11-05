@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <template id="mail_notification_paynow_tameson" inherit_id="mail.mail_notification_paynow">
             <xpath expr="//div[@t-if=&quot;is_online and not record._context.get('proforma')&quot;]" position="replace" />
             <xpath expr="/t/table/tr[2]" position="replace">
