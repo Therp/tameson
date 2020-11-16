@@ -12,12 +12,12 @@
     and UPS labels controller.
 
     This module also adds 2 new fields to products:
-    Minimal QTY Available and Minimal QTY Available Date. 
+    Minimal QTY Available and Minimal QTY Available Date.
     They inform a user of the minimal quantity of a product based on
     future stock moves as well as the date when this will occur.
     Also visible on the sales order line displaying a warning
     when the ordered quantity goes above it.
-    
+
     """,
     'author': "Tameson",
     'depends': [
@@ -29,6 +29,7 @@
     ],
     'data': [
         'data/cron.xml',
+        'data/cron_min_qty.xml',
         'data/migrations.xml',
         'report/picking_batch.xml',
         'report/stock.xml',

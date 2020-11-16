@@ -13,6 +13,13 @@ class SaleOrderLine(models.Model):
         readonly=True
     )
 
+    minimal_qty_available_stored = fields.Float(
+        related='product_id.minimal_qty_available_stored',
+        string=_('Product min qty available stored'),
+        readonly=True
+    )
+
+
     @api.onchange('product_uom_qty', 'product_uom', 'product_id')
     def _onchange_product_id_check_min_availability(self):
         if not self.product_id or not self.product_uom_qty or not self.product_uom:

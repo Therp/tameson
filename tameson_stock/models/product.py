@@ -1,6 +1,11 @@
+import logging
+from datetime import datetime, timedelta
 from collections import Counter
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DSDF
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductProduct(models.Model):
@@ -152,6 +157,17 @@ class ProductProduct(models.Model):
                 precision_rounding=product.uom_id.rounding
             )
 
+    def _minimal_qty_available_stored(self, field_names=None, arg=False):
+        for product in self:
+            product._minimal_qty_available()
+            try:
+                product.minimal_qty_available_stored = \
+                    product.minimal_qty_available
+                _logger.info('ReComputed MinQty for Pr {0}'.format(
+                    str(product.id)))
+            except:
+                pass
+        _logger.info('ReCompute Update for Prs complete')
 
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',
@@ -160,6 +176,33 @@ class ProductProduct(models.Model):
         help="Compute minimal QTY available in the future, including incoming "
              "and outgoing pickings."
     )
+
+    minimal_qty_available_stored = fields.Float(
+        digits='Product Unit of Measure',
+        string=_('Minimal QTY Available pre-calculated for export'),
+        store=True,
+        help="Compute minimal QTY available in the future, including incoming "
+             "and outgoing pickings. this is a stored field, precalculated for"
+             "faster exports."
+    )
+
+    def cron_recompute_min_qty_avail(self):
+        lasthour = datetime.now() - timedelta(hours=1)
+        lasthour_formatted = lasthour.strftime(DSDF)
+        domain = ['|', ('create_date', '>', lasthour_formatted),
+                  ('write_date', '>', lasthour_formatted)]
+        to_update_products = self.env['stock.move.line'].search(domain).mapped(
+            'product_id') + self.env['stock.move'].search(domain).mapped(
+                'product_id')
+        # add products with these products in BOM
+        bom_domain = [
+            ('bom_ids.bom_line_ids.product_id', 'in', to_update_products.ids)]
+        to_update_products += self.env['product.product'].search(
+            bom_domain)
+        to_update_products._minimal_qty_available_stored()
+
+    def cron_recompute_all_min_qty_avail_stored(self):
+        self.env['product.product'].search([])._minimal_qty_available_stored()
 
 
 class ProductTemplate(models.Model):
@@ -202,8 +245,36 @@ class ProductTemplate(models.Model):
                         if pv.minimal_qty_available
                     )
                 )
+                _logger.info('ReComputed MinQty for PrT {0}'.format(
+                    str(product.id)))
             except ValueError:
                 product.minimal_qty_available = False
+        _logger.info('ReCompute Update for Prtmpl complete')
+
+    def _minimal_qty_available_stored(self, field_names=None, arg=False):
+        for product in self:
+            product.minimal_qty_available_stored = \
+                product.minimal_qty_available
+
+    def cron_recompute_min_qty_avail(self):
+        lasthour = datetime.now() - timedelta(hours=1)
+        lasthour_formatted = lasthour.strftime(DSDF)
+        domain = ['|', ('create_date', '>', lasthour_formatted),
+                  ('write_date', '>', lasthour_formatted)]
+        to_update_product_tmpls = self.env['stock.move.line'].search(
+            domain).mapped('product_id.product_tmpl_id') + self.env[
+                'stock.move'].search(domain).mapped('product_tmpl_id')
+        # add products with these products in BOM
+        bom_domain = [
+            ('bom_ids.bom_line_ids.product_id.product_tmpl_id',
+             'in', to_update_product_tmpls.ids)]
+        to_update_product_tmpls += self.env['product.template'].search(
+            bom_domain
+        )
+        to_update_product_tmpls._minimal_qty_available_stored()
+
+    def cron_recompute_all_min_qty_avail_stored_tmpl(self):
+        self.env['product.template'].search([])._minimal_qty_available_stored()
 
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',
@@ -212,6 +283,15 @@ class ProductTemplate(models.Model):
         # fnct_search=_search_product_quantity,
         help="Compute minimal QTY available in the future, including incoming "
              "and outgoing pickings."
+    )
+
+    minimal_qty_available_stored = fields.Float(
+        digits='Product Unit of Measure',
+        string=_('Minimal QTY Available pre-calculated for export'),
+        store=True,
+        help="Compute minimal QTY available in the future, including incoming "
+             "and outgoing pickings. this is a stored field, precalculated for"
+             "faster exports."
     )
 
     rr_has_reordering_rules = fields.Boolean(

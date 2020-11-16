@@ -18,7 +18,10 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_kanban_details')]/ul[//li/field[@name='qty_available']]" position="after">
                 <ul position="inside">
-                    <li>Min qty: <field name="minimal_qty_available" /> <field name="uom_id" /></li>
+                    <li>
+                        Min qty: <field name="minimal_qty_available" /> 
+                        <field name="uom_id" />
+                    </li>
                 </ul>
             </xpath>
         </field>
