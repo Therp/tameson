@@ -41,4 +41,4 @@ class AccountMove(models.Model):
         }
 
     def get_so_ref(self):
-        return ', '.join(self.mapped('invoice_line_ids.sale_line_ids.order_id').filtered(lambda o: o.reference).mapped('client_order_ref'))
+        return ', '.join(self.mapped('invoice_line_ids.sale_line_ids.order_id').filtered(lambda o: o.client_order_ref).mapped('client_order_ref'))
