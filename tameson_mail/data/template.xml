@@ -9,6 +9,9 @@
                     </td>
                 </tr>
             </xpath>
+            <xpath expr="//t[@t-esc='message.record_name']" position="replace">
+                <t t-esc="message.env[message.model].browse(message.res_id).display_name"/>                
+            </xpath>
             <xpath expr="//tbody/tr[last()]" position="replace">
                 <tr>
                     <td style="padding: 0; font-size:11px;">
