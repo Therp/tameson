@@ -7,6 +7,7 @@ from wand.image import Image
 
 from odoo import api, fields, models, _
 from odoo.tools.pdf import merge_pdf
+from odoo.exceptions import UserError, ValidationError
 
 
 class StockPicking(models.Model):
@@ -91,10 +92,16 @@ class StockPicking(models.Model):
             r.t_payment_status = order and order.t_is_paid
 
     def action_done(self):
-        ret = super(StockPicking, self).action_done()
-
         # SO-44999 Create invoice for 'delivery' invoice policy
         for r in self:
+            try:
+                super(StockPicking, r).action_done()
+            except UserError as e:
+                msg = "%s: %s" % (r.name, e.name)
+                raise UserError(msg)
+            except ValidationError as e:
+                msg = "%s: %s" % (r.name, e.name)
+                raise ValidationError(msg)
             if r.sale_id:
                 if r.sale_id.t_invoice_policy == 'delivery' or r.sale_id.all_qty_delivered:
                     r.sale_id._create_invoice()
@@ -104,7 +111,7 @@ class StockPicking(models.Model):
             #     if r.purchase_id.t_purchase_method == 'receive':
             #         r.purchase_id._create_invoice()
 
-        return ret
+        return True
 
     def fill_done_qtys(self):
         for r in self:
