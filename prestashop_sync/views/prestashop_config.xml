@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Tree view for "prestashop.config" -->
+        <record id="view_prestashop_config_tree" model="ir.ui.view">
+            <field name="name">view.prestashop.config.tree</field>
+            <field name="model">prestashop.config</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="prestashop.config_tree">
+                    <field name="name" />
+                    <field name="url" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Form view for "prestashop.config" -->
+        <record id="view_prestashop_config_form" model="ir.ui.view">
+            <field name="name">view.prestashop.config.form</field>
+            <field name="model">prestashop.config</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="prestashop.config_form">
+                    <header>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" />
+                            <h1>
+                                <field name="name" class="oe_inline" placeholder="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="url" />
+                                <field name="key" />
+                                <field name="shop_group" />
+                                <field name="active" />
+                                <field name="sync_days" />
+                                <field name="batch_size" />
+                                <field name="discount_product_id" />
+                                <field name="source_id" />
+                                <field name="price_def_allowed" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Search view for "prestashop.config" -->
+        <record id="view_prestashop_config_search" model="ir.ui.view">
+            <field name="name">view.prestashop.config.search</field>
+            <field name="model">prestashop.config</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="prestashop.config_search">
+                    <field name="name" />
+                    <field name="url" />
+                </search>
+            </field>
+        </record>
+        
+        <!-- Main window action for "prestashop.config" -->
+        <record id="action_prestashop_config_act_window" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">PrestaShops</field>
+            <field name="res_model">prestashop.config</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">\{}</field>
+            <field name="search_view_id" ref="view_prestashop_config_search" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new Prestashop Configuration
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        <!-- Main menu for "prestashop.config" -->
+        <record id="menu_prestashop_config" model="ir.ui.menu" >
+            <field name="name">Prestashop Configuration</field>
+            <field name="sequence" eval="10" />
+            <field name="action" ref="action_prestashop_config_act_window" />
+            <field name="parent_id" ref="sale.menu_sale_config" />
+        </record>
+        
+    </data>
+</odoo>
