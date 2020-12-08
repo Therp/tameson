@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <record id="email_template_edi_invoice_tameson" model="mail.template">
             <field name="name">Invoice: Send by email - Tameson</field>
             <field name="model_id" ref="account.model_account_move"/>
@@ -19,46 +19,35 @@ Dear
     <p>Here is your new invoice: </p>
     <br/>
     <p style="border-left: 1px solid #8e0000; margin-left: 30px; padding-left: 5px;">
-       <strong>REFERENCES</strong><br />
-       Invoice Number : <strong>${object.name}</strong><br />
-       Total Amount: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
-       Invoice Date: ${object.invoice_date}<br />
-       % if object.origin:
-       Origin: ${object.origin}<br />
-       % endif
-       % if object.user_id:
-       Contact person: <a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.user_id.name}</a>
-       % endif
-    </p>  
-    
+        <strong>REFERENCES</strong><br />
+        Invoice Number : <strong>${object.name}</strong><br />
+        Total Amount: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
+        Invoice Date: ${object.invoice_date}<br />
+        % if object.origin:
+        Origin: ${object.origin}<br />
+        % endif
+        <br/>
+        % set ref = object.get_so_ref()
+        % if ref:
+            <span>Order message: ${ref} </span>
+            <br/>
+        % endif
+        % if object.invoice_payment_state != 'paid' and object.payment_term_id:
+            <span>Payment term: ${object.payment_term_id.name}</span>
+            <br/>
+        % endif
+
+        % if object.invoice_payment_state == 'paid':
+            <strong>Notice: This invoice has been paid.</strong>
+            <br/>
+        % endif
+    </p>
     <br/>
     <p>Do not hesitate to contact us if you have any questions.</p>
     <p>Thank You for choosing ${object.company_id.name or 'us'}</p>
     <br/>
     <br/>
 </div>
-<div>
-    % if object.partner_id.lang == 'nl_NL':
-        <a href="http://tameson.nl" style="font-family:'Arial Black', Arial, sans-serif; text-decoration: none; color: #D00000; font-size: 18px;"><img src="http://tameson.com/img/logo-tameson.png" alt="TAMESON"/></a><br/><p></p><p>
-        <span style="font-size: 14px; color:#555">Your partner in fluid control<br/></span></p><p>
-        <span style="font-size: 12px; color:#555">T:</span> +31 (0)40 750 5795 | E: <a href="mailto:support@tameson.nl" style="color: #000577">support@tameson.nl</a> | W: <a href="http://tameson.nl" target="_blank" style="color: #000577">tameson.nl</a> | <a target="_blank" href="http://tameson.nl/algemene-voorwaarden.html" style="color: #000577">algemene voorwaarden</a><br/></p><p>
-        <span style="font-size: 12px; color:#555">Torenallee 20 - 5617BC Eindhoven (NL) | KVK: 57331332 | BTW: NL852534991B01</span>
-
-    % elif object.partner_id.country_id.code == 'GB':
-        <a href="http://tameson.co.uk" style="font-family:'Arial Black', Arial, sans-serif; text-decoration: none; color: #D00000; font-size: 18px;"><img src="http://tameson.com/img/logo-tameson.png" alt="TAMESON"/></a>
-        <br/></p><p>
-        <span style="font-size: 14px; color:#555">Your partner in fluid control</span><br/></p><p>
-        <span style="font-size: 12px; color:#555">T: +44 (0)330 8080 502 | E: <a href="mailto:support@tameson.co.uk" style="color: #000577">support@tameson.co.uk</a> | W: <a href="http://tameson.co.uk" target="_blank" style="color: #000577">tameson.co.uk</a> | <a target="_blank" href="http://tameson.co.uk/terms-and-conditions.html" style="color: #000577">terms and conditions</a></span>
-        <span style="font-size: 12px; color:#555">Torenallee 20 - 5617BC Eindhoven (NL) | Reg. (NL): 57331332 | VAT: NL852534991B01</span>
-
-    % else:
-        <a href="http://tameson.com" style="font-family:'Arial Black', Arial, sans-serif; text-decoration: none; color: #D00000; font-size: 18px;"><img src="http://tameson.com/img/logo-tameson.png" alt="TAMESON"/></a>
-        <br/></p><p>
-        <span style="font-size: 14px; color:#555">Your partner in fluid control</span><br/></p><p>
-        <span style="font-size: 12px; color:#555">T: +31 (0)40 750 5795 | E: <a href="mailto:support@tameson.com" style="color: #000577">support@tameson.com</a> | W: <a href="http://tameson.com" target="_blank" style="color: #000577">tameson.com</a> | <a target="_blank" href="http://tameson.com/terms-and-conditions.html" style="color: #000577">terms and conditions</a></span>
-        <span style="font-size: 12px; color:#555">Torenallee 20 - 5617BC Eindhoven (NL) | Reg. (NL): 57331332 | VAT: NL852534991B01</span>
-    % endif
-</p></div>
             </field>
             <field name="report_template" ref="account.account_invoices"/>
             <field name="report_name">Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
