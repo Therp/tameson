@@ -92,10 +92,12 @@ class StockPicking(models.Model):
             r.t_payment_status = order and order.t_is_paid
 
     def action_done(self):
+        rets = True
         # SO-44999 Create invoice for 'delivery' invoice policy
         for r in self:
             try:
-                super(StockPicking, r).action_done()
+                ret = super(StockPicking, r).action_done()
+                rets = rets and ret
             except UserError as e:
                 msg = "%s: %s" % (r.name, e.name)
                 raise UserError(msg)
@@ -111,7 +113,7 @@ class StockPicking(models.Model):
             #     if r.purchase_id.t_purchase_method == 'receive':
             #         r.purchase_id._create_invoice()
 
-        return True
+        return rets
 
     def fill_done_qtys(self):
         for r in self:
