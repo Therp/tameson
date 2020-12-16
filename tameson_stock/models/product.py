@@ -163,8 +163,6 @@ class ProductProduct(models.Model):
             try:
                 product.minimal_qty_available_stored = \
                     product.minimal_qty_available
-                _logger.info('ReComputed MinQty for Pr {0}'.format(
-                    str(product.id)))
             except:
                 pass
         _logger.info('ReCompute Update for Prs complete')
@@ -245,8 +243,6 @@ class ProductTemplate(models.Model):
                         if pv.minimal_qty_available
                     )
                 )
-                _logger.info('ReComputed MinQty for PrT {0}'.format(
-                    str(product.id)))
             except ValueError:
                 product.minimal_qty_available = False
         _logger.info('ReCompute Update for Prtmpl complete')
