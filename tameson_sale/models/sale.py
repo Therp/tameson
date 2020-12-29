@@ -208,6 +208,8 @@ class SaleOrder(models.Model):
 
     def _send_invoice(self):
         new_invoice_ids = self.invoice_ids.filtered(lambda i: not i.invoice_sent)
+        if not new_invoice_ids:
+            return
         view_data = new_invoice_ids.with_context(
             active_id=self.id,
             active_ids=self.ids,
