@@ -225,7 +225,7 @@ class PrestashopConfig(models.Model):
         CeleryTask = self.env['celery.task']
         self = self.browse(config)
         Sale = self.env['sale.order']
-        orders = Sale.search([('prestashop_config_id','=',config),('state','not in',('cancel','sale')),('prestashop_module','not in',('invoicepayment','ps_wirepayment'))])
+        orders = Sale.search([('prestashop_config_id','=',config),('state','not in',('cancel','sale'))])
         prestashop_order_ids = orders.mapped('prestashop_id')
         Request = PrestashopRequest(self.url, self.key, self.shop_group)
         params = {
@@ -244,7 +244,7 @@ class PrestashopConfig(models.Model):
         order_data_dict = Request.get_by_ids('orders', ids=prestashop_order_ids, fields='[id,module,total_paid_tax_incl]')
         for order in orders:
             data = order_data_dict[order.prestashop_id]
-            if order.prestashop_id in confirmed_prestashop_order_ids or data['module'] in ('invoicepayment','ps_wirepayment'):
+            if order.prestashop_id in confirmed_prestashop_order_ids or data['module'] == 'ps_wirepayment':
                 CeleryTask.call_task('sale.order', 'prestashop_order_process', so_id=order.id, data=data, celery=celery, celery_task_vals={'ref': order.name})
         return True
 

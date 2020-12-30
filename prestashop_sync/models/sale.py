@@ -58,7 +58,7 @@ class SaleOrderPresta(models.Model):
             product_id = self.env['product.product'].search([('default_code','=ilike',line['product_reference'])],limit=1)
             if not product_id:
                 raise UserError('Product for reference %s not found.' % line['product_reference'])
-                # product_id = self.env['product.product'].create({'default_code': line['product_reference'], 'name': line['product_name']})
+                # product_id = self.env['product.product'].create({'default_code': line['product_reference'], 'name': line['product_name'], 'type': 'product'})
             lines.append((0, 0, {
                 'product_id': product_id.id, 
                 'name': product_id.name, 
@@ -74,6 +74,7 @@ class SaleOrderPresta(models.Model):
             'pricelist_id': pricelist_id.id,
             'prestashop_id': prestashop_id,
             'prestashop_module': prestashop_module,
+            't_invoice_policy': 'delivery' if prestashop_module == 'invoicepayment' else False,
             'prestashop_date_upd': prestashop_date_upd,
             'prestashop_config_id': prestashop_config_id,
             'order_line': lines,
@@ -145,12 +146,7 @@ class SaleOrderPresta(models.Model):
         if float_compare(price_difference, self.prestashop_config_id.price_def_allowed, precision_digits=2) == 1:
             raise UserError('Total amount mismatch odoo: %.2f presta: %.2f' % (self.amount_total, presta_total))
         module = data['module']
-        if module == 'invoicepayment':
-            if self.state == 'sale':
-                return True
-            self.t_invoice_policy = 'delivery'
-            self.action_confirm()
-        elif module == 'ps_wirepayment':
+        if module == 'ps_wirepayment':
             if self.invoice_ids:
                 return True
             prepayment = self.env['account.payment.term'].search([('name','=','Prepayment')], limit=1)
@@ -183,3 +179,7 @@ class SaleOrderPresta(models.Model):
             payment.post()
             self.invoice_ids.post()
         return True
+    
+    def confirm_invoicepayment(self):
+        for sale in self.search([('state', 'in', ('draft', 'sent')), ('prestashop_module', '=', 'invoicepayment')]):
+            sale.action_confirm()
