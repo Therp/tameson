@@ -84,7 +84,7 @@
             expr="//td[@t-if=&quot;display_discount&quot;]"
             position="after">
             <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                <span class="text-nowrap" t-esc="line.price_unit - (line.price_unit*(line.discount/100.00))"/>
+                <span class="text-nowrap" t-esc="round(line.price_unit - (line.price_unit*(line.discount/100.00)),2)"/>
             </td>
         </xpath>
     </template>
