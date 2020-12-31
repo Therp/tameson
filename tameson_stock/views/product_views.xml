@@ -25,7 +25,6 @@
                     </li>
                     <li>
                         Location: <field name="t_location" /> 
-                        <field name="uom_id" />
                     </li>
                 </ul>
             </xpath>
