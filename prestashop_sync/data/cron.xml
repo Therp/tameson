@@ -23,5 +23,16 @@
             <field name="state">code</field>
             <field name="code">model.cron_sync_order_status()</field>
         </record>
+        <record forcecreate="True" id="ir_cron_confirm_invoicepayment" model="ir.cron">
+            <field name="name">PrestaShop: Confirm order 'invoicepayment'</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="sale.model_sale_order" />
+            <field name="state">code</field>
+            <field name="code">model.confirm_invoicepayment()</field>
+        </record>
     </data>
 </odoo>
