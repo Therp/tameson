@@ -53,4 +53,15 @@
             </xpath>
         </field>
     </record>
+    
+    <record model="ir.ui.view" id="stock_picking_batch_form">
+        <field name="name">stock.picking.batch.form_t</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
+        <field name="arch" type="xml">
+			<xpath expr="//field[@name='origin']" position="after">
+				<field name="t_delivery_allowed"/>        
+			</xpath>
+        </field>
+    </record>
 </odoo>
