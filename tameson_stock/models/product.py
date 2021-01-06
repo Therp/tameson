@@ -202,6 +202,15 @@ class ProductProduct(models.Model):
     def cron_recompute_all_min_qty_avail_stored(self):
         self.env['product.product'].search([])._minimal_qty_available_stored()
 
+    def action_view_stock_moves(self):
+        self.ensure_one()
+        action = self.env.ref('stock.stock_move_action').read()[0]
+        action.update({
+            'domain': [('product_id', '=', self.id)],
+            'context': {'create': 0, 'search_default_future': True}
+        })
+        return action
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -295,3 +304,12 @@ class ProductTemplate(models.Model):
         search=_search_has_reordering_rules,
         string=_('Has reordering rules')
     )
+
+    def action_view_stock_moves(self):
+        self.ensure_one()
+        action = self.env.ref('stock.stock_move_action').read()[0]
+        action.update({
+            'domain': [('product_id', '=', self.id)],
+            'context': {'create': 0, 'search_default_future': True}
+        })
+        return action
