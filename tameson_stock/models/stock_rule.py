@@ -14,6 +14,8 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.osv import expression
 from odoo.tools.misc import split_every
 
+#Function: unreserve stock moves that lie 'auto_reservation_days' days in the future,  after that reserve moves that are within now till that date
+#Reason: ODOO normally reserves from stock-on-hand without taking into account future incoming stock moves that are not done yet, this can lead to stock moves not being reserved when an incoming move qty covers an outgoing move qty at a later date. As we have our min_qty field that already takes into account the allowed amount that can be sold, this solves the issue of moves not being reserved while they should be.  
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
