@@ -4,18 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e-20200624\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-16 08:22+0000\n"
-"PO-Revision-Date: 2020-07-16 10:27+0200\n"
+"POT-Creation-Date: 2021-01-11 08:58+0000\n"
+"PO-Revision-Date: 2021-01-11 08:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"Language: nl\n"
-"X-Generator: Poedit 2.3.1\n"
 
 #. module: tameson_sale
 #: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
@@ -42,9 +40,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
 msgid ""
 "<span>Page:</span>\n"
-"                        <span class=\"page\"/>\n"
-"                        <span>/</span>\n"
-"                        <span class=\"topage\"/>"
+"                                <span class=\"page\"/>\n"
+"                                <span>/</span>\n"
+"                                <span class=\"topage\"/>"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid ""
+"<strong>Fiscal Position Remark: </strong>\n"
+"                <span>VAT reverse charge - export out of EU</span>"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid ""
+"<strong>Fiscal Position Remark: </strong>\n"
+"                <span>intra-community transaction</span>"
 msgstr ""
 
 #. module: tameson_sale
@@ -75,8 +87,20 @@ msgstr ""
 
 #. module: tameson_sale
 #: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid ""
+"<strong>Remark: </strong>\n"
+"                <span>This is a credit note / refund</span>"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__all_qty_delivered
+msgid "All quantities delivered"
 msgstr ""
 
 #. module: tameson_sale
@@ -85,8 +109,8 @@ msgstr ""
 #: model:ir.model.fields,help:tameson_sale.field_res_company__report_header2
 #: model:ir.model.fields,help:tameson_sale.field_res_company__report_header3
 msgid ""
-"Appears by default on the top right corner of your printed documents "
-"(report header)."
+"Appears by default on the top right corner of your printed documents (report"
+" header)."
 msgstr ""
 
 #. module: tameson_sale
@@ -116,8 +140,23 @@ msgid "Contents:"
 msgstr ""
 
 #. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_res_country
+msgid "Country"
+msgstr ""
+
+#. module: tameson_sale
 #: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
 msgid "Create Invoice"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_country__select_lang
+msgid "Default Language"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_country__select_shipment_id
+msgid "Default Shipment"
 msgstr ""
 
 #. module: tameson_sale
@@ -168,6 +207,7 @@ msgstr ""
 
 #. module: tameson_sale
 #: code:addons/tameson_sale/models/sale.py:0
+#: code:addons/tameson_sale/models/sale.py:0
 #: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_invoice_policy
 #: model:ir.model.fields,field_description:tameson_sale.field_sale_order_line__t_invoice_policy
 #, python-format
@@ -202,6 +242,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order__t_invoice_policy__order
 #: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order_line__t_invoice_policy__order
 msgid "Ordered quantities"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__payment_term_name
+msgid "Payment Terms"
 msgstr ""
 
 #. module: tameson_sale
@@ -272,6 +317,7 @@ msgstr ""
 
 #. module: tameson_sale
 #: code:addons/tameson_sale/models/sale.py:0
+#: code:addons/tameson_sale/models/sale.py:0
 #, python-format
 msgid "You must configure your mail address."
 msgstr ""
@@ -294,20 +340,4 @@ msgstr ""
 #. module: tameson_sale
 #: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
 msgid "support@tameson.nl"
-msgstr ""
-
-#. module: tameson_sale
-#: model:ir.ui.view,arch_db:tameson_sale.report_invoice_document
-#: model:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
-msgid ""
-"<strong>Fiscal Position Remark: </strong>\n"
-"                <span>VAT reverse charge - export out of EU</span>"
-msgstr ""
-
-#. module: tameson_sale
-#: model:ir.ui.view,arch_db:tameson_sale.report_invoice_document
-#: model:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
-msgid ""
-"<strong>Fiscal Position Remark: </strong>\n"
-"                <span>intra-community transaction</span>"
 msgstr ""
