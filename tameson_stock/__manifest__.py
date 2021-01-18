@@ -28,6 +28,7 @@
         'tameson_product',
     ],
     'data': [
+        'data/params.xml',
         'data/cron.xml',
         'data/cron_min_qty.xml',
         'data/migrations.xml',
