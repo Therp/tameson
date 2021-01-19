@@ -21,9 +21,9 @@ class StockPicking(models.Model):
         return res
 
     @api.model
-    def created(self, values):
+    def create(self, values):
         res = super(StockPicking, self).create(values)
-        for origin in self.origin.split(","):
+        for origin in res.origin.split(","):
             purchase = self.env["purchase.order"].search([("name", "=", origin)])
             if purchase:
                 purchase.find_and_refresh_picking_in_out_associations()
