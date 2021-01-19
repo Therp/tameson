@@ -1,6 +1,6 @@
 # Copyright 2020 Therp BV <https://therp.nl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-from odoo import models
+from odoo import api, models
 
 
 class PurchaseOrder(models.Model):
@@ -30,3 +30,10 @@ class PurchaseOrder(models.Model):
                     in_moves.write(
                         {"origin_so_picking_ids": [(6, 0, out_pickings.ids)]}
                     )
+
+    def _create_picking(self):
+        res = super(PurchaseOrder, self)._create_picking()
+        self.find_and_refresh_picking_in_out_associations()
+        return res
+
+
