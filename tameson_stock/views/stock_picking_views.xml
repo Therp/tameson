@@ -60,8 +60,11 @@
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
         <field name="arch" type="xml">
 			<xpath expr="//field[@name='origin']" position="after">
-				<field name="t_delivery_allowed"/>        
-			</xpath>
+				<field name="t_delivery_allowed"/>
+            </xpath>
+            <xpath expr="//header[1]//button[last()]" position="after">
+                <button name="print_batch_stock_picking_invoices" string="Picking invoices" type="object" class="oe_highlight"/>                
+            </xpath>
         </field>
     </record>
     <record id="view_move_tree" model="ir.ui.view">

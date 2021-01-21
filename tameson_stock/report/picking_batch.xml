@@ -8,6 +8,7 @@
         name="tameson_stock.report_batch_picking_invoice"
         file="tameson_stock.report_batch_picking_invoice"
         print_report_name="'Picking Invoices - %s' % object.name"
+        menu="False"
         />
 
     <template id="report_picking_batch"
