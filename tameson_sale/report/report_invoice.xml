@@ -63,8 +63,8 @@
         <xpath
             expr="//th[@name='th_description']"
             position="after">
-            <t t-set="display_intrastatcode" t-value="any([l.product_id and l.product_id.intrastat_id for l in o.invoice_line_ids])"/>
-            <th name="th_intrastat_code" t-if="display_intrastatcode" class="text-left"><span>Intrastat</span></th>
+            <t t-set="display_hscode" t-value="any([l.product_id and l.product_id.hs_code for l in o.invoice_line_ids])"/>
+            <th name="th_hs_code" t-if="display_hscode" class="text-left"><span>HS code</span></th>
         </xpath>
         <xpath
             expr="//th[@name='th_price_unit']"
@@ -90,9 +90,9 @@
                     </t>
                 </t>
             </td>
-            <td class="text-right" t-if="display_intrastatcode">
-                <t t-if="line.product_id and line.product_id.intrastat_id">
-                    <span t-field="line.product_id.intrastat_id and line.product_id.intrastat_id.code"/>
+            <td class="text-right" t-if="display_hscode">
+                <t t-if="line.product_id and line.product_id.hs_code">
+                    <span t-field="line.product_id.hs_code"/>
                 </t>
             </td>
         </xpath>
