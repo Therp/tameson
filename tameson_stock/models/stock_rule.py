@@ -32,7 +32,8 @@ class ProcurementGroup(models.Model):
         moves_domain = [
             ('state', 'in', ['assigned', 'partially_available']),
             ('product_uom_qty', '!=', 0.0),
-            ('date_expected', '>', (datetime.now() + relativedelta(days=days)).strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+            ('date_expected', '>', (datetime.now() + relativedelta(days=days)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+            ('picking_code', '=', 'outgoing')
         ]
         if company_id:
             moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
