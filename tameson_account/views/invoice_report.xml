@@ -17,6 +17,9 @@
                             Tracking number: <t t-esc="picking.carrier_tracking_ref" />
                         </div>
                         <div>
+                            Origin: The exporter of the products covered by this document declares that, except where otherwise clearly indicated, these products are of EU preferential origin.
+                        </div>                        
+                        <div>
                             <img alt="Signature" class="col-6 d-block img img-fluid" src="/tameson_account/static/src/img/signature.png"/>
                         </div>
                     </t>
