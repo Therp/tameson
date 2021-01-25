@@ -3,7 +3,7 @@
     <data noupdate="0">
         <template id="report_invoice_document" inherit_id="account.report_invoice_document">
             <xpath expr="//div[@id='qrcode']" position="after">
-                <div class="col-6">
+                <div class="col-12">
                     <t t-set="picking" t-value="o.get_picking_ids()" />
                     <t t-if="picking and all(picking.mapped('carrier_tracking_ref'))" >
                         <t t-set="picking" t-value="picking[0]" />
@@ -15,10 +15,13 @@
                         </div>
                         <div>
                             Tracking number: <t t-esc="picking.carrier_tracking_ref" />
-                        </div>
+                        </div>                       
                         <div>
                             <img alt="Signature" class="col-6 d-block img img-fluid" src="/tameson_account/static/src/img/signature.png"/>
                         </div>
+                        <div>
+                            Preferential origin: The exporter of the products covered by this document declares that, except where otherwise clearly indicated, these products are of EU preferential origin.
+                        </div> 
                     </t>
                 </div>
             </xpath>
