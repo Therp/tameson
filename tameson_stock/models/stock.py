@@ -141,3 +141,6 @@ class StockPickingBatch(models.Model):
 
     def get_ups_image_attachments(self, format='png'):
         yield from self.picking_ids.get_ups_image_attachments(format=format)
+
+    def print_batch_stock_picking_invoices(self):
+        return self.env.ref('tameson_stock.batch_stock_picking_invoices').report_action(self)
