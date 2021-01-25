@@ -309,7 +309,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.stock_move_action').read()[0]
         action.update({
-            'domain': [('product_id', '=', self.id)],
+            'domain': [('product_id', 'in', self.product_variant_ids.ids)],
             'context': {'create': 0, 'search_default_future': True}
         })
         return action
