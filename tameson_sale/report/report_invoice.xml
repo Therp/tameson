@@ -103,16 +103,16 @@
                 <span class="text-nowrap" t-esc="round(line.price_unit - (line.price_unit*(line.discount/100.00)),2)"/>
             </td>
         </xpath>
-        <xpath
-            expr="//p[@t-if=&quot;o.type in ('out_invoice', 'in_refund')&quot;]"
-            position="replace">
+        <xpath expr="//p[@t-if=&quot;o.type in ('out_invoice', 'in_refund')&quot;]" position="replace">
             <p t-if="o.fiscal_position_id and o.fiscal_position_id.name == 'EU landen'">
                 <strong>Fiscal Position Remark: </strong>
                 <span>intra-community transaction</span>
             </p>
             <p t-if="o.fiscal_position_id and o.fiscal_position_id.name == 'Niet-EU landen'">
                 <strong>Fiscal Position Remark: </strong>
-                <span>VAT reverse charge - export out of EU</span>
+                <span>VAT reverse charge - export out of EU</span><br/>
+                <strong>Preferential origin:</strong> 
+                <span>The exporter of the products covered by this document declares that, except where otherwise clearly indicated, these products are of EU preferential origin.</span>
             </p>
             <p t-if="o.type == 'out_refund'">
                 <strong>Remark: </strong>
