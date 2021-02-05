@@ -3,25 +3,18 @@
     <data noupdate="0">
         <template id="report_invoice_document" inherit_id="account.report_invoice_document">
             <xpath expr="//div[@id='qrcode']" position="after">
-                <div class="col-12">
-                    <t t-set="picking" t-value="o.get_picking_ids()" />
-                    <t t-if="picking and all(picking.mapped('carrier_tracking_ref'))" >
-                        <t t-set="picking" t-value="picking[0]" />
-                        <div>
-                            Shipping method: <t t-esc="picking.carrier_id.name" />
-                        </div>
-                        <div>
-                            Shipping date: <span t-field="picking.date_done" t-options="{'widget': 'date'}" />
-                        </div>
-                        <div>
-                            Tracking number: <t t-esc="picking.carrier_tracking_ref" />
-                        </div>                       
-                        <div>
-                            <img alt="Signature" class="col-6 d-block img img-fluid" src="/tameson_account/static/src/img/signature.png"/>
-                        </div>
-                        <div>
-                            Preferential origin: The exporter of the products covered by this document declares that, except where otherwise clearly indicated, these products are of EU preferential origin.
+                <div class="row">
+                    <t t-set="picking" t-value="o.get_picking_ids()"/>
+                    <t t-if="picking and all(picking.mapped('carrier_tracking_ref'))">
+                        <t t-set="picking" t-value="picking[0]"/>
+                        <div class="col-7">
+                            <strong>Shipping method:</strong> <t t-esc="picking.carrier_id.name"/><br/>
+                            <strong>Shipping date:</strong> <span t-field="picking.date_done" t-options="{'widget': 'date'}"/><br/>
+                            <strong>Tracking number:</strong> <t t-esc="picking.carrier_tracking_ref"/><br/>
                         </div> 
+                        <div class="col-4">
+                            <img alt="Signature" class="col-9 d-block img img-fluid" src="/tameson_account/static/src/img/signature.png"/>
+                        </div>
                     </t>
                 </div>
             </xpath>
