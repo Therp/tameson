@@ -5,6 +5,8 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
+from datetime import datetime, timezone
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from dateutil.relativedelta import relativedelta
@@ -69,10 +71,12 @@ class PrestashopConfig(models.Model):
             'interval_start': 1,
         }
         celery_task_vals = {'ref': 'Create/update Order From Prestashop'}
-        from_time = Sale.search([('prestashop_config_id','=',self.id)], order='prestashop_date_upd DESC', limit=1).prestashop_date_upd
-        if not from_time:
-            from_time = (fields.Datetime.now()-relativedelta(days=self.sync_days)).strftime("%Y-%m-%d 00:00:00")
-        to_time = fields.Datetime.now().strftime("%Y-%m-%d 23:59:59")
+
+        # from_time = Sale.search([('prestashop_config_id','=',self.id)], order='prestashop_date_upd DESC', limit=1).prestashop_date_upd
+        now_dt = datetime.now(tz=timezone.utc) + relativedelta(hours=2)
+        to_time = now_dt.strftime(DATEFORMAT)
+        from_time = (now_dt + relativedelta(days=-self.sync_days)).strftime(DATEFORMAT)
+
         request_params = {
             'display': '[id,id_address_delivery,id_address_invoice,id_cart,id_currency,id_lang,id_customer,id_carrier,current_state,module,date_upd,id_shop,total_paid_tax_excl,total_shipping_tax_excl,reference,user_invoice_email,ups_id_access_point,ups_country_iso,user_reference,total_discounts_tax_excl]',
             'filter[date_upd]': '[%s,%s]' % (from_time, to_time),
@@ -136,8 +140,8 @@ class PrestashopConfig(models.Model):
                 order.update(order_rows=order_rows.get(order_id,[]))
                 sale_order = Sale.search([('prestashop_config_id','=',self.id),('prestashop_id','=',order_id)], limit=1)
                 if sale_order:
-                    CeleryTask.call_task('sale.order', 'update_from_prestashop', so_id=sale_order.id, order=order, celery=celery, 
-                        celery_task_vals={'ref': 'Update existing order from prestashop: %s' % sale_order.name})
+                    # CeleryTask.call_task('sale.order', 'update_from_prestashop', so_id=sale_order.id, order=order, celery=celery, 
+                    #     celery_task_vals={'ref': 'Update existing order from prestashop: %s' % sale_order.name})
                     updated += 1
                 else:
                     customer = all_customer_data[order.get('id_customer', '0')]
