@@ -8,6 +8,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
+from odoo.tools.misc import formatLang, get_lang
 
 CURRENCIES = {
     '1': 'EUR',
@@ -54,6 +55,7 @@ class SaleOrderPresta(models.Model):
         if not pricelist_id:
             raise UserError('%s currency pricelist not found.' % CURRENCIES[order_data['id_currency']])
         lines = []
+        lang = get_lang(self.env, partner.lang).code
         for line in order_data['order_rows']:
             product_id = self.env['product.product'].search([('default_code','=ilike',line['product_reference'])],limit=1)
             if not product_id:
@@ -61,7 +63,7 @@ class SaleOrderPresta(models.Model):
                 # product_id = self.env['product.product'].create({'default_code': line['product_reference'], 'name': line['product_name'], 'type': 'product'})
             lines.append((0, 0, {
                 'product_id': product_id.id, 
-                'name': product_id.name, 
+                'name': product_id.with_context(lang=lang).get_product_multiline_description_sale(), 
                 'product_uom_qty': float(line['product_quantity']),
                 'price_unit': float(line['unit_price_tax_excl']),
                 }
