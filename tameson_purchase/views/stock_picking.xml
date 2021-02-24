@@ -19,7 +19,7 @@
                 <button 
                     name="do_print_picking_origin_so" 
                     type="object"
-                    string="Print Origin SO Picking Operations"
+                    string="Print Origin Deliveries"
                     groups="stock.group_stock_user"
                     attrs ="{'invisible': [('picking_type_id', '!=', %(stock.picking_type_in)d)]}"
                     >
