@@ -38,6 +38,36 @@ class StockWarehouseOrderpoint(models.Model):
     def cron_recompute_rr(self):
         self.env['stock.warehouse.orderpoint'].search([])._compute_rr()
 
+    @api.model
+    def cron_validate_orderpoint_product_routes(self):
+        mtomts_id = self.env['stock.location.route'].search([['name', '=', 'Make To Order + Make To Stock']])[0]
+        buy_id = self.env['stock.location.route'].search([['name', '=', 'Buy']])[0]
+
+        orderpoint_route_ids = sorted([buy_id.id])
+        non_orderpoint_route_ids = sorted([mtomts_id.id, buy_id.id])
+
+        orderpoints = self.env['stock.warehouse.orderpoint'].search_read([], ['product_id'])
+        orderpoint_pp_ids = set(swo['product_id'][0] for swo in orderpoints)
+        orderpoint_pt_ids = set(
+            pp['product_tmpl_id'][0]
+            for pp in self.env['product.product'].search_read([['id', 'in', list(orderpoint_pp_ids)]], ['product_tmpl_id'])
+        )
+        wrong_orderpoint_pt_ids = set(
+            pt['id']
+            for pt in self.env['product.template'].search_read([['id', 'in', list(orderpoint_pt_ids)]], ['id', 'route_ids'])
+            if sorted(pt['route_ids']) != orderpoint_route_ids
+        )
+
+        non_orderpoint_pt_ids = set(
+            pt['id']
+            for pt in self.env['product.template'].search_read([['id', 'not in', list(orderpoint_pt_ids)]], ['id'])
+        )
+        wrong_non_orderpoint_pt_ids = set(
+            pt['id']
+            for pt in self.env['product.template'].search_read([['id', 'in', list(non_orderpoint_pt_ids)]], ['id', 'route_ids'])
+            if sorted(pt['route_ids']) != non_orderpoint_route_ids
+        )
+
     def _compute_rr(self):
         self._compute_rr_supplier()
         # No need to compute rr_out_3m as it's computed in rr_max_out_3m
