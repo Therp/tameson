@@ -6,8 +6,8 @@
             id="action_report_picking_origin_so"
             model="stock.picking"
             report_type="qweb-pdf"
-            name="tameson_stock.report_delivery_document"
-            file="tameson_stock.report_delivery_documents"
+            name="stock.report_deliveryslip"
+            file="stock.report_deliveryslips"
             print_report_name="'Deliveries - %s - %s' % (object.partner_id.name or '', object.name)"
         />
     </data>
