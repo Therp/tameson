@@ -57,6 +57,9 @@ class StockWarehouseOrderpoint(models.Model):
             for pt in self.env['product.template'].search_read([['id', 'in', list(orderpoint_pt_ids)]], ['id', 'route_ids'])
             if sorted(pt['route_ids']) != orderpoint_route_ids
         )
+        if wrong_orderpoint_pt_ids:
+            # fix products
+            self.env['product.template'].browse(list(wrong_orderpoint_pt_ids)).write({'route_ids': orderpoint_route_ids})
 
         non_orderpoint_pt_ids = set(
             pt['id']
@@ -67,6 +70,9 @@ class StockWarehouseOrderpoint(models.Model):
             for pt in self.env['product.template'].search_read([['id', 'in', list(non_orderpoint_pt_ids)]], ['id', 'route_ids'])
             if sorted(pt['route_ids']) != non_orderpoint_route_ids
         )
+        if wrong_non_orderpoint_pt_ids:
+            # fix products
+            self.env['product.template'].browse(list(wrong_non_orderpoint_pt_ids)).write({'route_ids': non_orderpoint_route_ids})
 
     def _compute_rr(self):
         self._compute_rr_supplier()
