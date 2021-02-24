@@ -2,13 +2,13 @@
 <odoo>
     <data>
         <report
-            string="Origin SO Picking Operations"
+            string="Origin SO Deliveries"
             id="action_report_picking_origin_so"
             model="stock.picking"
             report_type="qweb-pdf"
-            name="stock.report_picking"
-            file="stock.report_picking_operations"
-            print_report_name="'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
+            name="tameson_stock.report_delivery_document"
+            file="tameson_stock.report_delivery_documents"
+            print_report_name="'Deliveries - %s - %s' % (object.partner_id.name or '', object.name)"
         />
     </data>
 </odoo>
