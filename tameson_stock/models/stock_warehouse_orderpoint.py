@@ -74,6 +74,14 @@ class StockWarehouseOrderpoint(models.Model):
             # fix products
             self.env['product.template'].browse(list(wrong_non_orderpoint_pt_ids)).write({'route_ids': non_orderpoint_route_ids})
 
+    @api.model
+    def fix_product_route(self):
+        pt = self.product_id.product_tmpl_id
+
+        buy_id = self.env['stock.location.route'].search([['name', '=', 'Buy']])[0]
+
+        pt.route_ids = [(6, 0, [buy_id.id])]
+
     def _compute_rr(self):
         self._compute_rr_supplier()
         # No need to compute rr_out_3m as it's computed in rr_max_out_3m
