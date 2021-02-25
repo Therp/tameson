@@ -353,15 +353,13 @@ class SaleOrder(models.Model):
         address2 = data.get('address2', '') or secondary_data.get('address2', '')
         address_supplement = data.get('address_supplement', '') or secondary_data.get('address_supplement', '')
         street2 = '{address2} {address_supplement}'.format(address2=address2, address_supplement=address_supplement)
+        names = [data.get('first_name', ''), data.get('middle_name', ''), data.get('last_name', '')]
+        full_name = ' '.join([n for n in names if n])
         if is_company:
             name = data.get('company', '')
-            comment = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
-                                                                      middle_name=data.get('middle_name', ''),
-                                                                      last_name=data.get('last_name', ''))
+            comment = full_name
         else:
-            name = '{first_name} {middle_name} {last_name}'.format(first_name=data.get('first_name', ''),
-                                                                   middle_name=data.get('middle_name', ''),
-                                                                   last_name=data.get('last_name', ''))
+            name = full_name
             comment = data.get('company', '') or secondary_data.get('company', '')
         values = {
             'name': name,
