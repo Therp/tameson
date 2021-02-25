@@ -1,6 +1,7 @@
 import codecs
 import six
 import tempfile
+import base64
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from wand.image import Image
@@ -135,6 +136,35 @@ class StockPicking(models.Model):
             for att in self.get_ups_attachments()
         ])
 
+    def action_mail_send(self):
+        ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
+        self.ensure_one()
+        lang = self.partner_id.lang
+        template = self.env['mail.template'].search([('model','=',self._name)], limit=1)
+        if template.lang:
+            lang = template._render_template(template.lang, self._name, self.ids[0])
+        ctx = {
+            'default_model': self._name,
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template),
+            'default_template_id': template.id,
+            'default_composition_mode': 'comment',
+            'custom_layout': "mail.mail_notification_light",
+            'force_email': True,
+            'model_description': 'Order',
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(False, 'form')],
+            'view_id': False,
+            'target': 'new',
+            'context': ctx,
+        }
+
+    def get_invoice_date(self):
+        return self.sale_id.invoice_ids.filtered(lambda i: i.invoice_payment_state != 'paid')[:1].invoice_date
 
 class StockPickingBatch(models.Model):
     _inherit = 'stock.picking.batch'
@@ -144,3 +174,51 @@ class StockPickingBatch(models.Model):
 
     def print_batch_stock_picking_invoices(self):
         return self.env.ref('tameson_stock.batch_stock_picking_invoices').report_action(self)
+
+class MailComposer(models.TransientModel):
+    _inherit = 'mail.compose.message'
+
+    def onchange_template_id(self, template_id, composition_mode, model, res_id):
+        SaleReport = self.env.ref('sale.action_report_saleorder')
+        InvoiceReport = self.env.ref('account.account_invoices')
+        PurchaseReport = self.env.ref('purchase.action_report_purchase_order')
+        Attachment = self.env['ir.attachment']
+
+        Delay = self.env.ref('tameson_stock.tameson_picking_order_delay')
+        NoPay = self.env.ref('tameson_stock.tameson_picking_no_payment_received')
+        NoPayCancel = self.env.ref('tameson_stock.tameson_picking_no_payment_cancel')
+        PurchaseDateUpdate = self.env.ref('tameson_stock.tameson_po_delivery_date_update')
+        
+
+        vals = super(MailComposer, self).onchange_template_id(template_id, composition_mode, model, res_id)
+        result = False
+        if template_id == Delay.id and composition_mode != 'mass_mail':
+            order = self.env[model].browse(res_id).sale_id
+            if order:
+                result, format = SaleReport.render_qweb_pdf([order.id])
+                report_name = order.name + '.pdf'
+
+        if template_id in (NoPay.id, NoPayCancel.id) and composition_mode != 'mass_mail':
+            open_invoice = self.env[model].browse(res_id).sale_id.invoice_ids.filtered(lambda i: i.invoice_payment_state != 'paid')[:1]
+            if open_invoice:
+                result, format = InvoiceReport.render_qweb_pdf([open_invoice.id])
+                report_name = open_invoice.name.replace('/','_') + '.pdf'
+
+        if template_id == PurchaseDateUpdate.id and composition_mode != 'mass_mail':
+            purchase = self.env[model].browse(res_id).purchase_id
+            if purchase:
+                result, format = PurchaseReport.render_qweb_pdf([purchase.id])
+                report_name = purchase.name + '.pdf'
+
+        if result:
+            result = base64.b64encode(result)
+            attachment = Attachment.create({
+                'name': report_name,
+                'datas': result,
+                'res_model': 'mail.compose.message',
+                'res_id': 0,
+                'type': 'binary'
+            })
+            vals['value']['attachment_ids'] = [(6, 0, attachment.ids)]
+
+        return vals

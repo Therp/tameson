@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="tameson_sale_order_confirmation_payment_term" model="mail.template">
+            <field name="name">Tameson - Sales order confirmation (payment term)</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">Sales order confirmation</field>
+            <field name="body_html" type="html">
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+Dear 
+% if object.partner_id.parent_id:
+    ${object.partner_id.name} (${object.partner_id.parent_id.name}),
+% else:
+    ${object.partner_id.name},
+% endif
+<br/><br/>
+    <p>Thank you for your order. Please find the confirmation attached.</p> <br/>
+    <p>Order: <strong>${object.name}</strong></p> <br/>
+    <p>Amount: <strong>${format_amount(object.amount_total, object.currency_id)}</strong></p><br/>
+    <br/>
+    <p>The expected shipping date is XXXXXX. After shipment you will receive an email with the track &amp; trace information. You will also receive the invoice via email.</p><br/>
+    <p>If you have any questions, please let us know! </p><br/>
+</div>
+            </field>
+            <field name="report_template" ref="sale.action_report_saleorder"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+        <record id="tameson_sale_order_confirmation_prepay" model="mail.template">
+            <field name="name">Tameson - Sales order confirmation (pre pay)</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">Sales order confirmation</field>
+            <field name="body_html" type="html">
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+Dear 
+% if object.partner_id.parent_id:
+    ${object.partner_id.name} (${object.partner_id.parent_id.name}),
+% else:
+    ${object.partner_id.name},
+% endif
+<br/><br/>
+    <p>Thank you for your order. Please find attached the (pro-forma) invoice for this order. The order will be shipped in approximately XXXXXX business days after payment confirmation.</p> <br/>
+    <p><strong>Notice: The order will be processed after the payment has been received.</strong></p><br/>
+    <br/>
+    <p>If you have any questions, please let us know! </p><br/>
+</div>
+            </field>
+            <field name="report_template" ref="sale.action_report_saleorder"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        
+        Odoo location: Quotations / SXXXXXX
+        Attachment: Quotation PDF
+        ENG – title:  update on Quotation Sxxx
+        Dear AUTOFILL CONTACT/NAME,
+        On AUTOFILL QUOTATION CREATION DATE we have sent you a quotation. Attached you will find quotation AUTOFILL SALES ORDER NUMBER with the requested products.
+        The quotation is about to expire, which means that we can no longer guarantee prices and delivery time. Please let us know if you agree with our offer, otherwise we are unfortunately forced to cancel the offer. If you want to extend the quotation period, we would also like to hear this.
+        Thank you in advance for your feedback and if you have any questions, please feel free to contact us.
+
+        <record id="tameson_quotation_reminder" model="mail.template">
+            <field name="name">Tameson - Quotation reminder</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">Update on Quotation Sxxx</field>
+            <field name="body_html" type="html">
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+Dear 
+% if object.partner_id.parent_id:
+    ${object.partner_id.name} (${object.partner_id.parent_id.name}),
+% else:
+    ${object.partner_id.name},
+% endif
+<br/><br/>
+    <p>On ${object.create_date.date()}, we have sent you a quotation. Attached you will find quotation ${object.name}, with the requested products.</p> <br/>
+    <p>The quotation is about to expire, which means that we can no longer guarantee prices and delivery time. Please let us know if you agree with our offer, otherwise we are unfortunately forced to cancel the offer. If you want to extend the quotation period, we would also like to hear this.</p><br/>
+    <p>Thank you in advance for your feedback and if you have any questions, please feel free to contact us.</p><br/>
+    <br/>
+</div>
+            </field>
+            <field name="report_template" ref="sale.action_report_saleorder"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

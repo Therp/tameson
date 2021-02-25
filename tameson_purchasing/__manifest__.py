@@ -20,6 +20,7 @@
         'views/purchase_views.xml',
         'views/assets.xml',
         'wizard/purchase_order_line_csv_import_views.xml',
+        "data/mail_data.xml"
     ],
     'application': False,
     'license': u'OPL-1',

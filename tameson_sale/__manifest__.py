@@ -20,6 +20,7 @@
     ],
     'data': [
         'data/cron.xml',
+        'data/mail_data.xml',
         'views/sale_views.xml',
         'report/report_invoice.xml',
         'report/report_sale_order.xml',
