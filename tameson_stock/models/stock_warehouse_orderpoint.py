@@ -46,6 +46,10 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoint_route_ids = sorted([buy_id.id])
         non_orderpoint_route_ids = sorted([mtomts_id.id, buy_id.id])
 
+        # First step – remove orderpoints with min/max qty = 0
+        self.env['stock.warehouse.orderpoint'].search([('product_max_qty', '<=', 0.0)]).unlink()
+
+        # Second step: fix products
         orderpoints = self.env['stock.warehouse.orderpoint'].search_read([], ['product_id'])
         orderpoint_pp_ids = set(swo['product_id'][0] for swo in orderpoints)
         orderpoint_pt_ids = set(
