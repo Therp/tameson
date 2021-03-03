@@ -5,10 +5,13 @@ class ProductTemplateInherit(models.Model):
     _inherit = "product.template"
 
     def _auto_init(self):
-        super(ProductTemplateInherit)._auto_init()
+        res = super(ProductTemplateInherit, self)._auto_init()
+
         default_code_index = 'default_code_unique_idx'
         if not tools.index_exists(self._cr, default_code_index, self._table):
             self._cr.execute('CREATE UNIQUE INDEX {} ON {} (default_code) WHERE active = true'.format(default_code_index, self._table))
+
+        return res
 
     supplierinfo_name = fields.Char(
         string="Vendor Name",
