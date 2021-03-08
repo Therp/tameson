@@ -244,28 +244,38 @@ class SaleOrder(models.Model):
         # 2. they have no validated ('posted') invoices
 
         self._cr.execute("""
-        WITH ok_invoices AS (
-          SELECT invoice_origin AS origin FROM account_move
-            WHERE state = 'posted'
-        ), joined_origins AS (
-          SELECT
-              so.id AS so_id,
-              sp.origin AS sp_origin,
-              ok_invoices.origin AS oi_origin
-            FROM sale_order AS so
-            JOIN stock_picking AS sp
-              ON so.name = sp.origin
-            LEFT JOIN ok_invoices
-              ON sp.origin = ok_invoices.origin
-            WHERE sp.state = 'done'
-              AND so.state != 'cancel'
-        )
-        SELECT DISTINCT so_id, sp_origin FROM joined_origins
-          WHERE oi_origin IS NULL
-        """)
+select distinct(so.id) so_id,
+    so.name so_name
+from sale_order so
+    left join sale_order_line sol on sol.order_id = so.id
+    left join sale_order_line_invoice_rel sli_rel on sol.id = sli_rel.order_line_id
+    left join account_move_line aml on aml.id = sli_rel.invoice_line_id
+where so.state in ('sale', 'done')
+    AND aml.parent_state = 'draft'
+union
+select sot.so_id,
+    sot.so_name
+from (
+        select so.id as so_id,
+            so.name as so_name,
+            sum(sol.qty_delivered) as sum_qty_delivered,
+            sum(
+                case
+                    when aml.id is null then 0
+                    else 1
+                end
+            ) as aml_count
+        from sale_order so
+            left join sale_order_line sol on sol.order_id = so.id
+            left join sale_order_line_invoice_rel sli_rel on sol.id = sli_rel.order_line_id
+            left join account_move_line aml on aml.id = sli_rel.invoice_line_id
+        where so.state in ('sale', 'done')
+        group by so.id
+    ) as sot
+where sot.aml_count = 0
+    and sot.sum_qty_delivered > 0 """)
 
         wrong_sale_orders = [(r[0], r[1]) for r in self._cr.fetchall()]
-
         if wrong_sale_orders:
             sof = '<br/>'.join('{} ({})'.format(so[1], so[0]) for so in wrong_sale_orders)
 
