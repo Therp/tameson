@@ -7,10 +7,10 @@ class ProductTemplateInherit(models.Model):
     def _auto_init(self):
         res = super(ProductTemplateInherit, self)._auto_init()
 
-        default_code_index = 'default_code_unique_idx'
+        default_code_index = 'product_template_default_code_unique_idx'
         if not tools.index_exists(self._cr, default_code_index):
             self._cr.execute(
-                'CREATE UNIQUE INDEX {} ON {} (default_code) WHERE active = true AND default_code != \'\' AND default_code IS NOT NULL'.format(default_code_index, self._table)
+                'CREATE UNIQUE INDEX {} ON {} ((lower(default_code))) WHERE active = true AND default_code != \'\' AND default_code IS NOT NULL'.format(default_code_index, self._table)
             )
 
         return res
