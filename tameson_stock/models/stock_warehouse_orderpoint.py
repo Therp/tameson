@@ -1,7 +1,10 @@
+import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+
+_logger = logging.getLogger(__name__)
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -43,11 +46,13 @@ class StockWarehouseOrderpoint(models.Model):
         mtomts_id = self.env['stock.location.route'].search([['name', '=', 'Make To Order + Make To Stock']])[0]
         buy_id = self.env['stock.location.route'].search([['name', '=', 'Buy']])[0]
 
-        orderpoint_route_ids = sorted([buy_id.id])
-        non_orderpoint_route_ids = sorted([mtomts_id.id, buy_id.id])
+        orderpoint_buy_route_ids = [buy_id.id]
+        non_orderpoint_buy_route_ids = sorted([mtomts_id.id, buy_id.id])
 
         # First step – remove orderpoints with min/max qty = 0
-        self.env['stock.warehouse.orderpoint'].search([('product_max_qty', '<=', 0.0)]).unlink()
+        orderpoints_to_remove = self.env['stock.warehouse.orderpoint'].search([('product_max_qty', '<=', 0.0)])
+        _logger.info('Orderpoint ids to remove: %s', orderpoints_to_remove.ids)
+        orderpoints_to_remove.unlink()
 
         # Second step: fix products
         orderpoints = self.env['stock.warehouse.orderpoint'].search_read([], ['product_id'])
@@ -56,27 +61,17 @@ class StockWarehouseOrderpoint(models.Model):
             pp['product_tmpl_id'][0]
             for pp in self.env['product.product'].search_read([['id', 'in', list(orderpoint_pp_ids)]], ['product_tmpl_id'])
         )
-        wrong_orderpoint_pt_ids = set(
-            pt['id']
-            for pt in self.env['product.template'].search_read([['id', 'in', list(orderpoint_pt_ids)]], ['id', 'route_ids'])
-            if sorted(pt['route_ids']) != orderpoint_route_ids
-        )
-        if wrong_orderpoint_pt_ids:
-            # fix products
-            self.env['product.template'].browse(list(wrong_orderpoint_pt_ids)).write({'route_ids': orderpoint_route_ids})
+        for pt in self.env['product.template'].search([['id', 'in', list(orderpoint_pt_ids)],
+                                                       ['route_ids', '!=', orderpoint_buy_route_ids]]):
+            pt.route_ids = orderpoint_buy_route_ids
 
         non_orderpoint_pt_ids = set(
             pt['id']
             for pt in self.env['product.template'].search_read([['id', 'not in', list(orderpoint_pt_ids)]], ['id'])
         )
-        wrong_non_orderpoint_pt_ids = set(
-            pt['id']
-            for pt in self.env['product.template'].search_read([['id', 'in', list(non_orderpoint_pt_ids)]], ['id', 'route_ids'])
-            if sorted(pt['route_ids']) != non_orderpoint_route_ids
-        )
-        if wrong_non_orderpoint_pt_ids:
-            # fix products
-            self.env['product.template'].browse(list(wrong_non_orderpoint_pt_ids)).write({'route_ids': non_orderpoint_route_ids})
+        for pt in self.env['product.template'].search([['id', 'in', list(non_orderpoint_pt_ids)],
+                                                       ['route_ids', '!=', non_orderpoint_buy_route_ids]]):
+            pt.route_ids = non_orderpoint_buy_route_ids
 
     @api.model
     def fix_product_route(self):
