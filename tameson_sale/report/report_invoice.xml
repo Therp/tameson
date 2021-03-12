@@ -110,7 +110,7 @@
             </p>
             <p t-if="o.fiscal_position_id and o.fiscal_position_id.name == 'Niet-EU landen'">
                 <strong>Fiscal Position Remark: </strong>
-                <span>VAT reverse charge - export out of EU</span><br/>
+                <span>VAT reverse charge - export out of EU - </span><strong>EORI number: </strong><span>NL859280263</span><br/>
                 <strong>Preferential origin:</strong> 
                 <span>The exporter of the products covered by this document declares that, except where otherwise clearly indicated, these products are of EU preferential origin.</span>
             </p>
