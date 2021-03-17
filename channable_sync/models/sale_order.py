@@ -561,14 +561,17 @@ class SaleOrder(models.Model):
                                                               endpoint=endpoint,
                                                               payload=payload,
                                                               timeout=120)
-        if response.get('status', '') != 'success':
-            raise Warning(_('Channable Order Update Failure: %s' % str(response.get('message', ''))))
-        else:
+
+        order_response = self.env.user.company_id.channable_request(method="GET",
+                                                              endpoint="/orders/%s" % self.channable_order_id,
+                                                              payload={},
+                                                              timeout=120)
+        if order_response.get('status_shipped', False) != 'not_shipped':
             self.write({
                 'channable_to_update_shipped': False,
                 'channable_order_status': 'shipped',
             })
-            return True
+        return True
 
     def action_cancel(self):
         res = super(SaleOrder, self).action_cancel()
