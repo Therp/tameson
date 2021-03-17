@@ -14,6 +14,20 @@
             <field name="code">model.cron_recompute_rr()</field>
         </record>
     </data>
+
+    <data noupdate="1">
+        <record forcecreate="True" id="ir_cron_scheduler_validate_orderpoint_product_routes" model="ir.cron">
+            <field name="name">Tameson: Validate product routes wrt stock.warehouse.orderpoint</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="stock.model_stock_warehouse_orderpoint" />
+            <field name="state">code</field>
+            <field name="code">model.cron_validate_orderpoint_product_routes()</field>
+        </record>
+    </data>
 </odoo>
 
 

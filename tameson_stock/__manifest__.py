@@ -18,6 +18,10 @@
     Also visible on the sales order line displaying a warning
     when the ordered quantity goes above it.
 
+    Also, cron job is added to perform automatic change to 'buy' route for
+    products with an orderpoint and 'buy' + 'mto+mts' for products which are not
+    in an orderpoint.
+
     """,
     'author': "Tameson",
     'depends': [
@@ -29,6 +33,7 @@
     ],
     'data': [
         'data/params.xml',
+        'data/automated_actions.xml',
         'data/cron.xml',
         'data/cron_min_qty.xml',
         'data/migrations.xml',
