@@ -1,8 +1,19 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 
 
 class ProductTemplateInherit(models.Model):
     _inherit = "product.template"
+
+    def init(self):
+        res = super(ProductTemplateInherit, self).init()
+
+        default_code_index = 'product_template_default_code_unique_idx'
+        if not tools.index_exists(self._cr, default_code_index):
+            self._cr.execute(
+                'CREATE UNIQUE INDEX IF NOT EXISTS {} ON {} ((lower(default_code))) WHERE active = true AND default_code != \'\' AND default_code IS NOT NULL'.format(default_code_index, self._table)
+            )
+
+        return res
 
     supplierinfo_name = fields.Char(
         string="Vendor Name",
