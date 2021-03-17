@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="0">
         <record id="tameson_template_po_supplier" model="mail.template">
-            <field name="name">Tameson - Purchase order for supplier</field>
+            <field name="name">01. Tameson - Purchase order for supplier</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) |safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
