@@ -27,6 +27,9 @@
                         <t t-set="partner_country_code" t-value="o and 'partner_id' in o and o.partner_id and o.partner_id.country_id.code" />
                         <t t-if="partner_country_code == 'GB'">
                             <div class="row">
+                                <div>Reg.: 72902531</div>
+                            </div>
+                            <div class="row">
                                 <div style="white-space: nowrap;">+44 (0)330 8080 502</div>
                             </div>
                             <div class="row">
@@ -35,6 +38,9 @@
                         </t>
                         <t t-if="partner_country_code in ['BE', 'NL']">
                             <div class="row">
+                                <div>KVK: 72902531</div>
+                            </div>
+                            <div class="row">
                                 <div style="white-space: nowrap;">+31 (0)40 750 5795</div>
                             </div>
                             <div class="row">
@@ -42,6 +48,9 @@
                             </div>
                         </t>
                         <t t-if="partner_country_code not in ['GB', 'BE', 'NL']">
+                            <div class="row">
+                                <div>Reg.: 72902531</div>
+                            </div>
                             <div class="row">
                                 <div style="white-space: nowrap;">+31 (0)40 750 5795</div>
                             </div>
