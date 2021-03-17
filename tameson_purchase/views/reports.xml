@@ -7,6 +7,11 @@
                 <strong>Origin SO picking</strong>
             </th>
         </xpath>
+        
+        <xpath expr="//t[@t-as='move']" position="attributes">
+            <attribute name="t-foreach">o.move_ids_without_package.sorted(key=lambda m: m.origin_so_picking_ids[:1].id if m.picking_code == 'incoming' else m.product_id.id)</attribute>
+        </xpath>
+        
         <xpath expr="//td[@t-if='has_barcode']" position="after">
             <td t-if="o.picking_type_id.code == 'incoming'">
                 <t t-foreach="move.origin_so_picking_ids" t-as="origin_so_pick">
