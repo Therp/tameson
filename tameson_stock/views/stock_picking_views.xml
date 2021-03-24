@@ -25,6 +25,8 @@
                         groups="stock.group_stock_user"
                         type="object"
                         class="oe_highlight" />
+                        
+                <button name="action_mail_send" string="Send" type="object" class="oe_highlight"/>
             </xpath>
 
             <xpath expr="//page[last()]" position="after">

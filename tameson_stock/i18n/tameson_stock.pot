@@ -34,6 +34,80 @@ msgid "<span class=\"o_stat_text\">Min Qty</span>"
 msgstr ""
 
 #. module: tameson_stock
+#: model:mail.template,body_html:tameson_stock.tameson_picking_order_delay
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br/><br/>\n"
+"    <p>You recently placed an order with us including backorder product XXXXX. Unfortunately, the delivery of this product has been delayed.</p> <br/>\n"
+"    <p>We have been informed by the supplier that the items will be delivered to us at XXXXX. We will ship the order to you the same day. We will keep you informed of the progress.</p><br/>\n"
+"    <p>Sorry for the inconvenience.</p><br/>\n"
+"    <br/>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,body_html:tameson_stock.tameson_picking_no_payment_cancel
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br/><br/>\n"
+"    <p>On ${object.get_invoice_date()} you have placed an order with Tameson. However, a payment is required to finalize the order. Our records show that the enclosed invoice belonging to this order has not yet been paid. We have cancelled the order, assuming you have no interest in these products anymore.</p> <br/>\n"
+"    <p>If you have any questions or comments, or if you still want to receive the order, please feel free to contact us.</p><br/>\n"
+"    <br/>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,body_html:tameson_stock.tameson_picking_no_payment_received
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br/><br/>\n"
+"    <p>On ${object.get_invoice_date()} you have placed an order with Tameson. However, to finalize the order a payment is required. Our administration shows that the enclosed invoice that accompanies this order has not yet been paid. Can you provide an update regarding the payment status?</p> <br/>\n"
+"    <p>If you are no longer interested in the products, please let us know so that the order can be cancelled.</p><br/>\n"
+"    <p>If you have any questions or remarks, please feel free to contact us.</p><br/>\n"
+"    <br/>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,body_html:tameson_stock.tameson_po_delivery_date_update
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br/><br/>\n"
+"    <p>he confirmed delivery date of purchase order ${object.purchase_id.name} has passed. We request an update of the delivery date of this order as soon as possible.</p> <br/>\n"
+"    <p>Thank you in advance!</p><br/>\n"
+"    <br/>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: tameson_stock
 #: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
 msgid "<strong>Location</strong>"
 msgstr ""
@@ -199,6 +273,26 @@ msgstr ""
 #: model:ir.actions.report,name:tameson_stock.stock_picking_invoices
 msgid "Picking invoices"
 msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,subject:tameson_stock.tameson_picking_order_delay
+msgid "Order delivery update"
+msgstr "Verwachte levering order"
+
+#. module: tameson_stock
+#: model:mail.template,subject:tameson_stock.tameson_picking_no_payment_cancel
+msgid "Order payment not received"
+msgstr "Betaling voor bestelling niet ontvangen"
+
+#. module: tameson_stock
+#: model:mail.template,subject:tameson_stock.tameson_picking_no_payment_received
+msgid "Order payment not received yet"
+msgstr "Betaling van bestelling nog niet ontvangen"
+
+#. module: tameson_stock
+#: model:mail.template,subject:tameson_stock.tameson_po_delivery_date_update
+msgid "Purchase order delivery date"
+msgstr "Inkooporder afleverdatum"
 
 #. module: tameson_stock
 #: model:ir.model,name:tameson_stock.model_product_product

@@ -46,6 +46,7 @@
         'views/product_views.xml',
         'views/sale_views.xml',
         'views/templates.xml',
+        'data/mail_data.xml'
     ],
     'qweb': [
         'static/src/xml/qweb.xml',

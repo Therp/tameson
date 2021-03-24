@@ -1,7 +1,8 @@
+import base64
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.tools import formataddr, float_compare, float_is_zero
-
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -360,3 +361,33 @@ class SaleOrderLine(models.Model):
                     line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
             else:
                 line.qty_to_invoice = 0
+
+
+
+class MailComposer(models.TransientModel):
+    _inherit = 'mail.compose.message'
+
+    def onchange_template_id(self, template_id, composition_mode, model, res_id):
+        InvoiceReport = self.env.ref('account.account_invoices')
+        ProformaReport = self.env.ref('sale.action_report_pro_forma_invoice')
+        Attachment = self.env['ir.attachment']
+
+        vals = super(MailComposer, self).onchange_template_id(template_id, composition_mode, model, res_id)
+        if template_id == self.env.ref('tameson_sale.tameson_sale_order_confirmation_prepay').id and composition_mode != 'mass_mail':
+            invoices = self.env[model].browse(res_id).invoice_ids
+            if invoices :
+                result, format = InvoiceReport.render_qweb_pdf(invoices.ids)
+                report_name = (', '.join(invoices.mapped('name')) or 'Invoice').replace('/','_') + '.pdf'
+            else:
+                result, format = ProformaReport.render_qweb_pdf([res_id])
+                report_name = "Proforma.pdf"
+            result = base64.b64encode(result)
+            attachment = Attachment.create({
+                'name': report_name,
+                'datas': result,
+                'res_model': 'mail.compose.message',
+                'res_id': 0,
+                'type': 'binary'
+            })
+            vals['value']['attachment_ids'] += [(4, attachment.id, 0)]
+        return vals
