@@ -166,22 +166,33 @@ class SaleOrderPresta(models.Model):
             self.action_confirm()
             journal_id = self.env['account.journal']
             if module and module == 'adyencw_paypal':
-                journal_id = journal_id.search([('name','ilike','paypal')], limit=1)
+                journal_id = journal_id.search([('name','ilike','paypal'), ('type', 'in', ('cash','bank'))], limit=1)
             elif module and module.startswith('adyencw'):
-                journal_id = journal_id.search([('name','ilike','adyen')], limit=1)
+                journal_id = journal_id.search([('name','ilike','adyen'), ('type', 'in', ('cash','bank'))], limit=1)
             if not journal_id:
                 raise UserError('Journal not found for module %s order %s prestashop_id %s' % (module, self.name, self.prestashop_id))
-            payment_method_id = journal_id.inbound_payment_method_ids.ids[0]
-            payment_env = self.env['account.payment'].with_context(active_ids=self.invoice_ids.ids, active_model='account.move', active_id=self.invoice_ids.id)
-            payment = payment_env.create({
-                'journal_id': journal_id.id,
-                'payment_method_id': payment_method_id,
-            })
-            payment._onchange_journal()
-            payment.post()
-            self.invoice_ids.post()
+            self.invoice_ids.action_register_payment(journal_id=journal_id.id)
         return True
     
     def confirm_invoicepayment(self):
         for sale in self.search([('state', 'in', ('draft', 'sent')), ('prestashop_module', '=', 'invoicepayment')]):
             sale.action_confirm()
+
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.move'
+
+    def action_register_payment(self, journal_id=False):
+        payment_env = self.env['account.payment'].with_context(active_ids=self.ids, active_model=self._name)
+        payment_vals = payment_env.default_get(list(payment_env.fields_get()))
+        if journal_id:
+            payment_vals.update({'journal_id': journal_id})
+        payment_new = payment_env.new(payment_vals)
+        payment_new._onchange_journal()
+        payment_new._onchange_partner_id()
+        payment_new._onchange_payment_type()
+        payment_new._onchange_amount()
+        payment_new._onchange_currency()
+        payment_vals = payment_new._convert_to_write({name: payment_new[name] for name in payment_new._cache})
+        payment = self.env['account.payment'].create(payment_vals)
+        payment.post()    
