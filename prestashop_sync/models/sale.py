@@ -185,8 +185,11 @@ class AccountInvoice(models.Model):
     def action_register_payment(self, journal_id=False):
         payment_env = self.env['account.payment'].with_context(active_ids=self.ids, active_model=self._name)
         payment_vals = payment_env.default_get(list(payment_env.fields_get()))
-        if journal_id:
-            payment_vals.update({'journal_id': journal_id})
+        
+        if not journal_id:
+            journal_id = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))], limit=1).id
+
+        payment_vals.update({'journal_id': journal_id})
         payment_new = payment_env.new(payment_vals)
         payment_new._onchange_journal()
         payment_new._onchange_partner_id()
