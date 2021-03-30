@@ -183,6 +183,8 @@ class AccountInvoice(models.Model):
     _inherit = 'account.move'
 
     def action_register_payment(self, journal_id=False):
+        if self.state == 'draft':
+            self.action_post()
         payment_env = self.env['account.payment'].with_context(active_ids=self.ids, active_model=self._name)
         payment_vals = payment_env.default_get(list(payment_env.fields_get()))
         
