@@ -171,7 +171,7 @@ class SaleOrderPresta(models.Model):
                 journal_id = journal_id.search([('name','ilike','adyen'), ('type', 'in', ('cash','bank'))], limit=1)
             if not journal_id:
                 raise UserError('Journal not found for module %s order %s prestashop_id %s' % (module, self.name, self.prestashop_id))
-            self.invoice_ids.action_register_payment(journal_id=journal_id.id)
+            self.invoice_ids.action_register_payment_direct(journal_id=journal_id.id)
         return True
     
     def confirm_invoicepayment(self):
@@ -182,7 +182,7 @@ class SaleOrderPresta(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.move'
 
-    def action_register_payment(self, journal_id=False):
+    def action_register_payment_direct(self, journal_id=False):
         if self.state == 'draft':
             self.action_post()
         payment_env = self.env['account.payment'].with_context(active_ids=self.ids, active_model=self._name)
