@@ -40,6 +40,9 @@
                     </group>
                 </page>
             </xpath>
+            <xpath expr="//page[3]" position="attributes">
+                <attribute name="autofocus">autofocus</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -62,10 +65,17 @@
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
         <field name="arch" type="xml">
 			<xpath expr="//field[@name='origin']" position="after">
-				<field name="t_delivery_allowed"/>
+				<field name="t_delivery_allowed" optional="show" />
             </xpath>
             <xpath expr="//header[1]//button[last()]" position="after">
                 <button name="print_batch_stock_picking_invoices" string="Picking invoices" type="object" class="oe_highlight"/>                
+            </xpath>
+            <xpath expr="//field[@name='scheduled_date']" position="before">
+				<field name="create_date" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+				<field name="partner_id" optional="show"/>
+				<field name="carrier_id" optional="show" string="Delivery method"/>
             </xpath>
         </field>
     </record>
