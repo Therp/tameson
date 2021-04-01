@@ -240,12 +240,12 @@ class SaleOrder(models.Model):
         # The SQL is for performance reasons
         # We are looking for sale.order (id, origin) pairs such that:
         # 1. they have 'done' pickings
-        # 2. they have no 'open' nor 'paid' invoices
+        # 2. they have no validated ('posted') invoices
 
         self._cr.execute("""
         WITH ok_invoices AS (
           SELECT invoice_origin AS origin FROM account_move
-            WHERE invoice_payment_state IN ('open', 'paid')
+            WHERE state = 'posted'
         ), joined_origins AS (
           SELECT
               so.id AS so_id,
