@@ -167,7 +167,7 @@ class SaleOrderPresta(models.Model):
                 return True
             self.action_confirm()
             self.write({
-                'prestashop_module': module
+                'prestashop_module': module,
                 'prestashop_process_payment': True
             })
         return True
