@@ -30,7 +30,8 @@ class SaleOrderPresta(models.Model):
     prestashop_date_upd = fields.Datetime(string='Prestashop update time', index=True, copy=False)
     prestashop_config_id = fields.Many2one(string='Prestashop', comodel_name='prestashop.config', ondelete='set null',index=True, copy=False)
     prestashop_state = fields.Char(string='Prestashop current state', index=True, copy=False)
-
+    prestashop_process_payment = fields.Boolean(readonly=True )
+    
     shipped_status_prestashop = fields.Boolean(string='Prestashop shipped', default=False, readonly=True, copy=False)
     force_all_qty_delivered = fields.Boolean(string='Force prestashop shipped', default=False, copy=False)
     
@@ -154,7 +155,8 @@ class SaleOrderPresta(models.Model):
             prepayment = self.env['account.payment.term'].search([('name','=','Prepayment')], limit=1)
             self.write({
                 'payment_term_id': prepayment.id,
-                't_invoice_policy': 'order'
+                't_invoice_policy': 'order',
+                'prestashop_module': module
             })
             wizard = self.env['sale.advance.payment.inv'].with_context({'active_model': self._name, 'active_id': self.id, 'active_ids': self.ids}).\
                 create({'advance_payment_method': 'delivered'})
@@ -164,14 +166,10 @@ class SaleOrderPresta(models.Model):
             if self.state == 'sale':
                 return True
             self.action_confirm()
-            journal_id = self.env['account.journal']
-            if module and module == 'adyencw_paypal':
-                journal_id = journal_id.search([('name','ilike','paypal'), ('type', 'in', ('cash','bank'))], limit=1)
-            elif module and module.startswith('adyencw'):
-                journal_id = journal_id.search([('name','ilike','adyen'), ('type', 'in', ('cash','bank'))], limit=1)
-            if not journal_id:
-                raise UserError('Journal not found for module %s order %s prestashop_id %s' % (module, self.name, self.prestashop_id))
-            self.invoice_ids.action_register_payment_direct(journal_id=journal_id.id)
+            self.write({
+                'prestashop_module': module
+                'prestashop_process_payment': True
+            })
         return True
     
     def confirm_invoicepayment(self):
