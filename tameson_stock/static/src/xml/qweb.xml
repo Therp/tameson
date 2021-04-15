@@ -4,14 +4,14 @@
     <t t-extend="ListView.buttons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
             <t t-if="widget.modelName == 'stock.picking'">
-                <button class="btn btn-secondary js-show-when-selected picking-ups-labels" type="button">Show UPS labels</button>
+                <button class="btn btn-secondary js-show-when-selected picking-delivery-labels" type="button">Show delivery labels</button>
             </t>
         </t>
     </t>
     <t t-extend="FormView.buttons">
         <t t-jquery="div.o_form_buttons_view button:last" t-operation="after">
             <t t-if="widget.modelName == 'stock.picking.batch'">
-                <button class="btn btn-secondary js-show-when-selected batch-picking-ups-labels" type="button">Show UPS labels</button>
+                <button class="btn btn-secondary js-show-when-selected batch-picking-delivery-labels" type="button">Show delivery labels</button>
             </t>
         </t>
     </t>

@@ -166,6 +166,42 @@ class StockPicking(models.Model):
     def get_invoice_date(self):
         return self.sale_id.invoice_ids.filtered(lambda i: i.invoice_payment_state != 'paid')[:1].invoice_date
 
+    def generate_non_ups_labels(self):
+        for r in self:
+            if r.ups_username:
+                continue
+
+            # don't regenerate a label if it exists already
+            if r.get_non_ups_labels():
+                continue
+
+            pdf, _ = self.env.ref('tameson_stock.t_delivery_addresses').render_qweb_pdf([r.id])
+            attachments = [('DeliveryAddresses.pdf', pdf)]
+            r.message_post(body='Delivery addresses', attachments=attachments)
+
+    def get_non_ups_labels(self):
+        """Find attachments that match the UPS label name."""
+        query = [
+            ['name', '=like', 'DeliveryAddresses%pdf'],
+            ['type', '=', 'binary'],
+            ['res_model', '=', 'stock.picking'],
+            ['res_id', 'in', self.ids],
+        ]
+
+        return self.env['ir.attachment'].search(query)
+
+    def get_merged_labels(self):
+        ups_attachments = self.get_ups_attachments()
+        non_ups = self.get_non_ups_labels()
+        att_dict = {att.res_id: att for att in ups_attachments}
+        att_dict.update({att.res_id: att for att in non_ups})
+
+        return merge_pdf([
+            codecs.decode(att_dict[sp_id].datas, 'base64')
+            for sp_id in self.ids
+        ])
+
+
 class StockPickingBatch(models.Model):
     _inherit = 'stock.picking.batch'
 
@@ -174,6 +210,7 @@ class StockPickingBatch(models.Model):
 
     def print_batch_stock_picking_invoices(self):
         return self.env.ref('tameson_stock.batch_stock_picking_invoices').report_action(self)
+
 
 class MailComposer(models.TransientModel):
     _inherit = 'mail.compose.message'
@@ -188,7 +225,6 @@ class MailComposer(models.TransientModel):
         NoPay = self.env.ref('tameson_stock.tameson_picking_no_payment_received')
         NoPayCancel = self.env.ref('tameson_stock.tameson_picking_no_payment_cancel')
         PurchaseDateUpdate = self.env.ref('tameson_stock.tameson_po_delivery_date_update')
-        
 
         vals = super(MailComposer, self).onchange_template_id(template_id, composition_mode, model, res_id)
         result = False

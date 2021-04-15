@@ -10,6 +10,7 @@ odoo.define 'tameson_stock.list_view', (require) ->
 
             if @$buttons
                 @$buttons.on 'click', '.batch-picking-ups-labels', @batch_picking_ups_labels.bind(this)
+                @$buttons.on 'click', '.batch-picking-delivery-labels', @batch_picking_delivery_labels.bind(this)
 
             ret
 
@@ -17,6 +18,13 @@ odoo.define 'tameson_stock.list_view', (require) ->
             state = @model.get(@handle, {raw: true})
             selected_ids = state.data.picking_ids
             path = "/stock/ups_labels/#{selected_ids.join(",")}"
+            url = "#{location.protocol}//#{location.host}#{path}"
+            window.open url, '_blank'
+
+        batch_picking_delivery_labels: () ->
+            state = @model.get(@handle, {raw: true})
+            selected_ids = state.data.picking_ids
+            path = "/stock/delivery_labels/#{selected_ids.join(",")}"
             url = "#{location.protocol}//#{location.host}#{path}"
             window.open url, '_blank'
 
@@ -28,6 +36,7 @@ odoo.define 'tameson_stock.list_view', (require) ->
 
             if @$buttons
                 @$buttons.on 'click', '.picking-ups-labels', @proxy('picking_ups_labels')
+                @$buttons.on 'click', '.picking-delivery-labels', @proxy('picking_delivery_labels')
 
             ret
 
@@ -51,5 +60,11 @@ odoo.define 'tameson_stock.list_view', (require) ->
         picking_ups_labels: () ->
             selected_ids = (@model.get(r).res_id for r in @selectedRecords)
             path = "/stock/ups_labels/#{selected_ids.join(",")}"
+            url = "#{location.protocol}//#{location.host}#{path}"
+            window.open url, '_blank'
+
+        picking_delivery_labels: () ->
+            selected_ids = (@model.get(r).res_id for r in @selectedRecords)
+            path = "/stock/delivery_labels/#{selected_ids.join(",")}"
             url = "#{location.protocol}//#{location.host}#{path}"
             window.open url, '_blank'
