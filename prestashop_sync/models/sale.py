@@ -22,6 +22,21 @@ DOMAIN = {
     '3': 'tameson.com'
 }
 
+def _log_logging(env, message, function_name, path):
+    env['ir.logging'].sudo().create({
+        'name': 'Prestashop',
+        'type': 'server',
+        'level': 'WARN',
+        'dbname': env.cr.dbname,
+        'message': message,
+        'func': function_name,
+        'path': path,
+        'line': '0',
+    })
+
+import logging
+_logger = logging.getLogger(__name__)
+
 class SaleOrderPresta(models.Model):
     _inherit = 'sale.order'
     
@@ -165,16 +180,48 @@ class SaleOrderPresta(models.Model):
         else:
             if self.state == 'sale':
                 return True
-            self.action_confirm()
             self.write({
                 'prestashop_module': module,
                 'prestashop_process_payment': True
             })
+            self.action_confirm()
         return True
     
     def confirm_invoicepayment(self):
         for sale in self.search([('state', 'in', ('draft', 'sent')), ('prestashop_module', '=', 'invoicepayment')]):
             sale.action_confirm()
+
+    def process_payment(self):
+        for record in self.search([('prestashop_process_payment', '=', True)]):
+            if record.prestashop_module and record.prestashop_module == 'adyencw_paypal':
+                name = 'paypal'
+            elif record.prestashop_module and record.prestashop_module.startswith('adyencw'):
+                name = 'adyen'
+            else:
+                msg = "Module name not match %s" % record.name
+                _log_logging(self.env, msg, 'process_payment', record.id)
+                _logger.warn(msg)
+                continue
+
+            journal_id = self.env['account.journal'].search([('type', 'in', ('bank', 'cash')), ('name', 'ilike', name)], limit=1)
+
+            if not journal_id:
+                msg = "Journal not found %s" % record.name
+                _log_logging(self.env, msg, 'process_payment', record.id)
+                _logger.warn(msg)
+                continue
+
+            try:
+                for invoice in record.invoice_ids:
+                   invoice.action_register_payment_direct(journal_id=journal_id.id)
+                record.write({
+                    'prestashop_process_payment': False
+                })
+            except Exception as e:
+                msg = "Payment creation error: %s %s" % (str(e), record.name)
+                _log_logging(self.env, msg, 'process_payment', record.id)
+                _logger.warn(msg)
+                continue
 
 
 class AccountInvoice(models.Model):
