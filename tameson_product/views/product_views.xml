@@ -31,4 +31,36 @@
             </xpath>
         </field>
     </record>
+
+    <record model="ir.ui.view" id="product_product_only_form_view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_only_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[last()]" position="after">
+                <page name="tameson" string="Tameson">
+                    <group>
+                        <group name="general">
+                            <field name="t_height" />
+                            <field name="t_length" />
+                            <field name="t_width" />
+                            <field name="t_location" />
+                            <field name="t_purchase_cost" />
+                            <field name="t_product_data_source" />
+                            <field name="t_pim_published" />
+                            <field name="t_pim_status" />
+                            <field name="t_customer_backorder_allowed" />
+                            <field name="t_customer_lead_time" />
+                            <field name="t_web_sales" />
+                            <field name="t_use_up" />
+                            <field name="t_use_up_replacement_sku" />
+                        </group>
+                        <group name="description">
+                            <field name="t_product_description_short" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 </odoo>
