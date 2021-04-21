@@ -214,6 +214,11 @@ class PrestashopConfig(models.Model):
     def prestashop_cancel_orders(self, task_uuid, so_id, **kwargs):
         order = self.env['sale.order'].browse(so_id)
         order.ensure_one()
+        if order.payment_term_id.name = 'Prepayment':
+            for invoice in order.invoice_ids:
+                if invoice.invoice_payment_state == 'not_paid':
+                    invoice.button_draft()
+                    invoice.button_cancel()
         order.action_cancel()
         return True
 
