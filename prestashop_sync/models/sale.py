@@ -17,7 +17,7 @@ CURRENCIES = {
 }
 
 DOMAIN = {
-    '1': 'magneetventielshop.nl',
+    '1': 'tameson.nl',
     '2': 'tameson.co.uk',
     '3': 'tameson.com'
 }
