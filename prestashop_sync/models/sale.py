@@ -45,7 +45,6 @@ class SaleOrderPresta(models.Model):
     prestashop_date_upd = fields.Datetime(string='Prestashop update time', index=True, copy=False)
     prestashop_config_id = fields.Many2one(string='Prestashop', comodel_name='prestashop.config', ondelete='set null',index=True, copy=False)
     prestashop_state = fields.Char(string='Prestashop current state', index=True, copy=False)
-    prestashop_process_payment = fields.Boolean(readonly=True )
     
     shipped_status_prestashop = fields.Boolean(string='Prestashop shipped', default=False, readonly=True, copy=False)
     force_all_qty_delivered = fields.Boolean(string='Force prestashop shipped', default=False, copy=False)
@@ -191,8 +190,8 @@ class SaleOrderPresta(models.Model):
         for sale in self.search([('state', 'in', ('draft', 'sent')), ('prestashop_module', '=', 'invoicepayment')]):
             sale.action_confirm()
 
-    def process_payment(self):
-        for record in self.search([('prestashop_process_payment', '=', True)]):
+    def process_channel_payment(self):
+        for record in self.search([('channel_process_payment', '=', True),('prestashop_id','!=',False)]):
             if record.prestashop_module and record.prestashop_module == 'adyencw_paypal':
                 name = 'paypal'
             elif record.prestashop_module and record.prestashop_module.startswith('adyencw'):
@@ -212,37 +211,15 @@ class SaleOrderPresta(models.Model):
                 continue
 
             try:
-                for invoice in record.invoice_ids:
+                for invoice in record.invoice_ids.filtered(lambda i: i.state != 'cancel' and i.invoice_payment_state != 'paid'):
                    invoice.action_register_payment_direct(journal_id=journal_id.id)
                 record.write({
-                    'prestashop_process_payment': False
+                    'channel_process_payment': False
                 })
             except Exception as e:
-                msg = "Payment creation error: %s %s" % (str(e), record.name)
-                _log_logging(self.env, msg, 'process_payment', record.id)
+                msg = "Prestashop payment creation error: %s %s" % (str(e), record.name)
+                _log_logging(self.env, msg, 'process_channel_payment', record.id)
                 _logger.warn(msg)
                 continue
-
-
-class AccountInvoice(models.Model):
-    _inherit = 'account.move'
-
-    def action_register_payment_direct(self, journal_id=False):
-        if self.state == 'draft':
-            self.action_post()
-        payment_env = self.env['account.payment'].with_context(active_ids=self.ids, active_model=self._name)
-        payment_vals = payment_env.default_get(list(payment_env.fields_get()))
-        
-        if not journal_id:
-            journal_id = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))], limit=1).id
-
-        payment_vals.update({'journal_id': journal_id})
-        payment_new = payment_env.new(payment_vals)
-        payment_new._onchange_journal()
-        payment_new._onchange_partner_id()
-        payment_new._onchange_payment_type()
-        payment_new._onchange_amount()
-        payment_new._onchange_currency()
-        payment_vals = payment_new._convert_to_write({name: payment_new[name] for name in payment_new._cache})
-        payment = self.env['account.payment'].create(payment_vals)
-        payment.post()    
+        return super(SaleOrderPresta, self).process_channel_payment()
+   
