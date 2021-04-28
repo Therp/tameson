@@ -41,6 +41,7 @@ class SaleOrder(models.Model):
     )
 
     payment_term_name = fields.Char(related='payment_term_id.name')
+    channel_process_payment = fields.Boolean()
 
 
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
@@ -323,6 +324,9 @@ class SaleOrder(models.Model):
                     order._add_default_shipping()
         return result
     
+    def process_channel_payment(self):
+        return True
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'

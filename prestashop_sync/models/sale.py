@@ -17,10 +17,25 @@ CURRENCIES = {
 }
 
 DOMAIN = {
-    '1': 'magneetventielshop.nl',
+    '1': 'tameson.nl',
     '2': 'tameson.co.uk',
     '3': 'tameson.com'
 }
+
+def _log_logging(env, message, function_name, path):
+    env['ir.logging'].sudo().create({
+        'name': 'Prestashop',
+        'type': 'server',
+        'level': 'WARN',
+        'dbname': env.cr.dbname,
+        'message': message,
+        'func': function_name,
+        'path': path,
+        'line': '0',
+    })
+
+import logging
+_logger = logging.getLogger(__name__)
 
 class SaleOrderPresta(models.Model):
     _inherit = 'sale.order'
@@ -30,7 +45,7 @@ class SaleOrderPresta(models.Model):
     prestashop_date_upd = fields.Datetime(string='Prestashop update time', index=True, copy=False)
     prestashop_config_id = fields.Many2one(string='Prestashop', comodel_name='prestashop.config', ondelete='set null',index=True, copy=False)
     prestashop_state = fields.Char(string='Prestashop current state', index=True, copy=False)
-
+    
     shipped_status_prestashop = fields.Boolean(string='Prestashop shipped', default=False, readonly=True, copy=False)
     force_all_qty_delivered = fields.Boolean(string='Force prestashop shipped', default=False, copy=False)
     
@@ -154,7 +169,8 @@ class SaleOrderPresta(models.Model):
             prepayment = self.env['account.payment.term'].search([('name','=','Prepayment')], limit=1)
             self.write({
                 'payment_term_id': prepayment.id,
-                't_invoice_policy': 'order'
+                't_invoice_policy': 'order',
+                'prestashop_module': module
             })
             wizard = self.env['sale.advance.payment.inv'].with_context({'active_model': self._name, 'active_id': self.id, 'active_ids': self.ids}).\
                 create({'advance_payment_method': 'delivered'})
@@ -163,25 +179,47 @@ class SaleOrderPresta(models.Model):
         else:
             if self.state == 'sale':
                 return True
-            self.action_confirm()
-            journal_id = self.env['account.journal']
-            if module and module == 'adyencw_paypal':
-                journal_id = journal_id.search([('name','ilike','paypal')], limit=1)
-            elif module and module.startswith('adyencw'):
-                journal_id = journal_id.search([('name','ilike','adyen')], limit=1)
-            if not journal_id:
-                raise UserError('Journal not found for module %s order %s prestashop_id %s' % (module, self.name, self.prestashop_id))
-            payment_method_id = journal_id.inbound_payment_method_ids.ids[0]
-            payment_env = self.env['account.payment'].with_context(active_ids=self.invoice_ids.ids, active_model='account.move', active_id=self.invoice_ids.id)
-            payment = payment_env.create({
-                'journal_id': journal_id.id,
-                'payment_method_id': payment_method_id,
+            self.write({
+                'prestashop_module': module,
+                'prestashop_process_payment': True
             })
-            payment._onchange_journal()
-            payment.post()
-            self.invoice_ids.post()
+            self.action_confirm()
         return True
     
     def confirm_invoicepayment(self):
         for sale in self.search([('state', 'in', ('draft', 'sent')), ('prestashop_module', '=', 'invoicepayment')]):
             sale.action_confirm()
+
+    def process_channel_payment(self):
+        for record in self.search([('channel_process_payment', '=', True),('prestashop_id','!=',False)]):
+            if record.prestashop_module and record.prestashop_module == 'adyencw_paypal':
+                name = 'paypal'
+            elif record.prestashop_module and record.prestashop_module.startswith('adyencw'):
+                name = 'adyen'
+            else:
+                msg = "Module name not match %s" % record.name
+                _log_logging(self.env, msg, 'process_payment', record.id)
+                _logger.warn(msg)
+                continue
+
+            journal_id = self.env['account.journal'].search([('type', 'in', ('bank', 'cash')), ('name', 'ilike', name)], limit=1)
+
+            if not journal_id:
+                msg = "Journal not found %s" % record.name
+                _log_logging(self.env, msg, 'process_payment', record.id)
+                _logger.warn(msg)
+                continue
+
+            try:
+                for invoice in record.invoice_ids.filtered(lambda i: i.state != 'cancel' and i.invoice_payment_state != 'paid'):
+                   invoice.action_register_payment_direct(journal_id=journal_id.id)
+                record.write({
+                    'channel_process_payment': False
+                })
+            except Exception as e:
+                msg = "Prestashop payment creation error: %s %s" % (str(e), record.name)
+                _log_logging(self.env, msg, 'process_channel_payment', record.id)
+                _logger.warn(msg)
+                continue
+        return super(SaleOrderPresta, self).process_channel_payment()
+   

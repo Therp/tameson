@@ -20,6 +20,7 @@ class SaleOrder(models.Model):
     channable_to_update_cancel = fields.Boolean(string="Needs To Be Cancelled in Channable", default=False, copy=False)
     channable_to_update_shipped = fields.Boolean(string="Needs To Be Updated in Channable", default=False, copy=False)
     channable_refused_cancellation = fields.Boolean(string="Refused Cancellation in Channable", default=False, copy=False)
+    channable_channel_name = fields.Char(string="Channable Channel", copy=False)
 
     @api.model
     def cron_sync_orders_with_channable(self):
@@ -239,6 +240,7 @@ class SaleOrder(models.Model):
             'pricelist_id': pricelist_id,
             'fiscal_position_id': fiscal_position_id,
             'payment_term_id': payment_term,
+            'channable_channel_name': order.get('channel_name', '')
         }
         sale_order = self.create(values)
         sale_order.flush()
@@ -276,25 +278,7 @@ class SaleOrder(models.Model):
             sale_order.action_confirm()
             if sale_order.company_id and sale_order.company_id.channable_auto_register_payment:
                 # and also register the payment on the invoice if applicable
-                for invoice in sale_order.invoice_ids:
-                    payment_journal = self.env['account.journal'].search([('channable_channel_name', '=', order.get('channel_name', ''))], limit=1) or False
-                    if payment_journal:
-                        PaymentObj = self.env['account.payment'].with_context(active_id=invoice.id, active_ids=invoice.ids)
-                        payment_method = self.env['account.payment.method'].search([('payment_type', '=', 'inbound')], limit=1)
-                        payment = PaymentObj.with_context(active_ids=self.ids, active_model='account.move', active_id=self.id).create({
-                            'invoice_ids': [(6, 0, [invoice.id])],
-                            'journal_id': payment_journal.id,
-                            'payment_method_id': payment_method and payment_method.id or False,
-                            'amount': invoice.amount_residual,
-                            'currency_id': invoice.currency_id.id,
-                            'payment_type': 'inbound',
-                            'communication': invoice.name,
-                            'partner_type': 'customer',
-                            'partner_id': invoice.commercial_partner_id and invoice.commercial_partner_id.id or invoice.partner_id.id,
-                            'payment_date': invoice.invoice_date or invoice.invoice_date_due
-                        })
-                        payment.post()
-                        invoice.post()  # post an invoice again, otherwise it won't be successfully reconciled
+                sale_order.channel_process_payment = True
 
         msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
         _logger.info(msg)
@@ -596,6 +580,23 @@ class SaleOrder(models.Model):
                     "target": "new",
                 }
 
+    def process_channel_payment(self):
+        for record in self.search([('channel_process_payment', '=', True),('channable_order_id','!=',False)]):
+            journal_id = self.env['account.journal'].search([('channable_channel_name', '=', record.channable_channel_name)], limit=1)
+            if not journal_id:
+                continue
+            try:
+                for invoice in record.invoice_ids.filtered(lambda i: i.state != 'cancel' and i.invoice_payment_state != 'paid'):
+                    invoice.action_register_payment_direct(journal_id=journal_id.id)
+                record.write({
+                    'channel_process_payment': False
+                })
+            except Exception as e:
+                msg = "Prestashop payment creation error: %s %s" % (str(e), record.name)
+                _log_logging(self.env, msg, 'process_channel_payment', record.id)
+                _logger.warn(msg)
+                continue
+        return super(SaleOrder, self).process_channel_payment()
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
