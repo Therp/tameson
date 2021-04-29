@@ -275,10 +275,10 @@ class SaleOrder(models.Model):
 
         if sale_order.company_id and sale_order.company_id.channable_auto_confirm_order:
             # automatically confirm an order
-            sale_order.action_confirm()
             if sale_order.company_id and sale_order.company_id.channable_auto_register_payment:
                 # and also register the payment on the invoice if applicable
-                sale_order.channel_process_payment = True
+                sale_order.write({'channel_process_payment': True})
+            sale_order.action_confirm()
 
         msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
         _logger.info(msg)

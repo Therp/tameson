@@ -11,7 +11,7 @@
     """,
     'author': "Tameson",
     'depends': [
-        'sale',
+        'tameson_sale',
         'delivery',
         'celery',
     ],
