@@ -10,6 +10,17 @@ from odoo.addons.celery.models.celery_task import STATE_PENDING as CELERY_STATE_
 import logging
 _logger = logging.getLogger(__name__)
 
+def _log_logging(env, message, function_name, path):
+    env['ir.logging'].sudo().create({
+        'name': 'Prestashop',
+        'type': 'server',
+        'level': 'WARN',
+        'dbname': env.cr.dbname,
+        'message': message,
+        'func': function_name,
+        'path': path,
+        'line': '0',
+    })
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
