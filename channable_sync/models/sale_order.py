@@ -10,6 +10,17 @@ from odoo.addons.celery.models.celery_task import STATE_PENDING as CELERY_STATE_
 import logging
 _logger = logging.getLogger(__name__)
 
+def _log_logging(env, message, function_name, path):
+    env['ir.logging'].sudo().create({
+        'name': 'Prestashop',
+        'type': 'server',
+        'level': 'WARN',
+        'dbname': env.cr.dbname,
+        'message': message,
+        'func': function_name,
+        'path': path,
+        'line': '0',
+    })
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -20,7 +31,7 @@ class SaleOrder(models.Model):
     channable_to_update_cancel = fields.Boolean(string="Needs To Be Cancelled in Channable", default=False, copy=False)
     channable_to_update_shipped = fields.Boolean(string="Needs To Be Updated in Channable", default=False, copy=False)
     channable_refused_cancellation = fields.Boolean(string="Refused Cancellation in Channable", default=False, copy=False)
-    channable_channel_name = fields.Char(string="Channable Channel", copy=False)
+    channable_payment_method = fields.Char(string="Channable Payment", copy=False)
 
     @api.model
     def cron_sync_orders_with_channable(self):
@@ -240,7 +251,7 @@ class SaleOrder(models.Model):
             'pricelist_id': pricelist_id,
             'fiscal_position_id': fiscal_position_id,
             'payment_term_id': payment_term,
-            'channable_channel_name': order.get('channel_name', '')
+            'channable_payment_method': price_data.get('payment_method', '')
         }
         sale_order = self.create(values)
         sale_order.flush()
@@ -275,10 +286,10 @@ class SaleOrder(models.Model):
 
         if sale_order.company_id and sale_order.company_id.channable_auto_confirm_order:
             # automatically confirm an order
-            sale_order.action_confirm()
             if sale_order.company_id and sale_order.company_id.channable_auto_register_payment:
                 # and also register the payment on the invoice if applicable
-                sale_order.channel_process_payment = True
+                sale_order.write({'channel_process_payment': True})
+            sale_order.action_confirm()
 
         msg = 'Channable order import: successfully imported a new order: %s' % str(sale_order.name)
         _logger.info(msg)
@@ -582,7 +593,7 @@ class SaleOrder(models.Model):
 
     def process_channel_payment(self):
         for record in self.search([('channel_process_payment', '=', True),('channable_order_id','!=',False)]):
-            journal_id = self.env['account.journal'].search([('channable_channel_name', '=', record.channable_channel_name)], limit=1)
+            journal_id = self.env['account.journal'].search([('channable_channel_name', 'ilike', record.channable_payment_method)], limit=1)
             if not journal_id:
                 continue
             try:
