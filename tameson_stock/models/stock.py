@@ -1,10 +1,5 @@
-import codecs
-import six
-import tempfile
 import base64
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from wand.image import Image
+import codecs
 
 from odoo import api, fields, models, _
 from odoo.tools.pdf import merge_pdf
@@ -141,8 +136,8 @@ class StockPicking(models.Model):
         self.ensure_one()
         lang = self.partner_id.lang
         template = self.env['mail.template'].search([('model','=',self._name)], limit=1)
-        if template.lang:
-            lang = template._render_template(template.lang, self._name, self.ids[0])
+        # if template.lang:
+        #     lang = template._render_template(template.lang, self._name, self.ids[0])
         ctx = {
             'default_model': self._name,
             'default_res_id': self.ids[0],
