@@ -556,7 +556,7 @@ class SaleOrder(models.Model):
                                                               endpoint="/orders/%s" % self.channable_order_id,
                                                               payload={},
                                                               timeout=120)
-        if order_response.get('status_shipped', False) == 'shipped':
+        if order_response.get('order', {}).get('status_shipped', False) == 'shipped':
             self.write({
                 'channable_to_update_shipped': False,
                 'channable_order_status': 'shipped',
