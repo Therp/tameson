@@ -489,7 +489,7 @@ class SaleOrder(models.Model):
                 celery = {
                     'countdown': 1,
                     'retry': True,
-                    'max_retries': 3,
+                    'max_retries': 0,
                     'interval_start': 5,
                     'queue': 'high.priority',
                 }
@@ -552,20 +552,21 @@ class SaleOrder(models.Model):
             'tracking_code': tracking_code,
             'transporter': transporter,
         }
-        response = self.env.user.company_id.channable_request(method="POST",
-                                                              endpoint=endpoint,
-                                                              payload=payload,
-                                                              timeout=120)
-
         order_response = self.env.user.company_id.channable_request(method="GET",
                                                               endpoint="/orders/%s" % self.channable_order_id,
                                                               payload={},
                                                               timeout=120)
-        if order_response.get('status_shipped', False) != 'not_shipped':
+        if order_response.get('order', {}).get('status_shipped', False) == 'shipped':
             self.write({
                 'channable_to_update_shipped': False,
                 'channable_order_status': 'shipped',
             })
+        else:
+            response = self.env.user.company_id.channable_request(method="POST",
+                                                                endpoint=endpoint,
+                                                                payload=payload,
+                                                                timeout=120)
+
         return True
 
     def action_cancel(self):
