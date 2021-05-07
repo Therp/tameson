@@ -226,7 +226,8 @@ class SaleOrderPresta(models.Model):
 
     def _get_sale_order_has_issues(self):
         vals = super(SaleOrderPresta, self)._get_sale_order_has_issues()
-        orders = self.search([('prestashop_id', '!=', False), ('state', '=', 'sale')]).filtered(lambda o: not o.invoice_ids.filtered(lambda i: i.invoice_payment_state == 'paid'))
+        orders = self.search([('prestashop_id', '!=', False), ('state', '=', 'sale'), ('prestashop_module', '!=', 'invoicepayment')]).\
+            filtered(lambda o: not o.invoice_ids.filtered(lambda i: i.invoice_payment_state == 'paid'))
         if orders:
             vals.append({
                 'name': 'Prestashop invoice not paid',
