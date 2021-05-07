@@ -274,7 +274,6 @@ where sot.aml_count = 0
 
     def check_sale_order_has_issues(self):
         sections = self._get_sale_order_has_issues()
-        print(sections)
         partners = self.env.ref('tameson_sale.notification_faulty_sale_orders').users.mapped('partner_id')
         if sections and partners:
             template = self.env.ref('tameson_sale.tameson_sale_order_issue_notify')
