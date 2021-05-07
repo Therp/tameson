@@ -232,17 +232,8 @@ class SaleOrder(models.Model):
             ])
             report.render_qweb_pdf(new_invoice.ids)
 
-    @api.model
-    def cron_check_sale_order_has_validated_invoice_for_done_pickings(self):
-        self.check_sale_order_has_validated_invoice_for_done_pickings()
 
-    # validators
-    def check_sale_order_has_validated_invoice_for_done_pickings(self):
-        # The SQL is for performance reasons
-        # We are looking for sale.order (id, origin) pairs such that:
-        # 1. they have 'done' pickings
-        # 2. they have no validated ('posted') invoices
-
+    def _get_sale_order_has_issues(self):
         self._cr.execute("""
 select distinct(so.id) so_id,
     so.name so_name
@@ -276,33 +267,19 @@ where sot.aml_count = 0
     and sot.sum_qty_delivered > 0 """)
 
         wrong_sale_orders = [(r[0], r[1]) for r in self._cr.fetchall()]
+        vals = []
         if wrong_sale_orders:
-            sof = '<br/>'.join('{} ({})'.format(so[1], so[0]) for so in wrong_sale_orders)
+            vals.append({'name': 'Orders with invoice issue', 'orders': wrong_sale_orders})
+        return vals
 
-            subject = 'Sale orders with "done" pickings found which have unvalidated invoices.'
-            header_text = ''
-            body = """
-            The following sale orders have pickings in 'done' state but have no validated invoices: <br/>
-            {}
-            """.format(sof)
+    def check_sale_order_has_issues(self):
+        sections = self._get_sale_order_has_issues()
+        print(sections)
+        partners = self.env.ref('tameson_sale.notification_faulty_sale_orders').users.mapped('partner_id')
+        if sections and partners:
+            template = self.env.ref('tameson_sale.tameson_sale_order_issue_notify')
+            template.with_context(sections=sections).send_mail(self.env.user.partner_id.id, force_send=True, email_values={'recipient_ids': [(6, 0, partners.ids)]})
 
-            msg = self.env['mail.message'].sudo().new(dict(body=body))
-            notif_layout = self.env.ref('mail.mail_notification_light')
-            notif_values = {'model_description': header_text, 'company': self.env.user.company_id}
-            body_html = notif_layout.render(dict(message=msg, **notif_values), engine='ir.qweb', minimal_qcontext=True)
-            body_html = self.env['mail.thread']._replace_local_links(body_html)
-            email = self.env.user.work_email or self.env.user.email
-            if not email:
-                raise ValidationError(_("You must configure your mail address."))
-            mail_values = {
-                'email_from': formataddr((self.env.user.name, email)),
-                'email_to': formataddr((self.env.user.name, email)),
-                'subject': subject
-            }
-            self.env['mail.mail'].create(dict(body_html=body_html, state='outgoing', **mail_values))
-
-            if self.env.context.get('raise_errors'):
-                raise Exception(wrong_sale_orders)
 
     ##Add delivery method only if delivery_id is not set for new SO
     @api.model_create_multi

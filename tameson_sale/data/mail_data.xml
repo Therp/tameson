@@ -83,5 +83,26 @@ Dear
             <field name="user_signature" eval="False"/>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <record id="tameson_sale_order_issue_notify" model="mail.template">
+            <field name="name">Tameson - Sale Orders with issue notification</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from">${(user.email_formatted) |safe}</field>
+            <field name="subject">Sale orders with issue</field>
+            <field name="body_html" type="html">
+<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+% for section in ctx.get('sections', []):
+    <strong>${section.get('name', '')}</strong><br />
+    % for id, order in section.get('orders', []):
+        <p>${order} (${id})</p>
+    % endfor
+    <br /><br />
+% endfor
+</div>
+            </field>
+            <field name="lang">${object.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
     </data>
 </odoo>

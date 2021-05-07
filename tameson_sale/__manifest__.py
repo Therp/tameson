@@ -19,6 +19,7 @@
         'tameson_account'
     ],
     'data': [
+        'data/group.xml',
         'data/cron.xml',
         'data/mail_data.xml',
         'views/sale_views.xml',
