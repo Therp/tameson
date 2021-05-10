@@ -88,7 +88,7 @@ Dear
             <field name="name">Tameson - Sale Orders with issue notification</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="email_from">${(user.email_formatted) |safe}</field>
-            <field name="subject">Sale orders with issue</field>
+            <field name="subject">ODOO - data to check</field>
             <field name="body_html" type="html">
 <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 % for section in ctx.get('sections', []):

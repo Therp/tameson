@@ -230,7 +230,7 @@ class SaleOrderPresta(models.Model):
             filtered(lambda o: not o.invoice_ids.filtered(lambda i: i.invoice_payment_state == 'paid'))
         if orders:
             vals.append({
-                'name': 'Prestashop invoice not paid',
+                'name': 'Prestashop order confirmed but invoice not paid',
                 'orders': orders.mapped(lambda o: (o.id, o.name))
             })
         return vals

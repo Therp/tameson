@@ -614,7 +614,7 @@ class SaleOrder(models.Model):
         orders = self.search([('channable_order_id', '!=', False), ('state', '=', 'sale')]).filtered(lambda o: not o.invoice_ids.filtered(lambda i: i.invoice_payment_state == 'paid'))
         if orders:
             vals.append({
-                'name': 'Channable invoice not paid',
+                'name': 'Channable order confirmed but invoice not marked as paid',
                 'orders': orders.mapped(lambda o: (o.id, o.name))
             })
         return vals

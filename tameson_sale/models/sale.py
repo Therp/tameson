@@ -269,7 +269,7 @@ where sot.aml_count = 0
         wrong_sale_orders = [(r[0], r[1]) for r in self._cr.fetchall()]
         vals = []
         if wrong_sale_orders:
-            vals.append({'name': 'Orders with invoice issue', 'orders': wrong_sale_orders})
+            vals.append({'name': 'Sale orders that have a confirmed delivery, but no confirmed invoice', 'orders': wrong_sale_orders})
         return vals
 
     def check_sale_order_has_issues(self):
