@@ -163,7 +163,7 @@ class StockPicking(models.Model):
 
     def generate_non_ups_labels(self):
         for r in self:
-            if r.carrier_id.ups_username:
+            if r.carrier_id.delivery_type == 'ups':
                 continue
 
             # don't regenerate a label if it exists already
