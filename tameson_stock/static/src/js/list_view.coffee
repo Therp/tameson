@@ -31,7 +31,8 @@ odoo.define 'tameson_stock.list_view', (require) ->
                    ['state', 'not in', ['draft', 'cancel']]],
                   ['id']
                   ]
-            ).then (ids) ->
+            ).then (objs) ->
+                ids = (i.id for i in objs)
                 path = "/stock/delivery_labels/#{ids.join(",")}"
                 url = "#{location.protocol}//#{location.host}#{path}"
                 window.open url, '_blank'

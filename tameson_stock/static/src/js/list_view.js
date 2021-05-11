@@ -35,8 +35,17 @@
           model: 'stock.picking',
           method: 'search_read',
           args: [[['id', 'in', selected_ids], ['state', 'not in', ['draft', 'cancel']]], ['id']]
-        }).then(function(ids) {
-          var path, url;
+        }).then(function(objs) {
+          var i, ids, path, url;
+          ids = (function() {
+            var j, len, results;
+            results = [];
+            for (j = 0, len = objs.length; j < len; j++) {
+              i = objs[j];
+              results.push(i.id);
+            }
+            return results;
+          })();
           path = "/stock/delivery_labels/" + (ids.join(","));
           url = location.protocol + "//" + location.host + path;
           return window.open(url, '_blank');
@@ -75,11 +84,11 @@
       picking_ups_labels: function() {
         var path, r, selected_ids, url;
         selected_ids = (function() {
-          var i, len, ref, results;
+          var j, len, ref, results;
           ref = this.selectedRecords;
           results = [];
-          for (i = 0, len = ref.length; i < len; i++) {
-            r = ref[i];
+          for (j = 0, len = ref.length; j < len; j++) {
+            r = ref[j];
             results.push(this.model.get(r).res_id);
           }
           return results;
@@ -91,11 +100,11 @@
       picking_delivery_labels: function() {
         var path, r, selected_ids, url;
         selected_ids = (function() {
-          var i, len, ref, results;
+          var j, len, ref, results;
           ref = this.selectedRecords;
           results = [];
-          for (i = 0, len = ref.length; i < len; i++) {
-            r = ref[i];
+          for (j = 0, len = ref.length; j < len; j++) {
+            r = ref[j];
             results.push(this.model.get(r).res_id);
           }
           return results;
