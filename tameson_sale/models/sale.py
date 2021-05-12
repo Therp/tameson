@@ -235,67 +235,53 @@ class SaleOrder(models.Model):
             ])
             report.render_qweb_pdf(new_invoice.ids)
 
-    @api.model
-    def cron_check_sale_order_has_validated_invoice_for_done_pickings(self):
-        self.check_sale_order_has_validated_invoice_for_done_pickings()
 
-    # validators
-    def check_sale_order_has_validated_invoice_for_done_pickings(self):
-        # The SQL is for performance reasons
-        # We are looking for sale.order (id, origin) pairs such that:
-        # 1. they have 'done' pickings
-        # 2. they have no validated ('posted') invoices
-
+    def _get_sale_order_has_issues(self):
         self._cr.execute("""
-        WITH ok_invoices AS (
-          SELECT invoice_origin AS origin FROM account_move
-            WHERE state = 'posted'
-        ), joined_origins AS (
-          SELECT
-              so.id AS so_id,
-              sp.origin AS sp_origin,
-              ok_invoices.origin AS oi_origin
-            FROM sale_order AS so
-            JOIN stock_picking AS sp
-              ON so.name = sp.origin
-            LEFT JOIN ok_invoices
-              ON sp.origin = ok_invoices.origin
-            WHERE sp.state = 'done'
-              AND so.state != 'cancel'
-        )
-        SELECT DISTINCT so_id, sp_origin FROM joined_origins
-          WHERE oi_origin IS NULL
-        """)
+select distinct(so.id) so_id,
+    so.name so_name
+from sale_order so
+    left join sale_order_line sol on sol.order_id = so.id
+    left join sale_order_line_invoice_rel sli_rel on sol.id = sli_rel.order_line_id
+    left join account_move_line aml on aml.id = sli_rel.invoice_line_id
+where so.state in ('sale', 'done')
+    AND aml.parent_state = 'draft'
+union
+select sot.so_id,
+    sot.so_name
+from (
+        select so.id as so_id,
+            so.name as so_name,
+            sum(sol.qty_delivered) as sum_qty_delivered,
+            sum(
+                case
+                    when aml.id is null then 0
+                    else 1
+                end
+            ) as aml_count
+        from sale_order so
+            left join sale_order_line sol on sol.order_id = so.id
+            left join sale_order_line_invoice_rel sli_rel on sol.id = sli_rel.order_line_id
+            left join account_move_line aml on aml.id = sli_rel.invoice_line_id
+        where so.state in ('sale', 'done')
+        group by so.id
+    ) as sot
+where sot.aml_count = 0
+    and sot.sum_qty_delivered > 0 """)
 
         wrong_sale_orders = [(r[0], r[1]) for r in self._cr.fetchall()]
-
+        vals = []
         if wrong_sale_orders:
-            sof = '<br/>'.join('{} ({})'.format(so[1], so[0]) for so in wrong_sale_orders)
+            vals.append({'name': 'Sale orders that have a confirmed delivery, but no confirmed invoice', 'orders': wrong_sale_orders})
+        return vals
 
-            subject = 'Sale orders with "done" pickings found which have unvalidated invoices.'
-            header_text = ''
-            body = """
-            The following sale orders have pickings in 'done' state but have no validated invoices: <br/>
-            {}
-            """.format(sof)
+    def check_sale_order_has_issues(self):
+        sections = self._get_sale_order_has_issues()
+        partners = self.env.ref('tameson_sale.notification_faulty_sale_orders').users.mapped('partner_id')
+        if sections and partners:
+            template = self.env.ref('tameson_sale.tameson_sale_order_issue_notify')
+            template.with_context(sections=sections).send_mail(self.env.user.partner_id.id, force_send=True, email_values={'recipient_ids': [(6, 0, partners.ids)]})
 
-            msg = self.env['mail.message'].sudo().new(dict(body=body))
-            notif_layout = self.env.ref('mail.mail_notification_light')
-            notif_values = {'model_description': header_text, 'company': self.env.user.company_id}
-            body_html = notif_layout.render(dict(message=msg, **notif_values), engine='ir.qweb', minimal_qcontext=True)
-            body_html = self.env['mail.thread']._replace_local_links(body_html)
-            email = self.env.user.work_email or self.env.user.email
-            if not email:
-                raise ValidationError(_("You must configure your mail address."))
-            mail_values = {
-                'email_from': formataddr((self.env.user.name, email)),
-                'email_to': formataddr((self.env.user.name, email)),
-                'subject': subject
-            }
-            self.env['mail.mail'].create(dict(body_html=body_html, state='outgoing', **mail_values))
-
-            if self.env.context.get('raise_errors'):
-                raise Exception(wrong_sale_orders)
 
     ##Add delivery method only if delivery_id is not set for new SO
     @api.model_create_multi
