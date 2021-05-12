@@ -40,7 +40,10 @@ class SaleOrder(models.Model):
         store=True,
     )
 
-    payment_term_name = fields.Char(related='payment_term_id.name')
+    payment_term_name = fields.Char(
+        related='payment_term_id.name',
+        string='Payment Term name'
+    )
     channel_process_payment = fields.Boolean()
 
 
