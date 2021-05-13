@@ -187,7 +187,7 @@ class SaleOrder(models.Model):
 
         # SO-44999 Create & validate invoice after non-delivery invoice_policy
         # order is confirmed
-        if self.t_invoice_policy != 'delivery':
+        if self.t_invoice_policy != 'delivery' and not self.transaction_ids:
             self._create_invoice()
 
         return ret
