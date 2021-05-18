@@ -507,7 +507,7 @@ class SaleOrder(models.Model):
             update_log += "Canceled order: %s\n" % order_to_cancel.name
         for order_to_update in self.search([('channable_order_id', '!=', False), ('channable_to_update_shipped', '=', True)]):
             result = order_to_update.update_status_shipped_channable()
-            update_log += "Updated order: %s" % order_to_update.name
+            update_log += "Updated order: %s\n" % order_to_update.name
             updated_orders_count += 1
 
         msg = 'Channable: updated status for %s orders.\n%s' % (str(updated_orders_count), update_log)
