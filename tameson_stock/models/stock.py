@@ -1,5 +1,6 @@
 import base64
 import codecs
+import itertools
 
 from odoo import api, fields, models, _
 from odoo.tools.pdf import merge_pdf
@@ -185,16 +186,24 @@ class StockPicking(models.Model):
 
         return self.env['ir.attachment'].search(query)
 
+    def get_sendcloud_labels(self):
+        for r in self:
+            for parcel_id in r.sendcloud_parcel_ids:
+                if parcel_id.label:
+                    yield parcel_id.label
+
     def get_merged_labels(self):
         ups_attachments = self.get_ups_attachments()
         non_ups = self.get_non_ups_labels()
+        sendcloud_labels = self.get_sendcloud_labels()
         att_dict = {att.res_id: att for att in ups_attachments}
         att_dict.update({att.res_id: att for att in non_ups})
 
-        return merge_pdf([
-            codecs.decode(att_dict[sp_id].datas, 'base64')
-            for sp_id in self.ids
-        ])
+        return merge_pdf(itertools.chain(
+            (codecs.decode(att_dict[sp_id].datas, 'base64')
+             for sp_id in self.ids),
+            sendcloud_labels
+        ))
 
 
 class StockPickingBatch(models.Model):
