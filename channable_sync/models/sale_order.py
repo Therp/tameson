@@ -500,15 +500,17 @@ class SaleOrder(models.Model):
     @api.model
     def update_status_in_channable(self, task_uuid, **kwargs):
         updated_orders_count = 0
-
+        update_log = ''
         for order_to_cancel in self.search([('channable_order_id', '!=', False), ('channable_to_update_cancel', '=', True)]):
             result = order_to_cancel.update_status_canceled_channable()
             updated_orders_count += 1
+            update_log += "Canceled order: %s\n" % order_to_cancel.name
         for order_to_update in self.search([('channable_order_id', '!=', False), ('channable_to_update_shipped', '=', True)]):
             result = order_to_update.update_status_shipped_channable()
+            update_log += "Updated order: %s\n" % order_to_update.name
             updated_orders_count += 1
 
-        msg = 'Channable: updated status for %s orders.' % str(updated_orders_count)
+        msg = 'Channable: updated status for %s orders.\n%s' % (str(updated_orders_count), update_log)
         _logger.info(msg)
         return msg
 
@@ -618,6 +620,13 @@ class SaleOrder(models.Model):
                 'name': 'Channable order confirmed but invoice not marked as paid',
                 'orders': orders.mapped(lambda o: (o.id, o.name))
             })
+        not_shipped_orders = self.search([('channable_order_id', '!=', False), ('all_qty_delivered', '=', True), ('channable_order_status', '!=', 'shipped')])
+        if not_shipped_orders:
+            vals.append({
+                'name': 'Channable order delivered but status not marked as shipped',
+                'orders': not_shipped_orders.mapped(lambda o: (o.id, o.name))
+            })
+
         return vals
 
 class SaleOrderLine(models.Model):
