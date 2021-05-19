@@ -1,8 +1,7 @@
 odoo.define 'tameson_stock.list_view', (require) ->
     FormController = require 'web.FormController'
     ListController = require 'web.ListController'
-    Model = require 'web.BasicModel'
-    StockPicking = new Model 'stock.picking'
+    rpc = require 'web.rpc'
 
     FormController.include
         renderButtons: ($node) ->
@@ -24,9 +23,19 @@ odoo.define 'tameson_stock.list_view', (require) ->
         batch_picking_delivery_labels: () ->
             state = @model.get(@handle, {raw: true})
             selected_ids = state.data.picking_ids
-            path = "/stock/delivery_labels/#{selected_ids.join(",")}"
-            url = "#{location.protocol}//#{location.host}#{path}"
-            window.open url, '_blank'
+            rpc.query(
+              model: 'stock.picking'
+              method: 'search_read'
+              args: [
+                  [['id', 'in', selected_ids],
+                   ['state', 'not in', ['draft', 'cancel']]],
+                  ['id']
+                  ]
+            ).then (objs) ->
+                ids = (i.id for i in objs)
+                path = "/stock/delivery_labels/#{ids.join(",")}"
+                url = "#{location.protocol}//#{location.host}#{path}"
+                window.open url, '_blank'
 
     ListController.include
         renderButtons: ($node) ->
