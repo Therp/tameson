@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <template id="frontend_layout_tameson" inherit_id="web.frontend_layout">
+            <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('row')]/div[1]" position="after">
+                <div class="col-sm text-center text-sm-left">
+                    <a class="text-dark" href="https://tameson.com/privacy-policy.html">Privacy Policy</a>
+                </div>
+                <div class="col-sm text-center text-sm-left">
+                    <a class="text-dark" href="/page/contactus">Contact Us</a>
+                </div>
+                <div class="col-sm text-center text-sm-left">
+                    <a class="text-dark" href="https://tameson.com/terms-and-conditions.html">Terms and Conditions</a>
+                </div>
+            </xpath>
+            
+            <xpath expr="//t[@t-call='web.brand_promotion']" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>
