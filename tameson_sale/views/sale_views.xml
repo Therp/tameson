@@ -19,6 +19,9 @@
                 <field name="t_invoice_policy"
                        attrs="{'readonly': [('t_done_pickings', '!=', [])]}" />
             </xpath>
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
+                <field name="bypass_credit_limit" groups="sales_team.group_sale_manager,account.group_account_manager" />
+            </xpath>
         </field>
     </record>
 </odoo>

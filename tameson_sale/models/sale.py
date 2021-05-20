@@ -7,6 +7,9 @@ from odoo.tools import formataddr, float_compare, float_is_zero
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    
+    bypass_credit_limit = fields.Boolean()
+
     t_done_pickings = fields.Many2many(
         'stock.picking',
         string=_('Done pickings for this sale order'),
@@ -189,6 +192,12 @@ class SaleOrder(models.Model):
         # order is confirmed
         if self.t_invoice_policy != 'delivery' and not self.transaction_ids:
             self._create_invoice()
+
+        if not self.bypass_credit_limit and self.partner_invoice_id.property_payment_term_id and self.partner_invoice_id.property_payment_term_id.name != 'Prepayment':
+            credit_limit = self.partner_invoice_id.credit_limit
+            credit = self.partner_invoice_id.credit
+            if credit_limit and (self.amount_total + credit) > credit_limit:
+                raise ValidationError("Credit limit crossed for this partner. Credit limit: %.2f, Total due: %.2f, Difference: %.2f" % (credit_limit, credit, credit_limit - credit))
 
         return ret
 
