@@ -202,7 +202,7 @@ class StockPicking(models.Model):
         return merge_pdf(itertools.chain(
             (codecs.decode(att_dict[sp_id].datas, 'base64')
              for sp_id in self.ids),
-            sendcloud_labels
+            (codecs.decode(sl, 'base64') for sl in sendcloud_labels)
         ))
 
 
