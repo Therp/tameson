@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data noupdate="0">
-        <template id="portal_record_sidebar" inehrit_id="portal.portal_record_sidebar" >
+        <template id="portal_record_sidebar" inherit_id="portal.portal_record_sidebar" >
             <xpath expr="//div[hasclass('card-footer')]" position="replace" />
         </template>
         <template id="mail_notification_paynow_tameson" inherit_id="mail.mail_notification_paynow">
