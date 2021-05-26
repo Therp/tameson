@@ -3,6 +3,9 @@
     <data noupdate="0">
         <template id="mail_notification_paynow_tameson" inherit_id="mail.mail_notification_paynow">
             <!-- <xpath expr="//div[@t-if=&quot;is_online and not record._context.get('proforma')&quot;]" position="replace" /> -->
+            <xpath expr="//a[@t-att-href='access_url']" position="attributes">
+                <attribute name="style">background-color: #f4c300; padding: 8px 16px 8px 16px; text-decoration: none; color: #333; border-radius: 5px; font-size:13px;</attribute>
+            </xpath>
             <xpath expr="/t/table/tr[2]" position="replace">
                 <tr height="10px">
                     <td align="center" style="min-width: 590px;">
