@@ -62,7 +62,7 @@ class SaleOrderPresta(models.Model):
         order_data = order['order']
         prestashop_id = order_data['id']
         prestashop_state = order_data['current_state']
-        if prestashop_state in (6, 13):
+        if prestashop_state in ('6', '13'):
             return 'Order not created. id: %s state: %s' % (prestashop_id, prestashop_state)
         prestashop_module = order_data['module']
         prestashop_date_upd = order_data['date_upd']
