@@ -62,6 +62,15 @@ class SaleOrder(models.Model):
                 for line in order.order_line
             )
 
+    @api.onchange('t_invoice_policy')
+    def _onchange_t_invoice_policy(self):
+        if self.t_invoice_policy == 'delivery':
+            self.require_payment = False
+            self.require_signature = True
+        else:
+            self.require_payment = True
+            self.require_signature = False
+
     @api.depends('t_invoice_policy')
     def _get_t_is_delivery_invoice_policy(self):
         for r in self:
