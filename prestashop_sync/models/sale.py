@@ -58,12 +58,12 @@ class SaleOrderPresta(models.Model):
     ]
     
     def create_from_prestashop(self, task_uuid, order, **kwargs):
-        partner, delivery, invoice = self.env['res.partner'].match_or_create_prestashop(order)
         order_data = order['order']
         prestashop_id = order_data['id']
         prestashop_state = order_data['current_state']
         if prestashop_state in ('6', '13'):
             return 'Order not created.'
+        partner, delivery, invoice = self.env['res.partner'].match_or_create_prestashop(order)
         prestashop_module = order_data['module']
         prestashop_date_upd = order_data['date_upd']
         prestashop_config_id = order['config_id']
