@@ -60,7 +60,6 @@ class SaleOrderPresta(models.Model):
     def create_from_prestashop(self, task_uuid, order, **kwargs):
         order_data = order['order']
         prestashop_id = order_data['id']
-        prestashop_state = order_data['current_state']
         partner, delivery, invoice = self.env['res.partner'].match_or_create_prestashop(order)
         prestashop_module = order_data['module']
         prestashop_date_upd = order_data['date_upd']
@@ -98,7 +97,7 @@ class SaleOrderPresta(models.Model):
             'order_line': lines,
             'presta_ups_access_point_country': order_data.get('ups_country_iso', {}).get('value', False),
             'presta_ups_access_point_id': order_data.get('ups_id_access_point', {}).get('value', False),
-            'prestashop_state': prestashop_state,
+            'prestashop_state': order_data['current_state'],
             'client_order_ref': order_data.get('user_reference', {}).get('value', False),
             'origin': "%s - %s - %s" % (DOMAIN.get(order_data.get('id_shop', ''), ''), prestashop_id, order_data.get('reference', ''),),
             'source_id': config_id.source_id.id
