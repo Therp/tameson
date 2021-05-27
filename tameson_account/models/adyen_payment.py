@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 class Payment(models.Model):
     _inherit = 'payment.acquirer'
 
+    # totally replace existing function from payment_adyen module, inheritance chain breaks here
     def _adyen_form_validate(self, data):
         status = data.get('authResult', 'PENDING')
         if status == 'AUTHORISED':
