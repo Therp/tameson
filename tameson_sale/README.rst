@@ -17,3 +17,4 @@ Sale related customizations for Tameson
       block order confirmation if credit_limit is crossed. can be bypassed using
       credit limit bypass bool field on sale order for users of group
       Sale administrator/Accounting advisors
+    * Set 'online payment' (default) or 'signature' (delivered qty) automatically depending on the invoice policy

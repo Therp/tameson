@@ -135,8 +135,10 @@ class PrestashopConfig(models.Model):
         all_states_data = Request.get_by_ids('states', ids='all', fields='[id,iso_code]')
         updated = 0
         created = 0
+        skipped = 0
         for order in all_orders:
             order_id = order.get('id', False)
+            current_state = order.get('current_state', False)
             try:
                 order.update(order_rows=order_rows.get(order_id,[]))
                 sale_order = Sale.search([('prestashop_config_id','=',self.id),('prestashop_id','=',order_id)], limit=1)
@@ -144,6 +146,9 @@ class PrestashopConfig(models.Model):
                     # CeleryTask.call_task('sale.order', 'update_from_prestashop', so_id=sale_order.id, order=order, celery=celery, 
                     #     celery_task_vals={'ref': 'Update existing order from prestashop: %s' % sale_order.name})
                     updated += 1
+                    #skip states canceled,payment process started, awaiting payment (adyen)
+                elif current_state in ('6', '13', '152'):
+                    skipped += 1
                 else:
                     customer = all_customer_data[order.get('id_customer', '0')]
                     delivery = order.get('id_address_delivery', '0')
@@ -169,7 +174,7 @@ class PrestashopConfig(models.Model):
                     created += 1
             except Exception as e:
                 raise Exception("%s\n%s" % (str(e), order_id))
-        return "Pulled from API: %d\nUpdated orders: %d\nCreated orders: %d" % (len(all_orders), updated, created)
+        return "Pulled from API: %d\nUpdated orders: %d\nCreated orders: %d\nSkipped orders: %d" % (len(all_orders), updated, created, skipped)
     
     def cron_sync_order_status(self):
         CeleryTask = self.env['celery.task']
