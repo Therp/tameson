@@ -8,7 +8,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     
-    bypass_credit_limit = fields.Boolean()
+    bypass_credit_limit = fields.Boolean(tracking=True)
 
     t_done_pickings = fields.Many2many(
         'stock.picking',
