@@ -170,6 +170,12 @@ class StockPicking(models.Model):
             # don't regenerate a label if it exists already
             if r.get_non_ups_labels():
                 continue
+            # skip if there are sendcloud labels
+            try:
+                next(r.get_sendcloud_labels())
+                continue
+            except StopIteration:
+                pass
 
             pdf, _ = self.env.ref('tameson_stock.t_delivery_addresses').render_qweb_pdf([r.id])
             attachments = [('DeliveryAddresses.pdf', pdf)]
