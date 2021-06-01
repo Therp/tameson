@@ -143,7 +143,7 @@ class PrestashopConfig(models.Model):
                 order.update(order_rows=order_rows.get(order_id,[]))
                 sale_order = Sale.search([('prestashop_config_id','=',self.id),('prestashop_id','=',order_id)], limit=1)
                 if sale_order:
-                    if current_state == '6':
+                    if current_state in ('6', '146'):
                         CeleryTask.call_task('sale.order', 'update_from_prestashop', so_id=sale_order.id, order=order, celery=celery, 
                             celery_task_vals={'ref': 'Update existing order from prestashop: %s' % sale_order.name})
                     updated += 1
