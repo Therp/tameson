@@ -14,4 +14,5 @@ Stock related customizations for Tameson
       Minimal QTY Available and Minimal QTY Available Date. 
       They inform the user of the minimal quantity of a product based on
       Also visible on the sales order line displaying a warning
-      when the ordered quantity goes above it.
+      when the ordered quantity goes above it. 
+    * Includes 'show delivery labels' button that prints delivery labels PDFs,  creates universal 'address' label if none available
