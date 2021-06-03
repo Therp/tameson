@@ -7,6 +7,9 @@ from odoo.tools import formataddr, float_compare, float_is_zero
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    
+    bypass_credit_limit = fields.Boolean(tracking=True)
+
     t_done_pickings = fields.Many2many(
         'stock.picking',
         string=_('Done pickings for this sale order'),
@@ -192,6 +195,24 @@ class SaleOrder(models.Model):
                 line.invoice_status = 'no'
 
     def action_confirm(self):
+        parent_partner = self.env['res.partner'].search([('id', 'parent_of', self.partner_id.id), ('parent_id','=',False)], limit=1)
+        if not self.bypass_credit_limit and self.t_invoice_policy == 'delivery':
+            credit_limit = parent_partner.credit_limit
+            open_orders = self.search([('partner_id', 'child_of', parent_partner.id), ('state','=','sale'), ('state','=','sale')]).\
+                filtered(lambda so: 'posted' not in so.invoice_ids.mapped('state'))
+            open_invoices = parent_partner.unreconciled_aml_ids.mapped('move_id')
+            credit = parent_partner.credit
+            open_orders_total = 0
+            for order in open_orders + self:
+                open_orders_total += order.currency_id._convert(order.amount_total, self.env.user.company_id.currency_id,
+                                    self.env.user.company_id, fields.Date.today())
+            difference = (credit + open_orders_total) - credit_limit
+            if credit_limit and  difference > 0:
+                invoices = ', '.join(open_invoices.mapped('name'))
+                orders = ', '.join(open_orders.mapped('name'))
+                msg = "Credit limit: %.2f, Total due: %.2f, Total open order amount: %.2f, Difference: %.2f\nOpen invoices: %s\nOpen orders: %s" %\
+                    (credit_limit, credit, open_orders_total, difference, invoices, orders)
+                raise ValidationError(msg)
         ret = super(SaleOrder, self).action_confirm()
 
         # SO-44999 Create & validate invoice after non-delivery invoice_policy
