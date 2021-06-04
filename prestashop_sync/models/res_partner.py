@@ -26,9 +26,11 @@ class ResPartner(models.Model):
                 'name': "%s %s"%(customer_data.get('firstname', ''), customer_data.get('lastname', '')),
             })
         if not partner:
+            country_id = self.env['res.country'].search([('code','=ilike',invoice_data.get('country_code', ''))], limit=1).id
             partner = self.create({
                 'name': "%s %s"%(customer_data.get('firstname', ''), customer_data.get('lastname', '')),
                 'email': email,
+                'country_id': country_id,
             })
         childs = self.search([('id','child_of',partner.id),('type','in',('invoice', 'delivery', 'other'))])
         if invoice_data:
