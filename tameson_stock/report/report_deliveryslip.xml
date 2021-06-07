@@ -14,6 +14,14 @@
             <div t-esc="partner"
                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}' style="display:none"/>
         </xpath>
+        
+        <xpath expr="//div[@name='div_origin']" position="after">
+            <div t-if="o.sale_id" class="col-auto" name="div_order_date">
+                <strong>Order Date:</strong>
+                <p t-field="o.sale_id.date_order"/>
+            </div>
+        </xpath>
+        
         <xpath
             expr="//div[@name='div_sched_date']"
             position="attributes">
