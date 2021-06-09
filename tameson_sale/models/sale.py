@@ -385,7 +385,11 @@ class SaleOrderLine(models.Model):
             else:
                 line.qty_to_invoice = 0
 
-
+    @api.onchange('product_id', 'product_uom_qty')
+    def _onchange_product_id_set_customer_lead(self):
+        self.customer_lead = self.product_id.sale_delay
+        if self.product_id and self.product_id.virtual_available < self.product_uom_qty:
+            self.customer_lead = self.product_id.sale_delay + self.product_id._select_seller(quantity=self.product_uom_qty).delay
 
 class MailComposer(models.TransientModel):
     _inherit = 'mail.compose.message'
