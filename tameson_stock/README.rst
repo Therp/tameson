@@ -16,3 +16,5 @@ Stock related customizations for Tameson
       Also visible on the sales order line displaying a warning
       when the ordered quantity goes above it. 
     * Includes 'show delivery labels' button that prints delivery labels PDFs,  creates universal 'address' label if none available
+    * Batch mailing action for delivery delay mail sending.
+      Default mail template will be with name matching "delivery delay".
