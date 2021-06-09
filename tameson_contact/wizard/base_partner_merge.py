@@ -8,6 +8,6 @@ class MergePartnerAutomatic(models.TransientModel):
         if self.env.user.has_group('sales_team.group_sale_manager'):
             extra_checks = False
 
-        return super(MergePartnerAutomatic, self)._merge(partner_id,
+        return super(MergePartnerAutomatic, self)._merge(partner_ids,
                                                          dst_partner=dst_partner,
                                                          extra_checks=extra_checks)
