@@ -26,6 +26,42 @@ class PurchaseOrder(models.Model):
         compute="_compute_clipboard_text_handle",
     )
 
+
+    ## compute invoice_status based on t_purchase_method instead of each product purchase_method
+    @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty', 't_purchase_method')
+    def _get_invoiced(self):
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for order in self:
+            if order.state not in ('purchase', 'done'):
+                order.invoice_status = 'no'
+                continue
+
+            if any(
+                float_compare(
+                    line.qty_invoiced,
+                    line.product_qty if order.t_purchase_method == 'purchase' else line.qty_received,
+                    precision_digits=precision,
+                )
+                == -1
+                for line in order.order_line.filtered(lambda l: not l.display_type)
+            ):
+                order.invoice_status = 'to invoice'
+            elif (
+                all(
+                    float_compare(
+                        line.qty_invoiced,
+                        line.product_qty if order.t_purchase_method == "purchase" else line.qty_received,
+                        precision_digits=precision,
+                    )
+                    >= 0
+                    for line in order.order_line.filtered(lambda l: not l.display_type)
+                )
+                and order.invoice_ids
+            ):
+                order.invoice_status = 'invoiced'
+            else:
+                order.invoice_status = 'no'
+
     def _compute_clipboard_text_handle(self):
         for po in self:
             text_val_to_clipboard = "/"
