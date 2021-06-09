@@ -15,3 +15,5 @@ Stock related customizations for Tameson
       They inform the user of the minimal quantity of a product based on
       Also visible on the sales order line displaying a warning
       when the ordered quantity goes above it.
+    * Batch mailing action for delivery delay mail sending.
+      Default mail template will be with name matching "delivery delay".
