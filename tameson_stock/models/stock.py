@@ -213,6 +213,8 @@ class StockPicking(models.Model):
         return self.env['ir.attachment'].search(query)
 
     def get_sendcloud_labels(self):
+        if not hasattr(self, 'sendcloud_parcel_ids'):
+            return False
         for r in self:
             for parcel_id in r.sendcloud_parcel_ids:
                 if parcel_id.label:
