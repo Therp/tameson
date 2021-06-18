@@ -28,6 +28,10 @@
                         </group>
                     </group>
                 </page>
+                <page name="Help" string="Help" >
+                    <button name="action_set_help" string="Edit help" type="object" class="oe_link" groups="stock.group_stock_manager" />
+                    <field name="help_text" />
+                </page>
             </xpath>
         </field>
     </record>

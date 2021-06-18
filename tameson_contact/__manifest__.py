@@ -11,6 +11,7 @@
         'base_address_extended'
     ],
     'data': [
+        'views/contact.xml'
     ],
     'application': False,
 }

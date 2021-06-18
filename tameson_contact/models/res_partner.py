@@ -11,7 +11,8 @@ from odoo.exceptions import ValidationError
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'set.help.mixin']
 
     @api.constrains('email')
     def _check_email(self):

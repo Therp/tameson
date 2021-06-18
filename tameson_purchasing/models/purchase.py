@@ -3,7 +3,9 @@ from odoo.tools import float_compare, float_is_zero
 
 
 class PurchaseOrder(models.Model):
-    _inherit = 'purchase.order'
+    _name= 'purchase.order'
+    _inherit = ['purchase.order', 'set.help.mixin']
+
 
     t_purchase_method = fields.Selection(
         [
