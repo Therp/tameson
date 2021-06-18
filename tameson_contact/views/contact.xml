@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">view_partner_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[last()]" position="after">
+                    <page string="Help" >
+                        <button name="action_set_help" string="Edit help" type="object" class="oe_link" />
+                        <field name="help_text" />                        
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

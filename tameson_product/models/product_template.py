@@ -2,7 +2,8 @@ from odoo import api, fields, models, tools, _
 
 
 class ProductTemplateInherit(models.Model):
-    _inherit = "product.template"
+    _name = "product.template"
+    _inherit = ["product.template", "set.help.mixin"]
 
     def init(self):
         res = super(ProductTemplateInherit, self).init()

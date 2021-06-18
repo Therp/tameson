@@ -17,6 +17,12 @@
                 <button name="tameson_po_copy_clipboard" type="object" string="Copy Lines To Clipboard"
                     attrs="{'invisible': [('t_clipboard_text_handle', '=', '/')]}"/>
             </xpath>
+            <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                <page string="Help" >
+                    <button name="action_set_help" string="Edit help" type="object" class="oe_link" groups="purchase.group_purchase_manager" />
+                    <field name="help_text" />
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>

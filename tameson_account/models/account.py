@@ -2,7 +2,8 @@ from odoo import api, fields, models, _
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _name = 'account.move'
+    _inherit = ['account.move', 'set.help.mixin']
 
     t_comment = fields.Text(
         string=_('Comment'),

@@ -16,6 +16,7 @@
     'author': "Tameson",
     'depends': [
         'product',
+        'tameson_base',
     ],
     'data': [
         'views/product_views.xml',

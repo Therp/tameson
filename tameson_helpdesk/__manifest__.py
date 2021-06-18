@@ -8,6 +8,7 @@
     'author': "Tameson",
     'depends': [
         'helpdesk',
+        'tameson_base',
     ],
     'data': [
         'views/helpdesk_views.xml',

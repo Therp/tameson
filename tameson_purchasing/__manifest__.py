@@ -15,6 +15,7 @@
     'depends': [
         'purchase_stock',
         'tameson_account',
+        'tameson_base',
     ],
     'data': [
         'views/purchase_views.xml',

@@ -5,8 +5,8 @@ from odoo.exceptions import ValidationError
 from odoo.tools import formataddr, float_compare, float_is_zero
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
-
+    _name= 'sale.order'
+    _inherit = ['sale.order', 'set.help.mixin']
     
     bypass_credit_limit = fields.Boolean(tracking=True)
 
