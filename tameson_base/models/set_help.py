@@ -26,7 +26,7 @@ class SetHelpModel(models.TransientModel):
         
     def set_help_text(self):
         model = self.env.context.get('active_model')
-        ir_model = self.env['ir.model'].search([('model','=',model)], limit=1)
+        ir_model = self.env['ir.model'].search([('model','=',model)], limit=1).sudo()
         ir_model.help_text = self.help
         return {'type': 'ir.actions.act_window_close'}
 
