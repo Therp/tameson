@@ -15,7 +15,8 @@
         'sales_team',
     ],
     'data': [
-        'views/contact.xml'
+        'views/contact.xml',
+        'wizard/tameson_merge.xml',
     ],
     'application': False,
 }
