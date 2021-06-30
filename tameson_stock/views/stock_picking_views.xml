@@ -27,6 +27,7 @@
                         class="oe_highlight" />
                         
                 <button name="action_mail_send" string="Send" type="object" class="oe_highlight"/>
+                <button name="action_create_batch" string="Batch for ready shipments" type="object" attrs="{'invisible': ['|', ('state','not in',('done')), ('picking_type_code','!=','incoming')]}" />
             </xpath>
 
             <xpath expr="//page[last()]" position="after">

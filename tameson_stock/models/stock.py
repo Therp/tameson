@@ -33,6 +33,23 @@ class StockPicking(models.Model):
         store=True
     )
 
+    def action_create_batch(self):
+        pickings = self.move_ids_without_package.mapped('origin_so_picking_ids').filtered(lambda sp: sp.t_delivery_allowed and sp.state == 'assigned')
+        if not pickings:
+            return
+        batch = self.env['stock.picking.batch'].create({
+            'state': 'draft',
+            'picking_ids': [(4, pid, 0) for pid in pickings.ids]
+        })
+        
+        return {
+            'name': batch.name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.picking.batch',
+            'res_id': batch.id
+        }
+        
     def action_delivery_delay_mail(self):
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
         template_id = self.env['mail.template'].search([('name','ilike','delivery delay')], limit=1).id
