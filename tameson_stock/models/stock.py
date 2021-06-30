@@ -8,7 +8,8 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _name = 'stock.picking'
+    _inherit = ['stock.picking', 'set.help.mixin']
 
     t_delivery_allowed = fields.Boolean(
         compute='_t_delivery_allowed_get',

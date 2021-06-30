@@ -39,6 +39,10 @@
                         </group>
                     </group>
                 </page>
+                <page string="Help" >
+                    <button name="action_set_help" string="Edit help" type="object" class="oe_link" groups="stock.group_stock_manager" />
+                    <field name="help_text" />    
+                </page>
             </xpath>
             <xpath expr="//page[3]" position="attributes">
                 <attribute name="autofocus">autofocus</attribute>
