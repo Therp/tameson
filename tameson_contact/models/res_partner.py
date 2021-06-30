@@ -16,6 +16,8 @@ class ResPartner(models.Model):
 
     @api.constrains('email')
     def _check_email(self):
+        if self.env.context.get('skip_email_check', False):
+            return
         for record in self:
             if record.email:
                 child_ids = self.search([('id','child_of',record.parent_id.id or record.id)])
