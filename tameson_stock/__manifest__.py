@@ -30,6 +30,7 @@
         'stock_picking_batch',
         'tameson_sale',
         'tameson_product',
+        'tameson_base',
     ],
     'data': [
         'data/params.xml',
