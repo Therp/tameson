@@ -138,6 +138,8 @@ class SaleOrderPresta(models.Model):
         Order.recompute()
         Order._compute_tax_id()
         Order.flush()
+        for line in Order.order_line:
+            line._onchange_product_id_set_customer_lead()
         invoice_email = order_data.get('user_invoice_email', {}).get('value', False)
         if invoice_email:
             if not Order.partner_invoice_id.email:
