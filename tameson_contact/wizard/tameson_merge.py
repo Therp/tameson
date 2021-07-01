@@ -8,6 +8,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class TamesonMergeContact(models.TransientModel):
@@ -46,14 +48,14 @@ select ids, email
             del_inv = self.env['res.partner']
             other = self.env['res.partner']
             arch = self.env['res.partner']
-            del_inv += partner.child_ids.filtered(lambda p: p.type == 'delivery').sorted('id')[-1]
-            del_inv += partner.child_ids.filtered(lambda p: p.type == 'invoice').sorted('id')[-1]
+            del_inv += partner.child_ids.filtered(lambda p: p.type == 'delivery').sorted('id', reverse=True)[:1]
+            del_inv += partner.child_ids.filtered(lambda p: p.type == 'invoice').sorted('id', reverse=True)[:1]
             for child in partner.child_ids - del_inv:
                 if child.zip not in (del_inv + other).mapped('zip'):
                     other += child
                 else:
                     arch += child
-            print("Archive: %d Other: %d" % (len(arch), len(other)))
+            _logger.warning("Archive: %d Other: %d" % (len(arch), len(other)))
             arch.action_archive()
             other.write({'type': 'other'})
 
