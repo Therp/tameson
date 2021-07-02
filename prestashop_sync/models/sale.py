@@ -57,6 +57,17 @@ class SaleOrderPresta(models.Model):
         )
     ]
     
+    def prestashop_cancel_orders(self):
+        CancelOrders = self.env['sale.order'].search([('state','!=','cancel'), ('prestashop_id','!=',False), ('prestashop_state','in',('6','146'))])
+        for order in CancelOrders:
+            if order.payment_term_id.name == 'Prepayment':
+                for invoice in order.invoice_ids:
+                    if invoice.invoice_payment_state == 'not_paid':
+                        invoice.button_draft()
+                        invoice.button_cancel()
+            order.action_cancel()
+        return True
+
     def create_from_prestashop(self, task_uuid, order, **kwargs):
         order_data = order['order']
         prestashop_id = order_data['id']
