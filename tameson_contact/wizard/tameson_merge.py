@@ -29,7 +29,17 @@ select ids, email
             where parent_id is null and
             email is not null
             group by email) as subquery
-        where count > 1;
+        where count > 1
+union
+select ARRAY[parent.id] id, rp.email 
+    from (
+        select parent_id id, count(parent_id) 
+            from res_partner 
+                where active = True 
+                group by parent_id) parent 
+            left join res_partner rp 
+                on parent.id = rp.id 
+            where parent.count > 2;
 """)
         pidss = self.env.cr.fetchall()
         lines  = [(0, 0, {'partner_ids': [(6, 0, ids)], 'partner_email': email})for ids, email in pidss]
@@ -41,17 +51,22 @@ select ids, email
     def action_merge(self):
         for line in self.line_ids:
             ids = line.partner_ids.ids
-            wiz = self.env['base.partner.merge.automatic.wizard'].with_context(active_ids=ids,active_model='res.partner').create({})
-            wiz.write({'dst_partner_id': max(ids)})
-            partner = wiz.dst_partner_id
-            wiz.with_context(skip_email_check=True).action_merge()
+            if len(ids) > 1:
+                wiz = self.env['base.partner.merge.automatic.wizard'].with_context(active_ids=ids,active_model='res.partner').create({})
+                wiz.write({'dst_partner_id': max(ids)})
+                partner = wiz.dst_partner_id
+                wiz.with_context(skip_email_check=True).action_merge()
+            elif len(ids) == 1:
+                partner = line.partner_ids
+            else:
+                return
             del_inv = self.env['res.partner']
             other = self.env['res.partner']
             arch = self.env['res.partner']
             del_inv += partner.child_ids.filtered(lambda p: p.type == 'delivery').sorted('id', reverse=True)[:1]
             del_inv += partner.child_ids.filtered(lambda p: p.type == 'invoice').sorted('id', reverse=True)[:1]
             for child in partner.child_ids - del_inv:
-                if child.zip not in (del_inv + other).mapped('zip'):
+                if child.zip.lower().strip() not in (del_inv + other).mapped(lambda p: p.zip.lower().strip()):
                     other += child
                 else:
                     arch += child
