@@ -66,7 +66,7 @@ select ARRAY[parent.id] id, rp.email
             del_inv += partner.child_ids.filtered(lambda p: p.type == 'delivery').sorted('id', reverse=True)[:1]
             del_inv += partner.child_ids.filtered(lambda p: p.type == 'invoice').sorted('id', reverse=True)[:1]
             for child in partner.child_ids - del_inv:
-                if child.zip.lower().strip() not in (del_inv + other).mapped(lambda p: p.zip.lower().strip()):
+                if (child.zip or "").lower().strip() not in (del_inv + other).mapped(lambda p: (p.zip or "").lower().strip()):
                     other += child
                 else:
                     arch += child
