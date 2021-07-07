@@ -14,7 +14,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'set.help.mixin']
 
-    @api.constrains('email')
+    # @api.constrains('email')
     def _check_email(self):
         if self.env.context.get('skip_email_check', False):
             return
