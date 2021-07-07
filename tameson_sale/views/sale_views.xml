@@ -35,6 +35,9 @@
                     <field name="help_text" />
                 </page>
             </xpath>
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_id','=',False)]}</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

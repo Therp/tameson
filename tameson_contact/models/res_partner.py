@@ -25,6 +25,24 @@ class ResPartner(models.Model):
                 if match:
                     raise ValidationError('Duplicate email for contact: %s' % match.name)
 
+    @api.constrains('child_ids.name', 'is_company')
+    def check_company_childs(self):
+        for record in self:
+            if record.is_company and not any(record.child_ids.mapped('name')):
+                raise ValidationError('At least one child contact with name needed for company contact.')
+
+    
+    # @api.onchange('company_type')
+    # def _onchange_company_type(self):
+    #     if self.company_type == 'company':
+    #         return {
+    #             'warning': {
+    #                 'title': 'Warning',
+    #                 'message': 'At least one child contact with name needed for company contact.'
+    #             }
+    #         }
+    
+
     def action_set_street(self):
         self._set_street()
         return True
