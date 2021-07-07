@@ -57,6 +57,21 @@ class SaleOrderPresta(models.Model):
         )
     ]
     
+    def prestashop_cancel_orders(self):
+        CancelOrders = self.env['sale.order'].search([('state','!=','cancel'), ('prestashop_id','!=',False), ('prestashop_state','in',('6','146'))])
+        for order in CancelOrders:
+            try:
+                if order.payment_term_id.name == 'Prepayment':
+                    for invoice in order.invoice_ids:
+                        if invoice.invoice_payment_state == 'not_paid':
+                            invoice.button_draft()
+                            invoice.button_cancel()
+                order.action_cancel()
+            except Exception as e:
+                _logger.warning(str(e))
+                continue
+        return True
+
     def create_from_prestashop(self, task_uuid, order, **kwargs):
         order_data = order['order']
         prestashop_id = order_data['id']
@@ -190,7 +205,11 @@ class SaleOrderPresta(models.Model):
     
     def confirm_invoicepayment(self):
         for sale in self.search([('state', 'in', ('draft', 'sent')), ('prestashop_module', '=', 'invoicepayment')]):
-            sale.action_confirm()
+            try:
+                sale.action_confirm()
+            except Exception as e:
+                _logger.warning(str(e))
+                continue
 
     def process_channel_payment(self):
         for record in self.search([('channel_process_payment', '=', True),('prestashop_id','!=',False)]):

@@ -190,12 +190,6 @@ class PrestashopConfig(models.Model):
             'interval_start': 5,
             'queue': 'high.priority',
         }
-        cancel_celery = {
-            'countdown': 1,
-            'retry': False,
-            'interval_start': 5,
-            'queue': 'celery',
-        }
 
         for Config in self.search([]):
             sync_order_ref = 'Sync Order status From Prestashop config_id: %d' % Config.id
@@ -204,30 +198,7 @@ class PrestashopConfig(models.Model):
                 CeleryTask.call_task(self._name, 'sync_order_status', config=Config.id, celery=sync_orders_celery, celery_task_vals={'ref': sync_order_ref})
             if CeleryTask.search_count(domain + [('ref','=', mark_shipped_ref), ('method', '=', 'prestashop_mark_shipped'),]) == 0:
                 CeleryTask.call_task(self._name, 'prestashop_mark_shipped', config=Config.id, celery=sync_orders_celery, celery_task_vals={'ref': mark_shipped_ref})
-            from_date = (fields.Datetime.now()-relativedelta(days=Config.sync_days)).strftime("%Y-%m-%d 00:00:00")
-            CancelOrders = self.env['sale.order'].search([
-                ('state','!=','cancel'),
-                ('prestashop_config_id','=',Config.id),
-                ('prestashop_state','in',('6','146')),
-                ('prestashop_date_upd','>',from_date)
-            ])
-            for order in CancelOrders:
-                cancel_order_ref = 'Cancel prestashop order: %s' % order.name
-                CeleryTask.call_task(self._name, 'prestashop_cancel_orders', so_id=order.id, celery=cancel_celery, celery_task_vals={'ref': cancel_order_ref})
         return True
-
-
-    def prestashop_cancel_orders(self, task_uuid, so_id, **kwargs):
-        order = self.env['sale.order'].browse(so_id)
-        order.ensure_one()
-        if order.payment_term_id.name == 'Prepayment':
-            for invoice in order.invoice_ids:
-                if invoice.invoice_payment_state == 'not_paid':
-                    invoice.button_draft()
-                    invoice.button_cancel()
-        order.action_cancel()
-        return True
-
 
     def sync_order_status(self, task_uuid, config, **kwargs):
         celery = {
