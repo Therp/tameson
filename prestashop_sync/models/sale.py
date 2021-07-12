@@ -57,7 +57,17 @@ class SaleOrderPresta(models.Model):
         )
     ]
     
+    def prestashop_cancel_confirm_cron(self):
+        issues = []
+        issues += self.prestashop_cancel_orders()
+        issues += self.confirm_invoicepayment()
+        partners = self.env.ref('tameson_sale.notification_faulty_sale_orders').users.mapped('partner_id')
+        if issues and partners:
+            template = self.env.ref('prestashop_sync.notification_prestashop_cron_issue')
+            template.with_context(issues=issues).send_mail(self.env.user.partner_id.id, force_send=True, email_values={'recipient_ids': [(6, 0, partners.ids)]})
+
     def prestashop_cancel_orders(self):
+        issues = []
         CancelOrders = self.env['sale.order'].search([('state','!=','cancel'), ('prestashop_id','!=',False), ('prestashop_state','in',('6','146'))])
         for order in CancelOrders:
             try:
@@ -69,8 +79,9 @@ class SaleOrderPresta(models.Model):
                 order.action_cancel()
             except Exception as e:
                 _logger.warning(str(e))
+                issues.append((order.name, order.id, str(e)))
                 continue
-        return True
+        return issues
 
     def create_from_prestashop(self, task_uuid, order, **kwargs):
         order_data = order['order']
@@ -204,12 +215,15 @@ class SaleOrderPresta(models.Model):
         return True
     
     def confirm_invoicepayment(self):
+        issues = []
         for sale in self.search([('state', 'in', ('draft', 'sent')), ('prestashop_module', '=', 'invoicepayment')]):
             try:
                 sale.action_confirm()
             except Exception as e:
                 _logger.warning(str(e))
+                issues.append((sale.name, sale.id, str(e)))
                 continue
+        return issues
 
     def process_channel_payment(self):
         for record in self.search([('channel_process_payment', '=', True),('prestashop_id','!=',False)]):

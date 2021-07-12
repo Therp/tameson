@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="notification_prestashop_cron_issue" model="res.groups">
+            <field name="name">Tameson: Prestashop cron issue</field>
+            <field name="category_id" ref="base.module_category_administration"/>
+        </record>
+    </data>
+</odoo>
