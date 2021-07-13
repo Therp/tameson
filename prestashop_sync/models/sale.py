@@ -61,9 +61,9 @@ class SaleOrderPresta(models.Model):
         issues = []
         issues += self.prestashop_cancel_orders()
         issues += self.confirm_invoicepayment()
-        partners = self.env.ref('tameson_sale.notification_faulty_sale_orders').users.mapped('partner_id')
+        partners = self.env.ref('prestashop_sync.notification_prestashop_cron_issue').users.mapped('partner_id')
         if issues and partners:
-            template = self.env.ref('prestashop_sync.notification_prestashop_cron_issue')
+            template = self.env.ref('prestashop_sync.tameson_notify_prestashop_cron_issue')
             template.with_context(issues=issues).send_mail(self.env.user.partner_id.id, force_send=True, email_values={'recipient_ids': [(6, 0, partners.ids)]})
 
     def prestashop_cancel_orders(self):
