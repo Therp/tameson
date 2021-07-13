@@ -64,6 +64,10 @@ class SaleOrder(models.Model):
                 == 0
                 for line in order.order_line
             )
+    
+    def action_create_product(self):
+        action = self.env.ref('tameson_sale.action_product_creation_wizard_act_window')
+        return action.read()[0]
 
     @api.onchange('t_invoice_policy')
     def _onchange_t_invoice_policy(self):
