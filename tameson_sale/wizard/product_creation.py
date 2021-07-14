@@ -47,7 +47,7 @@ class ProductCreationWizard(models.TransientModel):
         if self._context.get('active_model', '') == 'sale.order' and 'active_id' in self._context:
             sale = self.env['sale.order'].browse(self._context.get('active_id'))
             sale.write({
-                'order_line': [(0, 0, {'product_id': product.id})]
+                'order_line': [(0, 0, {'product_id': product.product_variant_id.id})]
             })
             sale.onchange_partner_shipping_id()
             sale.recompute()
