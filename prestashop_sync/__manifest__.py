@@ -16,6 +16,8 @@
     ],
     'data': [
         'data/cron.xml',
+        'data/groups.xml',
+        'data/mail_data.xml',
         'security/ir.model.access.csv',
         'views/prestashop_config.xml',
         'views/delivery.xml',

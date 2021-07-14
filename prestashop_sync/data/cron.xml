@@ -33,8 +33,7 @@
             <field name="model_id" ref="sale.model_sale_order" />
             <field name="state">code</field>
             <field name="code">
-model.confirm_invoicepayment()
-model.prestashop_cancel_orders()
+model.prestashop_cancel_confirm_cron()
             </field>
         </record>
     </data>
