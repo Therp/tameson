@@ -16,6 +16,7 @@ class ProductCreationWizard(models.TransientModel):
     name = fields.Char(required=True)
     vendor_id = fields.Many2one(comodel_name='res.partner', ondelete='cascade', required=True)
     vendor_code = fields.Char(required=True)
+    default_code = fields.Char(string="Internal reference", required=True)
     vendor_lead_days = fields.Integer(required=True)
     purchase_price = fields.Float(required=True)
     sale_price = fields.Float(required=True)
@@ -35,6 +36,7 @@ class ProductCreationWizard(models.TransientModel):
             'categ_id': self.categ_id.id,
             'standard_price': self.purchase_price,
             'list_price': self.sale_price,
+            'default_code': self.default_code,
             'seller_ids': [(0,0, {
                 'name': self.vendor_id.id,
                 'price': self.purchase_price,
