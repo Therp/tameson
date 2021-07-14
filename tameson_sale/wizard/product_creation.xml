@@ -51,5 +51,11 @@
                 </p>
             </field>
         </record>
+        <record id="menu_product_creation_wizard" model="ir.ui.menu" >
+            <field name="name">Create Custom Product</field>
+            <field name="sequence" eval="10" />
+            <field name="action" ref="action_product_creation_wizard_act_window" />
+            <field name="parent_id" ref="stock.menu_stock_inventory_control" />
+        </record>
     </data>
 </odoo>
