@@ -15,6 +15,7 @@
     'data': [
         'views/model.xml',
         'views/set_help.xml',
+        'views/assets.xml',
     ],
     'application': False,
 }
