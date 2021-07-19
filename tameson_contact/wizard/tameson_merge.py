@@ -55,7 +55,7 @@ select ARRAY[parent.id] id, rp.email
                 wiz = self.env['base.partner.merge.automatic.wizard'].with_context(active_ids=ids,active_model='res.partner').create({})
                 wiz.write({'dst_partner_id': max(ids)})
                 partner = wiz.dst_partner_id
-                wiz.with_context(skip_email_check=True).action_merge()
+                wiz.with_context(skip_email_check=True, skip_child_check=True).action_merge()
             elif len(ids) == 1:
                 partner = line.partner_ids
             else:

@@ -14,7 +14,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'set.help.mixin']
 
-    # @api.constrains('email')
+    @api.constrains('email')
     def _check_email(self):
         if self.env.context.get('skip_email_check', False):
             return
@@ -27,6 +27,8 @@ class ResPartner(models.Model):
 
     @api.constrains('child_ids.name', 'is_company')
     def check_company_childs(self):
+        if self.env.context.get('skip_child_check', False):
+            return
         for record in self:
             if record.is_company and not any(record.child_ids.mapped('name')):
                 raise ValidationError('At least one child contact with name needed for company contact.')
