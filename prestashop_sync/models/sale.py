@@ -95,6 +95,7 @@ class SaleOrderPresta(models.Model):
         pricelist_id = self.env['product.pricelist'].search([('currency_id','=',currency_id.id)],limit=1)
         if not pricelist_id:
             raise UserError('%s currency pricelist not found.' % CURRENCIES[order_data['id_currency']])
+        partner.property_product_pricelist = pricelist_id
         lines = []
         lang = get_lang(self.env, partner.lang).code
         for line in order_data['order_rows']:
