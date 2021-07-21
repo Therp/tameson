@@ -379,7 +379,7 @@ class SaleOrder(models.Model):
                 'type': address_type,
                 'parent_id': parent_id,
             })
-        return self.env['res.partner'].create(values)
+        return self.env['res.partner'].with_context(skip_child_check=True).create(values)
 
     def update_partner_address(self, partner, data, secondary_data, is_company=False):
         # updates the partner data if anything in the address changed
