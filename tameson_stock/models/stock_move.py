@@ -49,10 +49,10 @@ class StockMove(models.Model):
     ## port: sftp port
     ## username: sftp username
     ## password: sftp password
-    def product_stock_export(self, hours=1, filename='stock-presta.csv', **kwargs):
+    def product_stock_export(self, hours=24, filename='stock-presta.csv', **kwargs):
         date_filter  = fields.Datetime.now() - relativedelta(hours=hours)
         header = ["quantity", "SKU"]
-        products = self.search([('date','>=',date_filter), ('state','=','done')]).mapped('product_id')
+        products = self.search([('date','>=',date_filter)]).mapped('product_id')
         bom_products = self.env['mrp.bom.line'].search([('product_id','in',products.ids)]).mapped('bom_id').mapped('product_tmpl_id')
         fp = tempfile.NamedTemporaryFile(mode='w', encoding='utf-8')
         writer = csv.writer(fp)
