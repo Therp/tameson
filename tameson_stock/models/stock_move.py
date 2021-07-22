@@ -11,7 +11,7 @@ from odoo.exceptions import UserError, ValidationError
 from dateutil.relativedelta import relativedelta
 import csv
 import tempfile
-import paramiko
+import ftplib
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -58,13 +58,10 @@ class StockMove(models.Model):
         writer.writerows((products.mapped('product_tmpl_id') + bom_products).mapped(lambda p: [p.minimal_qty_available, p.default_code]))
         fp.flush()
         host = kwargs.get("host", False) or "ns3.tameson.com"
-        port = kwargs.get("port", False) or 22
-        transport = paramiko.Transport((host, port))
         password = kwargs.get("password", False) or "4sK2buewXkNl"
         username = kwargs.get("username", False) or "sync_tameson.com"
-        transport.connect(username = username, password = password)
-        sftp = paramiko.SFTPClient.from_transport(transport)
-        sftp.put(fp.name, filename)
+        ftp = ftplib.FTP(host, username, password)
+        ftp.storbinary(f"STOR {filename}", fp)
+        ftp.encoding = "utf-8"
+        ftp.quit()
         fp.close()
-        sftp.close()
-        transport.close()
