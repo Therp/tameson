@@ -28,6 +28,18 @@
             <field name="code">model.cron_validate_orderpoint_product_routes()</field>
         </record>
     </data>
+
+    <data noupdate="1">
+        <record forcecreate="True" id="product_stock_export" model="ir.cron">
+            <field name="name">Tameson: Export product stock</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="stock.model_stock_move" />
+            <field name="state">code</field>
+            <field name="code">model.product_stock_export()</field>
+        </record>
+    </data>
 </odoo>
-
-
