@@ -12,6 +12,8 @@ from dateutil.relativedelta import relativedelta
 import csv
 import tempfile
 import ftplib
+import base64
+import io
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -52,7 +54,7 @@ class StockMove(models.Model):
         header = ["quantity", "SKU"]
         products = self.search([('date','>=',date_filter), ('state','=','done')]).mapped('product_id')
         bom_products = self.env['mrp.bom.line'].search([('product_id','in',products.ids)]).mapped('bom_id').mapped('product_tmpl_id')
-        fp = tempfile.NamedTemporaryFile(mode='w+b')
+        fp = tempfile.NamedTemporaryFile(mode='w', encoding='utf-8')
         writer = csv.writer(fp)
         writer.writerow(header)
         writer.writerows((products.mapped('product_tmpl_id') + bom_products).mapped(lambda p: [p.minimal_qty_available, p.default_code]))
@@ -60,8 +62,9 @@ class StockMove(models.Model):
         host = kwargs.get("host", False) or "ns3.tameson.com"
         password = kwargs.get("password", False) or "4sK2buewXkNl"
         username = kwargs.get("username", False) or "sync_tameson.com"
-        ftp = ftplib.FTP(host, username, password)
-        ftp.encoding = "utf-8"
-        ftp.storbinary(f"STOR {filename}", fp.read())
-        ftp.quit()
+        with ftplib.FTP() as ftp:
+            ftp.connect(host=host)
+            ftp.login(username, password)
+            ftp.cwd('/')
+            ftp.storbinary('STOR %s' % filename, open(fp.name, 'rb'))
         fp.close()
