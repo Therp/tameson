@@ -39,6 +39,7 @@ class StockMove(models.Model):
         ## end
         return res
 
+
     ## parameters
     ## hours: number of hours to check for last stock operation
     ## filename: output sftp filename
@@ -49,11 +50,12 @@ class StockMove(models.Model):
     def product_stock_export(self, hours=1, filename='stock-presta.csv', **kwargs):
         date_filter  = fields.Datetime.now() - relativedelta(hours=hours)
         header = ["quantity", "SKU"]
-        moves = self.search([('date','>=',date_filter), ('state','=','done')])
+        products = self.search([('date','>=',date_filter), ('state','=','done')]).mapped('product_id')
+        bom_products = self.env['mrp.bom.line'].search([('product_id','in',products.ids)]).mapped('bom_id').mapped('product_tmpl_id')
         fp = tempfile.NamedTemporaryFile(mode='w', encoding='UTF8')
         writer = csv.writer(fp)
         writer.writerow(header)
-        writer.writerows(moves.mapped('product_id').mapped('product_tmpl_id').mapped(lambda p: [p.minimal_qty_available, p.default_code]))
+        writer.writerows((products.mapped('product_tmpl_id') + bom_products).mapped(lambda p: [p.minimal_qty_available, p.default_code]))
         fp.flush()
         host = kwargs.get("host", False) or "ns3.tameson.com"
         port = kwargs.get("port", False) or 22
