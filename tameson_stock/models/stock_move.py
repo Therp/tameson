@@ -52,7 +52,7 @@ class StockMove(models.Model):
         header = ["quantity", "SKU"]
         products = self.search([('date','>=',date_filter), ('state','=','done')]).mapped('product_id')
         bom_products = self.env['mrp.bom.line'].search([('product_id','in',products.ids)]).mapped('bom_id').mapped('product_tmpl_id')
-        fp = tempfile.NamedTemporaryFile(mode='w+b', encoding='UTF8')
+        fp = tempfile.NamedTemporaryFile(mode='w+b')
         writer = csv.writer(fp)
         writer.writerow(header)
         writer.writerows((products.mapped('product_tmpl_id') + bom_products).mapped(lambda p: [p.minimal_qty_available, p.default_code]))
