@@ -61,7 +61,7 @@ class StockMove(models.Model):
         password = kwargs.get("password", False) or "4sK2buewXkNl"
         username = kwargs.get("username", False) or "sync_tameson.com"
         ftp = ftplib.FTP(host, username, password)
-        ftp.storbinary(f"STOR {filename}", fp)
+        ftp.storbinary(f"STOR {filename}", fp.read())
         ftp.encoding = "utf-8"
         ftp.quit()
         fp.close()
