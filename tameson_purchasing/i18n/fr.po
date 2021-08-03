@@ -1,0 +1,312 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_purchasing
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: tameson_purchasing
+#: model:mail.template,report_name:tameson_purchasing.tameson_template_po_supplier
+msgid "${(object.name or '').replace('/','_')}"
+msgstr "${(object.name or '').replace('/','_')}"
+
+#. module: tameson_purchasing
+#: model:mail.template,body_html:tameson_purchasing.tameson_template_po_supplier
+msgid ""
+"<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Hereby you receive purchase order <b style=\"font-weight:bolder;\">${object.name}</b>. We request that you process this order as soon as possible on the basis of applicable agreements and purchasing conditions. Always include our purchase order number on the packing slip and invoice.</p> <br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Please send the order confirmation with delivery date to <a href=\"mailto:purchasing@tameson.com\" style=\"background-color:transparent;text-decoration-thickness:initial;color:rgb(0, 135, 132);\">purchasing@tameson.com</a> and the invoice to <a href=\"mailto:invoice@tameson.com\" style=\"background-color:transparent;text-decoration-thickness:initial;color:rgb(0, 135, 132);\">invoice@tameson.com</a>.</p><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Thank you in advance and we look forward to confirmation.</p><br>\n"
+"    <br>\n"
+"</div>\n"
+"            "
+msgstr "<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \"> \n"
+"Madame/ Monsieur\n"
+"% if object.partner_id.parent_id : \n"
+"${object.partner_id.name} (${object.partner_id.parent_id.name}), \n"
+"% else : \n"
+"${object.partner_id.name}, \n"
+"% endif \n"
+"<br><br> \n"
+"<p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Vous recevez ici le bon de commande <b style=\"font-weight :bolder;\">${object.name}</b>. Nous vous demandons de traiter cette commande dans les plus brefs délais sur la base des accords et conditions d'achat applicables. Incluez toujours notre numéro de bon de commande sur le bordereau d'expédition et la facture.</p> <br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial , sans-serif;\">Veuillez envoyer la confirmation de commande avec la date de livraison à <a href=\"mailto:purchasing@tameson.com\" style=\"background-color:transparent;text-decoration-thickness:initial;color:rgb( 0, 135, 132);\">purchasing@tameson.com</a> et la facture à <a href=\"mailto:invoice@tameson.com\" style=\"background-color:transparent;text-decoration-thickness : initial;color:rgb(0, 135, 132);\">invoice@tameson.com</a>.</p><br> <p style=\"margin:0px;font-size:13px;font-family :&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Merci d'avance et nous attendons avec impatience la confirmation.</p><br> <br> </div>\n"
+"            "
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_orderline_csv_import_form
+msgid "Close"
+msgstr "Fermer"
+
+#. module: tameson_purchasing
+#: code:addons/tameson_purchasing/models/purchase.py:0
+#: code:addons/tameson_purchasing/models/purchase.py:0
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_order__t_purchase_method
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_order_line__t_purchase_method
+#, python-format
+msgid "Control Policy (overrides product control policies)"
+msgstr "Politique de contrôle (remplace les politiques de contrôle des produits)"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_order_form
+msgid "Copy Lines To Clipboard"
+msgstr "Copier les lignes dans le presse-papiers"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__create_uid
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__create_date
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__create_date
+msgid "Created on"
+msgstr "Créé sur"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields.selection,name:tameson_purchasing.selection__purchase_order__t_purchase_method__receive
+#: model:ir.model.fields.selection,name:tameson_purchasing.selection__purchase_order_line__t_purchase_method__receive
+msgid "Delivered quantities"
+msgstr "Quantités livrées"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__display_name
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__display_name
+msgid "Display Name"
+msgstr "Afficher un nom"
+
+#. module: tameson_purchasing
+#: code:addons/tameson_purchasing/models/purchase.py:0
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_order__t_done_pickings
+#, python-format
+msgid "Done pickings for this purchase order"
+msgstr "Cueillettes effectuées pour ce bon de commande"
+
+#. module: tameson_purchasing
+#. openerp-web
+#: code:addons/tameson_purchasing/static/src/js/tameson_po_lines_clipboard.js:0
+#, python-format
+msgid "Done!"
+msgstr "Terminé!"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields.selection,name:tameson_purchasing.selection__purchase_orderline_csv_import__state__draft
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_order_form
+msgid "Edit help"
+msgstr "Modifier l'aide"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__csv_file
+msgid "File"
+msgstr "Déposer"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__filename
+msgid "Filename"
+msgstr "Nom de fichier"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_order_form
+msgid "Help"
+msgstr "Aider"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__id
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: tameson_purchasing
+#: model:ir.actions.act_window,name:tameson_purchasing.ir_purchase_orderline_csv_import_wizard
+msgid "Import Products from .csv"
+msgstr "Importer des produits à partir de .csv"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_orderline_csv_import_form
+msgid "Import Purchase Order Lines"
+msgstr "Importer des lignes de commande d'achat"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields.selection,name:tameson_purchasing.selection__purchase_orderline_csv_import__state__imported
+msgid "Imported"
+msgstr "Importé"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import____last_update
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__write_uid
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__write_date
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: tameson_purchasing
+#: code:addons/tameson_purchasing/wizard/purchase_order_line_csv_import.py:0
+#, python-format
+msgid "Line # does not have a valid product SKU: , please correct it!"
+msgstr "Le numéro de ligne n'a pas de SKU de produit valide : , veuillez le corriger !"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_orderline_csv_import_form
+msgid "Lines"
+msgstr "Lignes"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__line_ids
+msgid "Lines to import"
+msgstr "Lignes à importer"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields.selection,name:tameson_purchasing.selection__purchase_orderline_csv_import__state__loaded
+msgid "Loaded"
+msgstr "Chargé"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,help:tameson_purchasing.field_purchase_orderline_csv_import__csv_file
+msgid "Must be in .csv format."
+msgstr "Doit être au format .csv."
+
+#. module: tameson_purchasing
+#: code:addons/tameson_purchasing/wizard/purchase_order_line_csv_import.py:0
+#, python-format
+msgid "Nothing to import!"
+msgstr "Rien à importer !"
+
+#. module: tameson_purchasing
+#: code:addons/tameson_purchasing/wizard/purchase_order_line_csv_import.py:0
+#: code:addons/tameson_purchasing/wizard/purchase_order_line_csv_import.py:0
+#, python-format
+msgid "Only orders in draft state can be used with the .csv import!"
+msgstr "Seules les commandes à l'état de brouillon peuvent être utilisées avec l'import .csv !"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields.selection,name:tameson_purchasing.selection__purchase_order__t_purchase_method__purchase
+#: model:ir.model.fields.selection,name:tameson_purchasing.selection__purchase_order_line__t_purchase_method__purchase
+msgid "Ordered quantities"
+msgstr "Quantités commandées"
+
+#. module: tameson_purchasing
+#: model:ir.model,name:tameson_purchasing.model_purchase_orderline_csv_import_line
+msgid "PO Import Lines"
+msgstr "Lignes d'importation de bon de commande"
+
+#. module: tameson_purchasing
+#: model:ir.model,name:tameson_purchasing.model_purchase_orderline_csv_import
+msgid "PO Import Wizard"
+msgstr "Assistant d'importation de bon de commande"
+
+#. module: tameson_purchasing
+#. openerp-web
+#: code:addons/tameson_purchasing/static/src/js/tameson_po_lines_clipboard.js:0
+#, python-format
+msgid "PO lines copied to clipboard."
+msgstr "Lignes de commande copiées dans le presse-papiers."
+
+#. module: tameson_purchasing
+#: code:addons/tameson_purchasing/wizard/purchase_order_line_csv_import.py:0
+#, python-format
+msgid "Please upload a .csv file for import!"
+msgstr "Veuillez télécharger un fichier .csv pour l'importation !"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_orderline_csv_import_form
+msgid "Please upload a .csv file:<br/>"
+msgstr "Veuillez télécharger un fichier .csv :<br/>"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__product_id
+msgid "Product"
+msgstr "Produit"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_order__t_clipboard_text_handle
+msgid "Products Quantity (Clipboard)"
+msgstr "Quantité de produits (Presse-papiers)"
+
+#. module: tameson_purchasing
+#: model:ir.model,name:tameson_purchasing.model_purchase_order
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__purchase_order_id
+msgid "Purchase Order"
+msgstr "Bon de commande"
+
+#. module: tameson_purchasing
+#: model:ir.model,name:tameson_purchasing.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Ligne de commande d'achat"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_orderline_csv_import_form
+msgid "Purchase Order Line Import"
+msgstr "Importation de ligne de commande d'achat"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_orderline_csv_import_form
+msgid "Purchase Order Lines To Import"
+msgstr "Lignes de commande fournisseur à importer"
+
+#. module: tameson_purchasing
+#: model:mail.template,subject:tameson_purchasing.tameson_template_po_supplier
+msgid "Purchase order ${object.name}"
+msgstr "Bon de commande ${object.name}"
+
+#. module: tameson_purchasing
+#: code:addons/tameson_purchasing/wizard/purchase_order_line_csv_import.py:0
+#, python-format
+msgid ""
+"Purchase order lines were not imported, error: \n"
+"\n"
+msgstr "Les lignes de bon de commande n'ont pas été importées, erreur : \n"
+"\n"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__quantity
+msgid "Quantity"
+msgstr "Quantité"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import__state
+msgid "State"
+msgstr "État"
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__unit_price
+msgid "Unit Price"
+msgstr "Prix unitaire"
+
+#. module: tameson_purchasing
+#: model_terms:ir.ui.view,arch_db:tameson_purchasing.purchase_orderline_csv_import_form
+msgid "Upload a .csv file."
+msgstr "Téléchargez un fichier .csv."
+
+#. module: tameson_purchasing
+#: model:ir.model.fields,field_description:tameson_purchasing.field_purchase_orderline_csv_import_line__wizard_id
+msgid "Wizard"
+msgstr "magicien"

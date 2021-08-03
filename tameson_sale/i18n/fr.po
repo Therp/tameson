@@ -1,0 +1,632 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: tameson_sale
+#: model:mail.template,report_name:tameson_sale.tameson_quotation_reminder
+#: model:mail.template,report_name:tameson_sale.tameson_sale_order_confirmation_payment_term
+#: model:mail.template,report_name:tameson_sale.tameson_sale_order_confirmation_prepay
+msgid "${(object.name or '').replace('/','_')}"
+msgstr "${(object.name or '').replace('/','_')}"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "+31 (0)40 750 5795"
+msgstr "+31 (0)40 750 5795"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "+44 (0)330 8080 502"
+msgstr "+44 (0)330 8080 502"
+
+#. module: tameson_sale
+#: model:mail.template,body_html:tameson_sale.tameson_sale_order_issue_notify
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"% for section in ctx.get('sections', []):\n"
+"    <strong>${section.get('name', '')}</strong><br/>\n"
+"    % for id, order in section.get('orders', []):\n"
+"        <p>${order} (${id})</p>\n"
+"    % endfor\n"
+"    <br/><br/>\n"
+"% endfor\n"
+"</div>\n"
+"            "
+msgstr "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"% for section in ctx.get('sections', []):\n"
+"<strong>${section.get('name', '')}</strong><br/> \n"
+"% for id, order in section.get('orders', []):\n"
+" <p>${order} (${id})</p> % endfor <br/><br/> % endfor </div>\n"
+"            "
+
+#. module: tameson_sale
+#: model:mail.template,body_html:tameson_sale.tameson_sale_order_confirmation_prepay
+msgid ""
+"<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br>\n"
+"<br><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><br></p><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Thank you for your order. Please find attached the (pro-forma) invoice for this order. The order will be shipped in approximately XXXXXX business days after payment confirmation.</p> <br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><strong style=\"font-weight:bolder;\">Notice: The order will be processed after the payment has been received.</strong></p><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">If you have any questions, please let us know! </p><br>\n"
+"</div>\n"
+"            "
+msgstr "<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Madame/ Monsieur\n"
+"% if object.partner_id.parent_id: \n"
+"${object.partner_id.name} (${object.partner_id.parent_id.name}), \n"
+"% else: \n"
+"${object.partner_id.name}, \n"
+"% endif <br> <br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><br></p><p style=\"margin :0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Merci pour votre commande. Veuillez trouver ci-joint la facture (pro forma) de cette commande. La commande sera expédiée dans environ XXXXXX jours ouvrables après la confirmation du paiement.</p> <br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><strong style=\"font-weight:bolder;\">Avis : La commande sera traitée après réception du paiement.</strong></p><br> <p style= \"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Si vous avez des questions, n'hésitez pas à nous le faire savoir ! </p><br> </div>\n"
+"            "
+
+#. module: tameson_sale
+#: model:mail.template,body_html:tameson_sale.tameson_quotation_reminder
+msgid ""
+"<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">On ${object.create_date.date()}, we have sent you a quotation. Attached you will find quotation ${object.name}, with the requested products.</p> <br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">The quotation is about to expire, which means that we can no longer guarantee prices and delivery time. Please let us know if you agree with our offer, otherwise we are unfortunately forced to cancel the offer. If you want to extend the quotation period, we would also like to hear this.</p><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Thank you in advance for your feedback and if you have any questions, please feel free to contact us.</p><br>\n"
+"    <br>\n"
+"</div>\n"
+"            "
+msgstr "<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Madame/ Monsieur\n"
+"% if object.partner_id.parent_id: \n"
+"${object.partner_id.name} (${object.partner_id.parent_id.name}), \n"
+"% else: \n"
+"${object.partner_id.name}, \n"
+"% endif <br><br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Le ${object.create_date.date()}, nous vous ont envoyé un devis. Vous trouverez ci-joint le devis ${object.name}, avec les produits demandés.</p> <br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica , Verdana, Arial, sans-serif;\">Le devis est sur le point d'expirer, ce qui signifie que nous ne pouvons plus garantir les prix et les délais de livraison. S'il vous plaît laissez-nous savoir si vous êtes d'accord avec notre offre, sinon nous sommes malheureusement obligés d'annuler l'offre. Si vous souhaitez prolonger la période de cotation, nous aimerions également entendre ceci.</p><br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica , Verdana, Arial, sans-serif ;\"> Merci d'avance pour vos commentaires et si vous avez des questions, n'hésitez pas à nous contacter.</p><br> <br> </div>\n"
+"            "
+
+#. module: tameson_sale
+#: model:mail.template,body_html:tameson_sale.tameson_sale_order_confirmation_payment_term
+msgid ""
+"<div style=\"font-size:13px;font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br>\n"
+"<br>Thank you for your order. Please find the confirmation attached. <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"></p><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><br></p><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Order: <b style=\"font-weight:bolder;\">${object.name} </b></p><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Amount: <b style=\"font-weight:bolder;\">${format_amount(object.amount_total, object.currency_id)} </b></p><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><br></p><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">The order will be shipped in <b style=\"font-weight:bolder;\">XXXXXX</b> business days. After shipment you will receive an email with the track &amp; trace information. Also automatically you will receive the invoice. If you have any questions, please let us know! </p></div>"
+msgstr "<div style=\"font-size:13px;font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color : #FFF; \"> \n"
+"Madame/ Monsieur\n"
+"% if object.partner_id.parent_id : ${object.partner_id.name} (${object.partner_id.parent_id.name}), % else : ${object.partner_id.name}, % endif <br> <br>Merci pour votre commande. Veuillez trouver la confirmation ci-jointe. <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"></p><p style=\"margin:0px; font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><br></p><p style=\"margin:0px;font-size:13px; font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Ordre : <b style=\"font-weight:bolder;\">${object.name} </b></p ><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande\", Helvetica, Verdana, Arial, sans-serif;\">Montant : <b style=\"font-weight:bolder ;\">${format_amount(object.amount_total, object.currency_id)} </b></p><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica , Verdana, Arial, sans-serif;\"><br></p><p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans -serif;\">La commande sera expédiée dans les <b style=\"font-weight:bolder;\">XXXXXX</b> jours ouvrables. Après l'expédition, vous recevrez un e-mail avec la piste &amp; tracer les informations. De plus, vous recevrez automatiquement la facture. Si vous avez des questions, s'il vous plaît laissez-nous savoir! </p></div>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "<span>HS code</span>"
+msgstr "<span>code SH</span>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<span>Net Unit Price</span>"
+msgstr "<span>Prix unitaire net</span>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid ""
+"<span>Page:</span>\n"
+"                                <span class=\"page\"/>\n"
+"                                <span>/</span>\n"
+"                                <span class=\"topage\"/>"
+msgstr "<span>Page :</span> <span class=\"page\"/> <span>/</span> <span class=\"topage\"/>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid ""
+"<strong>Fiscal Position Remark: </strong>\n"
+"                <span>VAT reverse charge - export out of EU _______ </span><strong>EORI number: </strong><span>NL859280263</span><br/>\n"
+"                <strong>Preferential origin:</strong> \n"
+"                <span>The exporter of the products covered by this document declares that, except where otherwise clearly indicated, these products are of EU preferential origin.</span>"
+msgstr "<strong>Remarque sur la position fiscale : </strong> <span>Autoliquidation de la TVA - exportation hors de l'UE _______ </span><strong>Numéro EORI : </strong><span>NL859280263</span><br/> < strong>Origine préférentielle :</strong> <span>L'exportateur des produits couverts par ce document déclare que, sauf indication contraire claire, ces produits sont d'origine préférentielle de l'UE.</span>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid ""
+"<strong>Fiscal Position Remark: </strong>\n"
+"                <span>intra-community transaction</span>"
+msgstr "<strong>Remarque sur la position fiscale : </strong> <span>transaction intracommunautaire</span>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "<strong>Invoice Address:</strong>"
+msgstr "<strong>Adresse de facturation :</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Invoicing Address:</strong>"
+msgstr "<strong>Adresse de facturation :</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "<strong>Order Date:</strong>"
+msgstr "<strong>Date de la commande :</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Payment Terms:</strong>"
+msgstr "<strong>Conditions de paiement :</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "<strong>Reference:</strong>"
+msgstr "<strong>Référence :</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid ""
+"<strong>Remark: </strong>\n"
+"                <span>This is a credit note / refund</span>"
+msgstr "<strong>Remarque : </strong> <span>Ceci est une note de crédit/un remboursement</span>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Shipping Address:</strong>"
+msgstr "<strong>Adresse de livraison :</strong>"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__all_qty_delivered
+msgid "All quantities delivered"
+msgstr "Toutes les quantités livrées"
+
+#. module: tameson_sale
+#: model:ir.model.fields,help:tameson_sale.field_base_document_layout__report_header2
+#: model:ir.model.fields,help:tameson_sale.field_base_document_layout__report_header3
+#: model:ir.model.fields,help:tameson_sale.field_res_company__report_header2
+#: model:ir.model.fields,help:tameson_sale.field_res_company__report_header3
+msgid ""
+"Appears by default on the top right corner of your printed documents (report"
+" header)."
+msgstr "Apparaît par défaut dans le coin supérieur droit de vos documents imprimés (en-tête de rapport)."
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "BIC/SWIFT:"
+msgstr "BIC/SWIFT :"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__bypass_credit_limit
+msgid "Bypass Credit Limit"
+msgstr "Contourner la limite de crédit"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__categ_id
+msgid "Category"
+msgstr "Catégorie"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__channel_process_payment
+msgid "Channel Process Payment"
+msgstr "Paiement du processus de canal"
+
+#. module: tameson_sale
+#: model_terms:ir.actions.act_window,help:tameson_sale.action_product_creation_wizard_act_window
+msgid "Click to add new Product from wizard"
+msgstr "Cliquez pour ajouter un nouveau produit à partir de l'assistant"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_res_company
+msgid "Companies"
+msgstr "Entreprises"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_base_document_layout
+msgid "Company Document Layout"
+msgstr "Mise en page des documents d'entreprise"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "Contents:"
+msgstr "Contenu:"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_res_country
+msgid "Country"
+msgstr "De campagne"
+
+#. module: tameson_sale
+#: model:ir.ui.menu,name:tameson_sale.menu_product_creation_wizard
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Create Custom Product"
+msgstr "Créer un produit personnalisé"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Create Invoice"
+msgstr "Créer une facture"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.product_creation_wizard_form
+msgid "Create Product"
+msgstr "Créer un produit"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__create_date
+msgid "Created on"
+msgstr "Créé sur"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_partner_form
+msgid "Credit Limit"
+msgstr "Limite de crédit"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_country__select_lang
+msgid "Default Language"
+msgstr "Langage par défaut"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_country__select_shipment_id
+msgid "Default Shipment"
+msgstr "Expédition par défaut"
+
+#. module: tameson_sale
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order__t_invoice_policy__delivery
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order_line__t_invoice_policy__delivery
+msgid "Delivered quantities"
+msgstr "Quantités livrées"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Delivery Date"
+msgstr "La date de livraison"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__display_name
+msgid "Display Name"
+msgstr "Afficher un nom"
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_done_pickings
+#, python-format
+msgid "Done pickings for this sale order"
+msgstr "Cueillettes effectuées pour cette commande de vente"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Edit help"
+msgstr "Modifier l'aide"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__email
+#: model:ir.model.fields,field_description:tameson_sale.field_res_partner__email
+#: model:ir.model.fields,field_description:tameson_sale.field_res_users__email
+msgid "Email"
+msgstr "E-mail"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Assistant de composition d'e-mails"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Expected:"
+msgstr "Attendu:"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_base_document_layout_inherit
+msgid "Header 2"
+msgstr "En-tête 2"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_base_document_layout_inherit
+msgid "Header 3"
+msgstr "En-tête 3"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Help"
+msgstr "Aider"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "IBAN:"
+msgstr "IBAN :"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "INGBNL2A"
+msgstr "INGBNL2A"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__default_code
+msgid "Internal reference"
+msgstr "Référence interne"
+
+#. module: tameson_sale
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order__t_invoice_policy__cost
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order_line__t_invoice_policy__cost
+msgid "Invoice based on time and material"
+msgstr "Facture en fonction du temps et du matériel"
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_invoice_policy
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order_line__t_invoice_policy
+#, python-format
+msgid "Invoicing Policy (overrides product invoice policies)"
+msgstr "Politique de facturation (remplace les politiques de facturation des produits)"
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_is_delivery_invoice_policy
+#, python-format
+msgid "Is order delivery invoice policy?"
+msgstr "La politique de facturation de livraison de la commande est-elle?"
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_is_paid
+#, python-format
+msgid "Is order paid?"
+msgstr "La commande est-elle payée ?"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "KVK: 72902531"
+msgstr "KVK : 72902531"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "Logo"
+msgstr "Logo"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "NL66INGB0007718965"
+msgstr "NL66INGB0007718965"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: tameson_sale
+#: model:res.groups,name:tameson_sale.notification_faulty_sale_orders
+msgid "Notify: Faulty Sale Orders"
+msgstr "Notifier : Commandes client défectueuses"
+
+#. module: tameson_sale
+#: model:mail.template,subject:tameson_sale.tameson_sale_order_issue_notify
+msgid "ODOO - data to check"
+msgstr "ODOO - données à vérifier"
+
+#. module: tameson_sale
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order__t_invoice_policy__order
+#: model:ir.model.fields.selection,name:tameson_sale.selection__sale_order_line__t_invoice_policy__order
+msgid "Ordered quantities"
+msgstr "Quantités commandées"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__payment_term_name
+msgid "Payment Term name"
+msgstr "Nom du terme de paiement"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__phone
+#: model:ir.model.fields,field_description:tameson_sale.field_res_partner__phone
+#: model:ir.model.fields,field_description:tameson_sale.field_res_users__phone
+msgid "Phone"
+msgstr "Téléphoner"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "Please use the following communication for your payment :"
+msgstr "Veuillez utiliser la communication suivante pour votre paiement :"
+
+#. module: tameson_sale
+#: model:ir.actions.server,name:tameson_sale.ir_cron_process_payment_ir_actions_server
+#: model:ir.cron,cron_name:tameson_sale.ir_cron_process_payment
+#: model:ir.cron,name:tameson_sale.ir_cron_process_payment
+msgid "Process payment"
+msgstr "Traiter le paiement"
+
+#. module: tameson_sale
+#: model:ir.actions.act_window,name:tameson_sale.action_product_creation_wizard_act_window
+#: model:ir.model,name:tameson_sale.model_product_creation_wizard
+msgid "Product Creation Wizard"
+msgstr "Assistant de création de produit"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__purchase_price
+msgid "Purchase Price"
+msgstr "Prix d'achat"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "Reg.: 72902531"
+msgstr "Rég.: 72902531"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_base_document_layout__report_header2
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__report_header2
+msgid "Report Header (2)"
+msgstr "En-tête de rapport (2)"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_base_document_layout__report_header3
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__report_header3
+msgid "Report Header (3)"
+msgstr "En-tête de rapport (3)"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__sale_price
+msgid "Sale Price"
+msgstr "Prix de vente"
+
+#. module: tameson_sale
+#: model:ir.model.constraint,message:tameson_sale.constraint_product_creation_wizard_check_sale_purchase_price
+msgid "Sale price must be higher than 1.5 times of the purchase price."
+msgstr "Le prix de vente doit être supérieur à 1,5 fois le prix d'achat."
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de commande client"
+
+#. module: tameson_sale
+#: model:mail.template,subject:tameson_sale.tameson_sale_order_confirmation_payment_term
+#: model:mail.template,subject:tameson_sale.tameson_sale_order_confirmation_prepay
+msgid "Sales order confirmation ${object.name}"
+msgstr "Confirmation de commande ${object.name}"
+
+#. module: tameson_sale
+#: model:ir.actions.server,name:tameson_sale.cron_check_sale_order_has_issues_ir_actions_server
+#: model:ir.cron,cron_name:tameson_sale.cron_check_sale_order_has_issues
+#: model:ir.cron,name:tameson_sale.cron_check_sale_order_has_issues
+msgid "Tameson: Sale order issue"
+msgstr "Tameson : Problème de commande"
+
+#. module: tameson_sale
+#: model:ir.actions.server,name:tameson_sale.cron_action_check_sale_order_has_invoice_for_done_pickings_ir_actions_server
+msgid ""
+"Tameson: check if sale.orders with 'done' pickings have validated invoices"
+msgstr "Tameson : vérifiez si les commandes sales.orders avec des prélèvements \"terminés\" ont des factures validées"
+
+#. module: tameson_sale
+#: model:ir.actions.server,name:tameson_sale.cron_confirm_orders_when_invoice_paid_ir_actions_server
+#: model:ir.cron,cron_name:tameson_sale.cron_confirm_orders_when_invoice_paid
+#: model:ir.cron,name:tameson_sale.cron_confirm_orders_when_invoice_paid
+msgid "Tameson: confirm sale.order for which an invoice was paid"
+msgstr "Tameson : confirmer la vente.commande pour laquelle une facture a été payée"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_invoice_document
+msgid "Tax ID"
+msgstr "Numéro d'identification fiscale"
+
+#. module: tameson_sale
+#: model:mail.template,subject:tameson_sale.tameson_quotation_reminder
+msgid "Update on Quotation ${object.name}"
+msgstr "Mise à jour sur le devis ${object.name}"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "VAT:"
+msgstr "T.V.A:"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__vendor_id
+msgid "Vendor"
+msgstr "Vendeur"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__vendor_code
+msgid "Vendor Code"
+msgstr "Code de fournisseur"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__vendor_lead_days
+msgid "Vendor Lead Days"
+msgstr "Jours de livraison des fournisseurs"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_company__website
+#: model:ir.model.fields,field_description:tameson_sale.field_res_partner__website
+#: model:ir.model.fields,field_description:tameson_sale.field_res_users__website
+msgid "Website Link"
+msgstr "Lien de site Web"
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid "You must configure your mail address."
+msgstr "Vous devez configurer votre adresse e-mail."
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.product_creation_wizard_form
+msgid "model_form"
+msgstr "model_form"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.product_creation_wizard_form
+msgid "name"
+msgstr "Nom"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_base_document_layout_inherit
+msgid "only applies to Tameson layout"
+msgstr "s'applique uniquement à la mise en page Tameson"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "support@tameson.co.uk"
+msgstr "support@tameson.co.uk"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "support@tameson.com"
+msgstr "support@tameson.com"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "support@tameson.nl"
+msgstr "support@tameson.nl"

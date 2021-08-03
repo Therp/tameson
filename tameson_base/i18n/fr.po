@@ -1,0 +1,85 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_base
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_text__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_text__create_date
+msgid "Created on"
+msgstr "Créé sur"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_mixin__display_name
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_text__display_name
+msgid "Display Name"
+msgstr "Afficher un nom"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_text__help
+#: model_terms:ir.ui.view,arch_db:tameson_base.set_help_wizard
+msgid "Help"
+msgstr "Aider"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_ir_model__help_text
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_mixin__help_text
+msgid "Help Text"
+msgstr "Texte d'aide"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_mixin__id
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_text__id
+msgid "ID"
+msgstr "ID"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_mixin____last_update
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_text____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_text__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: tameson_base
+#: model:ir.model.fields,field_description:tameson_base.field_set_help_text__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: tameson_base
+#: model:ir.model,name:tameson_base.model_ir_model
+msgid "Models"
+msgstr "Des modèles"
+
+#. module: tameson_base
+#: model_terms:ir.ui.view,arch_db:tameson_base.set_help_wizard
+msgid "Set"
+msgstr "Régler"
+
+#. module: tameson_base
+#: model:ir.model,name:tameson_base.model_set_help_text
+msgid "Set Help for Model"
+msgstr "Définir l'aide pour le modèle"
+
+#. module: tameson_base
+#: model:ir.model,name:tameson_base.model_set_help_mixin
+msgid "SetHelpMixin"
+msgstr "SetHelpMixin"

@@ -1,0 +1,516 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: tameson_stock
+#: model:ir.actions.server,name:tameson_stock.cron_minimal_qty_stored_ir_actions_server
+#: model:ir.cron,cron_name:tameson_stock.cron_minimal_qty_stored
+#: model:ir.cron,name:tameson_stock.cron_minimal_qty_stored
+msgid " Tameson: Recompute QTY_min stored "
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.report,print_report_name:tameson_stock.t_delivery_addresses
+msgid "'Delivery Addresses - %s' % object.name"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.report,print_report_name:tameson_stock.batch_stock_picking_invoices
+#: model:ir.actions.report,print_report_name:tameson_stock.stock_picking_invoices
+msgid "'Picking Invoices - %s' % object.name"
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,body_html:tameson_stock.tameson_picking_no_payment_cancel
+msgid ""
+"<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">On ${object.date} you have placed an order with Tameson. However, a payment is required to finalize the order. Our records show that the enclosed invoice belonging to this order has not yet been paid. We have cancelled the order, assuming you have no interest in these products anymore.</p> <br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">If you have any questions or comments, or if you still want to receive the order, please feel free to contact us.</p>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,body_html:tameson_stock.tameson_picking_no_payment_received
+msgid ""
+"<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">On ${object.date} you have placed an order with Tameson. However, to finalize the order a payment is required. Our administration shows that the enclosed invoice that accompanies this order has not yet been paid. Can you provide an update regarding the payment status?</p> <br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">If you are no longer interested in the products, please let us know so that the order can be cancelled.</p><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">If you have any questions or remarks, please feel free to contact us.</p>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,body_html:tameson_stock.tameson_picking_order_delay
+msgid ""
+"<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">You recently placed an order with us including a backorder product. Unfortunately, the delivery of this product has been delayed.</p> <br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">We have been informed by the manfacturer that the items will be delivered to us at <b style=\"font-weight:bolder;\">${object.scheduled_date.date()}</b>. We will ship the order to you the same day. We will keep you informed of the progress.</p><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Sorry for the inconvenience.</p><br>\n"
+"    <br>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,body_html:tameson_stock.tameson_po_delivery_date_update
+msgid ""
+"<div style=\"font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;background-color: rgb(255, 255, 255);\"><font color=\"#222222\" face=\"Lucida Grande, Ubuntu, Arial, Verdana, sans-serif\"><span style=\"font-size:12px;\">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"</span></font><br><br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><font color=\"#222222\" face=\"Lucida Grande, Ubuntu, Arial, Verdana, sans-serif\"><span style=\"font-size:12px;\">The confirmed delivery date of purchase order </span></font><font color=\"#222222\"><b style=\"font-weight:bolder;\">${object.origin}</b></font><font color=\"#222222\" face=\"Lucida Grande, Ubuntu, Arial, Verdana, sans-serif\"><span style=\"font-size:12px;\">&nbsp;has passed. We request an update of the delivery date of this order as soon as possible.</span></font></p> <br>\n"
+"    <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;color: rgb(34, 34, 34); font-family: &quot;Lucida Grande&quot;, Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;\">Thank you in advance!</p>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.product_template_form_view_procurement_button
+msgid "<span class=\"o_stat_text\">Min Qty</span>"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_picking_document_inherit
+msgid "<strong>Location</strong>"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
+msgid "<strong>Order Date:</strong>"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_picking_document_inherit
+msgid "<strong>Product</strong>"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
+msgid "<strong>Quantity</strong>"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
+msgid "<strong>Status</strong>"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_picking_document_inherit
+msgid "<strong>To</strong>"
+msgstr ""
+
+#. module: tameson_stock
+#: model:base.automation,name:tameson_stock.action_product_set_route
+#: model:ir.actions.server,name:tameson_stock.action_product_set_route_ir_actions_server
+msgid "Automatically set product route on orderpoint creation"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_stock_picking_batch
+msgid "Batch Transfer"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.view_picking_form
+msgid "Batch for ready shipments"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model.fields,help:tameson_stock.field_product_product__minimal_qty_available
+#: model:ir.model.fields,help:tameson_stock.field_product_template__minimal_qty_available
+#: model:ir.model.fields,help:tameson_stock.field_sale_order_line__minimal_qty_available
+msgid ""
+"Compute minimal QTY available in the future, including incoming and outgoing"
+" pickings."
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model.fields,help:tameson_stock.field_product_product__minimal_qty_available_stored
+#: model:ir.model.fields,help:tameson_stock.field_product_template__minimal_qty_available_stored
+#: model:ir.model.fields,help:tameson_stock.field_sale_order_line__minimal_qty_available_stored
+msgid ""
+"Compute minimal QTY available in the future, including incoming and outgoing"
+" pickings. this is a stored field, precalculated forfaster exports."
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock_warehouse_orderpoint.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_warehouse_orderpoint__rr_count_12m
+#, python-format
+msgid "Count 12M"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock_warehouse_orderpoint.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_warehouse_orderpoint__rr_count_3m
+#, python-format
+msgid "Count 3M"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.report,name:tameson_stock.t_delivery_addresses
+msgid "Delivery Addresses"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
+msgid "Delivery Slip:"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_picking__t_delivery_allowed
+#, python-format
+msgid "Delivery allowed"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.stock_picking_batch_form
+msgid "Delivery method"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.view_picking_form
+msgid "Edit help"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "E-Mail-Assistent"
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.view_picking_form
+msgid "Fill done QTYs"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_picking__t_payment_status
+#, python-format
+msgid "Fully paid"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/product.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_product_product__rr_has_reordering_rules
+#: model:ir.model.fields,field_description:tameson_stock.field_product_template__rr_has_reordering_rules
+#, python-format
+msgid "Has reordering rules"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.view_picking_form
+msgid "Help"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_picking__t_invoice_ids_to_report
+#, python-format
+msgid "Invoices to report"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.product_template_kanban_stock_view
+msgid "Location:"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
+msgid "Lot/Serial Number"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock_warehouse_orderpoint.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_warehouse_orderpoint__rr_max_out_3m
+#, python-format
+msgid "Max/out 3M"
+msgstr ""
+
+#. module: tameson_stock
+#. openerp-web
+#: code:addons/tameson_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Min qty"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.product_template_kanban_stock_view
+msgid "Min qty:"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/product.py:0
+#: code:addons/tameson_stock/models/product.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_product_product__minimal_qty_available
+#: model:ir.model.fields,field_description:tameson_stock.field_product_template__minimal_qty_available
+#, python-format
+msgid "Minimal QTY Available"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/product.py:0
+#: code:addons/tameson_stock/models/product.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_product_product__minimal_qty_available_stored
+#: model:ir.model.fields,field_description:tameson_stock.field_product_template__minimal_qty_available_stored
+#, python-format
+msgid "Minimal QTY Available pre-calculated for export"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Mindestbestandsregel"
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/sale.py:0
+#, python-format
+msgid "Not enough inventory!"
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,subject:tameson_stock.tameson_picking_order_delay
+msgid "Order delivery update"
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,subject:tameson_stock.tameson_picking_no_payment_received
+msgid "Order payment not received yet"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock_warehouse_orderpoint.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_warehouse_orderpoint__rr_out_12m
+#, python-format
+msgid "Out 12M"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock_warehouse_orderpoint.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_warehouse_orderpoint__rr_out_3m
+#, python-format
+msgid "Out 3M"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_picking__t_partner_outside_eu
+#, python-format
+msgid "Out of EU"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.view_picking_internal_search
+msgid "Partner outside EU"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_t_delivery_addresses
+msgid "Picking"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.report,name:tameson_stock.batch_stock_picking_invoices
+#: model:ir.actions.report,name:tameson_stock.stock_picking_invoices
+#: model_terms:ir.ui.view,arch_db:tameson_stock.stock_picking_batch_form
+msgid "Picking invoices"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_procurement_group
+msgid "Procurement Group"
+msgstr "Beschaffungsgruppe"
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_product_product
+msgid "Product"
+msgstr "Produkt"
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_product_template
+msgid "Product Template"
+msgstr "Produktvorlage"
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_sale_order_line__minimal_qty_available
+#, python-format
+msgid "Product min qty available"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_sale_order_line__minimal_qty_available_stored
+#, python-format
+msgid "Product min qty available stored"
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,subject:tameson_stock.tameson_po_delivery_date_update
+msgid "Purchase order delivery date"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.view_warehouse_orderpoint_tree
+msgid "Reordering Rules"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Kundenauftragszeile"
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.view_picking_form
+msgid "Send"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.server,name:tameson_stock.action_mail_delivery_delay
+msgid "Send delivery delay mail"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_t_delivery_addresses
+msgid "Sent by Tameson - 5617BC-20 - Ref:"
+msgstr ""
+
+#. module: tameson_stock
+#. openerp-web
+#: code:addons/tameson_stock/static/src/xml/qweb.xml:0
+#: code:addons/tameson_stock/static/src/xml/qweb.xml:0
+#, python-format
+msgid "Show delivery labels"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerbuchung"
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.product_form_view_procurement_button
+#: model_terms:ir.ui.view,arch_db:tameson_stock.product_template_form_view_procurement_button
+msgid "Stock Moves"
+msgstr ""
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/stock_warehouse_orderpoint.py:0
+#: model:ir.model.fields,field_description:tameson_stock.field_stock_warehouse_orderpoint__rr_supplier
+#, python-format
+msgid "Supplier"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.view_picking_form
+msgid "Tameson"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.server,name:tameson_stock.cron_complete_minimal_qty_stored_ir_actions_server
+#: model:ir.cron,cron_name:tameson_stock.cron_complete_minimal_qty_stored
+#: model:ir.cron,name:tameson_stock.cron_complete_minimal_qty_stored
+msgid "Tameson: Recompute Completely QTY min stored "
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.server,name:tameson_stock.cron_complete_minimal_qty_stored_tmpl_ir_actions_server
+#: model:ir.cron,cron_name:tameson_stock.cron_complete_minimal_qty_stored_tmpl
+#: model:ir.cron,name:tameson_stock.cron_complete_minimal_qty_stored_tmpl
+msgid "Tameson: Recompute Completely QTY min stored (template)  "
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.server,name:tameson_stock.cron_minimal_qty_stored_tmpl_ir_actions_server
+#: model:ir.cron,cron_name:tameson_stock.cron_minimal_qty_stored_tmpl
+#: model:ir.cron,name:tameson_stock.cron_minimal_qty_stored_tmpl
+msgid "Tameson: Recompute QTY_min stored (product template) "
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.server,name:tameson_stock.ir_cron_scheduler_recompute_reordering_rules_ir_actions_server
+#: model:ir.cron,cron_name:tameson_stock.ir_cron_scheduler_recompute_reordering_rules
+#: model:ir.cron,name:tameson_stock.ir_cron_scheduler_recompute_reordering_rules
+msgid "Tameson: Recompute reordering rules parameters"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.actions.server,name:tameson_stock.ir_cron_scheduler_validate_orderpoint_product_routes_ir_actions_server
+#: model:ir.cron,cron_name:tameson_stock.ir_cron_scheduler_validate_orderpoint_product_routes
+#: model:ir.cron,name:tameson_stock.ir_cron_scheduler_validate_orderpoint_product_routes
+msgid "Tameson: Validate product routes wrt stock.warehouse.orderpoint"
+msgstr ""
+
+#. module: tameson_stock
+#: model:ir.model,name:tameson_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Lieferung vornehmen"
+
+#. module: tameson_stock
+#: code:addons/tameson_stock/models/sale.py:0
+#, python-format
+msgid ""
+"You plan to sell %.2f %s but the minimum qty available is %.2f %s !\n"
+"The current stock on hand is %.2f %s."
+msgstr ""
+
+#. module: tameson_stock
+#: model:mail.template,subject:tameson_stock.tameson_picking_no_payment_cancel
+msgid "Your order is cancelled"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_t_delivery_addresses
+msgid "has no partner"
+msgstr ""
+
+#. module: tameson_stock
+#: model_terms:ir.ui.view,arch_db:tameson_stock.report_delivery_document
+msgid "of"
+msgstr ""

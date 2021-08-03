@@ -1,0 +1,301 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* prestashop_sync
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: prestashop_sync
+#: model:mail.template,body_html:prestashop_sync.tameson_notify_prestashop_cron_issue
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<h1>Prestashop cron issues</h1><br/>\n"
+"% for order, id, issue in ctx.get('issues', []):\n"
+"    <p><strong>${order} (${id})</strong>: ${issue}</p>\n"
+"% endfor\n"
+"<br/><br/>\n"
+"</div>\n"
+"            "
+msgstr "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \"> \n"
+"<h1>Problèmes cron Prestashop</h1><br/>\n"
+"% for order, id, issue in ctx.get('issues', []): \n"
+"<p><strong>${order} (${id}) </strong> : ${issue}</p> \n"
+"% endfor\n"
+" <br/><br/> \n"
+"</div>\n"
+"            "
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__key
+msgid "API key"
+msgstr "Clé API"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__active
+msgid "Active"
+msgstr "actif"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__price_def_allowed
+msgid "Allowed price difference"
+msgstr "Différence de prix autorisée"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id__carrier_id
+msgid "Carrier"
+msgstr "Transporteur"
+
+#. module: prestashop_sync
+#: model:ir.model,name:prestashop_sync.model_celery_task
+msgid "Celery Task"
+msgstr "Tâche de céleri"
+
+#. module: prestashop_sync
+#: model_terms:ir.actions.act_window,help:prestashop_sync.action_prestashop_config_act_window
+msgid "Click to add new Prestashop Configuration"
+msgstr "Cliquez pour ajouter une nouvelle configuration Prestashop"
+
+#. module: prestashop_sync
+#: model:ir.model,name:prestashop_sync.model_res_partner
+msgid "Contact"
+msgstr "Contacter"
+
+#. module: prestashop_sync
+#: model_terms:ir.actions.act_window,help:prestashop_sync.action_sale_prestashop
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr "Créer un nouveau devis, la première étape d'une nouvelle vente !"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id__create_uid
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id__create_date
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__create_date
+msgid "Created on"
+msgstr "Créé sur"
+
+#. module: prestashop_sync
+#: model:ir.model,name:prestashop_sync.model_delivery_carrier_prestashop_id
+msgid "Delivery Carrier Presta ID"
+msgstr "ID Presta du transporteur"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__discount_product_id
+msgid "Discount Product"
+msgstr "Produit à prix réduit"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id__display_name
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__display_name
+msgid "Display Name"
+msgstr "Afficher un nom"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_sale_order__force_all_qty_delivered
+msgid "Force prestashop shipped"
+msgstr "Forcer la livraison de prestashop"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id__id
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__id
+msgid "ID"
+msgstr "ID"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id____last_update
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id__write_uid
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id__write_date
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier_prestashop_id__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: prestashop_sync
+#: model:mail.template,subject:prestashop_sync.tameson_notify_prestashop_cron_issue
+msgid "ODOO - Prestashop cron issue"
+msgstr "ODOO - Problème cron Prestashop"
+
+#. module: prestashop_sync
+#: model_terms:ir.actions.act_window,help:prestashop_sync.action_sale_prestashop
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales "
+"order.<br> You will be able to create an invoice and collect the payment."
+msgstr "Une fois le devis confirmé par le client, il devient une commande client.<br> Vous pourrez créer une facture et encaisser le paiement."
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__batch_size
+msgid "Order request batch size"
+msgstr "Taille du lot de demande de commande"
+
+#. module: prestashop_sync
+#: model:ir.actions.server,name:prestashop_sync.ir_cron_confirm_invoicepayment_ir_actions_server
+#: model:ir.cron,cron_name:prestashop_sync.ir_cron_confirm_invoicepayment
+#: model:ir.cron,name:prestashop_sync.ir_cron_confirm_invoicepayment
+msgid "PrestaShop: Cancelations / Confirm order 'invoicepayment'"
+msgstr "PrestaShop : Annulations / Confirmer la commande 'paiement de la facture'"
+
+#. module: prestashop_sync
+#: model:ir.actions.server,name:prestashop_sync.ir_cron_scheduler_prestashop_order_sync_ir_actions_server
+#: model:ir.cron,cron_name:prestashop_sync.ir_cron_scheduler_prestashop_order_sync
+#: model:ir.cron,name:prestashop_sync.ir_cron_scheduler_prestashop_order_sync
+msgid "PrestaShop: Get orders"
+msgstr "PrestaShop : Obtenir des commandes"
+
+#. module: prestashop_sync
+#: model:ir.actions.server,name:prestashop_sync.ir_cron_scheduler_prestashop_order_sync_status_ir_actions_server
+#: model:ir.cron,cron_name:prestashop_sync.ir_cron_scheduler_prestashop_order_sync_status
+#: model:ir.cron,name:prestashop_sync.ir_cron_scheduler_prestashop_order_sync_status
+msgid "PrestaShop: Sync order status"
+msgstr "PrestaShop : Synchroniser le statut de la commande"
+
+#. module: prestashop_sync
+#: model:ir.actions.act_window,name:prestashop_sync.action_prestashop_config_act_window
+msgid "PrestaShops"
+msgstr "PrestaShops"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_sale_order__prestashop_config_id
+#: model_terms:ir.ui.view,arch_db:prestashop_sync.view_order_form
+msgid "Prestashop"
+msgstr "Prestashop"
+
+#. module: prestashop_sync
+#: model:ir.model,name:prestashop_sync.model_prestashop_config
+#: model:ir.ui.menu,name:prestashop_sync.menu_prestashop_config
+msgid "Prestashop Configuration"
+msgstr "Configuration Prestashop"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_sale_order__prestashop_id
+msgid "Prestashop ID"
+msgstr "Identifiant Prestashop"
+
+#. module: prestashop_sync
+#: code:addons/prestashop_sync/models/sale.py:0
+#: model:ir.model.constraint,message:prestashop_sync.constraint_sale_order_prestashop_id
+#: unique
+#, python-format
+msgid "Prestashop ID must be unique."
+msgstr "L'identifiant Prestashop doit être unique."
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_sale_order__prestashop_module
+msgid "Prestashop Module"
+msgstr "Module Prestashop"
+
+#. module: prestashop_sync
+#: model:ir.actions.act_window,name:prestashop_sync.action_sale_prestashop
+#: model:ir.ui.menu,name:prestashop_sync.menu_sale_prestashop
+msgid "Prestashop Orders"
+msgstr "Commandes Prestashop"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_delivery_carrier__prestashop_carrier_ids
+msgid "Prestashop carrier ID"
+msgstr "ID de transporteur Prestashop"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_sale_order__prestashop_state
+msgid "Prestashop current state"
+msgstr "Etat actuel de Prestashop"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_sale_order__shipped_status_prestashop
+msgid "Prestashop shipped"
+msgstr "Prestashop expédié"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_sale_order__prestashop_date_upd
+msgid "Prestashop update time"
+msgstr "Heure de mise à jour de Prestashop"
+
+#. module: prestashop_sync
+#: model:ir.model,name:prestashop_sync.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: prestashop_sync
+#: model_terms:ir.ui.view,arch_db:prestashop_sync.view_order_form
+msgid "Shipped"
+msgstr "Expédié"
+
+#. module: prestashop_sync
+#: model:ir.model,name:prestashop_sync.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "méthodes de livraison"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__shop_group
+msgid "Shop Group ID"
+msgstr "Identifiant du groupe de la boutique"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__name
+msgid "Shop name"
+msgstr "Nom de la boutique"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__url
+msgid "Shop url"
+msgstr "URL de la boutique"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__source_id
+msgid "Source"
+msgstr "Source"
+
+#. module: prestashop_sync
+#: model:ir.model.fields,field_description:prestashop_sync.field_prestashop_config__sync_days
+msgid "Sync order last n days"
+msgstr "Synchroniser la commande les n derniers jours"
+
+#. module: prestashop_sync
+#: model:res.groups,name:prestashop_sync.notification_prestashop_cron_issue
+msgid "Tameson: Prestashop cron issue"
+msgstr "Tameson : problème cron Prestashop"
+
+#. module: prestashop_sync
+#: model_terms:ir.ui.view,arch_db:prestashop_sync.view_prestashop_config_form
+msgid "name"
+msgstr "Nom"
+
+#. module: prestashop_sync
+#: model_terms:ir.ui.view,arch_db:prestashop_sync.view_prestashop_config_form
+msgid "prestashop.config_form"
+msgstr "prestashop.config_form"
+
+#. module: prestashop_sync
+#: model_terms:ir.ui.view,arch_db:prestashop_sync.view_prestashop_config_search
+msgid "prestashop.config_search"
+msgstr "prestashop.config_search"
+
+#. module: prestashop_sync
+#: model_terms:ir.ui.view,arch_db:prestashop_sync.view_prestashop_config_tree
+msgid "prestashop.config_tree"
+msgstr "prestashop.config_tree"

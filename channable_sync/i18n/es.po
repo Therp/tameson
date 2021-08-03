@@ -1,0 +1,408 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* channable_sync
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.sale_order_form_inherit_channable
+msgid "Are you sure?"
+msgstr "¿Está seguro?"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_auto_confirm_order
+msgid "Auto-confirm an Order After Importing From Channable?"
+msgstr "¿Confirmar automáticamente un pedido después de importarlo desde Channable?"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_auto_register_payment
+msgid "Auto-register Payment After Importing an Order From Channable?"
+msgstr "¿Registrar automáticamente el pago después de importar un pedido de Channable?"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_config_settings_view_form_channable_api
+msgid "Base URL:"
+msgstr "URL base:"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_company_form_inherit_channable
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: channable_sync
+#: model:ir.ui.menu,name:channable_sync.menu_sale_order_channable_root
+#: model_terms:ir.ui.view,arch_db:channable_sync.account_journal_form_inherit_channable
+#: model_terms:ir.ui.view,arch_db:channable_sync.sale_order_form_inherit_channable
+msgid "Channable"
+msgstr "Channable"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_company_form_inherit_channable
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_config_settings_view_form_channable_api
+msgid "Channable API"
+msgstr "API modificable"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/res_company.py:0
+#, python-format
+msgid "Channable API - invalid response! %s"
+msgstr "API Channable - ¡respuesta inválida! %s"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/res_company.py:0
+#, python-format
+msgid "Channable API Authentification Failed - Unable to retrieve token!"
+msgstr "Falló la autenticación de la API de Channable - ¡No se pudo recuperar el token!"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/res_company.py:0
+#, python-format
+msgid "Channable API Request Failed - Company ID not set!"
+msgstr "Error en la solicitud de API de canalizable: no se ha establecido el ID de la empresa."
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/res_company.py:0
+#, python-format
+msgid "Channable API Request Failed - Project ID not set!"
+msgstr "Solicitud de API modificable fallida: no se ha establecido el ID del proyecto"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_api_token
+msgid "Channable API Token"
+msgstr "Token de API modificable"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_config_settings__channable_api_base_url
+msgid "Channable API base URL"
+msgstr "URL base de API modificable"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/res_company.py:0
+#, python-format
+msgid "Channable API base URL not set!"
+msgstr "No se ha establecido la URL base de la API que se puede cambiar."
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_account_bank_statement_import_journal_creation__channable_channel_name
+#: model:ir.model.fields,field_description:channable_sync.field_account_journal__channable_channel_name
+msgid "Channable Channel Name"
+msgstr "Nombre del canal que se puede cambiar"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_company_id
+msgid "Channable Company ID"
+msgstr "ID de empresa modificable"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_orders_cancelled
+msgid "Channable Order - Fetch Cancelled"
+msgstr "Pedido que se puede canjear: recuperación cancelada"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_orders_not_shipped
+msgid "Channable Order - Fetch Not Shipped"
+msgstr "Orden modificable: recuperación no enviada"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_orders_shipped
+msgid "Channable Order - Fetch Shipped"
+msgstr "Orden que se puede canjear: recuperación enviada"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_orders_waiting
+msgid "Channable Order - Fetch Waiting"
+msgstr "Orden modificable: recuperación en espera"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/sale_order.py:0
+#, python-format
+msgid "Channable Order Cancel Failure: %s"
+msgstr "Fallo de cancelación de orden modificable: %s"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_sale_order__channable_order_id
+msgid "Channable Order ID"
+msgstr "ID de pedido modificable"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_sale_order_line__channable_line_id
+msgid "Channable Order Line ID"
+msgstr "ID de línea de pedido modificable"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_sale_order__channable_order_status
+msgid "Channable Order Status"
+msgstr "Estado de pedido modificable"
+
+#. module: channable_sync
+#: model:ir.actions.act_window,name:channable_sync.action_orders_channable
+msgid "Channable Orders"
+msgstr "Órdenes modificables"
+
+#. module: channable_sync
+#: model:ir.actions.act_window,name:channable_sync.action_orders_channable_to_cancel
+msgid "Channable Orders To Be Cancelled"
+msgstr "Órdenes modificables que se cancelarán"
+
+#. module: channable_sync
+#: model:ir.actions.act_window,name:channable_sync.action_orders_channable_to_shipped
+msgid "Channable Orders To Be Updated As Shipped"
+msgstr "Los pedidos modificables se actualizarán según se envíen"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_sale_order__channable_payment_method
+msgid "Channable Payment"
+msgstr "Pago modificable"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_project_id
+msgid "Channable Project ID"
+msgstr "ID de proyecto modificable"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.sale_order_form_inherit_channable
+msgid "Channable Status"
+msgstr "Estado modificable"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_delivery_carrier__channable_transporter_code
+msgid "Channable Transporter Code"
+msgstr "Código de transportador modificable"
+
+#. module: channable_sync
+#: model:ir.actions.server,name:channable_sync.ir_cron_scheduler_channable_order_sync_ir_actions_server
+#: model:ir.cron,cron_name:channable_sync.ir_cron_scheduler_channable_order_sync
+#: model:ir.cron,name:channable_sync.ir_cron_scheduler_channable_order_sync
+msgid "Channable: Sync Orders"
+msgstr "Cannable: Sincronizar pedidos"
+
+#. module: channable_sync
+#: model:ir.actions.server,name:channable_sync.ir_cron_scheduler_channable_order_status_update_ir_actions_server
+#: model:ir.cron,cron_name:channable_sync.ir_cron_scheduler_channable_order_status_update
+#: model:ir.cron,name:channable_sync.ir_cron_scheduler_channable_order_status_update
+msgid "Channable: Update Order Status"
+msgstr "Se puede cambiar: actualizar el estado del pedido"
+
+#. module: channable_sync
+#: model:ir.model,name:channable_sync.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.view_channable_quotation_tree
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/sale_order.py:0
+#, python-format
+msgid "Customer not available in order %s."
+msgstr "Cliente no disponible en orden%s ."
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_sale_order__channable_extra_info
+msgid "Extra Info (Channable)"
+msgstr "Información adicional (modificable)"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_company_form_inherit_channable
+msgid "Fetch orders of the following status:"
+msgstr "Obtener pedidos del siguiente estado:"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_config_settings__channable_orders_last_n_days_sync
+msgid "Field name"
+msgstr "Nombre del campo"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.sale_order_form_inherit_channable
+msgid "Force Cancel In Channable"
+msgstr "Forzar cancelación en Channable"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.sale_order_form_inherit_channable
+msgid "Force Shipped In Channable"
+msgstr "Fuerza enviada en Channable"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_company_form_inherit_channable
+msgid "Import Options"
+msgstr "Opciones de importación"
+
+#. module: channable_sync
+#: model:ir.model,name:channable_sync.model_account_journal
+msgid "Journal"
+msgstr "Diario"
+
+#. module: channable_sync
+#: model:ir.model.fields,help:channable_sync.field_account_bank_statement_import_journal_creation__channable_channel_name
+#: model:ir.model.fields,help:channable_sync.field_account_journal__channable_channel_name
+msgid ""
+"Name of the channel in Channable, to link and register the payment on this "
+"journal."
+msgstr "Nombre del canal en Channable, para vincular y registrar el pago en este diario."
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_sale_order__channable_to_update_cancel
+msgid "Needs To Be Cancelled in Channable"
+msgstr "Debe cancelarse en Channable"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_sale_order__channable_to_update_shipped
+msgid "Needs To Be Updated in Channable"
+msgstr "Necesita ser actualizado en Channable"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_company_form_inherit_channable
+msgid "Not Shipped"
+msgstr "No enviado"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_config_settings_view_form_channable_api
+msgid "Number of days to sync orders from the API (0 unlimited):"
+msgstr "Número de días para sincronizar pedidos desde la API (0 ilimitado):"
+
+#. module: channable_sync
+#: model:ir.ui.menu,name:channable_sync.menu_sale_order_channable_orders
+msgid "Orders"
+msgstr "Pedidos"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_res_company__channable_prices_contain_tax
+msgid "Prices From Channable Are Tax-inclusive?"
+msgstr "¿Los precios de Channable incluyen impuestos?"
+
+#. module: channable_sync
+#: model:ir.model,name:channable_sync.model_res_config_settings
+msgid "Procurement purchase grouping settings"
+msgstr "Configuración de agrupación de compras de compras"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/sale_order.py:0
+#, python-format
+msgid "Product %s not available in Odoo (order %s)."
+msgstr "Producto%s no disponible en Odoo (pedir%s )."
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.view_channable_quotation_tree
+msgid "Quotation"
+msgstr "Cotización"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.view_channable_quotation_tree
+msgid "Quotation Number"
+msgstr "Número de cotización"
+
+#. module: channable_sync
+#: model:ir.model.fields,field_description:channable_sync.field_sale_order__channable_refused_cancellation
+msgid "Refused Cancellation in Channable"
+msgstr "Cancelación rechazada en Channable"
+
+#. module: channable_sync
+#: model:ir.ui.menu,name:channable_sync.menu_sale_order_channable_orders_refused_cancel
+msgid "Refused Cancellations"
+msgstr "Cancelaciones rechazadas"
+
+#. module: channable_sync
+#: model:ir.actions.act_window,name:channable_sync.action_orders_channable_refused_cancel
+msgid "Refused Cancellations of Channable Orders"
+msgstr "Cancelaciones rechazadas de pedidos canjeables"
+
+#. module: channable_sync
+#: model:ir.model,name:channable_sync.model_sale_order
+msgid "Sales Order"
+msgstr "Órdenes de venta"
+
+#. module: channable_sync
+#: model:ir.model,name:channable_sync.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de orden de venta"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_company_form_inherit_channable
+msgid "Shipped"
+msgstr "Enviado"
+
+#. module: channable_sync
+#: model:product.product,name:channable_sync.product_product_delivery_channable
+#: model:product.template,name:channable_sync.product_product_delivery_channable_product_template
+msgid "Shipping Cost"
+msgstr "Costo de envío"
+
+#. module: channable_sync
+#: model:ir.model,name:channable_sync.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Métodos de envío"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/sale_order.py:0
+#, python-format
+msgid ""
+"Shipping cost service not available in Odoo, and shipping cost exists for "
+"this order."
+msgstr "El servicio de costo de envío no está disponible en Odoo y existe un costo de envío para este pedido."
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.view_channable_quotation_tree
+msgid "Tax Total"
+msgstr "Total de impuestos"
+
+#. module: channable_sync
+#: code:addons/channable_sync/models/sale_order.py:0
+#: code:addons/channable_sync/models/sale_order.py:0
+#, python-format
+msgid "This Order Is Not a Channable Order, Unable To Update!"
+msgstr "Este pedido no es un pedido modificable, no se puede actualizar."
+
+#. module: channable_sync
+#: model:ir.ui.menu,name:channable_sync.menu_sale_order_channable_orders_cancel
+msgid "To Be Cancelled"
+msgstr "Para ser cancelado"
+
+#. module: channable_sync
+#: model:ir.ui.menu,name:channable_sync.menu_sale_order_channable_orders_shipped
+msgid "To Be Updated (Shipped)"
+msgstr "Para ser actualizado (enviado)"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.view_channable_quotation_tree
+msgid "Total Tax Excluded"
+msgstr "Total de impuestos excluidos"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.view_channable_quotation_tree
+msgid "Total Tax Included"
+msgstr "Impuestos totales incluidos"
+
+#. module: channable_sync
+#: model:ir.model,name:channable_sync.model_stock_picking
+msgid "Transfer"
+msgstr "Transferir"
+
+#. module: channable_sync
+#: model:ir.model.fields,help:channable_sync.field_delivery_carrier__channable_transporter_code
+msgid ""
+"Transporter Code from Channable, to be used when an order is marked as "
+"shipped."
+msgstr "Código de transportista de Channable, para usar cuando un pedido se marca como enviado."
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.sale_order_form_inherit_channable
+msgid "View In Channable"
+msgstr "Ver en Channable"
+
+#. module: channable_sync
+#: model_terms:ir.ui.view,arch_db:channable_sync.res_company_form_inherit_channable
+msgid "Waiting"
+msgstr "Esperando"

@@ -1,0 +1,83 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_account
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: tameson_account
+#: model_terms:ir.ui.view,arch_db:tameson_account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            <strong>Shipping date:</strong>"
+msgstr "<br/> <strong> Fecha de envío: </strong>"
+
+#. module: tameson_account
+#: model_terms:ir.ui.view,arch_db:tameson_account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            <strong>Tracking number:</strong>"
+msgstr "<br/> <strong> Número de seguimiento: </strong>"
+
+#. module: tameson_account
+#: model_terms:ir.ui.view,arch_db:tameson_account.report_invoice_document
+msgid "<strong>Shipping method:</strong>"
+msgstr "<strong> Método de envío: </strong>"
+
+#. module: tameson_account
+#: code:addons/tameson_account/models/account.py:0
+#: model:ir.model.fields,field_description:tameson_account.field_account_move__t_comment
+#, python-format
+msgid "Comment"
+msgstr "Comentario"
+
+#. module: tameson_account
+#: model_terms:ir.ui.view,arch_db:tameson_account.view_move_form
+msgid "Edit help"
+msgstr "Editar ayuda"
+
+#. module: tameson_account
+#: model_terms:ir.ui.view,arch_db:tameson_account.view_move_form
+msgid "Help"
+msgstr "Ayuda"
+
+#. module: tameson_account
+#: code:addons/tameson_account/models/account.py:0
+#: model:ir.model.fields,field_description:tameson_account.field_account_payment_term__t_invoice_delivered_quantities
+#, python-format
+msgid "Invoice delivered quantities"
+msgstr "Cantidades entregadas en facturas"
+
+#. module: tameson_account
+#: model:ir.model,name:tameson_account.model_account_move
+msgid "Journal Entries"
+msgstr "Entradas de diario"
+
+#. module: tameson_account
+#: model:ir.model,name:tameson_account.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Adquiriente de pago"
+
+#. module: tameson_account
+#: model:ir.model,name:tameson_account.model_account_payment_term
+msgid "Payment Terms"
+msgstr "Términos de pago"
+
+#. module: tameson_account
+#: model:ir.model,name:tameson_account.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaccion de pago"
+
+#. module: tameson_account
+#: model_terms:ir.ui.view,arch_db:tameson_account.report_invoice_document
+msgid "Signature"
+msgstr "Firma"

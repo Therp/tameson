@@ -1,0 +1,745 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_custom_exports
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__fixed_filename
+msgid ""
+"\n"
+"        Check if this exporter will always use the same file name and overwrite\n"
+"        it on every run. If unchecked every generated file will be\n"
+"        differentiated with date at time of export."
+msgstr "\n"
+"        Vérifiez si cet exportateur utilisera toujours le même nom de fichier et l'écrasera à chaque exécution. Si elle n'est pas cochée, chaque fichier généré sera différencié avec la date au moment de l'exportation."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_exporter__export_format__csv
+msgid ".csv format"
+msgstr ".csv format"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_exporter__export_format__xlsx
+msgid ".xlsx format"
+msgstr ".xlsx format"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_form
+msgid "/exports or similar"
+msgstr "/exports ou similaire"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_needaction
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_needaction
+msgid "Action Needed"
+msgstr "Action nécessaire"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__active
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__active
+msgid "Active"
+msgstr "actif"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__activity_ids
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__activity_ids
+msgid "Activities"
+msgstr "Activités"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__activity_exception_decoration
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Activité Exception Décoration"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__activity_state
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__activity_state
+msgid "Activity State"
+msgstr "État d'activité"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Are you sure you want to run the export now?"
+msgstr "Êtes-vous sûr de vouloir exécuter l'exportation maintenant ?"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_attachment_count
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_attachment_count
+msgid "Attachment Count"
+msgstr "Nombre de pièces jointes"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__auth_type
+msgid "Authentification Type"
+msgstr "Type d'authentification"
+
+#. module: tameson_custom_exports
+#: code:addons/tameson_custom_exports/models/sftp_server.py:0
+#, python-format
+msgid "Connection Test Succeeded!"
+msgstr "Test de connexion réussi !"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__create_uid
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__create_uid
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__create_date
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__create_date
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__create_date
+msgid "Created on"
+msgstr "Créé sur"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_form
+msgid "Credentials"
+msgstr "Identifiants"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__cron_interval_number
+msgid "Cron Interval Number"
+msgstr "Numéro d'intervalle Cron"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__cron_interval_type
+msgid "Cron Interval Type"
+msgstr "Type d'intervalle Cron"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__ir_cron_id
+msgid "Cron Job"
+msgstr "Tâche planifiée"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__ir_cron_id
+msgid "Cron Job specified to run the export."
+msgstr "Cron Job spécifié pour exécuter l'exportation."
+
+#. module: tameson_custom_exports
+#: model:ir.model,name:tameson_custom_exports.model_custom_exporter
+msgid "Custom Export"
+msgstr "Exportation personnalisée"
+
+#. module: tameson_custom_exports
+#: model:ir.model,name:tameson_custom_exports.model_custom_export_file
+msgid "Custom Export File"
+msgstr "Fichier d'exportation personnalisé"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__custom_exporter_id
+msgid "Custom Exporter"
+msgstr "Exportateur personnalisé"
+
+#. module: tameson_custom_exports
+#: code:addons/tameson_custom_exports/models/custom_exporter.py:0
+#: code:addons/tameson_custom_exports/models/custom_exporter.py:0
+#: code:addons/tameson_custom_exports/models/custom_exporter.py:0
+#, python-format
+msgid ""
+"Custom Exporter Error:\n"
+"\n"
+" %s."
+msgstr "Erreur de l'exportateur personnalisé :%s ."
+
+#. module: tameson_custom_exports
+#: code:addons/tameson_custom_exports/models/custom_exporter.py:0
+#, python-format
+msgid ""
+"Custom Exporter FTP/SFTP Error:\n"
+"\n"
+" %s."
+msgstr "Erreur FTP/SFTP de l'exportateur personnalisé :%s ."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__custom_exporter_id
+msgid "Custom Exporter linked to this export."
+msgstr "Exportateur personnalisé lié à cette exportation."
+
+#. module: tameson_custom_exports
+#: model:ir.ui.menu,name:tameson_custom_exports.menu_custom_exporters
+msgid "Custom Exporters"
+msgstr "Exportateurs personnalisés"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Customer Exporters"
+msgstr "Clients exportateurs"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__sftp_server__keyfile_type__dsa
+msgid "DSA"
+msgstr "DSA"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_exporter__interval_type__days
+msgid "Days"
+msgstr "Journées"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__display_name
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__display_name
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__display_name
+msgid "Display Name"
+msgstr "Afficher un nom"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_export_file__state__draft
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__sftp_server__keyfile_type__ecdsa
+msgid "ECDSA"
+msgstr "ECDSA"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__sftp_server__keyfile_type__ed25519
+msgid "Ed25519"
+msgstr "Ed25519"
+
+#. module: tameson_custom_exports
+#: code:addons/tameson_custom_exports/models/sftp_server.py:0
+#, python-format
+msgid "Everything seems properly set up!"
+msgstr "Tout semble correctement configuré !"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Execute Every"
+msgstr "Exécuter chaque"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__export_domain
+msgid "Export Domain"
+msgstr "Exporter le domaine"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_search
+msgid "Export Settings"
+msgstr "Paramètres d'exportation"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__custom_export_format_id
+msgid "Export format"
+msgstr "Format d'exportation"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_export_file_form
+msgid "Exported File"
+msgstr "Fichier exporté"
+
+#. module: tameson_custom_exports
+#: model:ir.actions.act_window,name:tameson_custom_exports.action_custom_exported_files
+#: model:ir.ui.menu,name:tameson_custom_exports.menu_custom_exported_files
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_export_file_search
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_export_file_tree
+msgid "Exported Files"
+msgstr "Fichiers exportés"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_export_file_form
+msgid "Exported On"
+msgstr "Exporté le"
+
+#. module: tameson_custom_exports
+#: model:ir.actions.act_window,name:tameson_custom_exports.action_custom_exporter
+#: model:ir.ui.menu,name:tameson_custom_exports.menu_custom_exporter_settings
+msgid "Exporters"
+msgstr "Exportateurs"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__sftp_server__protocol__ftp
+msgid "FTP "
+msgstr "FTP "
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_export_file__state__failed
+msgid "Failed"
+msgstr "Manqué"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__export_format
+msgid "File Format"
+msgstr "Format de fichier"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__filename
+msgid "FileName"
+msgstr "Nom de fichier"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__export_filename_prefix
+msgid "Filename Prefix"
+msgstr "Préfixe du nom de fichier"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__fixed_filename
+msgid "Fixed Filename"
+msgstr "Nom de fichier fixe"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_follower_ids
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_follower_ids
+msgid "Followers"
+msgstr "Suiveurs"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_channel_ids
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Abonnés (Chaînes)"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_partner_ids
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Abonnés (Partenaires)"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Format"
+msgstr "Format"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__custom_export_format_header
+msgid "Header field names"
+msgstr "Noms des champs d'en-tête"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__host_address
+msgid "Host address"
+msgstr "Adresse de l'hôte"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_exporter__interval_type__hours
+msgid "Hours"
+msgstr "Les heures"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__id
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__id
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__id
+msgid "ID"
+msgstr "ID"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__activity_exception_icon
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__activity_exception_icon
+msgid "Icon"
+msgstr "Icône"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__activity_exception_icon
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icône pour indiquer une activité d'exception."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__message_needaction
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__message_unread
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__message_needaction
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Si coché, les nouveaux messages nécessitent votre attention."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__message_has_error
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__message_has_sms_error
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__message_has_error
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si coché, certains messages ont une erreur de livraison."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__interval_number
+msgid "Interval Number"
+msgstr "Numéro d'intervalle"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__interval_type
+msgid "Interval Unit"
+msgstr "Unité d'intervalle"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_is_follower
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_is_follower
+msgid "Is Follower"
+msgstr "est suiveur"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__keyfile
+msgid "Key File"
+msgstr "Fichier clé"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__keyfile_type
+msgid "Key File Type"
+msgstr "Type de fichier clé"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__keyfilename
+msgid "Key Filename"
+msgstr "Nom de fichier clé"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__sftp_server__auth_type__keyfile
+msgid "Key file"
+msgstr "Fichier clé"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file____last_update
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter____last_update
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__write_uid
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__write_uid
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__write_date
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__write_date
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_main_attachment_id
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Pièce jointe principale"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_has_error
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_has_error
+msgid "Message Delivery error"
+msgstr "Erreur de livraison du message"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_ids
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_ids
+msgid "Messages"
+msgstr "Messages"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_exporter__interval_type__minutes
+msgid "Minutes"
+msgstr "Minutes"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__export_model_name
+msgid "Model"
+msgstr "Modèle"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__custom_export_format_header
+msgid "Modify the header columns if needed."
+msgstr "Modifiez les colonnes d'en-tête si nécessaire."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_exporter__interval_type__months
+msgid "Months"
+msgstr "Mois"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__name
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__name
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__activity_date_deadline
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Date limite de la prochaine activité"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__activity_summary
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__activity_summary
+msgid "Next Activity Summary"
+msgstr "Résumé de l'activité suivante"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__activity_type_id
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__activity_type_id
+msgid "Next Activity Type"
+msgstr "Type d'activité suivante"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__cron_nextcall
+msgid "Next Execution Date"
+msgstr "Prochaine date d'exécution"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__nextcall
+msgid "Next Export At"
+msgstr "Prochaine exportation à"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__nextcall
+msgid "Next planned execution date for this export."
+msgstr "Prochaine date d'exécution prévue pour cette exportation."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__cron_nextcall
+msgid "Next planned execution date for this job."
+msgstr "Prochaine date d'exécution prévue pour ce travail."
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Next run:"
+msgstr "Prochaine course :"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_export_file__state__no_data
+msgid "No Data"
+msgstr "Pas de données"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_needaction_counter
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'actions"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_has_error_counter
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_has_error_counter
+msgid "Number of errors"
+msgstr "Nombre d'erreurs"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__message_needaction_counter
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Nombre de messages nécessitant une action"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__message_has_error_counter
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Nombre de messages avec erreur de livraison"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__message_unread_counter
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Nombre de messages non lus"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__password
+msgid "Password"
+msgstr "Mot de passe"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__sftp_server__auth_type__password
+msgid "Password-based"
+msgstr "Basé sur un mot de passe"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__port
+msgid "Port"
+msgstr "Port"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__sftp_server__keyfile_type__rsa
+msgid "RSA"
+msgstr "RSA"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__records_exported
+msgid "Records exported"
+msgstr "Enregistrements exportés"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__export_path
+msgid "Remote path to export files to"
+msgstr "Chemin d'accès distant pour exporter les fichiers vers"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__cron_interval_number
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__interval_number
+msgid "Repeat every x."
+msgstr "Répétez tous les x."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__activity_user_id
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__activity_user_id
+msgid "Responsible User"
+msgstr "Utilisateur responsable"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Run Now"
+msgstr "Cours maintenant"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__sftp_server__protocol__sftp
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "SFTP"
+msgstr "SFTP"
+
+#. module: tameson_custom_exports
+#: model:ir.model,name:tameson_custom_exports.model_sftp_server
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__sftp_server_id
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_form
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_tree
+msgid "SFTP Server"
+msgstr "Serveur SFTP"
+
+#. module: tameson_custom_exports
+#: model:ir.actions.act_window,name:tameson_custom_exports.action_exporter_sftp_servers
+#: model:ir.ui.menu,name:tameson_custom_exports.menu_custom_exporter_sftp_servers
+msgid "SFTP Servers"
+msgstr "Serveurs SFTP"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__sftp_server_id
+msgid "SFTP server to send the exports to."
+msgstr "Serveur SFTP vers lequel envoyer les exportations."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_has_sms_error
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Erreur de livraison SMS"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Scheduling"
+msgstr "Planification"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__custom_export_format_id
+msgid ""
+"Select a custom export format, or create one first in the default Export "
+"feature wizard for the model data."
+msgstr "Sélectionnez un format d'exportation personnalisé ou créez-en un d'abord dans l'assistant de fonction d'exportation par défaut pour les données du modèle."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_export_file__state__sent
+msgid "Sent"
+msgstr "Expédié"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_form
+msgid "Server"
+msgstr "Serveur"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_custom_exporter_form
+msgid "Show Past Exports"
+msgstr "Afficher les exportations passées"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__state
+msgid "State"
+msgstr "État"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__activity_state
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr "Statut basé sur les activités En retard : la date d'échéance est déjà dépassée Aujourd'hui : la date de l'activité est aujourd'hui Prévue : activités futures."
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_form
+msgid "Test connection"
+msgstr "Tester la connexion"
+
+#. module: tameson_custom_exports
+#: code:addons/tameson_custom_exports/models/custom_exporter.py:0
+#, python-format
+msgid ""
+"This exporter already produced files, so it can not be deleted - please "
+"archive it or instead delete all the exported files first if you want to "
+"delete it."
+msgstr "Cet exportateur a déjà produit des fichiers, il ne peut donc pas être supprimé - veuillez l'archiver ou supprimer d'abord tous les fichiers exportés si vous souhaitez le supprimer."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__protocol
+msgid "Type"
+msgstr "Type"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__activity_exception_decoration
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Type de l'activité d'exception enregistrée."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_unread
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_unread
+msgid "Unread Messages"
+msgstr "Messages non lus"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__message_unread_counter
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Compteur de messages non lus"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_form
+msgid "Upload a key file..."
+msgstr "Télécharger un fichier clé..."
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_sftp_server__username
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_export_file__website_message_ids
+#: model:ir.model.fields,field_description:tameson_custom_exports.field_custom_exporter__website_message_ids
+msgid "Website Messages"
+msgstr "Messages du site Web"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_export_file__website_message_ids
+#: model:ir.model.fields,help:tameson_custom_exports.field_custom_exporter__website_message_ids
+msgid "Website communication history"
+msgstr "Historique des communications du site Web"
+
+#. module: tameson_custom_exports
+#: model:ir.model.fields.selection,name:tameson_custom_exports.selection__custom_exporter__interval_type__weeks
+msgid "Weeks"
+msgstr "Semaines"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_form
+msgid "sftp.example.com"
+msgstr "sftp.example.com"
+
+#. module: tameson_custom_exports
+#: model_terms:ir.ui.view,arch_db:tameson_custom_exports.view_sftp_server_form
+msgid "user"
+msgstr "utilisateur"

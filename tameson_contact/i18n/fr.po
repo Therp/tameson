@@ -1,0 +1,114 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_contact
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: tameson_contact
+#: model_terms:ir.ui.view,arch_db:tameson_contact.tameson_merge_contact_form
+msgid "Caption"
+msgstr "Légende"
+
+#. module: tameson_contact
+#: model:ir.model,name:tameson_contact.model_res_partner
+msgid "Contact"
+msgstr "Contacter"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact__create_uid
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact__create_date
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__create_date
+msgid "Created on"
+msgstr "Créé sur"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact__display_name
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__display_name
+msgid "Display Name"
+msgstr "Afficher un nom"
+
+#. module: tameson_contact
+#: model_terms:ir.ui.view,arch_db:tameson_contact.view_partner_form
+msgid "Edit help"
+msgstr "Modifier l'aide"
+
+#. module: tameson_contact
+#: model_terms:ir.ui.view,arch_db:tameson_contact.view_partner_form
+msgid "Help"
+msgstr "Aider"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact__id
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact____last_update
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact__write_uid
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact__write_date
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact__line_ids
+msgid "Line"
+msgstr "Ligne"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__merge_id
+#: model_terms:ir.ui.view,arch_db:tameson_contact.tameson_merge_contact_form
+msgid "Merge"
+msgstr "Fusionner"
+
+#. module: tameson_contact
+#: model:ir.model,name:tameson_contact.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Assistant de fusion de partenaires"
+
+#. module: tameson_contact
+#: model:ir.actions.server,name:tameson_contact.action_tameson_merge_contact
+msgid "Merge duplicate email or address"
+msgstr "Fusionner l'e-mail ou l'adresse en double"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__partner_ids
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: tameson_contact
+#: model:ir.model.fields,field_description:tameson_contact.field_tameson_merge_contact_line__partner_email
+msgid "Partner Email"
+msgstr "E-mail du partenaire"
+
+#. module: tameson_contact
+#: model:ir.model,name:tameson_contact.model_tameson_merge_contact
+#: model:ir.model,name:tameson_contact.model_tameson_merge_contact_line
+msgid "Tameson Merge Contact"
+msgstr "Contact de fusion Tameson"
