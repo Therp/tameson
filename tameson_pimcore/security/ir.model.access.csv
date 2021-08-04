@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+pimcore_config_admin,pimcore_config_admin,model_pimcore_config,base.group_system,1,1,1,1
+pimcore_config_all,pimcore_config_all,model_pimcore_config,base.group_user,1,0,0,0
+pimcore_response_all,pimcore_response_all,model_pimcore_product_response,base.group_user,1,1,1,1
+pimcore_response_line_all,pimcore_response_line_all,model_pimcore_product_response_line,base.group_user,1,1,1,1
