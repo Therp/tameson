@@ -49,7 +49,8 @@ msgid ""
 "    <br/>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \"> Sehr geheerte(r) % if object.partner_id.parent_id: ${object.partner_id.name} (${object.partner_id.parent_id.name}), % else: ${object.partner_id.name}, % endif <br><br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Am ${object.date} haben Sie eine Bestellung aufgegeben bei Tameson. Es ist jedoch eine Zahlung erforderlich, um die Bestellung abzuschließen. Aus unseren Unterlagen geht hervor, dass die zu dieser Bestellung gehörende beiliegende Rechnung noch nicht bezahlt ist. Wir haben die Bestellung storniert, vorausgesetzt, Sie haben kein Interesse mehr an diesen Produkten.</p> <br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Wenn Sie Fragen oder Anmerkungen haben oder die Bestellung trotzdem erhalten möchten, können Sie uns gerne kontaktieren.</p> </div>\n"
+"            "
 
 #. module: tameson_stock
 #: model:mail.template,body_html:tameson_stock.tameson_picking_no_payment_received
@@ -68,7 +69,8 @@ msgid ""
 "    <br/>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \"> Sehr geheerte(r) % if object.partner_id.parent_id: ${object.partner_id.name} (${object.partner_id.parent_id.name}), % else: ${object.partner_id.name}, % endif <br><br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Am ${object.date} haben Sie eine Bestellung aufgegeben bei Tameson. Um die Bestellung abzuschließen, ist jedoch eine Zahlung erforderlich. Unsere Verwaltung zeigt, dass die beiliegende Rechnung, die dieser Bestellung beiliegt, noch nicht bezahlt wurde. Können Sie den Zahlungsstatus aktualisieren?</p> <br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans- serif;\">Wenn Sie kein Interesse mehr an den Produkten haben, teilen Sie uns dies bitte mit, damit die Bestellung storniert werden kann.</p><br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"> Bei Fragen oder Anmerkungen können Sie uns gerne kontaktieren.</p> </div>\n"
+"            "
 
 #. module: tameson_stock
 #: model:mail.template,body_html:tameson_stock.tameson_picking_order_delay
@@ -87,7 +89,8 @@ msgid ""
 "    <br/>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "<div style=\"font-family:'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \"> Sehr geheerte(r) % if object.partner_id.parent_id: ${object.partner_id.name} (${object.partner_id.parent_id.name}), % else: ${object.partner_id.name}, % endif <br><br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Sie haben vor Kurzem eine Bestellung mit einem Rückstandsprodukt bei uns aufgegeben. Leider hat sich die Lieferung dieses Produkts verzögert.</p> <br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans -serif;\">Wir wurden vom Hersteller informiert, dass die Artikel an uns unter <b style=\"font-weight:bolder;\">${object.scheduled_date.date()}</b> geliefert werden. Wir versenden die Bestellung noch am selben Tag an Sie. Wir halten Sie über den Fortschritt auf dem Laufenden.</p><br> <p style=\"margin:0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif ;\">Entschuldigung für die Unannehmlichkeiten.</p><br> <br> </div>\n"
+"            "
 
 #. module: tameson_stock
 #: model:mail.template,body_html:tameson_stock.tameson_po_delivery_date_update
@@ -105,7 +108,16 @@ msgid ""
 "    <br/>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "<div style=\"font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;background-color: rgb(255, 255, 255);\"><font color=\"#222222\" face=\"Lucida Grande, Ubuntu, Arial, Verdana, sans-serif\"><span style=\"font-size:12px;\">\n"
+"Sehr geheerte(r)\n"
+"% if object.partner_id.parent_id: \n"
+"${object.partner_id.name } (${object.partner_id.parent_id.name}), \n"
+"% else:\n"
+" ${object.partner_id.name}, \n"
+"% endif \n"
+"</span></font><br><br> \n"
+"<p style=\"margin:0px ;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\"><font color=\"#222222\" face=\"Lucida Grande, Ubuntu, Arial, Verdana, sans -serif\"><span style=\"font-size:12px;\">Das bestätigte Lieferdatum der Bestellung </span></font><font color=\"#222222\"><b style=\"font-weight: bolder;\">${object.origin}</b></font><font color=\"#222222\" face=\"Lucida Grande, Ubuntu, Arial, Verdana, sans-serif\"><span style=\"font- size:12px;\">&nbsp;ist bestanden. Wir bitten um eine schnellstmögliche Aktualisierung des Lieferdatums dieser Bestellung.</span></font></p> <br> <p style=\"margin:0px;font-size:13px;font-family: \"Lucida Grande\", Helvetica, Verdana, Arial, sans-serif;color: rgb(34, 34, 34); font-family: \"Lucida Grande\", Ubuntu, Arial, Verdana, sans-serif; font-size : 12px;\">Vielen Dank im Voraus!</p> </div>\n"
+"            "
 
 #. module: tameson_stock
 #: model_terms:ir.ui.view,arch_db:tameson_stock.product_template_form_view_procurement_button
