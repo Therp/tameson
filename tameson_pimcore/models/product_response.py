@@ -63,8 +63,7 @@ class PimcoreProductResponseLine(models.Model):
         Eur = self.env['product.pricelist'].search([('currency_id','=','EUR')], limit=1)
         Gbp = self.env['product.pricelist'].search([('currency_id','=','GBP')], limit=1)
         Usd = self.env['product.pricelist'].search([('currency_id','=','USD')], limit=1)
-        for count, row in enumerate(data):
-            _logger.info("%d / %d %s" % (count, len(data), row))
+        for row in data:
             try:
                 if not row[1]:
                     Line.browse(row[0]).create_product(Eur, Gbp, Usd)
