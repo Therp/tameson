@@ -71,7 +71,6 @@ class PimcoreProductResponseLine(models.Model):
                 elif row[2] > row[3]:
                     Line.browse(row[0]).update_product(row[1])
             except Exception as e:
-                self.message_post(body = str(e))
                 _logger.warn(str(e))
                 Line.browse(row[0]).write({'state': 'error'})
 
