@@ -79,7 +79,7 @@ class PimcoreProductResponseLine(models.Model):
 
     state = fields.Selection(string='Status', default='draft',
         selection=[('draft', 'Draft'), ('created', 'Created'), ('updated', 'Updated'), ('skipped', 'Skipped'), ('error', 'Error')])
-    response_id = fields.Many2one(comodel_name='pimcore.product.response', ondelete='restrict',)
+    response_id = fields.Many2one(comodel_name='pimcore.product.response', ondelete='cascade',)
     name = fields.Char()
     name_nl = fields.Char()
     pimcore_id = fields.Char()
