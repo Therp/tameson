@@ -32,6 +32,7 @@
         'views/res_country_view.xml',
         'views/partner.xml',
         'wizard/product_creation.xml',
+        'views/stock.xml'
     ],
     'application': False,
     'license': u'OPL-1',
