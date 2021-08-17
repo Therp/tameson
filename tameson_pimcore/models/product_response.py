@@ -50,7 +50,7 @@ class PimcoreProductResponseLine(models.Model):
     line_ids = fields.One2many(comodel_name='pimcore.product.response.line', inverse_name='response_id',)
     config_id = fields.Many2one(comodel_name='pimcore.config', ondelete='cascade',)
     
-    def create_products(self):
+    def import_product_data(self):
         self.env.cr.execute("""
         select rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) from pimcore_product_response_line rl
         left join product_template pt on rl.sku = pt.default_code
@@ -72,6 +72,13 @@ class PimcoreProductResponseLine(models.Model):
             except Exception as e:
                 _logger.warn(str(e))
                 Line.browse(row[0]).write({'state': 'error'})
+        bomlines = Line.search([('bom_import_done','=',False), ('bom','!=',False), ('state', '=', 'created')])
+        for line in bomlines:
+            try:
+                line.create_bom()
+            except Exception as e:
+                _logger.warn(str(e))
+                continue
 
 class PimcoreProductResponseLine(models.Model):
     _name = 'pimcore.product.response.line'
@@ -87,6 +94,7 @@ class PimcoreProductResponseLine(models.Model):
     sku = fields.Char()
     ean = fields.Char()
     image = fields.Char()
+    bom = fields.Char()
     width = fields.Float()
     height = fields.Float()
     depth = fields.Float()
@@ -97,7 +105,7 @@ class PimcoreProductResponseLine(models.Model):
     eur = fields.Float()
     gbp = fields.Float()
     usd = fields.Float()
-    published = fields.Boolean()
+    bom_import_done = fields.Boolean()
     
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env['product.category']
@@ -152,3 +160,22 @@ class PimcoreProductResponseLine(models.Model):
             'list_price': self.wholesaleprice,
             'modification_date': self.modification_date
         }
+
+    def create_bom(self):
+        PT = self.env['product.template']
+        main_product = PT.search([('default_code','=',self.sku)], limit=1)
+        bom_elements = self.bom.split(',')
+        bom_lines = []
+        for i in range(0,len(bom_elements), 2):
+            bom_item = PT.search([('default_code','=',bom_elements[i])], limit=1)
+            bom_qty = bom_elements[i+1]
+            bom_lines.append((0, 0, {
+                'product_id': bom_item.product_variant_id.id,
+                'product_qty': float(bom_qty)
+            }))
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': main_product.id,
+            'bom_line_ids': bom_lines
+        })
+        self.bom_import_done = True
+        self.env.cr.commit()

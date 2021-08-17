@@ -14,6 +14,35 @@
                 </tree>
             </field>
         </record>
+        <record id="pimcore_product_response_line_tree" model="ir.ui.view">
+            <field name="name">pimcore.product.response.line.tree</field>
+            <field name="model">pimcore.product.response.line</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="model_tree" create="true" delete="true" edit="true">
+                    <field name="state" />
+                    <field name="name" />
+                    <field name="name_nl" />
+                    <field name="full_path" />
+                    <field name="pimcore_id" />                                    
+                    <field name="sku" />                                    
+                    <field name="ean" />                                    
+                    <field name="width" />                                    
+                    <field name="height" />                                    
+                    <field name="depth" />                                    
+                    <field name="weight" />                                    
+                    <field name="volume" />                                    
+                    <field name="modification_date" />                                    
+                    <field name="eur" />                                    
+                    <field name="gbp" />                                    
+                    <field name="usd" />
+                    <field name="bom" />
+                </tree>
+            </field>
+        </record>
         
         <record id="pimcore_product_response_form" model="ir.ui.view">
             <field name="name">pimcore.product.response.form</field>
@@ -25,7 +54,7 @@
             <field name="arch" type="xml">
                 <form string="model_form" create="true" delete="true" edit="true">
                     <header>
-                        <button name="create_products" string="Create" type="object" class="oe_highlight"/>
+                        <button name="import_product_data" string="Import" type="object" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <group>
@@ -49,7 +78,7 @@
                                 <field name="eur" />                                    
                                 <field name="gbp" />                                    
                                 <field name="usd" />
-                                <field name="published" />
+                                <field name="bom" />
                             </tree>
                         </field>
                     </sheet>
@@ -80,12 +109,28 @@
             <field name="context">\{}</field>
             <field name="search_view_id" ref="pimcore_product_response_search" />
         </record>
+        <record id="action_pimcore_product_response_line" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Pimcore product response</field>
+            <field name="res_model">pimcore.product.response.line</field>
+            <field name="view_mode">tree</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">\{}</field>
+        </record>
         
 
         <record id="menu_pimcore_product_response" model="ir.ui.menu" >
             <field name="name">Pimcore Responses</field>
             <field name="sequence" eval="10" />
             <field name="action" ref="action_pimcore_product_response" />
+            <field name="parent_id" ref="stock.menu_stock_config_settings" />
+        </record>
+
+        <record id="menu_pimcore_product_response_line" model="ir.ui.menu" >
+            <field name="name">Pimcore Responses Lines</field>
+            <field name="sequence" eval="10" />
+            <field name="action" ref="action_pimcore_product_response_line" />
             <field name="parent_id" ref="stock.menu_stock_config_settings" />
         </record>
         
