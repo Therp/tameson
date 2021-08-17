@@ -19,6 +19,8 @@ _logger = logging.getLogger(__name__)
 static_getter = lambda v: v
 float_getter = lambda v: v.get('value', 0.0)
 image_getter = lambda v: v and len(v) and v[0].get('assetThumb', '')
+bom_getter = lambda v: v and ','.join(map(lambda i: "%s,%s" % (i['element']['SKU'],i['metadata'][0]['value']), v))
+
 product_nodes = {
     'name': {'field': 'Name', 'getter': static_getter},
     'name_nl': {'field': 'Name (language: "nl")', 'getter': static_getter},
@@ -26,7 +28,6 @@ product_nodes = {
     'full_path': {'field': 'fullpath', 'getter': static_getter},
     'sku': {'field': 'SKU', 'getter': static_getter},
     'ean': {'field': 'EAN', 'getter': static_getter},
-    'published': {'field': 'published', 'getter': static_getter},
     'width': {'field': 'Width {value}', 'getter': float_getter},
     'height': {'field': 'Height {value}', 'getter': float_getter},
     'depth': {'field': 'Depth {value}', 'getter': float_getter},
@@ -37,7 +38,8 @@ product_nodes = {
     'wholesaleprice': {'field': 'wholesalePrice', 'getter': static_getter},
     'gbp': {'field': 'PriceGBP', 'getter': static_getter},
     'usd': {'field': 'PriceUSD', 'getter': static_getter},
-    'image': {'field': 'Images {... on asset {assetThumb: fullpath(thumbnail: "")}}', 'getter': image_getter}
+    'image': {'field': 'Images {... on asset {assetThumb: fullpath(thumbnail: "")}}', 'getter': image_getter},
+    'bom': {'field': 'BOM {element {... on object_Product {SKU}} metadata {value}}', 'getter': bom_getter}
 }
 ProductQ = GqlQueryBuilder('getProductListing', 'edges', product_nodes)
 
@@ -69,6 +71,7 @@ class PimcoreConfig(models.Model):
             try:
                 val = {key: product_nodes[key]['getter'](val) for key, val in data.items()}
             except Exception as e:
+                _logger.warning(str(e))
                 _logger.warning(data)
                 continue
             lines_ids.append((0, 0, val))

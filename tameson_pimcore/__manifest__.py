@@ -20,7 +20,9 @@ Tameson PIMCore Integration
     'category': 'Uncategorized',
 
     'depends': [
-        'mail'
+        'mail',
+        'tameson_product',
+        'mrp'
     ],
     'external_dependencies': {
         'python': [
@@ -29,7 +31,8 @@ Tameson PIMCore Integration
     'data': [
         'views/pimcore_config.xml',
         'views/pimcore_response.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'data/cron.xml'
     ],
     'demo': [
     ],
