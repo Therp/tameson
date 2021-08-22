@@ -71,12 +71,13 @@ class PimcoreProductResponseLine(models.Model):
                     Line.browse(row[0]).update_product(row[1])
             except Exception as e:
                 _logger.warn(str(e))
-                Line.browse(row[0]).write({'state': 'error'})
+                Line.browse(row[0]).write({'state': 'error', 'error': str(e)})
         bomlines = Line.search([('bom_import_done','=',False), ('bom','!=',False), ('state', '=', 'created')])
         for line in bomlines:
             try:
                 line.create_bom()
             except Exception as e:
+                line.write({'state': 'error', 'error': str(e)})
                 _logger.warn(str(e))
                 continue
 
@@ -93,6 +94,7 @@ class PimcoreProductResponseLine(models.Model):
     full_path = fields.Char()
     sku = fields.Char()
     ean = fields.Char()
+    intrastat = fields.Char()
     image = fields.Char()
     bom = fields.Char()
     width = fields.Float()
@@ -102,10 +104,10 @@ class PimcoreProductResponseLine(models.Model):
     volume = fields.Float()
     modification_date = fields.Float()
     wholesaleprice = fields.Float()
-    eur = fields.Float()
     gbp = fields.Float()
     usd = fields.Float()
     bom_import_done = fields.Boolean()
+    error = fields.Text()
     
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env['product.category']
@@ -137,7 +139,10 @@ class PimcoreProductResponseLine(models.Model):
         })
         product = self.env['product.template'].create(vals)
         add_translation(self.env, product, 'nl_NL', self.name, self.name_nl)
-        add_pricelist_item(Eur, product, self.eur)
+        add_translation(self.env, product, 'fr_FR', self.name, self.name_fr)
+        add_translation(self.env, product, 'de_DE', self.name, self.name_de)
+        add_translation(self.env, product, 'es_ES', self.name, self.name_es)
+        add_pricelist_item(Eur, product, self.wholesaleprice)
         add_pricelist_item(Gbp, product, self.gbp)
         add_pricelist_item(Usd, product, self.usd)
         self.write({'state': 'created'})
@@ -149,16 +154,22 @@ class PimcoreProductResponseLine(models.Model):
         self.env.cr.commit()
 
     def get_product_vals(self):
+        commodity_code = self.env['account.intrastat.code'].search([('code','=',self.intrastat[:8]), ('type','=','commodity')], limit=1)
+        if not commodity_code:
+            commodity_code = self.env['account.intrastat.code'].create({'type': 'commodity', 'code': self.intrastat[:8], 'description': 'new from pimcore'})
         return {
             'name': self.name,
             'default_code': self.sku,
+            'barcode': self.ean,
             'weight': self.weight,
             't_height': self.height,
             't_length': self.depth,
             't_width': self.width,
             'type': 'product',
             'list_price': self.wholesaleprice,
-            'modification_date': self.modification_date
+            'modification_date': self.modification_date,
+            'hs_code': self.intrastat,
+            'intrastat_id': commodity_code.id,
         }
 
     def create_bom(self):

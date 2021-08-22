@@ -17,16 +17,20 @@ import logging
 _logger = logging.getLogger(__name__)
 
 static_getter = lambda v: v
-float_getter = lambda v: v.get('value', 0.0)
-image_getter = lambda v: v and len(v) and v[0].get('assetThumb', '')
+float_getter = lambda v: isinstance(v, dict) and v.get('value', 0.0)
+image_getter = lambda v: len(v) and v[0].get('assetThumb', '')
 bom_getter = lambda v: v and ','.join(map(lambda i: "%s,%s" % (i['element']['SKU'],i['metadata'][0]['value']), v))
 
 product_nodes = {
     'name': {'field': 'Name', 'getter': static_getter},
     'name_nl': {'field': 'Name (language: "nl")', 'getter': static_getter},
+    'name_fr': {'field': 'Name (language: "fr")', 'getter': static_getter},
+    'name_de': {'field': 'Name (language: "de")', 'getter': static_getter},
+    'name_es': {'field': 'Name (language: "es")', 'getter': static_getter},
     'pimcore_id': {'field': 'id', 'getter': static_getter},
     'full_path': {'field': 'fullpath', 'getter': static_getter},
     'sku': {'field': 'SKU', 'getter': static_getter},
+    'intrastat': {'field': 'Intrastat', 'getter': static_getter},
     'ean': {'field': 'EAN', 'getter': static_getter},
     'width': {'field': 'Width {value}', 'getter': float_getter},
     'height': {'field': 'Height {value}', 'getter': float_getter},
@@ -34,7 +38,6 @@ product_nodes = {
     'weight': {'field': 'Weight {value}', 'getter': float_getter},
     'volume': {'field': 'Volume {value}', 'getter': float_getter},
     'modification_date': {'field': 'modificationDate', 'getter': static_getter},
-    'eur': {'field': 'PriceEUR', 'getter': static_getter},
     'wholesaleprice': {'field': 'wholesalePrice', 'getter': static_getter},
     'gbp': {'field': 'PriceGBP', 'getter': static_getter},
     'usd': {'field': 'PriceUSD', 'getter': static_getter},
