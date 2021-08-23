@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_mail
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: tameson_mail
+#: model:mail.template,subject:tameson_mail.email_template_edi_invoice_tameson
+msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
+msgstr "Facture ${object.company_id.name} (Ref ${object.name or 'n/a'})"
+
+#. module: tameson_mail
+#: model:mail.template,body_html:tameson_mail.email_template_edi_invoice_tameson
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Dear \n"
+"% if object.partner_id.parent_id:\n"
+"    ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"% else:\n"
+"    ${object.partner_id.name},\n"
+"% endif\n"
+"<br/><br/>\n"
+"    <p>Here is your new invoice: </p>\n"
+"    <br/>\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px; padding-left: 5px;\">\n"
+"        <strong>REFERENCES</strong><br/>\n"
+"        Invoice Number : <strong>${object.name}</strong><br/>\n"
+"        Total Amount: <strong>${object.amount_total} ${object.currency_id.name}</strong><br/>\n"
+"        Invoice Date: ${object.invoice_date}<br/>\n"
+"        % if object.origin:\n"
+"        Origin: ${object.origin}<br/>\n"
+"        % endif\n"
+"        <br/>\n"
+"        % set ref = object.get_so_ref()\n"
+"        % if ref:\n"
+"            <span>Order message: ${ref} </span>\n"
+"            <br/>\n"
+"        % endif\n"
+"        % if object.invoice_payment_state != 'paid' and object.payment_term_id:\n"
+"            <span>Payment term: ${object.payment_term_id.name}</span>\n"
+"            <br/>\n"
+"        % endif\n"
+"        % if object.invoice_payment_state == 'paid':\n"
+"            <strong>Notice: This invoice has been paid.</strong>\n"
+"            <br/>\n"
+"        % endif\n"
+"    </p>\n"
+"    <br/>\n"
+"    <p>Do not hesitate to contact us if you have any questions.</p>\n"
+"    <p>Thank You for choosing ${object.company_id.name or 'us'}</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"</div>\n"
+"            "
+msgstr "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"Madame/ Monsieur\n"
+"% if object.partner_id.parent_id : \n"
+"${object.partner_id.name} (${object.partner_id.parent_id.name}), \n"
+"% else : \n"
+"${object.partner_id.name}, \n"
+"% endif \n"
+"<br/><br /> \n"
+"<p>Voici votre nouvelle facture : </p> \n"
+"<br/> \n"
+"<p style=\"border-left : 1px solid #8e0000 ; margin-left : 30px ; padding-left : 5px ;\"> <strong> RÉFÉRENCES</strong><br/> \n"
+"Numéro de facture : <strong>${object.name}</strong><br/> \n"
+"Montant total : <strong>${object.amount_total} ${object.currency_id.name}< /strong>\n"
+"<br/> \n"
+"Date de la facture : ${object.invoice_date}<br/> \n"
+"% if object.origin : \n"
+"Origine : ${object.origin}<br/> \n"
+"% endif\n"
+" <br/> \n"
+"% set ref = object. get_so_ref() \n"
+"% if ref : \n"
+"<span>Message de commande : ${ref} </span> \n"
+"<br/> \n"
+"% endif \n"
+"% if object.invoice_payment_state != 'paid' et object.payment_term_id : <span>Conditions de paiement : ${ object.payment_term_id.name}</span> <br/> % endif % if object.invoice_payment_state == 'paid' : <strong>Avis : Cette facture a été payée.</strong> <br/> % endif </p> <br/> <p>N'hésitez pas à nous contacter si vous avez des questions.</p> <p>Merci pour en choisissant ${object.company_id.name or 'us'}</p> <br/> <br/> </div>\n"
+"            "
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid ""
+"<span style=\"font-size: 14px; color:#555\">\n"
+"                                        Your partner in fluid control\n"
+"                                        <br/>\n"
+"                                    </span>"
+msgstr "<span style=\"font-size: 14px; color:#555\"> Votre partenaire en contrôle des fluides <br/> </span>"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid ""
+"<span style=\"font-size: 14px; color:#555\">Your partner in fluid control</span>\n"
+"                                    <br/>"
+msgstr "<span style=\"font-size: 14px; color:#555\">Votre partenaire en contrôle des fluides</span> <br/>"
+
+#. module: tameson_mail
+#: model:mail.template,report_name:tameson_mail.email_template_edi_invoice_tameson
+msgid ""
+"Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
+" '_draft' or ''}"
+msgstr "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}"
+
+#. module: tameson_mail
+#: model:ir.model,name:tameson_mail.model_account_move
+msgid "Journal Entries"
+msgstr "Écritures de journal"
+
+#. module: tameson_mail
+#: model:ir.model,name:tameson_mail.model_ir_mail_server
+msgid "Mail Server"
+msgstr "Serveur de courrier"
+
+#. module: tameson_mail
+#: code:addons/tameson_mail/models/account_move.py:0
+#, python-format
+msgid "Send Invoice"
+msgstr "Envoyer une facture"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "T: +31 (0)40 750 5795 | E:"
+msgstr "T : +31 (0)40 750 5795 | E :"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "T: +44 (0)330 8080 502 | E:"
+msgstr "T : +44 (0)330 8080 502 | E :"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "algemene voorwaarden"
+msgstr "algemene voorwaarden"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "support@tameson.co.uk"
+msgstr "support@tameson.co.uk"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "support@tameson.com"
+msgstr "support@tameson.com"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "support@tameson.nl"
+msgstr "support@tameson.nl"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "tameson.co.uk"
+msgstr "tameson.co.uk"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "tameson.com"
+msgstr "tameson.com"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "tameson.nl"
+msgstr "tameson.nl"
+
+#. module: tameson_mail
+#: model_terms:ir.ui.view,arch_db:tameson_mail.mail_notification_paynow_tameson
+msgid "terms and conditions"
+msgstr "termes et conditions"

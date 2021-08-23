@@ -1,0 +1,537 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_delivery_ups
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-20 10:30+0000\n"
+"PO-Revision-Date: 2021-07-20 10:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"A shipment cannot have a KGS/IN or LBS/CM as its unit of measurements. "
+"Configure it from the delivery method."
+msgstr "Eine Sendung darf nicht KGS/IN oder LBS/CM als Maßeinheit haben. Konfigurieren Sie es über die Liefermethode."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"Access License number is Invalid. Provide a valid number (Length sholuld be "
+"0-35 alphanumeric characters)"
+msgstr "Die Zugriffslizenznummer ist ungültig. Geben Sie eine gültige Nummer an (Länge sollte 0-35 alphanumerische Zeichen betragen)"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Access License number is invalid for this delivery provider."
+msgstr "Die Zugangslizenznummer ist für diesen Lieferanbieter ungültig."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Access License number is invalid for this provider.Please re-license."
+msgstr "Die Zugangslizenznummer ist für diesen Anbieter ungültig. Bitte lizenzieren Sie erneut."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Access License number is revoked contact UPS to get access."
+msgstr "Die Zugriffslizenznummer wurde widerrufen. Wenden Sie sich an UPS, um Zugriff zu erhalten."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Authorization system is currently unavailable , try again later."
+msgstr "Das Autorisierungssystem ist derzeit nicht verfügbar , versuchen Sie es später erneut."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Cancel shipment not available at this time , Please try again Later."
+msgstr "Versand stornieren derzeit nicht verfügbar. Bitte versuchen Sie es später erneut."
+
+#. module: tameson_delivery_ups
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_delivery_carrier__ups_default_package_weight
+msgid "Default package weight"
+msgstr "Standardpaketgewicht"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid ""
+"Error:\n"
+"%s"
+msgstr "Error:\n"
+"%s"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"Exceeds Total Number of allowed pieces per World Wide Express Shipment."
+msgstr "Überschreitet die Gesamtzahl der zulässigen Stücke pro World Wide Express-Sendung."
+
+#. module: tameson_delivery_ups
+#: model:ir.model.fields,help:tameson_delivery_ups.field_delivery_carrier__ups_default_package_weight
+msgid ""
+"If any of products in package has undefined weight, this value will be used"
+msgstr "Wenn eines der Produkte im Paket ein undefiniertes Gewicht hat, wird dieser Wert verwendet"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Packages %s do not have a positive shipping weight."
+msgstr "Pakete%s kein positives Versandgewicht haben."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid City in the warehouse address."
+msgstr "Bitte geben Sie eine gültige Stadt in der Lageradresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid Country in recipient's address."
+msgstr "Bitte geben Sie ein gültiges Land in der Empfängeradresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid Country in the warehouse address."
+msgstr "Bitte geben Sie ein gültiges Land in der Lageradresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid State in the warehouse address."
+msgstr "Bitte geben Sie einen gültigen Bundesstaat in der Lageradresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid Zip in the warehouse address."
+msgstr "Bitte geben Sie eine gültige Postleitzahl in der Lageradresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid city in the recipient address."
+msgstr "Bitte geben Sie in der Empfängeradresse eine gültige Stadt an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid city in the shipper's address."
+msgstr "Bitte geben Sie eine gültige Stadt in der Absenderadresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid country in the shipper's address."
+msgstr "Bitte geben Sie ein gültiges Land in der Versandadresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"Please provide a valid package type available for service and selected "
+"locations."
+msgstr "Bitte geben Sie einen gültigen Pakettyp an, der für den Service und ausgewählte Standorte verfügbar ist."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid phone number for the recipient."
+msgstr "Bitte geben Sie eine gültige Telefonnummer des Empfängers an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid shipper Number/Carrier Account."
+msgstr "Bitte geben Sie eine gültige Versendernummer/ein gültiges Spediteurkonto an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid shipper number/Carrier Account."
+msgstr "Bitte geben Sie eine gültige Versendernummer/ein gültiges Spediteurkonto an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid shipper phone number."
+msgstr "Bitte geben Sie eine gültige Telefonnummer des Absenders an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid state in the recipient address."
+msgstr "Bitte geben Sie in der Empfängeradresse einen gültigen Status an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid state in the shipper's address."
+msgstr "Bitte geben Sie einen gültigen Bundesstaat in der Absenderadresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid street in shipper's address."
+msgstr "Bitte geben Sie eine gültige Straße in der Absenderadresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid street in the recipient address."
+msgstr "Bitte geben Sie in der Empfängeradresse eine gültige Straße an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid street in the warehouse address."
+msgstr "Bitte geben Sie eine gültige Straße in der Lageradresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid warehouse Phone Number"
+msgstr "Bitte geben Sie eine gültige Lagertelefonnummer an"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid zip code in the recipient address."
+msgstr "Bitte geben Sie in der Empfängeradresse eine gültige Postleitzahl an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid zip code in the shipper's address."
+msgstr "Bitte geben Sie eine gültige Postleitzahl in der Versandadresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid zip code in the warehouse address."
+msgstr "Bitte geben Sie eine gültige Postleitzahl in der Lageradresse an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide a valid zipcode in the recipient address."
+msgstr "Bitte geben Sie in der Empfängeradresse eine gültige Postleitzahl an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide at least one item to ship"
+msgstr "Bitte geben Sie mindestens einen Artikel für den Versand an"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please provide at least one item to ship."
+msgstr "Bitte geben Sie mindestens einen Artikel für den Versand an."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please set a valid country in the recipient address."
+msgstr "Bitte geben Sie in der Empfängeradresse ein gültiges Land ein."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Please set a valid country in the warehouse address."
+msgstr "Bitte geben Sie in der Lageradresse ein gültiges Land ein."
+
+#. module: tameson_delivery_ups
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_stock_picking__presta_ups_ap_data_copied_from_so
+msgid "Presta Ups Ap Data Copied From So"
+msgstr "Presta Ups Ap-Daten von So . kopiert"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Provided Access License Number not found in the UPS database"
+msgstr "Die angegebene Zugangslizenznummer wurde in der UPS Datenbank nicht gefunden"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Provided Tracking Ref. Number is invalid."
+msgstr "Mitgelieferte Tracking-Ref. Nummer ist ungültig."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Recipient Phone must be at least 10 alphanumeric characters."
+msgstr "Die Telefonnummer des Empfängers muss mindestens 10 alphanumerische Zeichen umfassen."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Recipient PhoneExtension cannot exceed the length of 4."
+msgstr "Die Empfängertelefonerweiterung darf die Länge von 4 nicht überschreiten."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Recipient PhoneExtension must contain only numbers."
+msgstr "Die Telefonnebenstelle des Empfängers darf nur Nummern enthalten."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid ""
+"Return label generated<br/><b>Tracking Numbers:</b> %s<br/><b>Packages:</b> "
+"%s"
+msgstr "Rücksendeetikett generiert<br/><b>Tracking-Nummern:</b>%s </><b>Pakete:</b> "
+
+#. module: tameson_delivery_ups
+#: model:ir.model,name:tameson_delivery_ups.model_sale_order
+msgid "Sales Order"
+msgstr "Kundenauftrag"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Shipment N° %s has been cancelled"
+msgstr "Sendungsnr.%s wurde abgebrochen"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid ""
+"Shipment created into UPS<br/><b>Tracking Numbers:</b> "
+"%s<br/><b>Packages:</b> %s"
+msgstr "In UPS erstellte Sendung<br/><b>Tracking-Nummern:</b>%s </><b>Pakete:</b> %s"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Shipper Phone must be at least 10 alphanumeric characters."
+msgstr "Die Telefonnummer des Absenders muss aus mindestens 10 alphanumerischen Zeichen bestehen."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Shipper number must contain alphanumeric characters only."
+msgstr "Die Versendernummer darf nur alphanumerische Zeichen enthalten."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Shipper phone extension cannot exceed the length of 4."
+msgstr "Die Telefonerweiterung des Absenders darf die Länge von 4 nicht überschreiten."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Shipper phone extension must contain only numbers."
+msgstr "Die Telefondurchwahl des Absenders darf nur Nummern enthalten."
+
+#. module: tameson_delivery_ups
+#: model:ir.model,name:tameson_delivery_ups.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Versandarten"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "The UserId is currently locked out; please try again in 24 hours."
+msgstr "Die UserId ist derzeit gesperrt; Bitte versuchen Sie es in 24 Stunden erneut."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The address of your company is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr "Die Adresse Ihres Unternehmens fehlt oder ist falsch. (Fehlende(s) Feld(e) :%s )"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The address of your warehouse is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr "Die Adresse Ihres Lagers fehlt oder ist falsch. (Fehlende(s) Feld(e) :%s )"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The delivery cannot be done because the weight of your product is missing."
+msgstr "Die Lieferung kann nicht erfolgen, da das Gewicht Ihres Produkts fehlt."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The estimated price cannot be computed because the weight of your product is"
+" missing."
+msgstr "Der geschätzte Preis kann nicht berechnet werden, da das Gewicht Ihres Produkts fehlt."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The maximum number of user access attempts was exceeded. So please try again"
+" later"
+msgstr "Die maximale Anzahl von Benutzerzugriffsversuchen wurde überschritten. Bitte versuche es später noch einmal"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The recipient address is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr "Die Empfängeradresse fehlt oder ist falsch. (Fehlende(s) Feld(e) :%s )"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "The requested service is unavailable between the selected locations."
+msgstr "Der angeforderte Dienst ist zwischen den ausgewählten Standorten nicht verfügbar."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The selected service is invalid from the requested warehouse, please choose "
+"another service."
+msgstr "Der ausgewählte Service ist aus dem angeforderten Lager ungültig, bitte wählen Sie einen anderen Service."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The selected service is invalid to the recipient address, please choose "
+"another service."
+msgstr "Der ausgewählte Dienst ist für die Empfängeradresse ungültig, bitte wählen Sie einen anderen Dienst."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"The selected service is not possible from your warehouse to the recipient "
+"address, please choose another service."
+msgstr "Der gewählte Service ist von Ihrem Lager bis zur Empfängeradresse nicht möglich, bitte wählen Sie einen anderen Service."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "The selected service is not valid with the selected packaging."
+msgstr "Die ausgewählte Leistung ist mit der ausgewählten Verpackung nicht gültig."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from delivery method"
+msgstr "Dieses Maßsystem ist für das ausgewählte Land nicht gültig. Bitte wechseln Sie von LBS/IN auf KGS/CM (oder umgekehrt). Konfigurieren Sie es von der Liefermethode"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from the delivery "
+"method."
+msgstr "Dieses Maßsystem ist für das ausgewählte Land nicht gültig. Bitte wechseln Sie von LBS/IN auf KGS/CM (oder umgekehrt). Konfigurieren Sie es über die Liefermethode."
+
+#. module: tameson_delivery_ups
+#: model:ir.model,name:tameson_delivery_ups.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
+
+#. module: tameson_delivery_ups
+#: model_terms:ir.ui.view,arch_db:tameson_delivery_ups.sale_order_pob_access_point_id
+#: model_terms:ir.ui.view,arch_db:tameson_delivery_ups.stock_picking_pob_access_point_id
+msgid "UPS Access Point Countries"
+msgstr "UPS Access Point Länder"
+
+#. module: tameson_delivery_ups
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_sale_order__presta_ups_access_point_country
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_stock_picking__presta_ups_access_point_country
+msgid "UPS Access Point Country Code"
+msgstr "UPS Access Point Ländercode"
+
+#. module: tameson_delivery_ups
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_sale_order__presta_ups_access_point_id
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_stock_picking__presta_ups_access_point_id
+msgid "UPS Access Point ID"
+msgstr "UPS Access Point-ID"
+
+#. module: tameson_delivery_ups
+#: model_terms:ir.ui.view,arch_db:tameson_delivery_ups.sale_order_pob_access_point_id
+#: model_terms:ir.ui.view,arch_db:tameson_delivery_ups.stock_picking_pob_access_point_id
+msgid "UPS Access Points"
+msgstr "UPS Access Points"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "UPS Server Not Found"
+msgstr "USV-Server nicht gefunden"
+
+#. module: tameson_delivery_ups
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_delivery_carrier__ups_send_notification_undelivered_email
+msgid "UPS email notification to this email when customer email not delivered"
+msgstr "UPS E-Mail-Benachrichtigung an diese E-Mail, wenn Kunden-E-Mail nicht zugestellt wurde"
+
+#. module: tameson_delivery_ups
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_delivery_carrier__ups_send_notification_email
+msgid "UPS notification additional email"
+msgstr "UPS Benachrichtigung zusätzliche E-Mail"
+
+#. module: tameson_delivery_ups
+#: model:ir.model.fields,field_description:tameson_delivery_ups.field_delivery_carrier__ups_send_notification_to_customer
+msgid "UPS sends email notifications to the customer"
+msgstr "UPS sendet E-Mail-Benachrichtigungen an den Kunden"
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Username/Password is invalid for this delivery provider."
+msgstr "Benutzername/Passwort ist für diesen Versandanbieter ungültig."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Warehouse Phone must be at least 10 alphanumeric characters."
+msgstr "Lagertelefon muss aus mindestens 10 alphanumerischen Zeichen bestehen."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Warehouse Phone must contain only numbers."
+msgstr "Lagertelefon darf nur Nummern enthalten."
+
+#. module: tameson_delivery_ups
+#: code:addons/tameson_delivery_ups/models/ups_request_adapted.py:0
+#, python-format
+msgid "Warehouse PhoneExtension cannot exceed the length of 4."
+msgstr "Die Warehouse-Telefonerweiterung darf die Länge von 4 nicht überschreiten."
