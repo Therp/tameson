@@ -24,6 +24,7 @@
             <field name="arch" type="xml">
                 <tree string="model_tree" create="true" delete="true" edit="true">
                     <field name="state" />
+                    <field name="error" />
                     <field name="name" />
                     <field name="name_nl" />
                     <field name="full_path" />
@@ -36,7 +37,6 @@
                     <field name="weight" />                                    
                     <field name="volume" />                                    
                     <field name="modification_date" />                                    
-                    <field name="eur" />                                    
                     <field name="gbp" />                                    
                     <field name="usd" />
                     <field name="bom" />
