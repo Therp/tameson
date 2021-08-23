@@ -27,6 +27,9 @@
                     <field name="error" />
                     <field name="name" />
                     <field name="name_nl" />
+                    <field name="name_de" />
+                    <field name="name_es" />
+                    <field name="name_fr" />
                     <field name="full_path" />
                     <field name="pimcore_id" />                                    
                     <field name="sku" />                                    
@@ -63,6 +66,7 @@
                         <field name="line_ids" nolabel="1">
                             <tree >
                                 <field name="state" />
+                                <field name="error" />
                                 <field name="name" />
                                 <field name="name_nl" />
                                 <field name="full_path" />
@@ -75,7 +79,6 @@
                                 <field name="weight" />                                    
                                 <field name="volume" />                                    
                                 <field name="modification_date" />                                    
-                                <field name="eur" />                                    
                                 <field name="gbp" />                                    
                                 <field name="usd" />
                                 <field name="bom" />
