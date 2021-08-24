@@ -66,9 +66,13 @@ select ARRAY[parent.id] id, rp.email
             del_inv = self.env['res.partner']
             other = self.env['res.partner']
             arch = self.env['res.partner']
-            del_inv += partner.child_ids.filtered(lambda p: p.type == 'delivery').sorted('id', reverse=True)[:1]
-            del_inv += partner.child_ids.filtered(lambda p: p.type == 'invoice').sorted('id', reverse=True)[:1]
-            for child in partner.child_ids - del_inv:
+            last_order = self.env['sale.order'].search([('state','=','sale'),('partner_id','=',partner.id)],order='date_order DESC', limit=1)
+            del_inv += last_order.partner_shipping_id
+            del_inv += last_order.partner_invoice_id
+            if not last_order:
+                del_inv += partner.child_ids.filtered(lambda p: p.type == 'delivery').sorted('id', reverse=True)[:1]
+                del_inv += partner.child_ids.filtered(lambda p: p.type == 'invoice').sorted('id', reverse=True)[:1]
+            for child in partner.child_ids.filtered(lambda p: p.type != 'contact') - del_inv:
                 if (child.zip or "").lower().strip() not in (del_inv + other).mapped(lambda p: (p.zip or "").lower().strip()):
                     other += child
                 else:
