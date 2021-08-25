@@ -22,27 +22,27 @@
             <field name="priority" eval="16" />
             <field name="active" eval="True" />
             <field name="arch" type="xml">
-                <tree string="model_tree" create="true" delete="true" edit="true">
+                <tree string="model_tree" create="false" delete="true" edit="false">
                     <field name="state" />
                     <field name="error" />
                     <field name="name" />
-                    <field name="name_nl" />
-                    <field name="name_de" />
-                    <field name="name_es" />
-                    <field name="name_fr" />
-                    <field name="full_path" />
-                    <field name="pimcore_id" />                                    
-                    <field name="sku" />                                    
-                    <field name="ean" />                                    
-                    <field name="width" />                                    
-                    <field name="height" />                                    
-                    <field name="depth" />                                    
-                    <field name="weight" />                                    
-                    <field name="volume" />                                    
-                    <field name="modification_date" />                                    
-                    <field name="gbp" />                                    
-                    <field name="usd" />
-                    <field name="bom" />
+                    <field name="name_nl" optional="hide" />
+                    <field name="name_de" optional="hide" />
+                    <field name="name_es" optional="hide" />
+                    <field name="name_fr" optional="hide" />
+                    <field name="full_path" optional="hide" />
+                    <field name="pimcore_id" optional="hide" />                                    
+                    <field name="sku" optional="hide" />                                    
+                    <field name="ean" optional="hide" />                                    
+                    <field name="width" optional="hide" />                                    
+                    <field name="height" optional="hide" />                                    
+                    <field name="depth" optional="hide" />                                    
+                    <field name="weight" optional="hide" />                                    
+                    <field name="volume" optional="hide" />                                    
+                    <field name="modification_date" optional="hide" />                                    
+                    <field name="gbp" optional="hide" />                                    
+                    <field name="usd" optional="hide" />
+                    <field name="bom" optional="hide" />
                 </tree>
             </field>
         </record>
@@ -63,27 +63,7 @@
                         <group>
                             <field name="config_id" />
                         </group>
-                        <field name="line_ids" nolabel="1">
-                            <tree >
-                                <field name="state" />
-                                <field name="error" />
-                                <field name="name" />
-                                <field name="name_nl" />
-                                <field name="full_path" />
-                                <field name="pimcore_id" />                                    
-                                <field name="sku" />                                    
-                                <field name="ean" />                                    
-                                <field name="width" />                                    
-                                <field name="height" />                                    
-                                <field name="depth" />                                    
-                                <field name="weight" />                                    
-                                <field name="volume" />                                    
-                                <field name="modification_date" />                                    
-                                <field name="gbp" />                                    
-                                <field name="usd" />
-                                <field name="bom" />
-                            </tree>
-                        </field>
+                        <field name="line_ids" nolabel="1" context="{'tree_view_ref': 'tameson_pimcore.pimcore_product_response_line_tree'}" />
                     </sheet>
                 </form>
             </field>
