@@ -60,3 +60,9 @@ class ProductTemplate(models.Model):
         string=_('Width'),
         required=False
     )
+
+## Pimcore fields
+    modification_date = fields.Float()
+    pimcore_id = fields.Integer()
+    
+## End

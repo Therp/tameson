@@ -20,6 +20,7 @@ static_getter = lambda v: v
 float_getter = lambda v: isinstance(v, dict) and v.get('value', 0.0)
 image_getter = lambda v: len(v) and v[0].get('assetThumb', '')
 bom_getter = lambda v: v and ','.join(map(lambda i: "%s,%s" % (i['element']['SKU'],i['metadata'][0]['value']), v))
+single_field_m2one = lambda v: isinstance(v, dict) and list(v.items())[0][1]
 
 product_nodes = {
     'name': {'field': 'Name', 'getter': static_getter},
@@ -42,7 +43,15 @@ product_nodes = {
     'gbp': {'field': 'PriceGBP', 'getter': static_getter},
     'usd': {'field': 'PriceUSD', 'getter': static_getter},
     'image': {'field': 'Images {... on asset {assetThumb: fullpath(thumbnail: "")}}', 'getter': image_getter},
-    'bom': {'field': 'BOM {element {... on object_Product {SKU}} metadata {value}}', 'getter': bom_getter}
+    'bom': {'field': 'BOM {element {... on object_Product {SKU}} metadata {value}}', 'getter': bom_getter},
+    'short_description': {'field': 'shortDescription', 'getter': static_getter},
+    'use_up': {'field': 'UseUp', 'getter': static_getter},
+    'supplier_part_number': {'field': 'SupplierPartNumber', 'getter': static_getter},
+    'supplier_price': {'field': 'SupplierPrice', 'getter': static_getter},
+    'supplier_price_currency': {'field': 'SupplierPriceCurrency', 'getter': static_getter},
+    'supplier_lead_time': {'field': 'SupplierLeadTime', 'getter': static_getter},
+    'supplier_email': {'field': 'Supplier {... on object_Organisation{email}}', 'getter': single_field_m2one},
+    'replacement_sku': {'field': 'ReplacementProduct {... on object_Product{SKU}}', 'getter': single_field_m2one},
 }
 ProductQ = GqlQueryBuilder('getProductListing', 'edges', product_nodes)
 
