@@ -14,7 +14,11 @@ import requests, codecs
 import logging
 _logger = logging.getLogger(__name__)
 
-
+CURRENCY_DICT = {
+    'USD': 3,
+    'EUR': 1,
+    'GBP': 150
+}
 
 def add_translation(env, product, lang_code, src, value):
     nl_name = env['ir.translation'].search(
@@ -95,6 +99,10 @@ class PimcoreProductResponseLine(models.Model):
     name_fr = fields.Char()
     pimcore_id = fields.Char()
     full_path = fields.Char()
+    supplier_email = fields.Char()
+    supplier_part_number = fields.Char()
+    supplier_price_currency = fields.Char()
+    supplier_lead_time = fields.Integer()
     sku = fields.Char()
     ean = fields.Char()
     intrastat = fields.Char()
@@ -109,8 +117,12 @@ class PimcoreProductResponseLine(models.Model):
     wholesaleprice = fields.Float()
     gbp = fields.Float()
     usd = fields.Float()
+    supplier_price = fields.Float()
     bom_import_done = fields.Boolean()
+    use_up = fields.Boolean()
     error = fields.Text()
+    short_description = fields.Text()
+    replacement_sku = fields.Char()
     
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env['product.category']
@@ -160,6 +172,8 @@ class PimcoreProductResponseLine(models.Model):
         commodity_code = self.env['account.intrastat.code'].search([('code','=',self.intrastat[:8]), ('type','=','commodity')], limit=1)
         if not commodity_code:
             commodity_code = self.env['account.intrastat.code'].create({'type': 'commodity', 'code': self.intrastat[:8], 'description': 'new from pimcore'})
+        price = self.env['res.currency'].browse(CURRENCY_DICT[self.supplier_price_currency])._convert(self.supplier_price,
+            self.env.user.company_id.currency_id, self.env.user.company_id, self.create_date)
         return {
             'name': self.name,
             'default_code': self.sku,
@@ -173,6 +187,11 @@ class PimcoreProductResponseLine(models.Model):
             'modification_date': self.modification_date,
             'hs_code': self.intrastat,
             'intrastat_id': commodity_code.id,
+            't_product_description_short': self.short_description,
+            't_use_up': self.use_up,
+            'standard_price': price,
+            'seller_ids': [(0, 0, self.get_supplier_info())],
+            't_use_up_replacement_sku': self.replacement_sku,
         }
 
     def create_bom(self):
@@ -193,3 +212,18 @@ class PimcoreProductResponseLine(models.Model):
         })
         self.bom_import_done = True
         self.env.cr.commit()
+    
+    def get_supplier_info(self):
+        vendor = self.env['res.partner']
+        if self.supplier_email:
+            vendor = vendor.search([('email', '=', self.supplier_email)], limit=1)
+        if not vendor:
+            raise UserError("No vendor partner found for email: %s" % self.supplier_email)
+        return {
+            'name': vendor.id,
+            'product_code': self.supplier_part_number,
+            'delay': self.supplier_lead_time,
+            'min_qty': 1,
+            'price': self.supplier_price,
+            'currency_id': CURRENCY_DICT[self.supplier_price_currency]
+        }
