@@ -176,6 +176,7 @@ class PimcoreProductResponseLine(models.Model):
             self.env.user.company_id.currency_id, self.env.user.company_id, self.create_date)
         return {
             'name': self.name,
+            'pimcore_id': self.pimcore_id,
             'default_code': self.sku,
             'barcode': self.ean,
             'weight': self.weight,

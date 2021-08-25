@@ -63,6 +63,6 @@ class ProductTemplate(models.Model):
 
 ## Pimcore fields
     modification_date = fields.Float()
-    pimcore_id = fields.Integer()
+    pimcore_id = fields.Char()
     
 ## End
