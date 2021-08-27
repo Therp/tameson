@@ -103,6 +103,7 @@ class PimcoreProductResponseLine(models.Model):
     supplier_part_number = fields.Char()
     supplier_price_currency = fields.Char()
     supplier_lead_time = fields.Integer()
+    customer_lead_time = fields.Integer()
     sku = fields.Char()
     ean = fields.Char()
     intrastat = fields.Char()
@@ -120,9 +121,17 @@ class PimcoreProductResponseLine(models.Model):
     supplier_price = fields.Float()
     bom_import_done = fields.Boolean()
     use_up = fields.Boolean()
+    backorder = fields.Boolean()
+    oversized = fields.Boolean()
+    non_returnable = fields.Boolean()
+    imperial = fields.Boolean()
     error = fields.Text()
     short_description = fields.Text()
     replacement_sku = fields.Char()
+    origin_country = fields.Char()
+    brand_name = fields.Char()
+    manufacturer_name = fields.Char()
+    mpn = fields.Char()
     
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env['product.category']
@@ -131,7 +140,7 @@ class PimcoreProductResponseLine(models.Model):
             image_data = codecs.encode(image_response.content, 'base64')
         else:
             image_data = False
-        categ_path = self.full_path.split('/')[3:]
+        categ_path = self.full_path.split('/')[3:-1]
         child_categ = self.env['product.category']
         final_categ = self.env['product.category']
         for categ in categ_path[::-1]:
@@ -174,12 +183,13 @@ class PimcoreProductResponseLine(models.Model):
             commodity_code = self.env['account.intrastat.code'].create({'type': 'commodity', 'code': self.intrastat[:8], 'description': 'new from pimcore'})
         price = self.env['res.currency'].browse(CURRENCY_DICT[self.supplier_price_currency])._convert(self.supplier_price,
             self.env.user.company_id.currency_id, self.env.user.company_id, self.create_date)
+        origin = self.env['res.country'].search([('code','=', self.origin_country)], limit=1)
         return {
             'name': self.name,
             'pimcore_id': self.pimcore_id,
             'default_code': self.sku,
             'barcode': self.ean,
-            'weight': self.weight,
+            'weight': self.weight/1000,
             't_height': self.height,
             't_length': self.depth,
             't_width': self.width,
@@ -193,9 +203,18 @@ class PimcoreProductResponseLine(models.Model):
             'standard_price': price,
             'seller_ids': [(0, 0, self.get_supplier_info())],
             't_use_up_replacement_sku': self.replacement_sku,
+            'intrastat_origin_country_id': origin.id,
+            't_customer_backorder_allowed': self.backorder,
+            't_customer_lead_time': self.customer_lead_time,
+            'brand_name': self.brand_name,
+            'manufacturer_name': self.manufacturer_name,
+            'manufacturer_pn': self.mpn,
+            'oversized': self.oversized,
+            'imperial': self.imperial,
+            'non_returnable': self.non_returnable
         }
 
-    def create_bom(self):
+    def create_bom(self, bom_type='phantom'):
         PT = self.env['product.template']
         main_product = PT.search([('default_code','=',self.sku)], limit=1)
         bom_elements = self.bom.split(',')
@@ -209,7 +228,8 @@ class PimcoreProductResponseLine(models.Model):
             }))
         self.env['mrp.bom'].create({
             'product_tmpl_id': main_product.id,
-            'bom_line_ids': bom_lines
+            'bom_line_ids': bom_lines,
+            'type': bom_type
         })
         self.bom_import_done = True
         self.env.cr.commit()

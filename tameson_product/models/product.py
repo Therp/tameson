@@ -49,20 +49,25 @@ class ProductTemplate(models.Model):
         required=False
     )
     t_height = fields.Float(
-        string=_('Height'),
+        string=_('Height (in mm)'),
         required=False
     )
     t_length = fields.Float(
-        string=_('Length'),
+        string=_('Length (in mm)'),
         required=False
     )
     t_width = fields.Float(
-        string=_('Width'),
+        string=_('Width (in mm)'),
         required=False
     )
 
 ## Pimcore fields
     modification_date = fields.Float()
-    pimcore_id = fields.Char()
-    
+    pimcore_id = fields.Char("Pimcore ID")
+    brand_name = fields.Char("Brand")
+    manufacturer_name = fields.Char("Manufacturer")
+    manufacturer_pn = fields.Char("Manufacturer Part Number ")
+    oversized = fields.Boolean(string=_('Oversized'))
+    imperial = fields.Boolean(string=_('Imperial'))
+    non_returnable = fields.Boolean(string=_('Non Returnable'))
 ## End

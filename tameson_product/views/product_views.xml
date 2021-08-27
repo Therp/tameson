@@ -22,10 +22,17 @@
                             <field name="t_web_sales" />
                             <field name="t_use_up" />
                             <field name="t_use_up_replacement_sku" />
-                            <field name="pimcore_id" />
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />
+                            <field name="pimcore_id" />
+                            <field name="modification_date" />
+                            <field name="brand_name" />
+                            <field name="manufacturer_name" />
+                            <field name="manufacturer_pn" />
+                            <field name="oversized" />
+                            <field name="imperial" />
+                            <field name="non_returnable" />
                         </group>
                     </group>
                 </page>
