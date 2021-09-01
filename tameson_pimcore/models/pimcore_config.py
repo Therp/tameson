@@ -58,6 +58,7 @@ product_nodes = {
     'brand_name': {'field': 'Manufacturer{... on object_Brand{Name}}', 'getter': single_field_m2one},
     'manufacturer_name': {'field': 'ManufacturerOrganisation{... on object_Organisation{Name}}', 'getter': single_field_m2one},
     'mpn': {'field': 'MPN', 'getter': static_getter},
+    'origin_country': {'field': 'OriginCountry', 'getter': static_getter},
     'supplier_email': {'field': 'Supplier {... on object_Organisation{email}}', 'getter': single_field_m2one},
     'replacement_sku': {'field': 'ReplacementProduct {... on object_Product{SKU}}', 'getter': single_field_m2one},
 }
