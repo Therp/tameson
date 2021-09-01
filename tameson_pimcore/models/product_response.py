@@ -160,6 +160,7 @@ class PimcoreProductResponseLine(models.Model):
         vals.update({
             'image_1920': image_data,
             'categ_id': final_categ.id,
+            'seller_ids': [(0, 0, self.get_supplier_info())],
         })
         product = self.env['product.template'].create(vals)
         add_translation(self.env, product, 'nl_NL', self.name, self.name_nl)
@@ -201,7 +202,6 @@ class PimcoreProductResponseLine(models.Model):
             't_product_description_short': self.short_description,
             't_use_up': self.use_up,
             'standard_price': price,
-            'seller_ids': [(0, 0, self.get_supplier_info())],
             't_use_up_replacement_sku': self.replacement_sku,
             'intrastat_origin_country_id': origin.id,
             't_customer_backorder_allowed': self.backorder,
