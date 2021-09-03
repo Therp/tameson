@@ -5,7 +5,6 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-import enum
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import requests, codecs
@@ -45,15 +44,21 @@ def add_pricelist_item(pricelist, product, price):
         })]
     })
 
-class PimcoreProductResponseLine(models.Model):
+class PimcoreProductResponse(models.Model):
     _name = 'pimcore.product.response'
     _inherit = ['mail.thread', 'mail.activity.mixin']    
     _description = 'PimcoreProductResponse'
 
-    
+    name = fields.Char(default='New')
+    type = fields.Selection(selection=[('full', 'Full'), ('new', 'New')])
     line_ids = fields.One2many(comodel_name='pimcore.product.response.line', inverse_name='response_id',)
     config_id = fields.Many2one(comodel_name='pimcore.config', ondelete='cascade',)
     
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('pimcore.response')
+        return super(PimcoreProductResponse, self).create(vals)
+
     def import_product_data(self):
         self.env.cr.execute("""
         select rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) from pimcore_product_response_line rl
@@ -231,6 +236,7 @@ class PimcoreProductResponseLine(models.Model):
             'bom_line_ids': bom_lines,
             'type': bom_type
         })
+        main_product.standard_price = main_product.product_variant_id._get_price_from_bom()
         self.bom_import_done = True
         self.env.cr.commit()
     
