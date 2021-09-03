@@ -32,7 +32,8 @@ Tameson PIMCore Integration
         'views/pimcore_config.xml',
         'views/pimcore_response.xml',
         'security/ir.model.access.csv',
-        'data/cron.xml'
+        'data/cron.xml',
+        'data/data.xml',
     ],
     'demo': [
     ],

@@ -32,13 +32,20 @@ class PimcoreRequest(object):
 
 
 class GqlQueryBuilder(object):
-    def __init__(self, root, subroot, node):
+    def __init__(self, root, subroot, node, filters=[]):
         self.root = root
         self.subroot = subroot
         self.node = node
-        self.filter = 'filter: "{\"o_modificationDate\" : {\"$gt\" : 1621411735}}"'
+        self.filters = filters
 
-    def get_query(self, filter=""):
+    def get_query(self, params=""):
+        params_list = []
+        if self.filters:
+            filter = 'filter: "{%s}"' % ','.join(self.filters)
+            params_list.append(filter)
+        if params:
+            params_list.append(params)
+        full_param = ', '.join(params_list)
         node_string = """
             {
                 %(root)s (%(filter)s) {
@@ -52,7 +59,7 @@ class GqlQueryBuilder(object):
         """ % {'root': self.root,
                 'subroot': self.subroot,
                 'node_string': "\n".join(["%s: %s" % (key, val['field']) for key, val in self.node.items()]),
-                'filter': filter}
+                'filter': full_param}
         return gql(node_string)
 
     def parse_results(self, result):

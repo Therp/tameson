@@ -9,8 +9,10 @@
             <field name="priority" eval="16" />
             <field name="active" eval="True" />
             <field name="arch" type="xml">
-                <tree string="model_tree" create="true" delete="true" edit="true">
+                <tree string="model_tree" create="false" delete="false" edit="false">
                     <field name="create_date" />
+                    <field name="name" />
+                    <field name="type" />
                 </tree>
             </field>
         </record>
@@ -55,7 +57,7 @@
             <field name="priority" eval="16" />
             <field name="active" eval="True" />
             <field name="arch" type="xml">
-                <form string="model_form" create="true" delete="true" edit="true">
+                <form string="model_form" create="false" delete="false" edit="false">
                     <header>
                         <button name="import_product_data" string="Import" type="object" class="oe_highlight"/>
                     </header>
