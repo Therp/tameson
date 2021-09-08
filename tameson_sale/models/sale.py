@@ -1,4 +1,4 @@
-import base64
+import base64, re
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -49,6 +49,25 @@ class SaleOrder(models.Model):
     )
     channel_process_payment = fields.Boolean()
 
+    any_non_returnable = fields.Boolean(compute='_check_any_non_returnable')
+    non_returnable_skus = fields.Char(compute='_check_any_non_returnable')
+    
+    @api.depends('order_line.product_id.non_returnable')
+    def _check_any_non_returnable(self):
+        for record in self:
+            products = self.order_line.mapped('product_id').filtered(lambda p: p.non_returnable)
+            record.any_non_returnable = bool(products)
+            record.non_returnable_skus = ','.join(products.mapped('default_code'))
+
+    
+    @api.onchange('any_non_returnable')
+    def _onchange_non_returnable(self):
+        pattern = 'Warning: \S+ is manufactured on demand and cannot be returned or cancelled.'
+        note = re.sub(pattern, "", self.note)
+        if self.any_non_returnable:
+            warning_text = 'Warning: %s is manufactured on demand and cannot be returned or cancelled.' % self.non_returnable_skus
+            note = note + warning_text
+        self.note = note
 
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
     def _compute_all_qty_delivered(self):

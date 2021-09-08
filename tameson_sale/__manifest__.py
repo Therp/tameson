@@ -18,6 +18,7 @@
         'sale_stock',
         'tameson_account',
         'tameson_base',
+        'tameson_product',
     ],
     'data': [
         'data/group.xml',

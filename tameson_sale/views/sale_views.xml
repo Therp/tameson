@@ -38,8 +38,11 @@
             <xpath expr="//field[@name='order_line']" position="attributes">
                 <attribute name="attrs">{'readonly': [('partner_id','=',False)]}</attribute>
             </xpath>
-            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
-                <attribute name="options">{'no_create': True, 'no_create_edit': True}</attribute>
+            <xpath expr="//notebook[1]" position="before">
+                <field name="any_non_returnable" invisible="True" />
+                <h2 class="text-danger" attrs="{'invisible': [('any_non_returnable','=',False)]}" >
+                    Warning: <field name="non_returnable_skus" /> is non-returnable.
+                </h2>
             </xpath>
         </field>
     </record>
