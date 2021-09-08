@@ -158,7 +158,7 @@
                                 <field name="sftp_server_id"/>
                             </group>
                             <group string="Domain" colspan="4">
-                                <field name="export_domain" nolabel="1" widget="domain" options="{'model': 'product.template'}" colspan="4"/>
+                                <field name="export_domain" nolabel="1" widget="domain" options="{'model': 'export_model_name'}" colspan="4"/>
                                 <field name="active"/>
                             </group>
                         </group>
