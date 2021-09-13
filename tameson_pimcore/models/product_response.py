@@ -8,7 +8,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import requests, codecs
-
+from odoo.tools.float_utils import float_is_zero
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -18,6 +18,27 @@ CURRENCY_DICT = {
     'EUR': 1,
     'GBP': 150
 }
+
+def create_or_find_categ(env, path, model='product.category', start=3, end=-1):
+    if end == 0:
+        end  = len(path.split('/'))
+    categ_path = path.split('/')[start:end]
+    child_categ = env[model]
+    final_categ = env[model]
+    for categ in categ_path[::-1]:
+        break_loop = False
+        this_categ = child_categ.search([('name','=',categ)], limit=1)
+        if not this_categ:
+            this_categ = child_categ.create({'name': categ})
+        else:
+            break_loop = True
+        child_categ.parent_id = this_categ
+        child_categ = this_categ
+        if not final_categ:
+            final_categ = this_categ
+        if break_loop:
+            break
+    return final_categ
 
 def add_translation(env, product, lang_code, src, value):
     nl_name = env['ir.translation'].search(
@@ -104,6 +125,7 @@ class PimcoreProductResponseLine(models.Model):
     name_fr = fields.Char()
     pimcore_id = fields.Char()
     full_path = fields.Char()
+    categories = fields.Char()
     supplier_email = fields.Char()
     supplier_part_number = fields.Char()
     supplier_price_currency = fields.Char()
@@ -130,6 +152,7 @@ class PimcoreProductResponseLine(models.Model):
     oversized = fields.Boolean()
     non_returnable = fields.Boolean()
     imperial = fields.Boolean()
+    web_sales = fields.Boolean()
     error = fields.Text()
     short_description = fields.Text()
     replacement_sku = fields.Char()
@@ -145,27 +168,15 @@ class PimcoreProductResponseLine(models.Model):
             image_data = codecs.encode(image_response.content, 'base64')
         else:
             image_data = False
-        categ_path = self.full_path.split('/')[3:-1]
-        child_categ = self.env['product.category']
-        final_categ = self.env['product.category']
-        for categ in categ_path[::-1]:
-            break_loop = False
-            this_categ = Category.search([('name','=',categ)], limit=1)
-            if not this_categ:
-                this_categ = Category.create({'name': categ})
-            else:
-                break_loop = True
-            child_categ.parent_id = this_categ
-            child_categ = this_categ
-            if not final_categ:
-                final_categ = this_categ
-            if break_loop:
-                break
+
         vals = self.get_product_vals()
+        final_categ = create_or_find_categ(self.env, self.full_path)
+        ecom_categ = create_or_find_categ(self.env, self.categories, model='product.public.category', start=2, end=0)
         vals.update({
             'image_1920': image_data,
             'categ_id': final_categ.id,
             'seller_ids': [(0, 0, self.get_supplier_info())],
+            'public_categ_ids': [(4, ecom_categ.id, False)],
         })
         product = self.env['product.template'].create(vals)
         add_translation(self.env, product, 'nl_NL', self.name, self.name_nl)
@@ -176,12 +187,24 @@ class PimcoreProductResponseLine(models.Model):
         add_pricelist_item(Gbp, product, self.gbp)
         add_pricelist_item(Usd, product, self.usd)
         self.write({'state': 'created'})
-        self.env.cr.commit()
     
     def update_product(self, product_id):
-        self.env['product.template'].browse(product_id).write(self.get_product_vals())
+        product = self.env['product.template'].browse(product_id)
+        vals = self.get_product_vals()
+        if not float_is_zero(product.standard_price, precision_digits=2):
+            vals.pop('standard_price')
+        add_translation(self.env, product, 'nl_NL', self.name, self.name_nl)
+        add_translation(self.env, product, 'fr_FR', self.name, self.name_fr)
+        add_translation(self.env, product, 'de_DE', self.name, self.name_de)
+        add_translation(self.env, product, 'es_ES', self.name, self.name_es)
+        seller_vals = self.get_supplier_info()
+        seller = product.seller_ids.filtered(lambda s: s.name.id == seller_vals['name'])[:1]
+        if seller:
+            seller.write(seller_vals)
+        else:
+            vals.update(seller_ids=[(0, 0, seller_vals)])
+        product.write(vals)
         self.write({'state': 'updated'})
-        self.env.cr.commit()
 
     def get_product_vals(self):
         commodity_code = self.env['account.intrastat.code'].search([('code','=',self.intrastat[:8]), ('type','=','commodity')], limit=1)
@@ -216,7 +239,8 @@ class PimcoreProductResponseLine(models.Model):
             'manufacturer_pn': self.mpn,
             'oversized': self.oversized,
             'imperial': self.imperial,
-            'non_returnable': self.non_returnable
+            'non_returnable': self.non_returnable,
+            't_web_sales': self.web_sales
         }
 
     def create_bom(self, bom_type='phantom'):
@@ -238,7 +262,6 @@ class PimcoreProductResponseLine(models.Model):
         })
         main_product.standard_price = main_product.product_variant_id._get_price_from_bom()
         self.bom_import_done = True
-        self.env.cr.commit()
     
     def get_supplier_info(self):
         vendor = self.env['res.partner']

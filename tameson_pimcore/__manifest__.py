@@ -22,7 +22,8 @@ Tameson PIMCore Integration
     'depends': [
         'mail',
         'tameson_product',
-        'mrp'
+        'mrp',
+        'website_sale',
     ],
     'external_dependencies': {
         'python': [
