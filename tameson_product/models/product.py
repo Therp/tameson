@@ -4,25 +4,6 @@ from odoo import api, fields, models, _
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    t_location = fields.Char(
-        string=_('Location Tameson'),
-        required=False)
-    t_purchase_cost = fields.Float(
-        string=_('Purchase Cost'),
-        required=False
-    )
-    t_product_data_source = fields.Char(
-        string=_('Product data source'),
-        required=False
-    )
-    t_pim_published = fields.Boolean(
-        string=_('PIM published'),
-        required=False
-    )
-    t_pim_status = fields.Char(
-        string=_('PIM status'),
-        required=False
-    )
     t_product_description_short = fields.Text(
         string=_('Product Description Short'),
         required=False,
