@@ -12,11 +12,6 @@
                             <field name="t_height" />
                             <field name="t_length" />
                             <field name="t_width" />
-                            <field name="t_location" />
-                            <field name="t_purchase_cost" />
-                            <field name="t_product_data_source" />
-                            <field name="t_pim_published" />
-                            <field name="t_pim_status" />
                             <field name="t_customer_backorder_allowed" />
                             <field name="t_customer_lead_time" />
                             <field name="t_web_sales" />
@@ -56,11 +51,6 @@
                             <field name="t_height" />
                             <field name="t_length" />
                             <field name="t_width" />
-                            <field name="t_location" />
-                            <field name="t_purchase_cost" />
-                            <field name="t_product_data_source" />
-                            <field name="t_pim_published" />
-                            <field name="t_pim_status" />
                             <field name="t_customer_backorder_allowed" />
                             <field name="t_customer_lead_time" />
                             <field name="t_web_sales" />
