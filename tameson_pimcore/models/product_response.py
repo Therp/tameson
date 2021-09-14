@@ -187,7 +187,8 @@ class PimcoreProductResponseLine(models.Model):
         add_pricelist_item(Gbp, product, self.gbp)
         add_pricelist_item(Usd, product, self.usd)
         self.write({'state': 'created'})
-    
+        self.env.cr.commit()
+
     def update_product(self, product_id):
         product = self.env['product.template'].browse(product_id)
         vals = self.get_product_vals()
@@ -205,6 +206,7 @@ class PimcoreProductResponseLine(models.Model):
             vals.update(seller_ids=[(0, 0, seller_vals)])
         product.write(vals)
         self.write({'state': 'updated'})
+        self.env.cr.commit()
 
     def get_product_vals(self):
         commodity_code = self.env['account.intrastat.code'].search([('code','=',self.intrastat[:8]), ('type','=','commodity')], limit=1)
@@ -262,6 +264,7 @@ class PimcoreProductResponseLine(models.Model):
         })
         main_product.standard_price = main_product.product_variant_id._get_price_from_bom()
         self.bom_import_done = True
+        self.env.cr.commit()
     
     def get_supplier_info(self):
         vendor = self.env['res.partner']
