@@ -175,9 +175,10 @@ class PimcoreProductResponseLine(models.Model):
         vals.update({
             'image_1920': image_data,
             'categ_id': final_categ.id,
-            'seller_ids': [(0, 0, self.get_supplier_info())],
             'public_categ_ids': [(4, ecom_categ.id, False)],
         })
+        if self.supplier_email:
+            vals.update({'seller_ids': [(0, 0, self.get_supplier_info())],})
         product = self.env['product.template'].create(vals)
         add_translation(self.env, product, 'nl_NL', self.name, self.name_nl)
         add_translation(self.env, product, 'fr_FR', self.name, self.name_fr)
@@ -198,12 +199,13 @@ class PimcoreProductResponseLine(models.Model):
         add_translation(self.env, product, 'fr_FR', self.name, self.name_fr)
         add_translation(self.env, product, 'de_DE', self.name, self.name_de)
         add_translation(self.env, product, 'es_ES', self.name, self.name_es)
-        seller_vals = self.get_supplier_info()
-        seller = product.seller_ids.filtered(lambda s: s.name.id == seller_vals['name'])[:1]
-        if seller:
-            seller.write(seller_vals)
-        else:
-            vals.update(seller_ids=[(0, 0, seller_vals)])
+        if self.supplier_email:
+            seller_vals = self.get_supplier_info()
+            seller = product.seller_ids.filtered(lambda s: s.name.id == seller_vals['name'])[:1]
+            if seller:
+                seller.write(seller_vals)
+            else:
+                vals.update(seller_ids=[(0, 0, seller_vals)])
         product.write(vals)
         self.write({'state': 'updated'})
         self.env.cr.commit()
