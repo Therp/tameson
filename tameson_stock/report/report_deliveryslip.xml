@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty).sorted(key=lambda l: l.product_id.t_location or '')"/>
+                    <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
                     <tr t-foreach="lines" t-as="move">
                         <td t-if="move.state != 'partially_available'" >
                             <span t-field="move.product_uom_qty"/>
@@ -64,9 +64,6 @@
                             <p t-if="move.description_picking != move.product_id.name">
                                 <span t-field="move.description_picking"/>
                             </p>
-                        </td>
-                        <td>
-                            <span t-field="move.product_id.t_location"/>
                         </td>
                         <td>
                             <span t-field="move.state"/>
@@ -91,7 +88,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr t-foreach="o.move_line_ids.sorted(key=lambda l: l.product_id.t_location or '')" t-as="move_line">
+                    <tr t-foreach="o.move_line_ids" t-as="move_line">
                         <td class="text-center">
                             <span t-field="move_line.qty_done"/>
                             <span t-field="move_line.product_uom_id"/>
@@ -101,9 +98,6 @@
                             <p t-if="move_line.move_id.description_picking != move_line.product_id.name">
                                 <span t-field="move_line.move_id.description_picking"/>
                             </p>
-                        </td>
-                        <td class="text-center">
-                            <span t-field="move_line.product_id.t_location"/>
                         </td>
                         <td t-if="has_serial_number and move_line.lot_name" groups="stock.group_lot_on_delivery_slip">
                             <span t-field="move_line.lot_name"/>

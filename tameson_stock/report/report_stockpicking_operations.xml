@@ -72,9 +72,6 @@
             position="replace">
             <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                 <div>
-                    <t t-if="o.picking_type_id.code=='incoming'">
-                        <span t-field="ml.product_id.t_location"/>
-                    </t>
                     <t t-else="">
                         <span t-field="ml.location_dest_id"/>
                         <t t-if="ml.result_package_id">
