@@ -4,6 +4,10 @@ from odoo import api, fields, models, _
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    t_location = fields.Char(
+        string=_('Location Tameson'),
+        required=False)
+
     t_product_description_short = fields.Text(
         string=_('Product Description Short'),
         required=False,

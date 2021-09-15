@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
                 <field name="minimal_qty_available" optional="show" />
+                <field name="t_location" optional="show" />
             </xpath>
         </field>
     </record>
@@ -21,6 +22,9 @@
                     <li>
                         Min qty: <field name="minimal_qty_available" /> 
                         <field name="uom_id" />
+                    </li>
+                    <li>
+                        Location: <field name="t_location" /> 
                     </li>
                 </ul>
             </xpath>
