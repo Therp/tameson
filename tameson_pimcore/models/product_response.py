@@ -89,7 +89,7 @@ class PimcoreProductResponse(models.Model):
         data = self.env.cr.fetchall()
         skipped = [row[0] for row in data if row[2] <= row[3]]
         Line = self.env['pimcore.product.response.line']
-        self.env['pimcore.product.response.line'].browse(skipped).write({'state': 'skipped'})
+        self.env['pimcore.product.response.line'].browse(skipped).unlink()
         Eur = self.env['product.pricelist'].search([('currency_id','=','EUR')], limit=1)
         Gbp = self.env['product.pricelist'].search([('currency_id','=','GBP')], limit=1)
         Usd = self.env['product.pricelist'].search([('currency_id','=','USD')], limit=1)
