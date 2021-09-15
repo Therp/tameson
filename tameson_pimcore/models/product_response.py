@@ -175,7 +175,7 @@ class PimcoreProductResponseLine(models.Model):
         vals.update({
             'image_1920': image_data,
             'categ_id': final_categ.id,
-            'public_categ_ids': [(4, ecom_categ.id, False)],
+            'public_categ_ids': [(6, 0, ecom_categ.ids)],
         })
         if self.supplier_email:
             vals.update({'seller_ids': [(0, 0, self.get_supplier_info())],})
@@ -199,6 +199,15 @@ class PimcoreProductResponseLine(models.Model):
         add_translation(self.env, product, 'fr_FR', self.name, self.name_fr)
         add_translation(self.env, product, 'de_DE', self.name, self.name_de)
         add_translation(self.env, product, 'es_ES', self.name, self.name_es)
+        
+        if product.categ_id.name != self.full_path.split('/')[-2]:
+            final_categ = create_or_find_categ(self.env, self.full_path)
+            vals.update(categ_id=final_categ.id)
+
+        if product.public_categ_ids[:1].name != self.categories.split('/')[-1]:
+            ecom_categ = create_or_find_categ(self.env, self.categories, model='product.public.category', start=2, end=0)
+            vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
+
         if self.supplier_email:
             seller_vals = self.get_supplier_info()
             seller = product.seller_ids.filtered(lambda s: s.name.id == seller_vals['name'])[:1]
