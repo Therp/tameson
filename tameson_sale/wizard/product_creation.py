@@ -25,8 +25,8 @@ class ProductCreationWizard(models.TransientModel):
 
     _sql_constraints = [(
             'check_sale_purchase_price',
-            'CHECK((purchase_price * 1.5) <= sale_price)',
-            'Sale price must be higher than 1.5 times of the purchase price.'
+            'CHECK((purchase_price * 1.1) <= sale_price)',
+            'Sale price must be higher than 1.1 times of the purchase price.'
         )]
 
     def action_create(self):
