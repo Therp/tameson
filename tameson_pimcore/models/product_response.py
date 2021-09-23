@@ -8,7 +8,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import requests, codecs
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_is_zero, float_compare
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -65,6 +65,14 @@ def add_pricelist_item(pricelist, product, price):
         })]
     })
 
+def search_or_add_pricelist_item(pricelist, product, price):
+    item = pricelist.env['product.pricelist.item'].search([('applied_on','=','1_product'),('product_tmpl_id','=',product.id),('pricelist_id','=',pricelist.id)], limit=1)
+    if item:
+        if not float_compare(item.fixed_price, price, precision_digits=2) == 0:
+            item.write({'fixed_price': price})
+    else:
+        add_pricelist_item(pricelist, product, price)
+
 class PimcoreProductResponse(models.Model):
     _name = 'pimcore.product.response'
     _inherit = ['mail.thread', 'mail.activity.mixin']    
@@ -98,7 +106,7 @@ class PimcoreProductResponse(models.Model):
                 if not row[1]:
                     Line.browse(row[0]).create_product(Eur, Gbp, Usd)
                 elif row[2] > row[3]:
-                    Line.browse(row[0]).update_product(row[1])
+                    Line.browse(row[0]).update_product(row[1], Eur, Gbp, Usd)
             except Exception as e:
                 _logger.warn(str(e))
                 Line.browse(row[0]).write({'state': 'error', 'error': str(e)})
@@ -190,7 +198,7 @@ class PimcoreProductResponseLine(models.Model):
         self.write({'state': 'created'})
         self.env.cr.commit()
 
-    def update_product(self, product_id):
+    def update_product(self, product_id, Eur, Gbp, Usd):
         product = self.env['product.template'].browse(product_id)
         vals = self.get_product_vals()
         if not float_is_zero(product.standard_price, precision_digits=2):
@@ -207,7 +215,8 @@ class PimcoreProductResponseLine(models.Model):
         if product.public_categ_ids[:1].name != self.categories.split('/')[-1]:
             ecom_categ = create_or_find_categ(self.env, self.categories, model='product.public.category', start=2, end=0)
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
-
+        search_or_add_pricelist_item(Gbp, product, self.gbp)
+        search_or_add_pricelist_item(Usd, product, self.usd)
         product.write(vals)
         self.write({'state': 'updated'})
         self.env.cr.commit()
