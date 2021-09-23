@@ -8,7 +8,9 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 import requests, codecs
+from datetime import datetime
 from odoo.tools.float_utils import float_is_zero, float_compare
+from dateutil.relativedelta import relativedelta
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -118,6 +120,7 @@ class PimcoreProductResponse(models.Model):
                 line.write({'state': 'error', 'error': str(e)})
                 _logger.warn(str(e))
                 continue
+        self.search([('create_date','<',datetime.now() - relativedelta(days=14))]).unlink()
 
 class PimcoreProductResponseLine(models.Model):
     _name = 'pimcore.product.response.line'
