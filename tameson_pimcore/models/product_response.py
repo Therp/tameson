@@ -215,6 +215,14 @@ class PimcoreProductResponseLine(models.Model):
             final_categ = create_or_find_categ(self.env, self.full_path)
             vals.update(categ_id=final_categ.id)
 
+        if self.supplier_email:
+            seller_vals = self.get_supplier_info()
+            seller_vals.pop('price')
+            seller = product.seller_ids.filtered(lambda s: s.name.id == seller_vals['name'])[:1]
+            if seller:
+                seller.write(seller_vals)
+            else:
+                vals.update(seller_ids=[(0, 0, seller_vals)])
         if product.public_categ_ids[:1].name != self.categories.split('/')[-1]:
             ecom_categ = create_or_find_categ(self.env, self.categories, model='product.public.category', start=2, end=0)
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
