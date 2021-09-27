@@ -26,6 +26,8 @@ Tameson PIMCore Integration
     ],
     'external_dependencies': {
         'python': [
+            'aiohttp==3.7.4.post0',
+            'gql==3.0.0a6'
         ],
     },
     'data': [
