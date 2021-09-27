@@ -37,18 +37,5 @@ Tameson PIMCore Integration
         'data/cron.xml',
         'data/data.xml',
     ],
-    'demo': [
-    ],
-    'js': [
-    ],
-    'css': [
-    ],
-    'qweb': [
-    ],
-    'images': [
-    ],
-    'test': [
-    ],
-
     'installable': True
 }
