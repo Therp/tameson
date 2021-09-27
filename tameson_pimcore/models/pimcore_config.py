@@ -113,77 +113,79 @@ class PimcoreConfig(models.Model):
     active = fields.Boolean(default=True)
     limit = fields.Integer(string="Pull limit", default=300)
 
+    def action_cron_fetch_products(self):
+        for record in self.search([]):
+            record.action_fetch_products()
+
     def action_fetch_products(self):
-        if not self:
-            self = self.search([])
-        for config in self:
-            pim_request = PimcoreRequest(
-                config.api_host, config.api_name, config.api_key
+        pim_request = PimcoreRequest(
+            self.api_host, self.api_name, self.api_key
+        )
+        product_query = GqlQueryBuilder("getProductListing", "edges", product_nodes)
+        record_count = (
+            pim_request.execute(gql("{getProductListing {totalCount}}"))
+            .get("getProductListing", {})
+            .get("totalCount", 0)
+        )
+        result = pim_request.execute_async(ProductQ, 0, record_count, self.limit)
+        all_result = product_query.parse_results(result)
+        lines_ids = []
+        for node in all_result:
+            data = node.get("node")
+            try:
+                val = {
+                    key: product_nodes[key]["getter"](val)
+                    for key, val in data.items()
+                }
+            except Exception as e:
+                _logger.warning(str(e))
+                _logger.warning(data)
+                continue
+            lines_ids.append((0, 0, val))
+        if lines_ids:
+            response_obj = self.env["pimcore.product.response"].create(
+                {"config_id": self.id, "type": "full"}
             )
-            product_query = GqlQueryBuilder("getProductListing", "edges", product_nodes)
-            record_count = (
-                pim_request.execute(gql("{getProductListing {totalCount}}"))
-                .get("getProductListing", {})
-                .get("totalCount", 0)
-            )
-            result = pim_request.execute_async(ProductQ, 0, record_count, config.limit)
-            all_result = product_query.parse_results(result)
-            lines_ids = []
-            for node in all_result:
-                data = node.get("node")
-                try:
-                    val = {
-                        key: product_nodes[key]["getter"](val)
-                        for key, val in data.items()
-                    }
-                except Exception as e:
-                    _logger.warning(str(e))
-                    _logger.warning(data)
-                    continue
-                lines_ids.append((0, 0, val))
-            if lines_ids:
-                response_obj = self.env["pimcore.product.response"].create(
-                    {"config_id": self.id, "type": "full"}
-                )
-                response_obj.write({"line_ids": lines_ids})
+            response_obj.write({"line_ids": lines_ids})
+
+    def action_cron_fetch_new(self):
+        for record in self.search([]):
+            record.action_fetch_new()
 
     def action_fetch_new(self):
-        if not self:
-            self = self.search([])
-        for config in self:
-            last_mdate = (
-                self.env["product.template"]
-                .search(
-                    [("modification_date", ">", 0)],
-                    order="modification_date DESC",
-                    limit=1,
-                )
-                .modification_date
+        last_mdate = (
+            self.env["product.template"]
+            .search(
+                [("modification_date", ">", 0)],
+                order="modification_date DESC",
+                limit=1,
             )
-            pim_request = PimcoreRequest(
-                config.api_host, config.api_name, config.api_key
+            .modification_date
+        )
+        pim_request = PimcoreRequest(
+            self.api_host, self.api_name, self.api_key
+        )
+        filter = '\\"o_modificationDate\\" : {\\"$gt\\": \\"%.1f\\"}' % last_mdate
+        last_m_product_query = GqlQueryBuilder(
+            "getProductListing", "edges", product_nodes, filters=[filter]
+        )
+        result = pim_request.execute(LastmProductQ.get_query())
+        all_result = last_m_product_query.parse_results(result)
+        lines_ids = []
+        for node in all_result:
+            data = node.get("node")
+            try:
+                val = {
+                    key: product_nodes[key]["getter"](val)
+                    for key, val in data.items()
+                }
+            except Exception as e:
+                _logger.warning(str(e))
+                _logger.warning(data)
+                continue
+            lines_ids.append((0, 0, val))
+        if lines_ids:
+            response_obj = self.env["pimcore.product.response"].create(
+                {"config_id": self.id, "type": "new"}
             )
-            filter = '\\"o_modificationDate\\" : {\\"$gt\\": \\"%.1f\\"}' % last_mdate
-            last_m_product_query = GqlQueryBuilder(
-                "getProductListing", "edges", product_nodes, filters=[filter]
-            )
-            result = pim_request.execute(LastmProductQ.get_query())
-            all_result = last_m_product_query.parse_results(result)
-            lines_ids = []
-            for node in all_result:
-                data = node.get("node")
-                try:
-                    val = {
-                        key: product_nodes[key]["getter"](val)
-                        for key, val in data.items()
-                    }
-                except Exception as e:
-                    _logger.warning(str(e))
-                    _logger.warning(data)
-                    continue
-                lines_ids.append((0, 0, val))
-            if lines_ids:
-                response_obj = self.env["pimcore.product.response"].create(
-                    {"config_id": self.id, "type": "new"}
-                )
-                response_obj.write({"line_ids": lines_ids})
+            response_obj.write({"line_ids": lines_ids})
