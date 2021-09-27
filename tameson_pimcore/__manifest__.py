@@ -6,8 +6,7 @@
     'description': """
 Tameson PIMCore Integration
 ==============================================
-
-
+    * Syncs Product data from pimcore to odoo
     """,
 
     'author': 'TM_FULLNAME',
