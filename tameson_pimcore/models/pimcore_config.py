@@ -8,8 +8,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
 from gql.transport import requests
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
 from .pimcore_request import PimcoreRequest, GqlQueryBuilder
 from gql import gql
 
