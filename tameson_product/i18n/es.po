@@ -66,22 +66,6 @@ msgstr "Ubicación Tameson"
 
 #. module: tameson_product
 #: code:addons/tameson_product/models/product.py:0
-#: model:ir.model.fields,field_description:tameson_product.field_product_product__t_pim_published
-#: model:ir.model.fields,field_description:tameson_product.field_product_template__t_pim_published
-#, python-format
-msgid "PIM published"
-msgstr "PIM publicado"
-
-#. module: tameson_product
-#: code:addons/tameson_product/models/product.py:0
-#: model:ir.model.fields,field_description:tameson_product.field_product_product__t_pim_status
-#: model:ir.model.fields,field_description:tameson_product.field_product_template__t_pim_status
-#, python-format
-msgid "PIM status"
-msgstr "Estado de PIM"
-
-#. module: tameson_product
-#: code:addons/tameson_product/models/product.py:0
 #: model:ir.model.fields,field_description:tameson_product.field_product_product__t_product_description_short
 #: model:ir.model.fields,field_description:tameson_product.field_product_template__t_product_description_short
 #, python-format
@@ -92,22 +76,6 @@ msgstr "Descripción del producto Breve"
 #: model:ir.model,name:tameson_product.model_product_template
 msgid "Product Template"
 msgstr "Plantilla de producto"
-
-#. module: tameson_product
-#: code:addons/tameson_product/models/product.py:0
-#: model:ir.model.fields,field_description:tameson_product.field_product_product__t_product_data_source
-#: model:ir.model.fields,field_description:tameson_product.field_product_template__t_product_data_source
-#, python-format
-msgid "Product data source"
-msgstr "Fuente de datos del producto"
-
-#. module: tameson_product
-#: code:addons/tameson_product/models/product.py:0
-#: model:ir.model.fields,field_description:tameson_product.field_product_product__t_purchase_cost
-#: model:ir.model.fields,field_description:tameson_product.field_product_template__t_purchase_cost
-#, python-format
-msgid "Purchase Cost"
-msgstr "Costo de la compra"
 
 #. module: tameson_product
 #: model_terms:ir.ui.view,arch_db:tameson_product.product_normal_form_view
