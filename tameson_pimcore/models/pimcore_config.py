@@ -7,9 +7,10 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
-from gql.transport import requests
-from .pimcore_request import PimcoreRequest, GqlQueryBuilder
 from gql import gql
+from gql.transport import requests
+
+from .pimcore_request import PimcoreRequest, GqlQueryBuilder
 
 import logging
 _logger = logging.getLogger(__name__)
