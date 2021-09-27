@@ -84,11 +84,11 @@ class PimcoreConfig(models.Model):
         if not self:
             self = self.search([])
         for config in self:
-            Request = PimcoreRequest(config.api_host, config.api_name, config.api_key)
-            ProductQ = GqlQueryBuilder('getProductListing', 'edges', product_nodes)
-            record_count = Request.execute(gql('{getProductListing {totalCount}}')).get('getProductListing', {}).get('totalCount', 0)
-            result = Request.execute_async(ProductQ, 0, record_count, config.limit)
-            all_result = ProductQ.parse_results(result)
+            pim_request = PimcoreRequest(config.api_host, config.api_name, config.api_key)
+            product_query = GqlQueryBuilder('getProductListing', 'edges', product_nodes)
+            record_count = pim_request.execute(gql('{getProductListing {totalCount}}')).get('getProductListing', {}).get('totalCount', 0)
+            result = pim_request.execute_async(ProductQ, 0, record_count, config.limit)
+            all_result = product_query.parse_results(result)
             lines_ids = []
             for node in all_result:
                 data = node.get('node')
@@ -100,8 +100,8 @@ class PimcoreConfig(models.Model):
                     continue
                 lines_ids.append((0, 0, val))
             if lines_ids:
-                Response = self.env['pimcore.product.response'].create({'config_id': self.id, 'type': 'full'})
-                Response.write({
+                response_obj = self.env['pimcore.product.response'].create({'config_id': self.id, 'type': 'full'})
+                response_obj.write({
                     'line_ids': lines_ids
                 })
     
@@ -110,11 +110,11 @@ class PimcoreConfig(models.Model):
             self = self.search([])
         for config in self:
             last_mdate = self.env['product.template'].search([('modification_date','>',0)], order='modification_date DESC', limit=1).modification_date
-            Request = PimcoreRequest(config.api_host, config.api_name, config.api_key)
+            pim_request = PimcoreRequest(config.api_host, config.api_name, config.api_key)
             filter = '\\"o_modificationDate\\" : {\\"$gt\\": \\"%.1f\\"}' % last_mdate
-            LastmProductQ = GqlQueryBuilder('getProductListing', 'edges', product_nodes, filters=[filter])
-            result = Request.execute(LastmProductQ.get_query())
-            all_result = LastmProductQ.parse_results(result)
+            last_m_product_query = GqlQueryBuilder('getProductListing', 'edges', product_nodes, filters=[filter])
+            result = pim_request.execute(LastmProductQ.get_query())
+            all_result = last_m_product_query.parse_results(result)
             lines_ids = []
             for node in all_result:
                 data = node.get('node')
@@ -126,7 +126,7 @@ class PimcoreConfig(models.Model):
                     continue
                 lines_ids.append((0, 0, val))
             if lines_ids:
-                Response = self.env['pimcore.product.response'].create({'config_id': self.id, 'type': 'new'})
-                Response.write({
+                response_obj = self.env['pimcore.product.response'].create({'config_id': self.id, 'type': 'new'})
+                response_obj.write({
                     'line_ids': lines_ids
                 })
