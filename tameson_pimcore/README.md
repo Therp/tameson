@@ -1,3 +1,12 @@
+## Data pulling
+
+Two types of automated data pulling is implemented:
+- Full data pulled from pimcore API, pulls all of the product data
+- New data pulled from Pimcore based on modification date, only newer data is pulled
+
+If existing SKU in Odoo, odoo cpmpares modification date of pulled data and existing SKU if pulled data has newer modification date, tries to update that products, if not skips
+If not existing SKU in Odoo system, the new SKU pulled is imported as a new product in Odoo.
+
 ## Fields that will be updated with new modification time SKU
 - 'name'
 - 'pimcore_id'
@@ -24,10 +33,11 @@
 - 'oversized'
 - 'imperial'
 - 'non_returnable'
+- Pricelists (USD/GBP)
+- Translations
+- Vendor info
 
 ## Data that will not updated with new modification time
 
 - BOM
-- Pricelists
-- Translations
-- Vendor info
+- Vendor price information
