@@ -17,6 +17,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 static_getter = lambda v: v
+sku_getter = lambda v: isinstance(v, str) and v.upper()
 float_getter = lambda v: isinstance(v, dict) and v.get("value", 0.0)
 image_getter = lambda v: v and v[0].get("assetThumb", "")
 bom_getter = lambda v: v and ",".join(
@@ -33,7 +34,7 @@ product_nodes = {
     "name_es": {"field": 'Name (language: "es")', "getter": static_getter},
     "pimcore_id": {"field": "id", "getter": static_getter},
     "full_path": {"field": "fullpath", "getter": static_getter},
-    "sku": {"field": "SKU", "getter": static_getter},
+    "sku": {"field": "SKU", "getter": sku_getter},
     "intrastat": {"field": "Intrastat", "getter": static_getter},
     "ean": {"field": "EAN", "getter": static_getter},
     "width": {"field": "Width {value}", "getter": float_getter},
