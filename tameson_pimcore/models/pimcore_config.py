@@ -128,7 +128,7 @@ class PimcoreConfig(models.Model):
             .get("getProductListing", {})
             .get("totalCount", 0)
         )
-        result = pim_request.execute_async(ProductQ, 0, record_count, self.limit)
+        result = pim_request.execute_async(product_query, 0, record_count, self.limit)
         all_result = product_query.parse_results(result)
         lines_ids = []
         for node in all_result:
@@ -170,7 +170,7 @@ class PimcoreConfig(models.Model):
         last_m_product_query = GqlQueryBuilder(
             "getProductListing", "edges", product_nodes, filters=[filter]
         )
-        result = pim_request.execute(LastmProductQ.get_query())
+        result = pim_request.execute(last_m_product_query.get_query())
         all_result = last_m_product_query.parse_results(result)
         lines_ids = []
         for node in all_result:
