@@ -119,9 +119,7 @@ class PimcoreConfig(models.Model):
             record.action_fetch_products()
 
     def action_fetch_products(self):
-        pim_request = PimcoreRequest(
-            self.api_host, self.api_name, self.api_key
-        )
+        pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder("getProductListing", "edges", product_nodes)
         record_count = (
             pim_request.execute(gql("{getProductListing {totalCount}}"))
@@ -135,8 +133,7 @@ class PimcoreConfig(models.Model):
             data = node.get("node")
             try:
                 val = {
-                    key: product_nodes[key]["getter"](val)
-                    for key, val in data.items()
+                    key: product_nodes[key]["getter"](val) for key, val in data.items()
                 }
             except Exception as e:
                 _logger.warning(str(e))
@@ -163,9 +160,7 @@ class PimcoreConfig(models.Model):
             )
             .modification_date
         )
-        pim_request = PimcoreRequest(
-            self.api_host, self.api_name, self.api_key
-        )
+        pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         filter = '\\"o_modificationDate\\" : {\\"$gt\\": \\"%.1f\\"}' % last_mdate
         last_m_product_query = GqlQueryBuilder(
             "getProductListing", "edges", product_nodes, filters=[filter]
@@ -177,8 +172,7 @@ class PimcoreConfig(models.Model):
             data = node.get("node")
             try:
                 val = {
-                    key: product_nodes[key]["getter"](val)
-                    for key, val in data.items()
+                    key: product_nodes[key]["getter"](val) for key, val in data.items()
                 }
             except Exception as e:
                 _logger.warning(str(e))
