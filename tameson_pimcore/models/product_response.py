@@ -12,7 +12,6 @@ from odoo.tools.float_utils import float_is_zero, float_compare
 from dateutil.relativedelta import relativedelta
 
 import logging
-
 _logger = logging.getLogger(__name__)
 
 CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}
@@ -130,6 +129,8 @@ class PimcoreProductResponse(models.Model):
         )
         data = self.env.cr.fetchall()
         skipped = [row[0] for row in data if row[2] <= row[3]]
+        updated = [row for row in data if row[2] > row[3]]
+        _logger.warn("Skipped lines: %d" % len(skipped))
         Line = self.env["pimcore.product.response.line"]
         self.env["pimcore.product.response.line"].browse(skipped).unlink()
         Eur = self.env["product.pricelist"].search(
@@ -141,12 +142,15 @@ class PimcoreProductResponse(models.Model):
         Usd = self.env["product.pricelist"].search(
             [("currency_id", "=", "USD")], limit=1
         )
-        for row in data:
+        _logger.warn("Start importing data from %d lines" % len(updated))
+        for count, row in enumerate(updated):
             try:
                 if not row[1]:
                     Line.browse(row[0]).create_product(Eur, Gbp, Usd)
+                    _logger.warn("Created from %d" % count)
                 elif row[2] > row[3]:
                     Line.browse(row[0]).update_product(row[1], Eur, Gbp, Usd)
+                    _logger.warn("Updated from %d" % count)
             except Exception as e:
                 _logger.warn(str(e))
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
