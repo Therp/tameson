@@ -7,22 +7,7 @@ class ProductTemplate(models.Model):
     t_location = fields.Char(
         string=_('Location Tameson'),
         required=False)
-    t_purchase_cost = fields.Float(
-        string=_('Purchase Cost'),
-        required=False
-    )
-    t_product_data_source = fields.Char(
-        string=_('Product data source'),
-        required=False
-    )
-    t_pim_published = fields.Boolean(
-        string=_('PIM published'),
-        required=False
-    )
-    t_pim_status = fields.Char(
-        string=_('PIM status'),
-        required=False
-    )
+
     t_product_description_short = fields.Text(
         string=_('Product Description Short'),
         required=False,
@@ -49,14 +34,25 @@ class ProductTemplate(models.Model):
         required=False
     )
     t_height = fields.Float(
-        string=_('Height'),
+        string=_('Height (in mm)'),
         required=False
     )
     t_length = fields.Float(
-        string=_('Length'),
+        string=_('Length (in mm)'),
         required=False
     )
     t_width = fields.Float(
-        string=_('Width'),
+        string=_('Width (in mm)'),
         required=False
     )
+
+## Pimcore fields
+    modification_date = fields.Float()
+    pimcore_id = fields.Char("Pimcore ID")
+    brand_name = fields.Char("Brand")
+    manufacturer_name = fields.Char("Manufacturer")
+    manufacturer_pn = fields.Char("Manufacturer Part Number ")
+    oversized = fields.Boolean(string=_('Oversized'))
+    imperial = fields.Boolean(string=_('Imperial'))
+    non_returnable = fields.Boolean(string=_('Non Returnable'))
+## End

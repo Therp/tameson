@@ -13,10 +13,6 @@
                             <field name="t_length" />
                             <field name="t_width" />
                             <field name="t_location" />
-                            <field name="t_purchase_cost" />
-                            <field name="t_product_data_source" />
-                            <field name="t_pim_published" />
-                            <field name="t_pim_status" />
                             <field name="t_customer_backorder_allowed" />
                             <field name="t_customer_lead_time" />
                             <field name="t_web_sales" />
@@ -25,6 +21,14 @@
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />
+                            <field name="pimcore_id" />
+                            <field name="modification_date" />
+                            <field name="brand_name" />
+                            <field name="manufacturer_name" />
+                            <field name="manufacturer_pn" />
+                            <field name="oversized" />
+                            <field name="imperial" />
+                            <field name="non_returnable" />
                         </group>
                     </group>
                 </page>
@@ -49,10 +53,6 @@
                             <field name="t_length" />
                             <field name="t_width" />
                             <field name="t_location" />
-                            <field name="t_purchase_cost" />
-                            <field name="t_product_data_source" />
-                            <field name="t_pim_published" />
-                            <field name="t_pim_status" />
                             <field name="t_customer_backorder_allowed" />
                             <field name="t_customer_lead_time" />
                             <field name="t_web_sales" />
