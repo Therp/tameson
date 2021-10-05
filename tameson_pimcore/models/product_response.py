@@ -123,7 +123,7 @@ class PimcoreProductResponse(models.Model):
         self.env.cr.execute(
             """
         select rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) from pimcore_product_response_line rl
-        left join product_template pt on rl.sku = pt.default_code
+        left join product_template pt on lower(rl.sku) = lower(pt.default_code)
         where rl.state = 'draft'
         """
         )
