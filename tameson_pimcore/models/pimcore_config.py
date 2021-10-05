@@ -118,6 +118,7 @@ class PimcoreConfig(models.Model):
             record.action_fetch_products()
 
     def action_fetch_products(self):
+        self.ensure_one()
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder("getProductListing", "edges", product_nodes)
         record_count = (
@@ -150,6 +151,7 @@ class PimcoreConfig(models.Model):
             record.action_fetch_new()
 
     def action_fetch_new(self):
+        self.ensure_one()
         last_mdate = (
             self.env["product.template"]
             .search(
