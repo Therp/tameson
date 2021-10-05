@@ -147,10 +147,10 @@ class PimcoreProductResponse(models.Model):
             try:
                 if not row[1]:
                     Line.browse(row[0]).create_product(Eur, Gbp, Usd)
-                    _logger.warn("Created from %d" % count)
+                    _logger.warn("Created from %d / %d " % (count, len(updated)))
                 elif row[2] > row[3]:
                     Line.browse(row[0]).update_product(row[1], Eur, Gbp, Usd)
-                    _logger.warn("Updated from %d" % count)
+                    _logger.warn("Updated from %d / %d " % (count, len(updated)))
             except Exception as e:
                 _logger.warn(str(e))
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
