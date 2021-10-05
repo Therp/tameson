@@ -6,8 +6,8 @@ from gql.transport.aiohttp import log as aio_logger
 import asyncio
 import logging
 
-aio_logger.setLevel(logging.WARNING)
-req_logger.setLevel(logging.WARNING)
+# aio_logger.setLevel(logging.WARNING)
+# req_logger.setLevel(logging.WARNING)
 
 
 class PimcoreRequest(object):
