@@ -57,7 +57,7 @@ class GqlQueryBuilder(object):
         self.filters = filters
 
     def get_query(self, params=""):
-        params_list = []
+        params_list = ['published: false']
         if self.filters:
             filter = 'filter: "{%s}"' % ",".join(self.filters)
             params_list.append(filter)

@@ -122,7 +122,7 @@ class PimcoreConfig(models.Model):
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder("getProductListing", "edges", product_nodes)
         record_count = (
-            pim_request.execute(gql("{getProductListing {totalCount}}"))
+            pim_request.execute(gql("{getProductListing(published: false) {totalCount}}"))
             .get("getProductListing", {})
             .get("totalCount", 0)
         )
