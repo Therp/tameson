@@ -45,6 +45,8 @@
                     <field name="gbp" optional="hide" />                                    
                     <field name="usd" optional="hide" />
                     <field name="bom" optional="hide" />
+                    <field name="published" optional="hide" />
+                    <field name="response_id" optional="hide" />
                 </tree>
             </field>
         </record>
@@ -83,6 +85,25 @@
                 </search>
             </field>
         </record>        
+        <record id="pimcore_product_response_line_search" model="ir.ui.view">
+            <field name="name">pimcore.product.response.line.search</field>
+            <field name="model">pimcore.product.response.line</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="pimcore_product_response_line_search">
+                    <field name="response_id" />
+                    <!-- <filter string="My Orders" domain="[('user_id', '=', uid)]" name="my_sale_orders_filter"/> -->
+                    <group expand="0" string="Group By">
+                        <filter string="Response" name="response_id" domain="[]" context="{'group_by': 'response_id'}"/>
+                        <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>        
         
         <record id="action_pimcore_product_response" model="ir.actions.act_window">
             <field name="type">ir.actions.act_window</field>
@@ -96,12 +117,13 @@
         </record>
         <record id="action_pimcore_product_response_line" model="ir.actions.act_window">
             <field name="type">ir.actions.act_window</field>
-            <field name="name">Pimcore product response</field>
+            <field name="name">Pimcore product response lines</field>
             <field name="res_model">pimcore.product.response.line</field>
             <field name="view_mode">tree</field>
             <field name="target">current</field>
             <field name="domain">[]</field>
             <field name="context">\{}</field>
+            <field name="search_view_id" ref="pimcore_product_response_line_search" />
         </record>
         
 
