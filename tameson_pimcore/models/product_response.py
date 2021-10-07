@@ -168,6 +168,7 @@ class PimcoreProductResponse(models.Model):
                 line.write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))
                 continue
+        self.env['product.template'].search([('published','=',False)]).action_archive()
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
         ).unlink()
