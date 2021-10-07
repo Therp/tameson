@@ -67,6 +67,7 @@ product_nodes = {
     "oversized": {"field": "Oversized", "getter": static_getter},
     "non_returnable": {"field": "NonReturnable", "getter": static_getter},
     "imperial": {"field": "Imperial", "getter": static_getter},
+    "published": {"field": "published", "getter": static_getter},
     "brand_name": {
         "field": "Manufacturer{... on object_Brand{Name}}",
         "getter": single_field_m2one,

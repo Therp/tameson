@@ -227,6 +227,7 @@ class PimcoreProductResponseLine(models.Model):
     non_returnable = fields.Boolean()
     imperial = fields.Boolean()
     web_sales = fields.Boolean()
+    published = fields.Boolean()
     error = fields.Text()
     short_description = fields.Text()
     replacement_sku = fields.Char()
@@ -366,6 +367,7 @@ class PimcoreProductResponseLine(models.Model):
             "imperial": self.imperial,
             "non_returnable": self.non_returnable,
             "t_web_sales": self.web_sales,
+            "published": self.published,
         }
 
     def create_bom(self, bom_type="phantom"):

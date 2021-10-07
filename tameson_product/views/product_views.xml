@@ -16,6 +16,7 @@
                             <field name="t_customer_backorder_allowed" />
                             <field name="t_customer_lead_time" />
                             <field name="t_web_sales" />
+                            <field name="published" />
                             <field name="t_use_up" />
                             <field name="t_use_up_replacement_sku" />
                         </group>
@@ -56,11 +57,20 @@
                             <field name="t_customer_backorder_allowed" />
                             <field name="t_customer_lead_time" />
                             <field name="t_web_sales" />
+                            <field name="published" />
                             <field name="t_use_up" />
                             <field name="t_use_up_replacement_sku" />
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />
+                            <field name="pimcore_id" />
+                            <field name="modification_date" />
+                            <field name="brand_name" />
+                            <field name="manufacturer_name" />
+                            <field name="manufacturer_pn" />
+                            <field name="oversized" />
+                            <field name="imperial" />
+                            <field name="non_returnable" />
                         </group>
                     </group>
                 </page>
