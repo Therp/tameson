@@ -113,7 +113,7 @@ class PimcoreConfig(models.Model):
         required=True,
     )
     active = fields.Boolean(default=True)
-    limit = fields.Integer(string="Pull limit", default=300)
+    limit = fields.Integer(string="Pull limit", default=100)
     concurrent = fields.Integer(string="Concurrent connections", default=50)
 
     def action_cron_fetch_products(self):
