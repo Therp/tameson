@@ -169,7 +169,9 @@ class PimcoreProductResponse(models.Model):
                 line.write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))
                 continue
-        self.env['product.template'].search([('published','=',False)]).action_archive()
+        unpublished_products = self.env['product.template'].search([('published','=',False)])
+        self.env['stock.warehouse.orderpoint'].search([('product_id','in',unpublished_products.mapped('product_variant_ids').ids)]).action_archive()
+        unpublished_products.action_archive()
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
         ).unlink()
