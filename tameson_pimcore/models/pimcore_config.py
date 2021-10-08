@@ -6,6 +6,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from requests.exceptions import ConnectionError
 
 from gql import gql
 from gql.transport import requests
@@ -113,6 +114,7 @@ class PimcoreConfig(models.Model):
     )
     active = fields.Boolean(default=True)
     limit = fields.Integer(string="Pull limit", default=300)
+    concurrent = fields.Integer(string="Concurrent connections", default=50)
 
     def action_cron_fetch_products(self):
         for record in self.search([]):
@@ -122,12 +124,17 @@ class PimcoreConfig(models.Model):
         self.ensure_one()
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder("getProductListing", "edges", product_nodes)
-        record_count = (
-            pim_request.execute(gql("{getProductListing(published: false) {totalCount}}"))
-            .get("getProductListing", {})
-            .get("totalCount", 0)
-        )
-        result = pim_request.execute_async(product_query, 0, record_count, self.limit)
+
+        try:
+            record_count = (
+                pim_request.execute(gql("{getProductListing(published: false) {totalCount}}"))
+                .get("getProductListing", {})
+                .get("totalCount", 0)
+            )
+            result = pim_request.execute_async(product_query, 0, record_count, self.limit, self.concurrent)
+        except ConnectionError:
+            raise UserError("Unable to connect with Pimcore server.")
+
         all_result = product_query.parse_results(result)
         lines_ids = []
         for node in all_result:

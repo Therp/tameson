@@ -152,6 +152,7 @@ class PimcoreProductResponse(models.Model):
                     Line.browse(row[0]).update_product(row[1], Eur, Gbp, Usd)
                     _logger.warn("Updated from %d / %d " % (count, len(updated)))
             except Exception as e:
+                _logger.warn("Error from %d / %d " % (count, len(updated)))
                 _logger.warn(str(e))
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
         bomlines = Line.search(
@@ -163,7 +164,7 @@ class PimcoreProductResponse(models.Model):
         )
         for line in bomlines:
             try:
-                line.create_bom()
+                line.sudo().create_bom()
             except Exception as e:
                 line.write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))

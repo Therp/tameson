@@ -25,6 +25,7 @@ Tameson PIMCore Integration
     "data": [
         "views/pimcore_config.xml",
         "views/pimcore_response.xml",
+        "security/groups.xml",
         "security/ir.model.access.csv",
         "data/cron.xml",
         "data/data.xml",

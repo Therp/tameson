@@ -5,9 +5,8 @@ from gql.transport.aiohttp import AIOHTTPTransport
 from gql.transport.aiohttp import log as aio_logger
 import asyncio
 import logging
-
-# aio_logger.setLevel(logging.WARNING)
-# req_logger.setLevel(logging.WARNING)
+aio_logger.setLevel(logging.WARNING)
+req_logger.setLevel(logging.WARNING)
 
 
 class PimcoreRequest(object):
@@ -30,22 +29,20 @@ class PimcoreRequest(object):
         result = self.sync_client.execute(gql_query)
         return result
 
-    def execute_async(self, queryb, start, quantity, batch_size):
-        return asyncio.run(self.execute_async_main(queryb, start, quantity, batch_size))
+    def execute_async(self, queryb, start, quantity, batch_size, concurrent):
+        return asyncio.run(self.execute_async_main(queryb, start, quantity, batch_size, concurrent))
 
-    async def execute_async_main(self, queryb, start, quantity, batch_size):
-        filters = (
+    async def execute_async_main(self, queryb, start, quantity, batch_size, concurrent):
+        results = []
+        filters = [
             queryb.get_query("first: %d, after: %d" % (batch_size, after))
             for after in range(start, start + quantity, batch_size)
-        )
-        async with Client(
-            transport=self.async_transport,
-            fetch_schema_from_transport=False,
-            execute_timeout=1200,
-        ) as session:
-            results = await asyncio.gather(
-                *(asyncio.create_task(session.execute(f)) for f in filters)
-            )
+        ]
+        async with Client(transport=self.async_transport, fetch_schema_from_transport=False, execute_timeout=1200,) as session:
+            for cons in range(0, len(filters), concurrent):
+                results += await asyncio.gather(
+                    *(asyncio.create_task(session.execute(f)) for f in filters[cons:cons+concurrent])
+                )
         return results
 
 
