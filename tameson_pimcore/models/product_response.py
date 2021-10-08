@@ -242,12 +242,17 @@ class PimcoreProductResponseLine(models.Model):
 
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env["product.category"]
-        image_response = requests.get(
-            "%s/%s" % (self.response_id.config_id.api_host, self.image)
-        )
-        if image_response.status_code == 200:
-            image_data = codecs.encode(image_response.content, "base64")
-        else:
+
+        try:
+            image_response = requests.get(
+                "%s/%s" % (self.response_id.config_id.api_host, self.image),
+                timeout=60
+            )
+            if image_response.status_code == 200:
+                image_data = codecs.encode(image_response.content, "base64")
+            else:
+                image_data = False
+        except Exception as e:
             image_data = False
 
         vals = self.get_product_vals()
