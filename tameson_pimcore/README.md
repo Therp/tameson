@@ -1,3 +1,22 @@
+## Groups, menues and crons
+
+### Groups
+
+- (Debug on) Users > Select User > Technical settings > Pimcore to allow user full pimcore sync permission
+
+### Menu
+
+- Inventory > Configuration > Pimcore Config: Pimcore server configurations defined here
+- Inventory > Configuration > Pimcore Response: List pimcore response objects here, can be used for view/monitoring purpose, manually import
+- Inventory > Configuration > Pimcore Response Line: List pimcore response line objects here, can be used for view/monitoring purpose, canbe grouped by status, response no# etc.
+
+### Cron
+
+- Pimcore: Import data: run hourly, will import `draft` data from pimcore responses pulled and stored in odoo
+- Pimcore: Pull data: run daily, will pull full Pimcore product database daily and store in a pimcore response object
+- Pimcore: Pull data (New): run hourly, will pull new data only from pimcore server based on modification date comparison and store in a pimcore response object
+
+
 ## Data pulling
 
 Two types of automated data pulling is implemented:
