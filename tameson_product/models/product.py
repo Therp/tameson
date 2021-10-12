@@ -50,6 +50,8 @@ class ProductTemplate(models.Model):
     modification_date = fields.Float()
     pimcore_id = fields.Char("Pimcore ID")
     brand_name = fields.Char("Brand")
+    full_path = fields.Char("Full Path")
+    category_path = fields.Char("Category Path")
     manufacturer_name = fields.Char("Manufacturer")
     manufacturer_pn = fields.Char("Manufacturer Part Number ")
     oversized = fields.Boolean(string=_('Oversized'))

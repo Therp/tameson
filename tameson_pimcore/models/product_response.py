@@ -377,6 +377,8 @@ class PimcoreProductResponseLine(models.Model):
             "non_returnable": self.non_returnable,
             "t_web_sales": self.web_sales,
             "published": self.published,
+            "full_path": self.full_path,
+            "category_path": self.categories,
         }
 
     def create_bom(self, bom_type="phantom"):

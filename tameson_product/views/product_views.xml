@@ -30,6 +30,8 @@
                             <field name="oversized" />
                             <field name="imperial" />
                             <field name="non_returnable" />
+                            <field name="full_path" />
+                            <field name="category_path" />
                         </group>
                     </group>
                 </page>
@@ -71,6 +73,8 @@
                             <field name="oversized" />
                             <field name="imperial" />
                             <field name="non_returnable" />
+                            <field name="full_path" />
+                            <field name="category_path" />
                         </group>
                     </group>
                 </page>
