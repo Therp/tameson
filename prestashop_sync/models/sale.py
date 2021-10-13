@@ -212,7 +212,10 @@ class SaleOrderPresta(models.Model):
                 'prestashop_module': module,
                 'channel_process_payment': True
             })
-            self.action_confirm()
+            try:
+                self.action_confirm()
+            except Exception as e:
+                _logger.warn("Unable to confirm prestashop order %s Exception: %s" % (self.name, str(e)))
         return True
     
     def confirm_invoicepayment(self):
@@ -227,7 +230,7 @@ class SaleOrderPresta(models.Model):
         return issues
 
     def process_channel_payment(self):
-        for record in self.search([('channel_process_payment', '=', True),('prestashop_id','!=',False)]):
+        for record in self.search([('channel_process_payment', '=', True), ('prestashop_id','!=',False), ('state', '=', 'sale')]):
             if record.prestashop_module and record.prestashop_module == 'adyencw_paypal':
                 name = 'paypal'
             elif record.prestashop_module and record.prestashop_module.startswith('adyencw'):
@@ -268,5 +271,11 @@ class SaleOrderPresta(models.Model):
             vals.append({
                 'name': 'Prestashop order confirmed but invoice not paid',
                 'orders': orders.mapped(lambda o: (o.id, o.name))
+            })
+        not_confirmed_orders = self.search([('channel_process_payment', '=', True), ('state', '!=', 'sale')])        
+        if orders:
+            vals.append({
+                'name': 'Prestashop orders not confirmed.',
+                'orders': not_confirmed_orders.mapped(lambda o: (o.id, o.name))
             })
         return vals
