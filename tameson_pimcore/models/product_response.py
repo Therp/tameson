@@ -256,10 +256,18 @@ class PimcoreProductResponseLine(models.Model):
             image_data = False
 
         vals = self.get_product_vals()
-        final_categ = create_or_find_categ(self.env, self.full_path)
-        ecom_categ = create_or_find_categ(
-            self.env, self.categories, model="product.public.category", start=2, end=0
-        )
+        try:
+            final_categ = create_or_find_categ(self.env, self.full_path)
+        except Exception as e:
+            final_categ = self.env["product.category"].browse(1)
+        
+        try:
+            ecom_categ = create_or_find_categ(
+                self.env, self.categories, model="product.public.category", start=2, end=0
+            )
+        except Exception as e:
+            ecom_categ = self.env["product.public.category"]
+
         vals.update(
             {
                 "image_1920": image_data,
