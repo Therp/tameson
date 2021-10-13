@@ -174,7 +174,7 @@ class PimcoreProductResponse(models.Model):
         unpublished_products.action_archive()
         published_products = self.env['product.template'].search([('published', '=', True), ('active', '=', False)])
         published_products.action_unarchive()
-        self.env['stock.warehouse.orderpoint'].search([('product_id','in',published_products.mapped('product_variant_ids').ids)]).action_unarchive()
+        self.env['stock.warehouse.orderpoint'].search([('active','=',False), ('product_id','in',published_products.mapped('product_variant_ids').ids)]).action_unarchive()
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
         ).unlink()
