@@ -260,14 +260,14 @@ class PimcoreProductResponseLine(models.Model):
             final_categ = create_or_find_categ(self.env, self.full_path)
         except Exception as e:
             final_categ = self.env["product.category"].browse(1)
-        
+            self.error = 'Product category recursion condition'
         try:
             ecom_categ = create_or_find_categ(
                 self.env, self.categories, model="product.public.category", start=2, end=0
             )
         except Exception as e:
             ecom_categ = self.env["product.public.category"]
-
+            self.error = 'Ecommerce category recursion condition'
         vals.update(
             {
                 "image_1920": image_data,
