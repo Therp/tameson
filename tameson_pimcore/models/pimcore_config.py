@@ -6,6 +6,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from requests.exceptions import ConnectionError
 
 from gql import gql
 from gql.transport import requests
@@ -17,7 +18,6 @@ import logging
 _logger = logging.getLogger(__name__)
 
 static_getter = lambda v: v
-sku_getter = lambda v: isinstance(v, str) and v.upper()
 float_getter = lambda v: isinstance(v, dict) and v.get("value", 0.0)
 image_getter = lambda v: v and v[0].get("assetThumb", "")
 bom_getter = lambda v: v and ",".join(
@@ -34,7 +34,7 @@ product_nodes = {
     "name_es": {"field": 'Name (language: "es")', "getter": static_getter},
     "pimcore_id": {"field": "id", "getter": static_getter},
     "full_path": {"field": "fullpath", "getter": static_getter},
-    "sku": {"field": "SKU", "getter": sku_getter},
+    "sku": {"field": "SKU", "getter": static_getter},
     "intrastat": {"field": "Intrastat", "getter": static_getter},
     "ean": {"field": "EAN", "getter": static_getter},
     "width": {"field": "Width {value}", "getter": float_getter},
@@ -68,6 +68,7 @@ product_nodes = {
     "oversized": {"field": "Oversized", "getter": static_getter},
     "non_returnable": {"field": "NonReturnable", "getter": static_getter},
     "imperial": {"field": "Imperial", "getter": static_getter},
+    "published": {"field": "published", "getter": static_getter},
     "brand_name": {
         "field": "Manufacturer{... on object_Brand{Name}}",
         "getter": single_field_m2one,
@@ -112,21 +113,28 @@ class PimcoreConfig(models.Model):
         required=True,
     )
     active = fields.Boolean(default=True)
-    limit = fields.Integer(string="Pull limit", default=300)
+    limit = fields.Integer(string="Pull limit", default=100)
+    concurrent = fields.Integer(string="Concurrent connections", default=50)
 
     def action_cron_fetch_products(self):
         for record in self.search([]):
             record.action_fetch_products()
 
     def action_fetch_products(self):
+        self.ensure_one()
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder("getProductListing", "edges", product_nodes)
-        record_count = (
-            pim_request.execute(gql("{getProductListing {totalCount}}"))
-            .get("getProductListing", {})
-            .get("totalCount", 0)
-        )
-        result = pim_request.execute_async(product_query, 0, record_count, self.limit)
+
+        try:
+            record_count = (
+                pim_request.execute(gql("{getProductListing(published: false) {totalCount}}"))
+                .get("getProductListing", {})
+                .get("totalCount", 0)
+            )
+            result = pim_request.execute_async(product_query, 0, record_count, self.limit, self.concurrent)
+        except ConnectionError:
+            raise UserError("Unable to connect with Pimcore server.")
+
         all_result = product_query.parse_results(result)
         lines_ids = []
         for node in all_result:
@@ -151,6 +159,7 @@ class PimcoreConfig(models.Model):
             record.action_fetch_new()
 
     def action_fetch_new(self):
+        self.ensure_one()
         last_mdate = (
             self.env["product.template"]
             .search(

@@ -12,7 +12,6 @@ from odoo.tools.float_utils import float_is_zero, float_compare
 from dateutil.relativedelta import relativedelta
 
 import logging
-
 _logger = logging.getLogger(__name__)
 
 CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}
@@ -124,12 +123,14 @@ class PimcoreProductResponse(models.Model):
         self.env.cr.execute(
             """
         select rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) from pimcore_product_response_line rl
-        left join product_template pt on rl.sku = pt.default_code
+        left join product_template pt on lower(rl.sku) = lower(pt.default_code)
         where rl.state = 'draft'
         """
         )
         data = self.env.cr.fetchall()
         skipped = [row[0] for row in data if row[2] <= row[3]]
+        updated = [row for row in data if row[2] > row[3]]
+        _logger.warn("Skipped lines: %d" % len(skipped))
         Line = self.env["pimcore.product.response.line"]
         self.env["pimcore.product.response.line"].browse(skipped).unlink()
         Eur = self.env["product.pricelist"].search(
@@ -141,13 +142,17 @@ class PimcoreProductResponse(models.Model):
         Usd = self.env["product.pricelist"].search(
             [("currency_id", "=", "USD")], limit=1
         )
-        for row in data:
+        _logger.warn("Start importing data from %d lines" % len(updated))
+        for count, row in enumerate(updated):
             try:
                 if not row[1]:
-                    Line.browse(row[0]).create_product(Eur, Gbp, Usd)
+                    Line.browse(row[0]).sudo().create_product(Eur, Gbp, Usd)
+                    _logger.warn("Created from %d / %d " % (count, len(updated)))
                 elif row[2] > row[3]:
-                    Line.browse(row[0]).update_product(row[1], Eur, Gbp, Usd)
+                    Line.browse(row[0]).sudo().update_product(row[1], Eur, Gbp, Usd)
+                    _logger.warn("Updated from %d / %d " % (count, len(updated)))
             except Exception as e:
+                _logger.warn("Error from %d / %d " % (count, len(updated)))
                 _logger.warn(str(e))
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
         bomlines = Line.search(
@@ -159,11 +164,17 @@ class PimcoreProductResponse(models.Model):
         )
         for line in bomlines:
             try:
-                line.create_bom()
+                line.sudo().create_bom()
             except Exception as e:
                 line.write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))
                 continue
+        unpublished_products = self.env['product.template'].search([('published','=',False)])
+        self.env['stock.warehouse.orderpoint'].search([('product_id','in',unpublished_products.mapped('product_variant_ids').ids)]).action_archive()
+        unpublished_products.action_archive()
+        published_products = self.env['product.template'].search([('published', '=', True), ('active', '=', False)])
+        published_products.action_unarchive()
+        self.env['stock.warehouse.orderpoint'].search([('active','=',False), ('product_id','in',published_products.mapped('product_variant_ids').ids)]).action_unarchive()
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
         ).unlink()
@@ -223,6 +234,7 @@ class PimcoreProductResponseLine(models.Model):
     non_returnable = fields.Boolean()
     imperial = fields.Boolean()
     web_sales = fields.Boolean()
+    published = fields.Boolean()
     error = fields.Text()
     short_description = fields.Text()
     replacement_sku = fields.Char()
@@ -233,19 +245,32 @@ class PimcoreProductResponseLine(models.Model):
 
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env["product.category"]
-        image_response = requests.get(
-            "%s/%s" % (self.response_id.config_id.api_host, self.image)
-        )
-        if image_response.status_code == 200:
-            image_data = codecs.encode(image_response.content, "base64")
-        else:
+
+        try:
+            image_response = requests.get(
+                "%s/%s" % (self.response_id.config_id.api_host, self.image),
+                timeout=60
+            )
+            if image_response.status_code == 200:
+                image_data = codecs.encode(image_response.content, "base64")
+            else:
+                image_data = False
+        except Exception as e:
             image_data = False
 
         vals = self.get_product_vals()
-        final_categ = create_or_find_categ(self.env, self.full_path)
-        ecom_categ = create_or_find_categ(
-            self.env, self.categories, model="product.public.category", start=2, end=0
-        )
+        try:
+            final_categ = create_or_find_categ(self.env, self.full_path)
+        except Exception as e:
+            final_categ = self.env["product.category"].browse(1)
+            self.error = 'Product category recursion condition'
+        try:
+            ecom_categ = create_or_find_categ(
+                self.env, self.categories, model="product.public.category", start=2, end=0
+            )
+        except Exception as e:
+            ecom_categ = self.env["product.public.category"]
+            self.error = 'Ecommerce category recursion condition'
         vals.update(
             {
                 "image_1920": image_data,
@@ -362,6 +387,9 @@ class PimcoreProductResponseLine(models.Model):
             "imperial": self.imperial,
             "non_returnable": self.non_returnable,
             "t_web_sales": self.web_sales,
+            "published": self.published,
+            "full_path": self.full_path,
+            "category_path": self.categories,
         }
 
     def create_bom(self, bom_type="phantom"):

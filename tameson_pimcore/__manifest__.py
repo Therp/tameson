@@ -25,9 +25,11 @@ Tameson PIMCore Integration
     "data": [
         "views/pimcore_config.xml",
         "views/pimcore_response.xml",
+        "security/groups.xml",
         "security/ir.model.access.csv",
         "data/cron.xml",
         "data/data.xml",
     ],
     "installable": True,
+    'post_init_hook': 'add_pimcore_modification_date',
 }
