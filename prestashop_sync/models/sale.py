@@ -273,7 +273,7 @@ class SaleOrderPresta(models.Model):
                 'orders': orders.mapped(lambda o: (o.id, o.name))
             })
         not_confirmed_orders = self.search([('channel_process_payment', '=', True), ('state', '!=', 'sale')])        
-        if orders:
+        if not_confirmed_orders:
             vals.append({
                 'name': 'Prestashop orders not confirmed.',
                 'orders': not_confirmed_orders.mapped(lambda o: (o.id, o.name))
