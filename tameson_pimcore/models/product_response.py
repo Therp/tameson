@@ -103,6 +103,8 @@ class PimcoreProductResponse(models.Model):
     _name = "pimcore.product.response"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "PimcoreProductResponse"
+    _rec_name = 'name'
+    _order = 'name DESC'
 
     name = fields.Char(default="New")
     type = fields.Selection(selection=[("full", "Full"), ("new", "New")])
