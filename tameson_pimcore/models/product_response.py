@@ -158,9 +158,8 @@ class PimcoreProductResponse(models.Model):
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
         bomlines = Line.search(
             [
-                ("bom_import_done", "=", False),
+                ("bom_import_done", "=", True),
                 ("bom", "!=", False),
-                ("state", "=", "created"),
             ]
         )
         for line in bomlines:
@@ -228,7 +227,7 @@ class PimcoreProductResponseLine(models.Model):
     gbp = fields.Float()
     usd = fields.Float()
     supplier_price = fields.Float()
-    bom_import_done = fields.Boolean()
+    bom_import_done = fields.Boolean(default=False)
     use_up = fields.Boolean()
     backorder = fields.Boolean()
     oversized = fields.Boolean()
@@ -293,7 +292,7 @@ class PimcoreProductResponseLine(models.Model):
         add_pricelist_item(Eur, product, self.wholesaleprice / 100)
         add_pricelist_item(Gbp, product, self.gbp)
         add_pricelist_item(Usd, product, self.usd)
-        self.write({"state": "created"})
+        self.write({"state": "created", 'bom_import_done': True})
         self.env.cr.commit()
 
     def update_product(self, product_id, Eur, Gbp, Usd):
@@ -331,8 +330,12 @@ class PimcoreProductResponseLine(models.Model):
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
         search_or_add_pricelist_item(Gbp, product, self.gbp)
         search_or_add_pricelist_item(Usd, product, self.usd)
+        write_vals = {"state": "updated"}
+        if self.bom and not product.bom_ids.filtered(lambda b: b.bom_signature == self.bom):
+            write_vals.update({'bom_import_done': True})
+            product.bom_ids.action_archive()
         product.write(vals)
-        self.write({"state": "updated"})
+        self.write(write_vals)
         self.env.cr.commit()
 
     def get_product_vals(self):
@@ -416,12 +419,13 @@ class PimcoreProductResponseLine(models.Model):
                 "product_tmpl_id": main_product.id,
                 "bom_line_ids": bom_lines,
                 "type": bom_type,
+                "bom_signature": self.bom
             }
         )
         main_product.standard_price = (
             main_product.product_variant_id._get_price_from_bom()
         )
-        self.bom_import_done = True
+        self.bom_import_done = False
         self.env.cr.commit()
 
     def get_supplier_info(self):
