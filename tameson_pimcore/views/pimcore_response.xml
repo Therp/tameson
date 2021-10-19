@@ -10,8 +10,8 @@
             <field name="active" eval="True" />
             <field name="arch" type="xml">
                 <tree string="model_tree" create="false" delete="true" edit="false">
-                    <field name="create_date" />
                     <field name="name" />
+                    <field name="create_date" />
                     <field name="type" />
                 </tree>
             </field>
