@@ -12,6 +12,9 @@ from odoo.exceptions import UserError, ValidationError
 class MrpBOM(models.Model):
     _inherit = 'mrp.bom'
 
+    
+    bom_signature = fields.Char(index=True)
+    
     def get_bom_signature(self):
         self.ensure_one()
         return ','.join(self.bom_line_ids.mapped(lambda l: "%s,%.0f" % (l.product_id.default_code, l.product_qty)))
