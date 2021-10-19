@@ -23,19 +23,20 @@ def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
     categ_path = path.split("/")[start:end]
     child_categ = env[model]
     final_categ = env[model]
-    for categ in categ_path[::-1]:
-        break_loop = False
-        this_categ = child_categ.search([("name", "=", categ)], limit=1)
-        if not this_categ:
-            this_categ = child_categ.create({"name": categ})
-        else:
-            break_loop = True
-        child_categ.parent_id = this_categ
-        child_categ = this_categ
-        if not final_categ:
-            final_categ = this_categ
-        if break_loop:
-            break
+    if path:
+        for categ in categ_path[::-1]:
+            break_loop = False
+            this_categ = child_categ.search([("name", "=", categ)], limit=1)
+            if not this_categ:
+                this_categ = child_categ.create({"name": categ})
+            else:
+                break_loop = True
+            child_categ.parent_id = this_categ
+            child_categ = this_categ
+            if not final_categ:
+                final_categ = this_categ
+            if break_loop:
+                break
     return final_categ
 
 
