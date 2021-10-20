@@ -43,7 +43,7 @@ product_nodes = {
     "weight": {"field": "Weight {value}", "getter": float_getter},
     "volume": {"field": "Volume {value}", "getter": float_getter},
     "modification_date": {"field": "modificationDate", "getter": static_getter},
-    "wholesaleprice": {"field": "wholesalePrice", "getter": static_getter},
+    "eur": {"field": "PriceEUR", "getter": static_getter},
     "gbp": {"field": "PriceGBP", "getter": static_getter},
     "usd": {"field": "PriceUSD", "getter": static_getter},
     "image": {
