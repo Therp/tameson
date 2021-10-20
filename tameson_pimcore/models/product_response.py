@@ -321,7 +321,7 @@ class PimcoreProductResponseLine(models.Model):
                 seller.write(seller_vals)
             else:
                 vals.update(seller_ids=[(0, 0, seller_vals)])
-        if product.public_categ_ids[:1].name != self.categories.split("/")[-1]:
+        if self.categories and product.public_categ_ids[:1].name != self.categories.split("/")[-1]:
             ecom_categ = create_or_find_categ(
                 self.env,
                 self.categories,
