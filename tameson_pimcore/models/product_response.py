@@ -18,12 +18,12 @@ CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}
 
 
 def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
-    if end == 0:
-        end = len(path.split("/"))
-    categ_path = path.split("/")[start:end]
     child_categ = env[model]
     final_categ = env[model]
     if path:
+        if end == 0:
+            end = len(path.split("/"))
+        categ_path = path.split("/")[start:end]
         for categ in categ_path[::-1]:
             break_loop = False
             this_categ = child_categ.search([("name", "=", categ)], limit=1)
