@@ -97,8 +97,8 @@
                     <field name="response_id" />
                     <!-- <filter string="My Orders" domain="[('user_id', '=', uid)]" name="my_sale_orders_filter"/> -->
                     <group expand="0" string="Group By">
-                        <filter string="Response" name="response_id" domain="[]" context="{'group_by': 'response_id'}"/>
-                        <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Response" name="group_response_id" domain="[]" context="{'group_by': 'response_id'}"/>
+                        <filter string="Status" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
                     </group>
 
                 </search>
@@ -122,7 +122,7 @@
             <field name="view_mode">tree</field>
             <field name="target">current</field>
             <field name="domain">[]</field>
-            <field name="context">\{}</field>
+            <field name="context">{'search_default_group_response_id': True, 'search_default_group_state': True}</field>
             <field name="search_view_id" ref="pimcore_product_response_line_search" />
         </record>
         
