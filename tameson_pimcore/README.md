@@ -60,3 +60,8 @@ If not existing SKU in Odoo system, the new SKU pulled is imported as a new prod
 
 - BOM
 - Vendor price information
+
+## Error checking
+- Error are reported per line in pimcore response
+- If errors are generated while updating a product from pimcore response line, it  will be marked as `error` state
+- Lines are grouped by response id and state in pimcore response line menu, for easily check or filter.
