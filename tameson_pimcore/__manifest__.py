@@ -31,5 +31,4 @@ Tameson PIMCore Integration
         "data/data.xml",
     ],
     "installable": True,
-    'post_init_hook': 'add_pimcore_modification_date',
 }
