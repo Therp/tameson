@@ -232,7 +232,10 @@ class SaleOrderPresta(models.Model):
     def process_channel_payment(self):
         for record in self.search([('channel_process_payment', '=', True), ('prestashop_id','!=',False), ('state', '=', 'sale')]):
             if record.prestashop_module and record.prestashop_module == 'adyencw_paypal':
-                name = 'paypal'
+                if record.currency_id.name == 'USD':
+                    name = 'PayPal USD'
+                else:
+                    name = 'PayPal EUR'
             elif record.prestashop_module and record.prestashop_module.startswith('adyencw'):
                 name = 'adyen'
             else:
