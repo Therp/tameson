@@ -291,7 +291,7 @@ class PimcoreProductResponseLine(models.Model):
         add_translation(self.env, product, "fr_FR", self.name, self.name_fr)
         add_translation(self.env, product, "de_DE", self.name, self.name_de)
         add_translation(self.env, product, "es_ES", self.name, self.name_es)
-        add_pricelist_item(Eur, product, self.eur / 100)
+        add_pricelist_item(Eur, product, self.eur)
         add_pricelist_item(Gbp, product, self.gbp)
         add_pricelist_item(Usd, product, self.usd)
         self.write({"state": "created", 'bom_import_done': True})
@@ -375,7 +375,7 @@ class PimcoreProductResponseLine(models.Model):
             "t_length": self.depth,
             "t_width": self.width,
             "type": "product",
-            "list_price": self.eur / 100,
+            "list_price": self.eur,
             "modification_date": self.modification_date,
             "hs_code": self.intrastat,
             "intrastat_id": commodity_code.id,
