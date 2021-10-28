@@ -212,10 +212,7 @@ class SaleOrderPresta(models.Model):
                 'prestashop_module': module,
                 'channel_process_payment': True
             })
-            try:
-                self.action_confirm()
-            except Exception as e:
-                _logger.warn("Unable to confirm prestashop order %s Exception: %s" % (self.name, str(e)))
+            self.action_confirm()
         return True
     
     def confirm_invoicepayment(self):
