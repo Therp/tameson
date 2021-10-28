@@ -24,14 +24,17 @@ def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
         if end == 0:
             end = len(path.split("/"))
         categ_path = path.split("/")[start:end]
-        for categ in categ_path[::-1]:
+        categ_path_len = len(categ_path)
+        for pos, categ in enumerate(categ_path[::-1]):
+            this_path = ' / '.join(categ_path[:categ_path_len-pos])
             break_loop = False
-            this_categ = child_categ.search([("name", "=", categ)], limit=1)
+            this_categ = child_categ.search([("complete_name", "=", this_path)], limit=1)
             if not this_categ:
                 this_categ = child_categ.create({"name": categ})
             else:
                 break_loop = True
-            child_categ.parent_id = this_categ
+            if child_categ:
+                child_categ.parent_id = this_categ
             child_categ = this_categ
             if not final_categ:
                 final_categ = this_categ
