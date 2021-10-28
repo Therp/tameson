@@ -18,24 +18,28 @@ CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}
 
 
 def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
-    if end == 0:
-        end = len(path.split("/"))
-    categ_path = path.split("/")[start:end]
     child_categ = env[model]
     final_categ = env[model]
-    for categ in categ_path[::-1]:
-        break_loop = False
-        this_categ = child_categ.search([("name", "=", categ)], limit=1)
-        if not this_categ:
-            this_categ = child_categ.create({"name": categ})
-        else:
-            break_loop = True
-        child_categ.parent_id = this_categ
-        child_categ = this_categ
-        if not final_categ:
-            final_categ = this_categ
-        if break_loop:
-            break
+    if path:
+        if end == 0:
+            end = len(path.split("/"))
+        categ_path = path.split("/")[start:end]
+        categ_path_len = len(categ_path)
+        for pos, categ in enumerate(categ_path[::-1]):
+            this_path = ' / '.join(categ_path[:categ_path_len-pos])
+            break_loop = False
+            this_categ = child_categ.search([("complete_name", "=", this_path)], limit=1)
+            if not this_categ:
+                this_categ = child_categ.create({"name": categ})
+            else:
+                break_loop = True
+            if child_categ:
+                child_categ.parent_id = this_categ
+            child_categ = this_categ
+            if not final_categ:
+                final_categ = this_categ
+            if break_loop:
+                break
     return final_categ
 
 
@@ -102,6 +106,8 @@ class PimcoreProductResponse(models.Model):
     _name = "pimcore.product.response"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "PimcoreProductResponse"
+    _rec_name = 'name'
+    _order = 'name DESC'
 
     name = fields.Char(default="New")
     type = fields.Selection(selection=[("full", "Full"), ("new", "New")])
@@ -157,9 +163,8 @@ class PimcoreProductResponse(models.Model):
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
         bomlines = Line.search(
             [
-                ("bom_import_done", "=", False),
+                ("bom_import_done", "=", True),
                 ("bom", "!=", False),
-                ("state", "=", "created"),
             ]
         )
         for line in bomlines:
@@ -223,11 +228,11 @@ class PimcoreProductResponseLine(models.Model):
     weight = fields.Float()
     volume = fields.Float()
     modification_date = fields.Float()
-    wholesaleprice = fields.Float()
+    eur = fields.Float()
     gbp = fields.Float()
     usd = fields.Float()
     supplier_price = fields.Float()
-    bom_import_done = fields.Boolean()
+    bom_import_done = fields.Boolean(default=False)
     use_up = fields.Boolean()
     backorder = fields.Boolean()
     oversized = fields.Boolean()
@@ -289,10 +294,10 @@ class PimcoreProductResponseLine(models.Model):
         add_translation(self.env, product, "fr_FR", self.name, self.name_fr)
         add_translation(self.env, product, "de_DE", self.name, self.name_de)
         add_translation(self.env, product, "es_ES", self.name, self.name_es)
-        add_pricelist_item(Eur, product, self.wholesaleprice / 100)
+        add_pricelist_item(Eur, product, self.eur)
         add_pricelist_item(Gbp, product, self.gbp)
         add_pricelist_item(Usd, product, self.usd)
-        self.write({"state": "created"})
+        self.write({"state": "created", 'bom_import_done': True})
         self.env.cr.commit()
 
     def update_product(self, product_id, Eur, Gbp, Usd):
@@ -319,7 +324,7 @@ class PimcoreProductResponseLine(models.Model):
                 seller.write(seller_vals)
             else:
                 vals.update(seller_ids=[(0, 0, seller_vals)])
-        if product.public_categ_ids[:1].name != self.categories.split("/")[-1]:
+        if self.categories and product.public_categ_ids[:1].name != self.categories.split("/")[-1]:
             ecom_categ = create_or_find_categ(
                 self.env,
                 self.categories,
@@ -330,8 +335,12 @@ class PimcoreProductResponseLine(models.Model):
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
         search_or_add_pricelist_item(Gbp, product, self.gbp)
         search_or_add_pricelist_item(Usd, product, self.usd)
+        write_vals = {"state": "updated"}
+        if self.bom and not product.bom_ids.filtered(lambda b: b.bom_signature == self.bom):
+            write_vals.update({'bom_import_done': True})
+            product.bom_ids.action_archive()
         product.write(vals)
-        self.write({"state": "updated"})
+        self.write(write_vals)
         self.env.cr.commit()
 
     def get_product_vals(self):
@@ -369,7 +378,7 @@ class PimcoreProductResponseLine(models.Model):
             "t_length": self.depth,
             "t_width": self.width,
             "type": "product",
-            "list_price": self.wholesaleprice / 100,
+            "list_price": self.eur,
             "modification_date": self.modification_date,
             "hs_code": self.intrastat,
             "intrastat_id": commodity_code.id,
@@ -415,12 +424,13 @@ class PimcoreProductResponseLine(models.Model):
                 "product_tmpl_id": main_product.id,
                 "bom_line_ids": bom_lines,
                 "type": bom_type,
+                "bom_signature": self.bom
             }
         )
         main_product.standard_price = (
             main_product.product_variant_id._get_price_from_bom()
         )
-        self.bom_import_done = True
+        self.bom_import_done = False
         self.env.cr.commit()
 
     def get_supplier_info(self):
