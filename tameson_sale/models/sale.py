@@ -62,10 +62,10 @@ class SaleOrder(models.Model):
     
     @api.onchange('any_non_returnable')
     def _onchange_non_returnable(self):
-        pattern = 'Warning: \S+ is manufactured on demand and cannot be returned or cancelled.'
+        pattern = 'Warning: We kindly inform you that this item \S+ cannot be returned. This is manufactured on demand for you.'
         note = re.sub(pattern, "", self.note)
         if self.any_non_returnable:
-            warning_text = 'Warning: %s is manufactured on demand and cannot be returned or cancelled.' % self.non_returnable_skus
+            warning_text = 'Warning: We kindly inform you that this item %s cannot be returned. This is manufactured on demand for you.' % self.non_returnable_skus
             note = note + warning_text
         self.note = note
 
