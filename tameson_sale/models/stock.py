@@ -32,7 +32,6 @@ class StockPicking(models.Model):
                 'picking_price': total,
                 'currency': currency,
                 'lines': lines,
-                'picking_id': picking.id,
             })
         return data
 
