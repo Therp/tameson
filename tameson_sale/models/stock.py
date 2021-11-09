@@ -31,6 +31,7 @@ class StockPicking(models.Model):
                 'picking_price': total,
                 'currency': currency,
                 'lines': lines,
+                'picking_id': picking.id,
             })
         return data
 
@@ -58,6 +59,7 @@ class StockMove(models.Model):
             data.append({
                 'picking_id': move.picking_id.id,
                 'move_id': move.id,
+                'product_id': move_product.id,
                 'price': commercial_price,
                 'currency': currency
             })
