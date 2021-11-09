@@ -22,7 +22,17 @@ class StockPicking(models.Model):
             record.source_so_id = self.env['sale.order'].search([('name','=',record.origin)], limit=1)
 
     def get_commercial_price(self):
-        return self.mapped('move_lines').get_commercial_price()
+        data = []
+        for picking in self:
+            lines = picking.move_lines.get_commercial_price()
+            total = sum([line['price'] for line in lines])
+            currency = lines and lines[0]['currency']
+            data.append({
+                'picking_price': total,
+                'currency': currency,
+                'lines': lines,
+            })
+        return data
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
