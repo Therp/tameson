@@ -39,9 +39,9 @@ class StockMove(models.Model):
                 bom_kit = self.env['mrp.bom']._bom_find(product=sale_product, bom_type='phantom')
                 if bom_kit:
                     total_qty = sum(bom_kit.bom_line_ids.mapped('product_qty'))
-                    commercial_price = (sale_line.price_subtotal / sale_line.product_uom_qty) * move.product_uom_qty / total_qty
+                    commercial_price = (sale_line.price_total / sale_line.product_uom_qty) * move.product_uom_qty / total_qty
                 else:
-                    commercial_price = sale_line.price_unit * move.product_uom_qty
+                    commercial_price = (sale_line.price_total / sale_line.product_uom_qty) * move.product_uom_qty
                 currency = sale_line.currency_id.name
             if not commercial_price:
                 commercial_price = move.product_id.list_price
