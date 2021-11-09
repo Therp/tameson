@@ -28,10 +28,10 @@ class StockPicking(models.Model):
             total = sum([line['price'] for line in lines])
             currency = lines and lines[0]['currency']
             data.append({
+                'picking_id': picking.id,
                 'picking_price': total,
                 'currency': currency,
                 'lines': lines,
-                'picking_id': picking.id,
             })
         return data
 
