@@ -45,7 +45,7 @@
                     Warning: <field name="non_returnable_skus" /> is non-returnable.
                 </h2>
                 <h2 class="text-danger" attrs="{'invisible': [('any_use_up','=',False)]}" >
-                    Warning: <field name="uu_skus" /> will be discontinued. <field name="uu_replacement_skus" />.
+                    Warning: <field name="uu_skus" /> will be discontinued. <field name="uu_replacement_skus_en" />
                 </h2>
             </xpath>
         </field>

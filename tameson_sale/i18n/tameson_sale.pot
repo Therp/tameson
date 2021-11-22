@@ -414,3 +414,33 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
 msgid "support@tameson.nl"
 msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid "\nWarning: "
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " will be replaced by "
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " is being discontinued."
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid "\nWarning: We kindly inform you that this item "
+msgstr ""
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " cannot be returned. This is manufactured on demand for you."
+msgstr ""
