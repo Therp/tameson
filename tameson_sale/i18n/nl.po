@@ -472,7 +472,7 @@ msgstr " zal worden vervangen door "
 #: code:addons/tameson_sale/models/sale.py:0
 #, python-format
 msgid " is being discontinued."
-msgstr " wordt stopgezet."
+msgstr " is binnenkort niet meer beschikbaar."
 
 #. module: tameson_sale
 #: code:addons/tameson_sale/models/sale.py:0
@@ -484,4 +484,4 @@ msgstr "\nWaarschuwing: Wij informeren u vriendelijk dat dit item "
 #: code:addons/tameson_sale/models/sale.py:0
 #, python-format
 msgid " cannot be returned. This is manufactured on demand for you."
-msgstr " kan niet worden geretourneerd. Deze wordt op aanvraag voor u vervaardigd."
+msgstr " niet kan worden geretourneerd. Deze wordt op aanvraag voor u gefabriceerd."
