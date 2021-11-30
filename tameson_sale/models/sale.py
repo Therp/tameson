@@ -50,22 +50,46 @@ class SaleOrder(models.Model):
     channel_process_payment = fields.Boolean()
 
     any_non_returnable = fields.Boolean(compute='_check_any_non_returnable')
+    any_use_up = fields.Boolean(compute='_check_any_non_returnable')
     non_returnable_skus = fields.Char(compute='_check_any_non_returnable')
+    uu_skus = fields.Char(compute='_check_any_non_returnable')
+    uu_replacement_skus = fields.Char(compute='_check_any_non_returnable')
+    uu_replacement_skus_en = fields.Char(compute='_check_any_non_returnable')
     
-    @api.depends('order_line.product_id.non_returnable')
+    @api.depends('order_line.product_id.non_returnable', 'order_line.product_id.t_use_up', 'partner_id')
     def _check_any_non_returnable(self):
+        self.env.context = dict(self.env.context, lang=self.partner_id.lang or 'en_US')
         for record in self:
-            products = self.order_line.mapped('product_id').filtered(lambda p: p.non_returnable)
-            record.any_non_returnable = bool(products)
-            record.non_returnable_skus = ','.join(products.mapped('default_code'))
+            nr_products = self.order_line.mapped('product_id').filtered(lambda p: p.non_returnable)
+            record.any_non_returnable = bool(nr_products)
+            record.non_returnable_skus = ','.join(nr_products.mapped('default_code') or [])
+            
+            uu_products = self.order_line.mapped('product_id').filtered(lambda p: p.t_use_up)
+            uur_products = self.order_line.mapped('product_id').filtered(lambda p: p.t_use_up_replacement_sku)
+            record.any_use_up = bool(uu_products)
+            record.uu_skus = ','.join(uu_products.mapped('default_code'))
+            add_text = _(' will be replaced by ')
+            record.uu_replacement_skus = ', '.join(uur_products.mapped(lambda p: p and p.default_code + add_text + p.t_use_up_replacement_sku))
+            record.uu_replacement_skus_en = ', '.join(uur_products.mapped(lambda p: p and p.default_code + ' will be replaced by ' + p.t_use_up_replacement_sku))
 
-    
-    @api.onchange('any_non_returnable')
+    @api.onchange('order_line', 'any_use_up')
+    def _onchange_any_use_up(self):
+        self.env.context = dict(self.env.context, lang=self.partner_id.lang or 'en_US')
+        note = re.sub(_('\nWarning: ') + '\S+' + _(' is being discontinued.'), "", self.note)
+        note = re.sub(' \S+%s\S+,*' % _(' will be replaced by '), "", note)
+        warning_text = ''
+        if self.any_use_up:
+            warning_text = _('\nWarning: ') + self.uu_skus + _(' is being discontinued.') + " " + self.uu_replacement_skus
+            note = note + warning_text
+        self.note = note
+
+    @api.onchange('order_line', 'any_non_returnable')
     def _onchange_non_returnable(self):
-        pattern = 'Warning: \S+ is manufactured on demand and cannot be returned or cancelled.'
+        self.env.context = dict(self.env.context, lang=self.partner_id.lang or 'en_US')
+        pattern = '%s\S+%s' % (_('\nWarning: We kindly inform you that this item '), _(' cannot be returned. This is manufactured on demand for you.'))
         note = re.sub(pattern, "", self.note)
         if self.any_non_returnable:
-            warning_text = 'Warning: %s is manufactured on demand and cannot be returned or cancelled.' % self.non_returnable_skus
+            warning_text = _('\nWarning: We kindly inform you that this item ') + self.non_returnable_skus + _(' cannot be returned. This is manufactured on demand for you.')
             note = note + warning_text
         self.note = note
 

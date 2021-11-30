@@ -25,7 +25,7 @@ class ResPartner(models.Model):
                 if match:
                     raise ValidationError('Duplicate email for contact: %s' % match.name)
 
-    @api.constrains('child_ids.name', 'is_company')
+    @api.constrains('child_ids', 'is_company')
     def check_company_childs(self):
         if self.env.context.get('skip_child_check', False):
             return

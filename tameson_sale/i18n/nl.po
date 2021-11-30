@@ -455,3 +455,33 @@ msgstr ""
 #: model:mail.template,subject:tameson_sale.tameson_sale_order_confirmation
 msgid "Sales order confirmation"
 msgstr "Orderbevestiging"
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid "\nWarning: "
+msgstr "\nWaarschuwing: "
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " will be replaced by "
+msgstr " zal worden vervangen door "
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " is being discontinued."
+msgstr " is binnenkort niet meer beschikbaar."
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid "\nWarning: We kindly inform you that this item "
+msgstr "\nWaarschuwing: Wij informeren u vriendelijk dat dit item "
+
+#. module: tameson_sale
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " cannot be returned. This is manufactured on demand for you."
+msgstr " niet kan worden geretourneerd. Deze wordt op aanvraag voor u gefabriceerd."
