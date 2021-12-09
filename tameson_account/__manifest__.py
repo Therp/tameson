@@ -12,7 +12,8 @@
     'depends': [
         'account_intrastat',  # enterprise
         'l10n_nl_intrastat',  # enterprise, with 'account.move.line.intrastat_product_origin_country_id field'
-        'payment_adyen'
+        'payment_adyen',
+        'account_bank_statement_import_online_paypal',  # online paypal import for interval change
     ],
     'data': [
         'views/account_views.xml',
