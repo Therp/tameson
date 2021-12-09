@@ -262,6 +262,10 @@ class SaleOrder(models.Model):
                 raise ValidationError(msg)
         ret = super(SaleOrder, self).action_confirm()
 
+        ## don't auto create invoice for shopify orders
+        if hasattr(self, 'shopify_order_id') and self.shopify_order_id:
+            return ret
+
         # SO-44999 Create & validate invoice after non-delivery invoice_policy
         # order is confirmed
         if self.t_invoice_policy != 'delivery' and not self.transaction_ids:
