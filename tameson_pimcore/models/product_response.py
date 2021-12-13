@@ -126,13 +126,17 @@ class PimcoreProductResponse(models.Model):
         return super(PimcoreProductResponse, self).create(vals)
 
     def import_product_data(self):
-        self.env.cr.execute(
-            """
-        select rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) from pimcore_product_response_line rl
-        left join product_template pt on lower(rl.sku) = lower(pt.default_code)
-        where rl.state = 'draft'
-        """
-        )
+        self.env.cr.execute("""
+DELETE FROM pimcore_product_response_line
+WHERE id NOT IN
+(
+    SELECT MAX(id) AS id
+    FROM pimcore_product_response_line
+    GROUP BY sku
+);
+SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FROM pimcore_product_response_line rl
+    LEFT JOIN product_template pt on lower(rl.sku) = lower(pt.default_code)
+    WHERE rl.state = 'draft';""")
         data = self.env.cr.fetchall()
         skipped = [row[0] for row in data if row[2] <= row[3]]
         updated = [row for row in data if row[2] > row[3]]
