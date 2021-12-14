@@ -31,6 +31,7 @@
         'tameson_sale',
         'tameson_product',
         'tameson_base',
+        'delivery',
     ],
     'data': [
         'data/params.xml',

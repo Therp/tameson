@@ -308,3 +308,9 @@ class MailComposer(models.TransientModel):
             vals['value']['attachment_ids'] = [(6, 0, attachment.ids)]
 
         return vals
+
+class DeliveryCarrier(models.Model):
+    _inherit = 'delivery.carrier'
+
+    t_aa_shipper_mapping  = fields.Char(string='Active Ant Shipment Mapping',)
+    
