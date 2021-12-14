@@ -21,29 +21,16 @@ class StockPicking(models.Model):
         for record in self:
             record.source_so_id = self.env['sale.order'].search([('name','=',record.origin)], limit=1)
 
-    def get_commercial_price(self):
-        data = []
-        for picking in self:
-            lines = picking.move_lines.get_commercial_price()
-            total = sum([line['price'] for line in lines])
-            currency = lines and lines[0]['currency']
-            data.append({
-                'picking_id': picking.id,
-                'picking_price': total,
-                'currency': currency,
-                'lines': lines,
-            })
-        return data
-
 class StockMove(models.Model):
     _inherit = 'stock.move'
     
-    def get_commercial_price(self):
-        data = []
+    t_aa_comm_price = fields.Float('Commercial Price', compute='_get_commercial_price')
+    t_aa_comm_taxrate = fields.Float('Tax Rate', compute='_get_commercial_price')
+    
+    @api.depends('sale_line_id')
+    def _get_commercial_price(self):
         for move in self:
-            move_product = move.product_id
             commercial_price = 0
-            currency = self.env.user.company_id.currency_id.name
             if move.sale_line_id:
                 sale_line = move.sale_line_id
                 sale_product = sale_line.product_id
@@ -53,14 +40,9 @@ class StockMove(models.Model):
                     commercial_price = (sale_line.price_total / sale_line.product_uom_qty) * move.product_uom_qty / total_qty
                 else:
                     commercial_price = (sale_line.price_total / sale_line.product_uom_qty) * move.product_uom_qty
-                currency = sale_line.currency_id.name
+                tax_rate = move.sale_line_id.tax_id[:1].amount
             if not commercial_price:
                 commercial_price = move.product_id.list_price
-            data.append({
-                'picking_id': move.picking_id.id,
-                'move_id': move.id,
-                'product_id': move_product.id,
-                'price': commercial_price,
-                'currency': currency
-            })
-        return data
+                tax_rate = 0
+            move.t_aa_comm_price = commercial_price
+            move.t_aa_comm_taxrate = tax_rate
