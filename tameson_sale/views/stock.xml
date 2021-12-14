@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <field name="origin" position="after">
                     <field name="source_so_id" attrs="{'invisible': [('source_so_id','=',False)]}"/>
+                    <field name="t_aa_id" attrs="{'invisible': [('t_aa_id','=',False)]}"/>
                 </field>
             </field>
         </record>        

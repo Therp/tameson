@@ -13,13 +13,19 @@ from odoo.exceptions import UserError, ValidationError
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    
+    t_aa_name = fields.Char('Active Ant Name', compute='_get_t_aa_name')
+    t_aa_id = fields.Char('Active Ant ID', readonly=True )
     source_so_id = fields.Many2one(comodel_name='sale.order', compute='_get_source_so')
 
     @api.depends('origin')
     def _get_source_so(self):
         for record in self:
             record.source_so_id = self.env['sale.order'].search([('name','=',record.origin)], limit=1)
+
+    @api.depends('name', 'sale_id')
+    def _get_t_aa_name(self):
+        for record in self:
+            record.t_aa_name = "%s - %s" % (record.sale_id.name, record.name)
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
