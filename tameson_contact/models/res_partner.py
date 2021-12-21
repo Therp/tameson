@@ -7,12 +7,17 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-
-
+from odoo.addons.base_address_extended.models.base_address_extended import STREET_FIELDS
 
 class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'set.help.mixin']
+
+    @api.model
+    def _address_fields(self):
+        res = super(ResPartner, self)._address_fields()
+        res += STREET_FIELDS
+        return res
 
     @api.constrains('email')
     def _check_email(self):
