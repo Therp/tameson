@@ -20,8 +20,12 @@ class SaleOrder(models.Model):
                                    invoice_address, order_response, payment_gateway,
                                    workflow)
         po_ref = order_response.get('metafields', {}).get('po_reference', False)
+        name = order_response.get("name")
         if po_ref:
             vals.update({
-                'client_order_ref': "%s - %s" % (po_ref, order_response.get("name"))
+                'client_order_ref': "%s - %s" % (po_ref, name)
             })
+        vals.update({
+            'origin': "%s - %s" % (instance.shopify_host, name)
+        })
         return vals
