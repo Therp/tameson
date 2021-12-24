@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
     def import_shopify_orders(self, order_data_queue_line, log_book_id):
         order_id = super(SaleOrder, self).import_shopify_orders(order_data_queue_line, log_book_id)
         total_price = json.loads(order_data_queue_line.order_data).get('order',{}).get('total_price',0)
-        if float_compare(total_price, order_id.amount_total, precision_digits=2) != 0:
+        if float_compare(float(total_price), order_id.amount_total, precision_digits=2) != 0:
             raise UserError("Total amount missmatch")
         return order_id
 
