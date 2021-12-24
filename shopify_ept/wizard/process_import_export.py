@@ -44,7 +44,7 @@ class ShopifyProcessImportExport(models.TransientModel):
             #  'Import Payout Report'),
         ],
         string="Operation",
-        default="sync_product")
+        default="export_stock")
     orders_from_date = fields.Datetime(string="From Date")
     orders_to_date = fields.Datetime(string="To Date")
     shopify_instance_ids = fields.Many2many(
