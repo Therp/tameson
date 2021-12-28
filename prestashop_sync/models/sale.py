@@ -287,5 +287,5 @@ class SaleOrderPresta(models.Model):
     def prestashop_match_price(self):
         prestashop_rate = 1.21
         for line in self.order_line:
-            tax_rate = (100 + sum(line.tax_ids.filtered(lambda t: not t.price_include).mapped('amount'))) / 100
+            tax_rate = (100 + sum(line.tax_id.filtered(lambda t: not t.price_include).mapped('amount'))) / 100
             line.price_unit = line.price_unit * prestashop_rate / tax_rate
