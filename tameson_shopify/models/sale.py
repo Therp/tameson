@@ -5,10 +5,10 @@
 ###############################################################################
 
 import json
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
-
+import datetime
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -35,7 +35,9 @@ class SaleOrder(models.Model):
         order_id = super(SaleOrder, self).import_shopify_orders(order_data_queue_line, log_book_id)
         total_price = float(json.loads(order_data_queue_line.order_data).get('order',{}).get('total_price',0))
         if order_id and float_compare(total_price, order_id.amount_total, precision_digits=2) != 0:
-            raise UserError("Total amount missmatch shopify: %.2f odoo: %.2f" % (total_price, order_id.amount_total))
+            msg = "Total amount missmatch shopify: %.2f odoo: %.2f" % (total_price, order_id.amount_total)
+            order_id.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
+                note=msg, user_id=order_id.user_id.id or SUPERUSER_ID)
         return order_id
 
     def shopify_create_sale_order_line(self, line, product, quantity,
