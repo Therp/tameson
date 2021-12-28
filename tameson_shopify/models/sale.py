@@ -8,7 +8,7 @@ import json
 from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
-import datetime
+from datetime import datetime
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
