@@ -186,6 +186,8 @@ class SaleOrderPresta(models.Model):
 
     def prestashop_order_process(self, task_uuid, so_id, data, **kwargs):
         self = self.browse(so_id)
+        if self.fiscal_position_id.name.startswith('OSS'):
+            self.prestashop_match_price()
         presta_total = float(data['total_paid_tax_incl'])
         price_difference = abs(presta_total - self.amount_total)
         ## float_compare 1 means price difference greater allowed value
@@ -281,3 +283,9 @@ class SaleOrderPresta(models.Model):
                 'orders': not_confirmed_orders.mapped(lambda o: (o.id, o.name))
             })
         return vals
+
+    def prestashop_match_price(self):
+        prestashop_rate = 1.21
+        for line in self.order_line:
+            tax_rate = (100 + sum(line.tax_ids.filtered(lambda t: not t.price_include).mapped('amount'))) / 100
+            line.price_unit = line.price_unit * prestashop_rate / tax_rate
