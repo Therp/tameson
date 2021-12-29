@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
                 'client_order_ref': "%s - %s" % (po_ref, name)
             })
         vals.update({
-            'origin': "%s - %s" % (instance.shopify_host, name)
+            'origin': "%s - %s" % (instance.name, name)
         })
         return vals
     
