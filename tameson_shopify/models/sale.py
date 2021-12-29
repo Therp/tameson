@@ -14,6 +14,8 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     
+    shopify_total_price = fields.Float(readonly=True)
+
     def prepare_shopify_order_vals(self, instance, partner, shipping_address,
                                    invoice_address, order_response, payment_gateway,
                                    workflow):
@@ -34,6 +36,8 @@ class SaleOrder(models.Model):
     def import_shopify_orders(self, order_data_queue_line, log_book_id):
         order_id = super(SaleOrder, self).import_shopify_orders(order_data_queue_line, log_book_id)
         total_price = float(json.loads(order_data_queue_line.order_data).get('order',{}).get('total_price',0))
+        if order_id:
+            order_id.shopify_total_price = total_price
         if order_id and float_compare(total_price, order_id.amount_total, precision_digits=2) != 0:
             msg = "Total amount missmatch shopify: %.2f odoo: %.2f" % (total_price, order_id.amount_total)
             order_id.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
@@ -53,3 +57,7 @@ class SaleOrder(models.Model):
         line_id.price_unit = line_id.price_unit / (1 + tax)
         line_id.with_context(round=False)._compute_amount()
         return line_id
+
+    def process_orders_and_invoices_ept(self):
+        order = self.filtered(lambda o: float_compare(o.shopify_total_price, o.amount_total, precision_digits=2) == 0)
+        return super(SaleOrder, order).process_orders_and_invoices_ept()
