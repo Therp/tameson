@@ -12,6 +12,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/stock_level.xml',
+        'views/sale.xml'
     ],
     'application': False,
 }

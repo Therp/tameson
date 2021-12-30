@@ -22,29 +22,29 @@ class ShopifyProcessImportExport(models.TransientModel):
     sync_product_from_shopify = fields.Boolean("Sync Products")
     shopify_operation = fields.Selection(
         [
-            ('sync_product',
-             'Sync New Products - Set To Queue'),
-            ('sync_product_by_remote_ids',
-             'Sync New Products - By Remote Ids'),
+            # ('sync_product',
+            #  'Sync New Products - Set To Queue'),
+            # ('sync_product_by_remote_ids',
+            #  'Sync New Products - By Remote Ids'),
             ('import_orders',
              'Import Orders'),
             ('import_orders_by_remote_ids',
              'Import Orders - By Remote Ids'),
             ('update_order_status',
              'Update Order Status'),
-            ('import_customers',
-             'Import Customers'),
+            # ('import_customers',
+            #  'Import Customers'),
             ('export_stock',
              'Export Stock'),
-            ('import_stock',
-             'Import Stock'),
-            ('update_order_status',
-             'Update Order Status'),
-            ('import_payout_report',
-             'Import Payout Report'),
+            # ('import_stock',
+            #  'Import Stock'),
+            # ('update_order_status',
+            #  'Update Order Status'),
+            # ('import_payout_report',
+            #  'Import Payout Report'),
         ],
         string="Operation",
-        default="sync_product")
+        default="export_stock")
     orders_from_date = fields.Datetime(string="From Date")
     orders_to_date = fields.Datetime(string="To Date")
     shopify_instance_ids = fields.Many2many(
