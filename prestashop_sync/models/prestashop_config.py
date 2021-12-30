@@ -78,7 +78,11 @@ class PrestashopConfig(models.Model):
         from_time = (now_dt + relativedelta(days=-self.sync_days)).strftime(DATEFORMAT)
 
         request_params = {
-            'display': '[id,id_address_delivery,id_address_invoice,id_cart,id_currency,id_lang,id_customer,id_carrier,current_state,module,date_upd,id_shop,total_paid_tax_excl,total_shipping_tax_excl,reference,user_invoice_email,ups_id_access_point,ups_country_iso,user_reference,total_discounts_tax_excl]',
+            'display': '[id,id_address_delivery,id_address_invoice,id_cart,\
+                id_currency,id_lang,id_customer,id_carrier,current_state,module,\
+                date_upd,id_shop,total_paid_tax_excl,total_shipping_tax_excl,\
+                reference,user_invoice_email,ups_id_access_point,ups_country_iso,\
+                user_reference,total_discounts_tax_excl]',
             'filter[date_upd]': '[%s,%s]' % (from_time, to_time),
             'filter[date_add]': '[2020-12-22 00:00:00,%s]' % (to_time),
             'date': '1',
