@@ -270,12 +270,17 @@ class ProductTemplate(models.Model):
             domain).mapped('product_id.product_tmpl_id') + self.env[
                 'stock.move'].search(domain).mapped('product_tmpl_id')
         # add products with these products in BOM
-        bom_domain = [
-            ('bom_ids.bom_line_ids.product_id.product_tmpl_id',
-             'in', to_update_product_tmpls.ids)]
-        to_update_product_tmpls += self.env['product.template'].search(
-            bom_domain
-        )
+        
+        bom_product_query = '''
+SELECT DISTINCT mb.product_tmpl_id FROM product_template pt
+    LEFT JOIN product_product pp ON pp.product_tmpl_id = pt.id
+    LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
+    LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
+WHERE pt.id IN (%s)''' % ','.join(map(str, to_update_product_tmpls.ids))
+        
+        self.env.cr.execute(bom_product_query)
+        bom_products = [item[0] for item in self.env.cr.fetchall()]
+        to_update_product_tmpls += self.env['product.template'].browse(bom_products)
         to_update_product_tmpls._minimal_qty_available_stored()
 
     def cron_recompute_all_min_qty_avail_stored_tmpl(self):
