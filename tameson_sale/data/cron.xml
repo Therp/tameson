@@ -14,7 +14,7 @@
             <field name="code">model.cron_confirm_orders_when_invoice_paid()</field>
         </record>
         <record forcecreate="True" id="cron_check_sale_order_has_issues" model="ir.cron">
-            <field name="name">Tameson: Tameson: regular checks of sales/channable/presta orders</field>
+            <field name="name">Tameson: Regular check (Orders/Pimcore/Others)</field>
             <field name="active" eval="True" />
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
