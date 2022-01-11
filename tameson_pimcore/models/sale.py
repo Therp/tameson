@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
@@ -26,7 +25,7 @@ class SaleOrder(models.Model):
         if not full_response:
             vals.append({
                 'name': 'Pimcore Full Response',
-                'orders': [(0,'Full response not found for last 7 days.')]
+                'orders': [(0,'Full import not found for last 7 days.')]
             })
         ## Check for lines older than 1 day still not imported, must be imported (none in draft) everyday by cron
         draft_lines = PimLineModel.search([('create_date','<', datetime.now() - relativedelta(days=1)), 
