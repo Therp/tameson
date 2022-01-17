@@ -216,7 +216,8 @@ class PrestashopConfig(models.Model):
         CeleryTask = self.env['celery.task']
         self = self.browse(config)
         Sale = self.env['sale.order']
-        orders = Sale.search([('prestashop_config_id','=',config),('state','not in',('cancel','sale'))])
+        from_date = datetime.now() - relativedelta(days=120)
+        orders = Sale.search([('prestashop_config_id','=',config),('state','not in',('cancel','sale')),('create_date','>=',from_date)])
         prestashop_order_ids = orders.mapped('prestashop_id')
         Request = PrestashopRequest(self.url, self.key, self.shop_group)
         params = {
