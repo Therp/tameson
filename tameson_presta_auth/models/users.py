@@ -71,6 +71,9 @@ class PrestaUsers(models.Model):
         match = False
         hashpw = self.hashpw.encode('utf-8')
         login = self.login
+        user = self.env['res.users'].search([('login','=',login)], limit=1)
+        if user:
+            return
         if bcrypt.checkpw(password.encode('utf-8'), hashpw):
             match = True
         else:
