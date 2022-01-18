@@ -31,7 +31,7 @@ class ResUsers(models.Model):
                     if not presta_user:
                         raise AccessDenied()
                     user = presta_user._check_hash(password)
-        return super(ResUsers, cls)._login(db, login, password)
+                    raise AccessDenied("User migrated from old system, please login again.")
 
 
 class PrestaUsers(models.Model):
