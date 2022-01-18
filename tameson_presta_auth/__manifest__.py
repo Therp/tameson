@@ -13,7 +13,7 @@ Sets same password for that portal user.
     'author': "Tameson",
     'depends': [
         'base',
-        'web'
+        'portal'
     ],
     'data': [
         'security/ir.model.access.csv',

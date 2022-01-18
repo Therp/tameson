@@ -88,7 +88,7 @@ class PrestaUsers(models.Model):
             partner = ResPartner.create({'name': login, 'email': login})
         wizard = self.env['portal.wizard'].with_context(active_ids=partner.ids).create({})
         wizard.user_ids.write({'in_portal': True})
-        wizard.action_apply()
+        wizard.with_context(send_mail=False).action_apply()
         user = partner.user_ids[:1]
         cp_wiz = self.env['change.password.wizard'].create({
             'user_ids': [(0, 0, {
