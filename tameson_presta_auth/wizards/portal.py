@@ -12,6 +12,5 @@ class PortalWizardUser(models.TransientModel):
     _inherit = 'portal.wizard.user'
 
     def _send_email(self):
-        breakpoint()
         if self.env.context.get('send_mail', True):
             return super(PortalWizardUser, self)._send_email()
