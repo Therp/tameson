@@ -12,7 +12,7 @@ Sets same password for that portal user.
     """,
     'author': "Tameson",
     'depends': [
-        'base',
+        'website',
         'portal'
     ],
     'data': [
