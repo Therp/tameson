@@ -23,7 +23,7 @@ class StockPicking(models.Model):
     @api.model
     def create(self, values):
         res = super(StockPicking, self).create(values)
-        for origin in res.origin.split(","):
+        for origin in res.origin.split(",") if res.origin else []:
             purchase = self.env["purchase.order"].search([("name", "=", origin)])
             if purchase:
                 purchase.find_and_refresh_picking_in_out_associations()

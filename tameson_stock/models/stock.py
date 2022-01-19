@@ -34,6 +34,19 @@ class StockPicking(models.Model):
         store=True
     )
 
+    def action_validate_create_backorder(self):
+        self.ensure_one()
+        res = self.button_validate()
+        bo_model = 'stock.backorder.confirmation'
+        if isinstance(res, dict):
+            if res.get('res_model', False) == bo_model:
+                backorder_wiz_id = res.get('res_id')
+                wiz = self.env[bo_model].browse(backorder_wiz_id)
+                wiz.process()
+            else:
+                raise UserError('Backorder condition not met.')
+        return True
+
     def action_create_batch(self):
         pickings = self.move_ids_without_package.mapped('origin_so_picking_ids').filtered(lambda sp: sp.t_delivery_allowed and sp.state == 'assigned')
         if not pickings:
@@ -308,3 +321,9 @@ class MailComposer(models.TransientModel):
             vals['value']['attachment_ids'] = [(6, 0, attachment.ids)]
 
         return vals
+
+class DeliveryCarrier(models.Model):
+    _inherit = 'delivery.carrier'
+
+    t_aa_shipper_mapping  = fields.Char(string='Active Ant Shipment Mapping',)
+    

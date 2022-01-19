@@ -20,6 +20,11 @@ class SaleOrderLine(models.Model):
     )
 
 
+    @api.onchange('product_id')
+    def _onchange_product_warehouse(self):
+        if self.product_id.wh_id:
+            self.warehouse_id = self.product_id.wh_id
+
     @api.onchange('product_uom_qty', 'product_uom', 'product_id')
     def _onchange_product_id_check_min_availability(self):
         if not self.product_id or not self.product_uom_qty or not self.product_uom:

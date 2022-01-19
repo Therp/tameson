@@ -219,6 +219,19 @@ WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    wh_id = fields.Many2one(string="Warehouse", comodel_name='stock.warehouse',ondelete='restrict',)    
+
+    def write(self, vals):
+        res = super(ProductTemplate, self).write(vals)
+        warehouse_id = vals.get('wh_id', False)
+        if warehouse_id:
+            rules = self.product_variant_id.orderpoint_ids
+            rules.write({
+                'warehouse_id': warehouse_id
+            })
+            rules.onchange_warehouse_id()
+        return res
+
     @api.model
     def _search_has_reordering_rules(self, operator, operand):
         if not isinstance(operand, bool):
