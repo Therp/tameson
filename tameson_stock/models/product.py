@@ -193,10 +193,14 @@ class ProductProduct(models.Model):
             'product_id') + self.env['stock.move'].search(domain).mapped(
                 'product_id')
         # add products with these products in BOM
-        bom_domain = [
-            ('bom_ids.bom_line_ids.product_id', 'in', to_update_products.ids)]
-        to_update_products += self.env['product.product'].search(
-            bom_domain)
+        bom_product_query = '''
+SELECT DISTINCT mb.product_id FROM product_product pp
+    LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
+    LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
+WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
+        self.env.cr.execute(bom_product_query)
+        bom_products = [item[0] for item in self.env.cr.fetchall()]
+        to_update_products += self.browse(bom_products)
         to_update_products._minimal_qty_available_stored()
 
     def cron_recompute_all_min_qty_avail_stored(self):
@@ -266,16 +270,19 @@ class ProductTemplate(models.Model):
         lasthour_formatted = lasthour.strftime(DSDF)
         domain = ['|', ('create_date', '>', lasthour_formatted),
                   ('write_date', '>', lasthour_formatted)]
-        to_update_product_tmpls = self.env['stock.move.line'].search(
-            domain).mapped('product_id.product_tmpl_id') + self.env[
-                'stock.move'].search(domain).mapped('product_tmpl_id')
+        to_update_products = self.env['stock.move.line'].search(domain).mapped(
+            'product_id') + self.env['stock.move'].search(domain).mapped(
+                'product_id')
         # add products with these products in BOM
-        bom_domain = [
-            ('bom_ids.bom_line_ids.product_id.product_tmpl_id',
-             'in', to_update_product_tmpls.ids)]
-        to_update_product_tmpls += self.env['product.template'].search(
-            bom_domain
-        )
+        bom_product_query = '''
+SELECT DISTINCT mb.product_id FROM product_product pp
+    LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
+    LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
+WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
+        self.env.cr.execute(bom_product_query)
+        bom_products = [item[0] for item in self.env.cr.fetchall()]
+        to_update_products += self.env['product.product'].browse(bom_products)
+        to_update_product_tmpls = to_update_products.mapped('product_tmpl_id')
         to_update_product_tmpls._minimal_qty_available_stored()
 
     def cron_recompute_all_min_qty_avail_stored_tmpl(self):
