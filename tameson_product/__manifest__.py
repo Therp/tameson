@@ -20,6 +20,7 @@
     ],
     'data': [
         'views/product_views.xml',
+        'data/cron.xml',
     ],
     'application': False,
     'license': u'OPL-1',

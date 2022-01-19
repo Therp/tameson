@@ -59,3 +59,10 @@ class ProductTemplate(models.Model):
     published = fields.Boolean(string=_('Published'), default=True)
     non_returnable = fields.Boolean(string=_('Non Returnable'))
 ## End
+
+    def cron_compute_all_bom_price(self):
+        boms = self.env['mrp.bom'].search([]).filtered(lambda b: b.product_tmpl_id.active)
+        for bom in boms:
+            product_tmpl_id = bom.product_tmpl_id
+            product = product_tmpl_id.product_variant_id
+            product_tmpl_id.standard_price = product._compute_bom_price(bom)
