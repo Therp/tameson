@@ -32,7 +32,10 @@ class StockMove(models.Model):
         if propagated_date_field:
             for move in self.mapped('move_dest_ids'):
                 auto_activity = move.picking_id.activity_ids.filtered(lambda a: a.automated and 'The scheduled date has been automatically updated due to a delay on' in a.note)
-                order_date = (move.picking_id.sale_id.commitment_date or move.picking_id.sale_id.expected_date) + relativedelta(days=self[:1].propagate_date_minimum_delta)
+                so_date = move.picking_id.sale_id.commitment_date or move.picking_id.sale_id.expected_date
+                if not so_date: ## commitment_date, expected_date value not set for canceled sale orders
+                    continue
+                order_date = so_date + relativedelta(days=self[:1].propagate_date_minimum_delta)
                 if auto_activity and new_date <= order_date:
                     auto_activity.action_feedback(feedback="Scheduled on earlier date.")
                 manu_activity = move.picking_id.activity_ids.filtered(lambda a: a.automated and 'The scheduled date should be updated due to a delay on' in a.note)
