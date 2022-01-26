@@ -2,6 +2,15 @@ from odoo import api, fields, models, _
 from odoo.tools import float_compare
 
 
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    def _get_sale_order_has_issues(self):
+        res = super(SaleOrder, self)._get_sale_order_has_issues()
+        aa_stock_mismatch = []
+        res.append({'name': 'AA Stock mismatch', 'orders': aa_stock_mismatch})
+        return res
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 

@@ -23,5 +23,19 @@
             </xpath>
         </field>
     </record>
+    
+    <record id="view_warehouse_aa" model="ir.ui.view">
+        <field name="name">view_warehouse_aa</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse" />
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="aa_api" />
+                <field name="aa_username" />
+                <field name="aa_password" />
+            </field>
+        </field>
+    </record>
+    
 
 </odoo>
