@@ -54,7 +54,7 @@ WITH onhand_query AS (
 )
 SELECT
     aas.sku sku,
-    pt.name name,
+    pt.name ptname,
     aas.stock aa_quantity,
     coalesce(oh.quantity, 0) odoo_quantity
 FROM
