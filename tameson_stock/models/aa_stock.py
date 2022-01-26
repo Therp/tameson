@@ -22,21 +22,22 @@ class AAStock(models.TransientModel):
         super(AAStock, self).create(vals_list)
 
     def get_data(self):
+        aa_data = []
         for wh in self.env['stock.warehouse'].search([('aa_username','!=',False),('aa_password','!=',False)]):
             try:
-                token_response = requests.post(wh.aa_api,data={
+                token_response = requests.post("%s/token" % wh.aa_api,data={
                     "grant_type": "password",
                     "username": wh.aa_username,
                     "password": wh.aa_password
                 })
                 token = json.loads(token_response.text)['access_token']
-                data_response = requests.get("https://shopapitest.activeants.nl/stock/bulk/true", headers={'Authorization': 'Bearer %s' % token})
+                data_response = requests.get("%s/stock/bulk/true" % wh.aa_api, headers={'Authorization': 'Bearer %s' % token})
                 data = json.loads(data_response.text)
             except Exception as e:
                 raise UserError(str(e))
             vals = [{'sku': result['sku'], 'stock': result['stock']} for result in data['result']]
             self.create(vals)
-            locations = self.env['stock.locations'].search([('id','child_of',wh.lot_stock_id.id)])
+            locations = self.env['stock.location'].search([('id','child_of',wh.lot_stock_id.id)])
             query = """
 WITH onhand_query AS (
     SELECT
@@ -53,9 +54,9 @@ WITH onhand_query AS (
 )
 SELECT
     aas.sku,
+    pt.name name,
     aas.stock aa_quantity,
-    coalesce(oh.quantity, 0) odoo_quantity,
-    pt.name name
+    coalesce(oh.quantity, 0) odoo_quantity
 FROM
     onhand_query oh
     LEFT JOIN product_product pp ON pp.id = oh.product_id
@@ -63,7 +64,8 @@ FROM
     RIGHT JOIN aa_stock aas ON aas.sku = pt.default_code
 WHERE
     coalesce(oh.quantity, 0) != aas.stock
-""" % ','.join(locations.ids)
+""" % ','.join(map(str, locations.ids))
             self.env.cr.execute(query)
-            for sku, aa_quantity, odoo_quantity, name in self.env.cr.fetch_all():
-                pass
+            aa_data += self.env.cr.fetchall()
+        return aa_data
+            

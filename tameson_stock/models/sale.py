@@ -7,8 +7,13 @@ class SaleOrder(models.Model):
 
     def _get_sale_order_has_issues(self):
         res = super(SaleOrder, self)._get_sale_order_has_issues()
-        aa_stock_mismatch = []
-        res.append({'name': 'AA Stock mismatch', 'orders': aa_stock_mismatch})
+        aa_data = self.env['aa.stock'].get_data()
+        if aa_data:
+            res.append({
+                'name': 'AA Stock mismatch',
+                'header': ['SKU', 'Product Name', 'AA Quantity', 'Odoo Quantity'],
+                'orders': aa_data
+            })
         return res
 
 class SaleOrderLine(models.Model):
