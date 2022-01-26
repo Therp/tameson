@@ -103,7 +103,9 @@ Dear
             <td>
                 ${cell}
             </td>
+            % endfor
         </tr>
+        % endfor
     </table>
     <br /><br />
 % endfor
