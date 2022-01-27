@@ -93,7 +93,7 @@ Dear
 <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 % for section in ctx.get('sections', []):
     <strong>${section.get('name', '')}</strong><br />
-    <table role="presentation" border="1" cellspacing="0" width="100%">
+    <table class="table table-condensed table-bordered" >
         % if section.get('header', False)
         <tr>
             % for cell in section.get('header', []):
