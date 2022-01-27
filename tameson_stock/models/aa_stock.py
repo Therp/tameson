@@ -42,26 +42,27 @@ class AAStock(models.TransientModel):
 WITH onhand_query AS (
     SELECT
         sum(quantity) quantity,
-        product_id
+		pt.default_code sku
     FROM
         stock_quant sq
         LEFT JOIN stock_location sl ON sl.id = sq.location_id
+		LEFT JOIN product_product pp on pp.id = sq.product_id
+		LEFT JOIN product_template pt on pt.id = pp.product_tmpl_id
     WHERE
         sl.usage = 'internal' AND
         sl.id in (%s)
     GROUP BY
-        product_id
+        pt.default_code
 )
 SELECT
     aas.sku sku,
-    pt.name ptname,
+	pt.name ptname,
     aas.stock aa_quantity,
     coalesce(oh.quantity, 0) odoo_quantity
 FROM
-    onhand_query oh
-    LEFT JOIN product_product pp ON pp.id = oh.product_id
-    LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
-    RIGHT JOIN aa_stock aas ON aas.sku = pt.default_code
+    aa_stock aas
+	LEFT JOIN onhand_query oh on oh.sku = aas.sku
+	LEFT JOIN product_template pt on pt.default_code = aas.sku
 WHERE
     coalesce(oh.quantity, 0) != aas.stock
 """ % ','.join(map(str, locations.ids))
