@@ -321,11 +321,11 @@ class PimcoreProductResponseLine(models.Model):
 
         if self.supplier_email:
             seller_vals = self.get_supplier_info()
-            seller_vals.pop("price")
             seller = product.seller_ids.filtered(
                 lambda s: s.name.id == seller_vals["name"]
             )[:1]
             if seller:
+                seller_vals.pop("price")
                 seller.write(seller_vals)
             else:
                 vals.update(seller_ids=[(0, 0, seller_vals)])
