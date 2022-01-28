@@ -12,6 +12,7 @@ from odoo.tools.float_utils import float_is_zero, float_compare
 from dateutil.relativedelta import relativedelta
 
 import logging
+
 _logger = logging.getLogger(__name__)
 
 CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}
@@ -26,9 +27,11 @@ def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
         categ_path = path.split("/")[start:end]
         categ_path_len = len(categ_path)
         for pos, categ in enumerate(categ_path[::-1]):
-            this_path = ' / '.join(categ_path[:categ_path_len-pos])
+            this_path = " / ".joinx(categ_path[: categ_path_len - pos])
             break_loop = False
-            this_categ = child_categ.search([("complete_name", "=", this_path)], limit=1)
+            this_categ = child_categ.search(
+                [("complete_name", "=", this_path)], limit=1
+            )
             if not this_categ:
                 this_categ = child_categ.create({"name": categ})
             else:
@@ -106,8 +109,8 @@ class PimcoreProductResponse(models.Model):
     _name = "pimcore.product.response"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "PimcoreProductResponse"
-    _rec_name = 'name'
-    _order = 'name DESC'
+    _rec_name = "name"
+    _order = "name DESC"
 
     name = fields.Char(default="New")
     type = fields.Selection(selection=[("full", "Full"), ("new", "New")])
@@ -126,7 +129,8 @@ class PimcoreProductResponse(models.Model):
         return super(PimcoreProductResponse, self).create(vals)
 
     def import_product_data(self):
-        self.env.cr.execute("""
+        self.env.cr.execute(
+            """
 DELETE FROM pimcore_product_response_line
 WHERE id NOT IN
 (
@@ -137,7 +141,8 @@ WHERE id NOT IN
 ) and state = 'draft';
 SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FROM pimcore_product_response_line rl
     LEFT JOIN product_template pt on lower(rl.sku) = lower(pt.default_code)
-    WHERE rl.state = 'draft';""")
+    WHERE rl.state = 'draft';"""
+        )
         data = self.env.cr.fetchall()
         skipped = [row[0] for row in data if row[2] <= row[3]]
         updated = [row for row in data if row[2] > row[3]]
@@ -158,33 +163,48 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
             try:
                 if not row[1]:
                     Line.browse(row[0]).sudo().create_product(Eur, Gbp, Usd)
-                    _logger.warn("Created from %d / %d " % (count, len(updated)))
+                    _logger.info("Created from %d / %d " % (count, len(updated)))
                 elif row[2] > row[3]:
                     Line.browse(row[0]).sudo().update_product(row[1], Eur, Gbp, Usd)
-                    _logger.warn("Updated from %d / %d " % (count, len(updated)))
+                    _logger.info("Updated from %d / %d " % (count, len(updated)))
             except Exception as e:
                 _logger.warn("Error from %d / %d " % (count, len(updated)))
                 _logger.warn(str(e))
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
-        bomlines = Line.search(
-            [
-                ("bom_import_done", "=", True),
-                ("bom", "!=", False),
-            ]
-        )
-        for line in bomlines:
+        for line in updated:
             try:
                 line.sudo().create_bom()
             except Exception as e:
                 line.write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))
                 continue
-        unpublished_products = self.env['product.template'].search([('published','=',False)])
-        self.env['stock.warehouse.orderpoint'].search([('product_id','in',unpublished_products.mapped('product_variant_ids').ids)]).action_archive()
+        unpublished_products = self.env["product.template"].search(
+            [("published", "=", False)]
+        )
+        self.env["stock.warehouse.orderpoint"].search(
+            [
+                (
+                    "product_id",
+                    "in",
+                    unpublished_products.mapped("product_variant_ids").ids,
+                )
+            ]
+        ).action_archive()
         unpublished_products.action_archive()
-        published_products = self.env['product.template'].search([('published', '=', True), ('active', '=', False)])
+        published_products = self.env["product.template"].search(
+            [("published", "=", True), ("active", "=", False)]
+        )
         published_products.action_unarchive()
-        self.env['stock.warehouse.orderpoint'].search([('active','=',False), ('product_id','in',published_products.mapped('product_variant_ids').ids)]).action_unarchive()
+        self.env["stock.warehouse.orderpoint"].search(
+            [
+                ("active", "=", False),
+                (
+                    "product_id",
+                    "in",
+                    published_products.mapped("product_variant_ids").ids,
+                ),
+            ]
+        ).action_unarchive()
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
         ).unlink()
@@ -258,8 +278,7 @@ class PimcoreProductResponseLine(models.Model):
 
         try:
             image_response = requests.get(
-                "%s/%s" % (self.response_id.config_id.api_host, self.image),
-                timeout=60
+                "%s/%s" % (self.response_id.config_id.api_host, self.image), timeout=60
             )
             if image_response.status_code == 200:
                 image_data = codecs.encode(image_response.content, "base64")
@@ -273,14 +292,18 @@ class PimcoreProductResponseLine(models.Model):
             final_categ = create_or_find_categ(self.env, self.full_path)
         except Exception as e:
             final_categ = self.env["product.category"].browse(1)
-            self.error = 'Product category recursion condition'
+            self.error = "Product category recursion condition"
         try:
             ecom_categ = create_or_find_categ(
-                self.env, self.categories, model="product.public.category", start=2, end=0
+                self.env,
+                self.categories,
+                model="product.public.category",
+                start=2,
+                end=0,
             )
         except Exception as e:
             ecom_categ = self.env["product.public.category"]
-            self.error = 'Ecommerce category recursion condition'
+            self.error = "Ecommerce category recursion condition"
         vals.update(
             {
                 "image_1920": image_data,
@@ -302,7 +325,11 @@ class PimcoreProductResponseLine(models.Model):
         add_pricelist_item(Eur, product, self.eur)
         add_pricelist_item(Gbp, product, self.gbp)
         add_pricelist_item(Usd, product, self.usd)
-        self.write({"state": "created", 'bom_import_done': True})
+        self.write(
+            {
+                "state": "created",
+            }
+        )
         self.env.cr.commit()
 
     def update_product(self, product_id, Eur, Gbp, Usd):
@@ -329,7 +356,10 @@ class PimcoreProductResponseLine(models.Model):
                 seller.write(seller_vals)
             else:
                 vals.update(seller_ids=[(0, 0, seller_vals)])
-        if self.categories and product.public_categ_ids[:1].name != self.categories.split("/")[-1]:
+        if (
+            self.categories
+            and product.public_categ_ids[:1].name != self.categories.split("/")[-1]
+        ):
             ecom_categ = create_or_find_categ(
                 self.env,
                 self.categories,
@@ -341,9 +371,6 @@ class PimcoreProductResponseLine(models.Model):
         search_or_add_pricelist_item(Gbp, product, self.gbp)
         search_or_add_pricelist_item(Usd, product, self.usd)
         write_vals = {"state": "updated"}
-        if self.bom and not product.bom_ids.filtered(lambda b: b.bom_signature == self.bom):
-            write_vals.update({'bom_import_done': True})
-            product.bom_ids.action_archive()
         product.write(vals)
         self.write(write_vals)
         self.env.cr.commit()
@@ -409,6 +436,12 @@ class PimcoreProductResponseLine(models.Model):
     def create_bom(self, bom_type="phantom"):
         PT = self.env["product.template"]
         main_product = PT.search([("default_code", "=", self.sku)], limit=1)
+        if not self.bom or main_product.bom_ids.filtered(
+            lambda b: b.bom_signature == self.bom
+        ):
+            return
+        if main_product.bom_ids:
+            main_product.bom_ids.action_archive()
         bom_elements = self.bom.split(",")
         bom_lines = []
         for i in range(0, len(bom_elements), 2):
@@ -429,13 +462,12 @@ class PimcoreProductResponseLine(models.Model):
                 "product_tmpl_id": main_product.id,
                 "bom_line_ids": bom_lines,
                 "type": bom_type,
-                "bom_signature": self.bom
+                "bom_signature": self.bom,
             }
         )
         main_product.standard_price = (
             main_product.product_variant_id._get_price_from_bom()
         )
-        self.bom_import_done = False
         self.env.cr.commit()
 
     def get_supplier_info(self):
