@@ -24,9 +24,8 @@ class ResPartner(models.Model):
         if self.env.context.get('skip_email_check', False):
             return
         for record in self:
-            if record.email:
-                child_ids = self.search([('id','child_of',record.parent_id.id or record.id)])
-                match = self.search([('email','=',record.email),('id','not in',child_ids.ids)], limit=1)
+            if not record.parent_id and record.email:
+                match = self.search([('email','=',record.email),('parent_id','=',False)]) - self
                 if match:
                     raise ValidationError('Duplicate email for contact: %s' % match.name)
 
