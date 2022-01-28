@@ -1,3 +1,4 @@
+from itertools import product
 import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -41,45 +42,38 @@ class StockWarehouseOrderpoint(models.Model):
     def cron_recompute_rr(self):
         self.env['stock.warehouse.orderpoint'].search([])._compute_rr()
 
+    def write(self, vals):
+        if 'product_id' in vals:
+            self.mapped('product_id.product_tmpl_id').set_mtos_buy_route()
+        res = super(StockWarehouseOrderpoint, self).write(vals)
+        if 'product_id' in vals:
+            self.mapped('product_id.product_tmpl_id').set_buy_route()
+        return res
+
+    @api.model
+    def create(self, vals):
+        res = super(StockWarehouseOrderpoint, self).create(vals)
+        res.mapped('product_id.product_tmpl_id').set_buy_route()
+        return res
+    
+    def unlink(self):
+        self.mapped('product_id.product_tmpl_id').set_mtos_buy_route()
+        return super(StockWarehouseOrderpoint, self).unlink()
+    
+    def action_archive(self):
+        self.mapped('product_id.product_tmpl_id').set_mtos_buy_route()
+        return super(StockWarehouseOrderpoint, self).action_archive()
+
+    def action_unarchive(self):
+        self.mapped('product_id.product_tmpl_id').set_buy_route()
+        return super(StockWarehouseOrderpoint, self).action_unarchive()
+
     @api.model
     def cron_validate_orderpoint_product_routes(self):
-        mtomts_id = self.env['stock.location.route'].search([['name', '=', 'Make To Order + Make To Stock']])[0]
-        buy_id = self.env['stock.location.route'].search([['name', '=', 'Buy']])[0]
-
-        orderpoint_buy_route_ids = [buy_id.id]
-        non_orderpoint_buy_route_ids = sorted([mtomts_id.id, buy_id.id])
-
         # First step – remove orderpoints with min/max qty = 0
         orderpoints_to_remove = self.env['stock.warehouse.orderpoint'].search([('product_max_qty', '<=', 0.0)])
         _logger.info('Orderpoint ids to remove: %s', orderpoints_to_remove.ids)
         orderpoints_to_remove.unlink()
-
-        # Second step: fix products
-        orderpoints = self.env['stock.warehouse.orderpoint'].search_read([], ['product_id'])
-        orderpoint_pp_ids = set(swo['product_id'][0] for swo in orderpoints)
-        orderpoint_pt_ids = set(
-            pp['product_tmpl_id'][0]
-            for pp in self.env['product.product'].search_read([['id', 'in', list(orderpoint_pp_ids)]], ['product_tmpl_id'])
-        )
-        for pt in self.env['product.template'].search([['id', 'in', list(orderpoint_pt_ids)],
-                                                       ['route_ids', '!=', orderpoint_buy_route_ids]]):
-            pt.route_ids = orderpoint_buy_route_ids
-
-        non_orderpoint_pt_ids = set(
-            pt['id']
-            for pt in self.env['product.template'].search_read([['id', 'not in', list(orderpoint_pt_ids)]], ['id'])
-        )
-        for pt in self.env['product.template'].search([['id', 'in', list(non_orderpoint_pt_ids)],
-                                                       ['route_ids', '!=', non_orderpoint_buy_route_ids]]):
-            pt.route_ids = non_orderpoint_buy_route_ids
-
-    @api.model
-    def fix_product_route(self):
-        pt = self.product_id.product_tmpl_id
-
-        buy_id = self.env['stock.location.route'].search([['name', '=', 'Buy']])[0]
-
-        pt.route_ids = [(6, 0, [buy_id.id])]
 
     def _compute_rr(self):
         self._compute_rr_supplier()

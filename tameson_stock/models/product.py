@@ -219,7 +219,26 @@ WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
     wh_id = fields.Many2one(string="Warehouse", comodel_name='stock.warehouse',ondelete='restrict',)    
+
+    def _get_buy_route(self):
+        mtos_id = self.env.ref('stock_mts_mto_rule.route_mto_mts', raise_if_not_found=False)
+        res = super(ProductTemplate, self)._get_buy_route()
+        if mtos_id:
+            res.append(mtos_id.id)
+        return res
+
+    @api.model
+    def set_buy_route(self):
+        buy_id = self.env.ref('purchase_stock.route_warehouse0_buy')
+        self.write({'route_ids': [(6, 0, [buy_id.id])]})
+
+    @api.model
+    def set_mtos_buy_route(self):
+        buy_id = self.env.ref('purchase_stock.route_warehouse0_buy')
+        mtos_id = self.env.ref('stock_mts_mto_rule.route_mto_mts')
+        self.write({'route_ids': [(6, 0, [buy_id.id, mtos_id.id])]})
 
     def write(self, vals):
         res = super(ProductTemplate, self).write(vals)
