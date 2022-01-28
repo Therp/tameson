@@ -435,7 +435,9 @@ class PimcoreProductResponseLine(models.Model):
 
     def create_bom(self, bom_type="phantom"):
         PT = self.env["product.template"]
-        main_product = PT.search([("default_code", "=", self.sku)], limit=1)
+        main_product = PT.with_context(active_test=False).search(
+            [("default_code", "=", self.sku)], limit=1
+        )
         if not self.bom or main_product.bom_ids.filtered(
             lambda b: b.bom_signature == self.bom
         ):
@@ -445,7 +447,9 @@ class PimcoreProductResponseLine(models.Model):
         bom_elements = self.bom.split(",")
         bom_lines = []
         for i in range(0, len(bom_elements), 2):
-            bom_item = PT.search([("default_code", "=", bom_elements[i])], limit=1)
+            bom_item = PT.with_context(active_test=False).search(
+                [("default_code", "=", bom_elements[i])], limit=1
+            )
             bom_qty = bom_elements[i + 1]
             bom_lines.append(
                 (
