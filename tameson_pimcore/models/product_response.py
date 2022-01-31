@@ -27,7 +27,7 @@ def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
         categ_path = path.split("/")[start:end]
         categ_path_len = len(categ_path)
         for pos, categ in enumerate(categ_path[::-1]):
-            this_path = " / ".joinx(categ_path[: categ_path_len - pos])
+            this_path = " / ".join(categ_path[: categ_path_len - pos])
             break_loop = False
             this_categ = child_categ.search(
                 [("complete_name", "=", this_path)], limit=1
@@ -490,3 +490,4 @@ class PimcoreProductResponseLine(models.Model):
             "price": self.supplier_price,
             "currency_id": CURRENCY_DICT[self.supplier_price_currency],
         }
+pimcore_product_response_line
