@@ -173,9 +173,9 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
         for line in updated:
             try:
-                line.sudo().create_bom()
+                Line.browse(line[0]).sudo().create_bom()
             except Exception as e:
-                line.write({"state": "error", "error": str(e)})
+                Line.browse(line[0]).write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))
                 continue
         unpublished_products = self.env["product.template"].search(
