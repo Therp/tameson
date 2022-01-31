@@ -490,4 +490,3 @@ class PimcoreProductResponseLine(models.Model):
             "price": self.supplier_price,
             "currency_id": CURRENCY_DICT[self.supplier_price_currency],
         }
-pimcore_product_response_line
