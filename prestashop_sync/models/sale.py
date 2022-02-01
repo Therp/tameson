@@ -269,14 +269,17 @@ class SaleOrderPresta(models.Model):
 
     def _get_sale_order_has_issues(self):
         vals = super(SaleOrderPresta, self)._get_sale_order_has_issues()
-        orders = self.search([('prestashop_id', '!=', False), ('state', '=', 'sale'), ('prestashop_module', '!=', 'invoicepayment')]).\
+        orders = self.search([('prestashop_id', '!=', False),
+                                ('state', '=', 'sale'),
+                                ('prestashop_module', '!=', 'invoicepayment'),
+                                ('payment_term_id.name','=','Prepayment')]).\
             filtered(lambda o: not o.invoice_ids.filtered(lambda i: i.invoice_payment_state == 'paid'))
         if orders:
             vals.append({
                 'name': 'Prestashop order confirmed but invoice not paid',
                 'orders': orders.mapped(lambda o: (o.id, o.name))
             })
-        not_confirmed_orders = self.search([('channel_process_payment', '=', True), ('state', '!=', 'sale')])        
+        not_confirmed_orders = self.search([('channel_process_payment', '=', True), ('state', 'not in', ('sale', 'cancel'))])        
         if not_confirmed_orders:
             vals.append({
                 'name': 'Prestashop orders not confirmed.',
