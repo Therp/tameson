@@ -17,6 +17,7 @@
     'depends': [
         'product',
         'tameson_base',
+        'mrp',
     ],
     'data': [
         'views/product_views.xml',
