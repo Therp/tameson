@@ -272,7 +272,7 @@ class SaleOrderPresta(models.Model):
         orders = self.search([('prestashop_id', '!=', False),
                                 ('state', '=', 'sale'),
                                 ('prestashop_module', '!=', 'invoicepayment'),
-                                ('payment_term_id.name','=','Prepayment')]).\
+                                ('payment_term_id.t_invoice_delivered_quantities','=',False)]).\
             filtered(lambda o: not o.invoice_ids.filtered(lambda i: i.invoice_payment_state == 'paid'))
         if orders:
             vals.append({
