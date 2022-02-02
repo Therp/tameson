@@ -93,9 +93,26 @@ Dear
 <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 % for section in ctx.get('sections', []):
     <strong>${section.get('name', '')}</strong><br />
-    % for id, order in section.get('orders', []):
-        <p>${order} (${id})</p>
-    % endfor
+    <table class="table table-condensed table-bordered" >
+        % if section.get('header', False)
+        <tr>
+            % for cell in section.get('header', []):
+            <th>
+                ${cell}
+            </th>
+            % endfor
+        </tr>
+        % endif
+        % for row in section.get('orders', []):
+        <tr>
+            % for cell in row:
+            <td>
+                ${cell}
+            </td>
+            % endfor
+        </tr>
+        % endfor
+    </table>
     <br /><br />
 % endfor
 </div>

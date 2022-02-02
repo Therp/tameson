@@ -8,6 +8,14 @@ from odoo import api, fields, models, _
 _logger = logging.getLogger(__name__)
 
 
+class StockWarehouse(models.Model):
+    _inherit = 'stock.warehouse'
+    
+    aa_username = fields.Char()
+    aa_api = fields.Char()
+    aa_password = fields.Char(password=True)
+    
+
 class StockWarehouseOrderpoint(models.Model):
     _inherit = 'stock.warehouse.orderpoint'
 
