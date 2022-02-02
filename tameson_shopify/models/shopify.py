@@ -112,3 +112,8 @@ class ShopifyOrderDataQueueLineEpt(models.Model):
         return order_queue_list
 
 
+class ShopifyInstanceEpt(models.Model):
+    _inherit = "shopify.instance.ept"
+
+    shopify_multipass_secret = fields.Char("Multipass secret", )
+    
