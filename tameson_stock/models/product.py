@@ -193,6 +193,8 @@ class ProductProduct(models.Model):
             'product_id') + self.env['stock.move'].search(domain).mapped(
                 'product_id')
         # add products with these products in BOM
+        if not to_update_products:
+            return
         bom_product_query = '''
 SELECT DISTINCT mb.product_id FROM product_product pp
     LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
@@ -287,6 +289,8 @@ class ProductTemplate(models.Model):
             'product_id') + self.env['stock.move'].search(domain).mapped(
                 'product_id')
         # add products with these products in BOM
+        if not to_update_products:
+            return
         bom_product_query = '''
 SELECT DISTINCT mb.product_id FROM product_product pp
     LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id

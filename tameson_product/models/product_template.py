@@ -31,6 +31,15 @@ class ProductTemplateInherit(models.Model):
         compute='_compute_supplierinfo_fields',
         store=True,
     )
+    t_aa_pack_size = fields.Float(string='Pack size', compute='_get_aa_packing_size')
+
+    @api.depends('bom_ids.bom_line_ids')
+    def _get_aa_packing_size(self):
+        for pt in self:
+            if pt.bom_ids and len(pt.bom_ids[:1].bom_line_ids) == 1:
+                pt.t_aa_pack_size = pt.bom_ids[:1].bom_line_ids.product_qty
+            else:
+                pt.t_aa_pack_size = 1
 
     @api.depends('seller_ids.name', 'seller_ids.product_code', 'seller_ids.delay')
     def _compute_supplierinfo_fields(self):
