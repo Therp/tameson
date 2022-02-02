@@ -33,10 +33,11 @@
         'tameson_base',
         'delivery',
         'sale_sourced_by_line',
+        'stock_mts_mto_rule',
+        'purchase_stock',
     ],
     'data': [
         'data/params.xml',
-        'data/automated_actions.xml',
         'data/cron.xml',
         'data/cron_min_qty.xml',
         'data/migrations.xml',
