@@ -48,6 +48,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         return {
             'email': self.email,
+            "return_to": "/collections/all",
             'first_name': self.name.split(' ')[0] if self.name else '',
             'last_name': ' '.join(self.name.split(' ')[1:]) if self.name else '',
             'tag_string': 'odoo',
