@@ -58,13 +58,16 @@ class ResPartner(models.Model):
     def _get_shopify_partner_address(self):
         self.ensure_one()
         address = []
-        for child in self.search([('id','child_of',self.id)]):
+        childs = self.child_ids or self
+        for child in childs:
             address.append({
                 'address1': child.street,
+                'address2': child.street2,
                 'city': child.city,
                 'country': child.country_id.name,
                 'first_name': child.name.split(' ')[0] if child.name else '',
                 'last_name': ' '.join(child.name.split(' ')[1:]) if child.name else '',
+                'company': child.parent_id.name,
                 'phone': child.phone,
                 'province': child.state_id.name,
                 'zip': child.zip,
