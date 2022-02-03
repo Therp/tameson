@@ -62,16 +62,16 @@ class ResPartner(models.Model):
         for child in childs:
             address.append({
                 'address1': child.street,
-                'address2': child.street2,
+                'address2': child.street2 or '',
                 'city': child.city,
                 'country': child.country_id.name,
                 'first_name': child.name.split(' ')[0] if child.name else '',
                 'last_name': ' '.join(child.name.split(' ')[1:]) if child.name else '',
-                'company': child.parent_id.name,
+                'company': child.parent_id.name or '',
                 'phone': child.phone,
-                'province': child.state_id.name,
+                'province': child.state_id.name or '',
                 'zip': child.zip,
-                'province_code': child.state_id.code,
+                'province_code': child.state_id.code or '',
                 'country_code': child.country_id.code,
                 'default': False
             })
