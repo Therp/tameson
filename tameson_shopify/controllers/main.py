@@ -17,10 +17,14 @@ class Shopify(Controller):
         return request.render("tameson_shopify.portal_shopify_hosts", {'instances': instances})
 
     @route(['/shopify_auth/<int:instance_id>'], type='http', auth="user", website=True)
-    def shopify_auth(self, instance_id, **kw):
+    def shopify_auth(self, instance_id, shopify_page=None, **kw):
         instance = request.env['shopify.instance.ept'].sudo().browse(instance_id)
         partner = request.env.user.partner_id
         partner_data = partner._get_shopify_partner_data()
+        if shopify_page:
+            partner_data.update({
+                'return_to': shopify_page
+            })
         multipass = Multipass(instance.shopify_multipass_secret)
         url = multipass.generateURL(partner_data, instance.shopify_host)
         return request.redirect(url)
