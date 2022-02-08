@@ -72,8 +72,8 @@ class StockMove(models.Model):
             ftp.storbinary('STOR %s' % filename, open(fp.name, 'rb'))
         fp.close()
 
-
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
-        vals['note'] = ', '.join(self.mapped('sale_line_id.order_id.note'))
+        notes = [ note for note in self.mapped('sale_line_id.order_id.note') if note]
+        vals['note'] = ', '.join(notes)
         return vals
