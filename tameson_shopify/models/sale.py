@@ -38,7 +38,8 @@ class SaleOrder(models.Model):
         total_price = float(json.loads(order_data_queue_line.order_data).get('order',{}).get('total_price',0))
         if order_id:
             order_id.shopify_total_price = total_price
-        if order_id and float_compare(total_price, order_id.amount_total, precision_digits=2) != 0:
+        difference = abs(total_price - order_id.amount_total)
+        if order_id and float_compare(difference, 0.05, precision_digits=2) != 0:
             msg = "Total amount missmatch shopify: %.2f odoo: %.2f" % (total_price, order_id.amount_total)
             order_id.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
                 note=msg, user_id=order_id.user_id.id or SUPERUSER_ID)
@@ -59,5 +60,10 @@ class SaleOrder(models.Model):
         return line_id
 
     def process_orders_and_invoices_ept(self):
-        order = self.filtered(lambda o: float_compare(o.shopify_total_price, o.amount_total, precision_digits=2) == 0)
+
+        def filter_orders(order):
+            difference = abs(order.shopify_total_price - order.amount_total)
+            return float_compare(difference, 0.05, precision_digits=2) == 0
+
+        order = self.filtered(lambda o: filter_orders(o))
         return super(SaleOrder, order).process_orders_and_invoices_ept()
