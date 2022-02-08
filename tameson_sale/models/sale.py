@@ -75,7 +75,7 @@ class SaleOrder(models.Model):
     @api.onchange('order_line', 'any_use_up')
     def _onchange_any_use_up(self):
         self.env.context = dict(self.env.context, lang=self.partner_id.lang or 'en_US')
-        note = re.sub(_('\nWarning: ') + '\S+' + _(' is being discontinued.'), "", self.note)
+        note = re.sub(_('\nWarning: ') + '\S+' + _(' is being discontinued.'), "", self.note or '')
         note = re.sub(' \S+%s\S+,*' % _(' will be replaced by '), "", note)
         warning_text = ''
         if self.any_use_up:
@@ -87,7 +87,7 @@ class SaleOrder(models.Model):
     def _onchange_non_returnable(self):
         self.env.context = dict(self.env.context, lang=self.partner_id.lang or 'en_US')
         pattern = '%s\S+%s' % (_('\nWarning: We kindly inform you that this item '), _(' cannot be returned. This is manufactured on demand for you.'))
-        note = re.sub(pattern, "", self.note)
+        note = re.sub(pattern, "", self.note or "")
         if self.any_non_returnable:
             warning_text = _('\nWarning: We kindly inform you that this item ') + self.non_returnable_skus + _(' cannot be returned. This is manufactured on demand for you.')
             note = note + warning_text
