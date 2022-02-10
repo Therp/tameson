@@ -7,7 +7,8 @@
     """,
     'author': "Tameson",
     'depends': [
-        'shopify_ept'
+        'shopify_ept',
+        'tameson_contact',
     ],
     'data': [
         'security/ir.model.access.csv',
