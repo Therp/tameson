@@ -43,11 +43,12 @@ class SaleOrder(models.Model):
         total_price = float(json.loads(order_data_queue_line.order_data).get('order',{}).get('total_price',0))
         if order_id:
             order_id.shopify_total_price = total_price
-        difference = abs(total_price - order_id.amount_total)
-        if order_id and float_compare(difference, 0.05, precision_digits=2) == 1:
-            msg = "Total amount missmatch shopify: %.2f odoo: %.2f" % (total_price, order_id.amount_total)
-            order_id.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
-                note=msg, user_id=order_id.user_id.id or SUPERUSER_ID)
+        if order_id:
+            difference = abs(total_price - order_id.amount_total)
+            if float_compare(difference, 0.05, precision_digits=2) == 1:
+                msg = "Total amount missmatch shopify: %.2f odoo: %.2f" % (total_price, order_id.amount_total)
+                order_id.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
+                    note=msg, user_id=order_id.user_id.id or SUPERUSER_ID)
         return order_id
 
     def shopify_create_sale_order_line(self, line, product, quantity,
