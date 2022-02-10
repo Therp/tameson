@@ -70,7 +70,7 @@ class ResPartner(models.Model):
                         'street_number2': split_parts[0][1],
                         'street_name': remaining_part,
                     })
-                    partner.message_post('House number extracted from address %s' % street)
+                    partner.message_post(body='House number extracted from address %s' % street)
                 else:
                     partner.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
                 note='House number extraction failed.', user_id=self.env.user.id or SUPERUSER_ID)
