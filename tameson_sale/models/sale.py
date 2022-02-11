@@ -55,8 +55,9 @@ class SaleOrder(models.Model):
     uu_skus = fields.Char(compute='_check_any_non_returnable')
     uu_replacement_skus = fields.Char(compute='_check_any_non_returnable')
     uu_replacement_skus_en = fields.Char(compute='_check_any_non_returnable')
+    weight_over_25 = fields.Char(compute='_check_any_non_returnable')
     
-    @api.depends('order_line.product_id.non_returnable', 'order_line.product_id.t_use_up', 'partner_id')
+    @api.depends('order_line.product_id.non_returnable', 'order_line.product_id.t_use_up', 'order_line.product_id.weight', 'partner_id')
     def _check_any_non_returnable(self):
         self.env.context = dict(self.env.context, lang=self.partner_id.lang or 'en_US')
         for record in self:
@@ -71,6 +72,7 @@ class SaleOrder(models.Model):
             add_text = _(' will be replaced by ')
             record.uu_replacement_skus = ', '.join(uur_products.mapped(lambda p: p and p.default_code + add_text + p.t_use_up_replacement_sku))
             record.uu_replacement_skus_en = ', '.join(uur_products.mapped(lambda p: p and p.default_code + ' will be replaced by ' + p.t_use_up_replacement_sku))
+            record.weight_over_25 = sum(self.order_line.mapped(lambda l: l.product_id.weight * l.product_uom_qty)) >= 25.0
 
     @api.onchange('order_line', 'any_use_up')
     def _onchange_any_use_up(self):

@@ -41,8 +41,12 @@
             <xpath expr="//notebook[1]" position="before">
                 <field name="any_non_returnable" invisible="True" />
                 <field name="any_use_up" invisible="True" />
+                <field name="weight_over_25" invisible="True" />
                 <h2 class="text-danger" attrs="{'invisible': [('any_non_returnable','=',False)]}" >
                     Warning: <field name="non_returnable_skus" /> is non-returnable.
+                </h2>
+                <h2 class="text-danger" attrs="{'invisible': [('weight_over_25','=',False)]}" >
+                    Warning: Order weight is over 25 KG.
                 </h2>
                 <h2 class="text-danger" attrs="{'invisible': [('any_use_up','=',False)]}" >
                     Warning: <field name="uu_skus" /> will be discontinued. <field name="uu_replacement_skus_en" />
