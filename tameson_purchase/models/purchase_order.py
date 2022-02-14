@@ -36,4 +36,9 @@ class PurchaseOrder(models.Model):
         self.find_and_refresh_picking_in_out_associations()
         return res
 
+    def action_rfq_send(self):
+        res = super(PurchaseOrder, self).action_rfq_send()
+        template = self.env.ref("tameson_purchasing.tameson_template_po_supplier").id
+        res['context']['default_template_id'] = template
+        return res
 
