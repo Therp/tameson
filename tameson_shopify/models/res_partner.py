@@ -53,8 +53,13 @@ class ResPartner(models.Model):
             'last_name': ' '.join(self.name.split(' ')[1:]) if self.name else '',
             'tag_string': 'odoo',
             'identifier': self.id,
-            'addresses': self._get_shopify_partner_address()
+            'addresses': self._get_shopify_partner_address(),
+            'tax_exempt': self._get_shopify_tax_exempt()
         }
+
+    def _get_shopify_tax_exempt(self):
+        self.ensure_one()
+        return not (bool(self.vat) and self.property_account_position_id.name == 'EU landen')
 
     def _get_shopify_partner_address(self):
         self.ensure_one()
