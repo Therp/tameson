@@ -112,6 +112,17 @@ class SaleOrder(models.Model):
         action = self.env.ref('tameson_sale.action_product_creation_wizard_act_window')
         return action.read()[0]
 
+    def _find_mail_template(self, force_confirmation_template=False):
+        template_id = False
+        if self.state == 'sale' or force_confirmation_template:
+            template_id = int(self.env['ir.config_parameter'].sudo().get_param('sale.default_confirmation_template'))
+            template_id = self.env['mail.template'].search([('id', '=', template_id)]).id
+            if not template_id:
+                template_id = self.env['ir.model.data'].xmlid_to_res_id('tameson_sale.tameson_sale_order_confirmation_payment_term', raise_if_not_found=False)
+        else:
+            template_id = 86
+        return template_id
+
     @api.onchange('t_invoice_policy')
     def _onchange_t_invoice_policy(self):
         if self.t_invoice_policy == 'delivery':
