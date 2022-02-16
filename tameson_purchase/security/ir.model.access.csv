@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_aa_mutation_all,access_aa_mutation_all,model_aa_mutation,base.group_user,1,1,1,1

@@ -1,10 +1,12 @@
 # Copyright 2020 Therp BV <https://therp.nl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-from odoo import api, models
+from odoo import models, fields, api, _
 
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
+
+    t_aa_mutation_ids = fields.One2many(comodel_name='aa.mutation', inverse_name='purchase_id',)
 
     def find_and_refresh_picking_in_out_associations(self):
         for this in self:
@@ -35,5 +37,12 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self)._create_picking()
         self.find_and_refresh_picking_in_out_associations()
         return res
+    
+    class AAMutation(models.Model):
+        _name = 'aa.mutation'
+        _description = 'AA Mutation'
+        _rec_name = 'name'
+        _order = 'name ASC'
 
-
+        purchase_id = fields.Many2one(comodel_name='purchase.order', ondelete='cascade', required=True)
+        name = fields.Char(required=True,copy=False)
