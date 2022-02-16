@@ -102,14 +102,14 @@ Dear
             <field name="auto_delete" eval="True"/>
         </record>
 
-        <record id="action_mail_delivery_delay" model="ir.actions.server">
+        <record id="action_mass_mail" model="ir.actions.server">
             <field name="type">ir.actions.server</field>
-            <field name="name">Send delivery delay mail</field>
+            <field name="name">Batch email</field>
             <field name="model_id" ref="stock.model_stock_picking" />
             <field name="binding_model_id" ref="stock.model_stock_picking" />
             <field name="code">
 if records:
-    action = records.action_delivery_delay_mail()
+    action = records.action_mass_mail()
             </field>
             <field name="state">code</field>
         </record>
