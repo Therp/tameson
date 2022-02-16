@@ -62,6 +62,7 @@ class ResPartner(models.Model):
             if partner_data:
                 partner.write(partner_data)
             partner.onchange_country_lang()
+            partner.extract_house_from_street()
         else:
             invoice = partner
         if not delivery_data:
@@ -113,4 +114,5 @@ class ResPartner(models.Model):
                 'street2': inv_street2,
             })
         partner.onchange_country_lang()
+        partner.extract_house_from_street()
         return partner, (self-partner)
