@@ -64,9 +64,9 @@ class StockPicking(models.Model):
             'res_id': batch.id
         }
         
-    def action_delivery_delay_mail(self):
+    def action_mass_mail(self):
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
-        template_id = self.env['mail.template'].search([('name','ilike','delivery delay')], limit=1).id
+        template_id = self.env['mail.template'].search([('model_id.model','=',self._name)], limit=1).id
 
         return {
             'type': 'ir.actions.act_window',
