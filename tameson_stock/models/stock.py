@@ -5,7 +5,7 @@ import itertools
 from odoo import api, fields, models, _
 from odoo.tools.pdf import merge_pdf
 from odoo.exceptions import UserError, ValidationError
-
+import re
 
 class StockPicking(models.Model):
     _name = 'stock.picking'
@@ -33,6 +33,21 @@ class StockPicking(models.Model):
         string=_('Fully paid'),
         store=True
     )
+
+    delay_picking_id = fields.Many2one(comodel_name='stock.picking', compute='_get_delay_po')
+    delay_partner_id = fields.Many2one(comodel_name='res.partner', compute='_get_delay_po')
+    
+    def _get_delay_po(self):
+        for picking in self:
+            delay_activity = picking.activity_ids.filtered(lambda a: 'The scheduled date' in a.note)
+            picking_id = re.findall('data-oe-id=\"(\d+)\"',delay_activity.note)
+            if len(picking_id) == 1:
+                picking_id = picking_id[0]
+                picking.delay_picking_id = int(picking_id)
+                picking.delay_partner_id = picking.delay_picking_id.partner_id.id
+            else:
+                picking.delay_picking_id = False
+                picking.delay_partner_id = False
 
     def action_validate_create_backorder(self):
         self.ensure_one()

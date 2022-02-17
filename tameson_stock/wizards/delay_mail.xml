@@ -14,12 +14,14 @@
                         </group>
                         <field name="picking_ids">
                             <tree string="Selected pickings" create="true" delete="true" edit="false" editable="bottom">
+                                <field name="name" />
                                 <field name="partner_id" />
                                 <field name="company_id" invisible="True"/>
                                 <field name="source_so_id" />
                                 <field name="scheduled_date" />
                                 <field name="state" />
-                                <field name="activity_ids" />
+                                <field name="delay_picking_id" />
+                                <field name="delay_partner_id" />
                             </tree>
                         </field>
                     </sheet>
