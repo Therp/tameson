@@ -196,13 +196,13 @@ class ProductProduct(models.Model):
         if not to_update_products:
             return
         bom_product_query = '''
-SELECT DISTINCT mb.product_id FROM product_product pp
+SELECT DISTINCT mb.product_tmpl_id FROM product_product pp
     LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
     LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
 WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
         self.env.cr.execute(bom_product_query)
         bom_products = [item[0] for item in self.env.cr.fetchall()]
-        to_update_products += self.browse(bom_products)
+        to_update_products += self.env['product.template'].browse(bom_products).mapped('product_variant_ids')
         to_update_products._minimal_qty_available_stored()
 
     def cron_recompute_all_min_qty_avail_stored(self):
@@ -311,14 +311,13 @@ class ProductTemplate(models.Model):
         if not to_update_products:
             return
         bom_product_query = '''
-SELECT DISTINCT mb.product_id FROM product_product pp
+SELECT DISTINCT mb.product_tmpl_id FROM product_product pp
     LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
     LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
 WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
         self.env.cr.execute(bom_product_query)
         bom_products = [item[0] for item in self.env.cr.fetchall()]
-        to_update_products += self.env['product.product'].browse(bom_products)
-        to_update_product_tmpls = to_update_products.mapped('product_tmpl_id')
+        to_update_product_tmpls = to_update_products.mapped('product_tmpl_id') + self.browse(bom_products)
         to_update_product_tmpls._minimal_qty_available_stored()
 
     def cron_recompute_all_min_qty_avail_stored_tmpl(self):
