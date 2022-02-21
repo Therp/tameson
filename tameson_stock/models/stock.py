@@ -36,6 +36,7 @@ class StockPicking(models.Model):
 
     delay_picking_id = fields.Many2one(comodel_name='stock.picking', compute='_get_delay_po')
     delay_partner_id = fields.Many2one(comodel_name='res.partner', compute='_get_delay_po')
+    old_date_expected = fields.Datetime(string='Old Date', compute='_get_old_date_expected')
     
     def _get_delay_po(self):
         for picking in self:
@@ -48,6 +49,15 @@ class StockPicking(models.Model):
             else:
                 picking.delay_picking_id = False
                 picking.delay_partner_id = False
+
+    @api.depends('move_lines.old_date_expected')
+    def old_date_expected(self):
+        for record in self:
+            if record.move_type == 'direct':
+                record.old_date_expected = min(record.move_lines.mapped('old_date_expected') or [fields.Datetime.now()])
+            else:
+                record.old_date_expected = max(record.move_lines.mapped('old_date_expected') or [fields.Datetime.now()])
+
 
     def action_validate_create_backorder(self):
         self.ensure_one()

@@ -18,6 +18,7 @@
                                 <field name="partner_id" />
                                 <field name="company_id" invisible="True"/>
                                 <field name="source_so_id" />
+                                <field name="old_date_expected" />
                                 <field name="scheduled_date" />
                                 <field name="state" />
                                 <field name="delay_picking_id" />
