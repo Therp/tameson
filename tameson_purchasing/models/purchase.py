@@ -77,7 +77,7 @@ class PurchaseOrder(models.Model):
                     product_code = po_line.product_id.default_code
                 qty = str(po_line.product_qty)
                 text_val_to_clipboard = (
-                    text_val_to_clipboard + "{prod_qty};{prod_code}\n".format(
+                    text_val_to_clipboard + "{prod_qty}\t{prod_code}\n".format(
                         prod_qty=qty, prod_code=product_code
                     )
                 )
