@@ -54,9 +54,9 @@ class StockPicking(models.Model):
     def _get_old_date_expected(self):
         for record in self:
             if record.move_type == 'direct':
-                record.old_date_expected = min(record.move_lines.mapped('old_date_expected') or [fields.Datetime.now()])
+                record.old_date_expected = min([date for date in record.move_lines.mapped('old_date_expected') if date])
             else:
-                record.old_date_expected = max(record.move_lines.mapped('old_date_expected') or [fields.Datetime.now()])
+                record.old_date_expected = max([date for date in record.move_lines.mapped('old_date_expected') if date])
 
 
     def action_validate_create_backorder(self):
