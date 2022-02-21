@@ -27,7 +27,7 @@ class StockMove(models.Model):
         elif vals.get('state', '') == 'done' and vals.get('date'):
             propagated_date_field = 'date'
         new_date = fields.Datetime.to_datetime(vals.get(propagated_date_field))
-        old_date = self.date_expected
+        old_date = max(self.mapped('date_expected'))
         vals.update(old_date_expected=old_date)
         res = super(StockMove, self).write(vals)
         ## Compare new date on Incoming operation with SO delivery/expected date
