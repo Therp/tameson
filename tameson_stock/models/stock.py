@@ -51,7 +51,7 @@ class StockPicking(models.Model):
                 picking.delay_partner_id = False
 
     @api.depends('move_lines.old_date_expected')
-    def old_date_expected(self):
+    def _get_old_date_expected(self):
         for record in self:
             if record.move_type == 'direct':
                 record.old_date_expected = min(record.move_lines.mapped('old_date_expected') or [fields.Datetime.now()])
