@@ -53,11 +53,14 @@ class StockPicking(models.Model):
     @api.depends('move_lines.old_date_expected')
     def _get_old_date_expected(self):
         for record in self:
-            if record.move_type == 'direct':
-                record.old_date_expected = min([date for date in record.move_lines.mapped('old_date_expected') if date])
+            dates = [date for date in record.move_lines.mapped('old_date_expected') if date]
+            if dates:
+                if record.move_type == 'direct':
+                    record.old_date_expected = min(dates)
+                else:
+                    record.old_date_expected = max(dates)
             else:
-                record.old_date_expected = max([date for date in record.move_lines.mapped('old_date_expected') if date])
-
+                record.old_date_expected = False
 
     def action_validate_create_backorder(self):
         self.ensure_one()
