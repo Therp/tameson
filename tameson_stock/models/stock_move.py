@@ -27,8 +27,10 @@ class StockMove(models.Model):
         elif vals.get('state', '') == 'done' and vals.get('date'):
             propagated_date_field = 'date'
         new_date = fields.Datetime.to_datetime(vals.get(propagated_date_field))
-        old_date = max(self.mapped('date_expected'))
-        vals.update(old_date_expected=old_date)
+        if propagated_date_field:
+            dates = self.mapped('date_expected')
+            old_date = dates and max(dates)
+            vals.update(old_date_expected=old_date)
         res = super(StockMove, self).write(vals)
         ## Compare new date on Incoming operation with SO delivery/expected date
         ## Dismiss exception posted on Picking if not later than SO delivery/expected date + propagate_date_minimum_delta
