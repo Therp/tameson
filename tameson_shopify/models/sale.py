@@ -60,9 +60,11 @@ class SaleOrder(models.Model):
                                        product_name, order_id,
                                        price, order_response, is_shipping,
                                        previous_line, is_discount)
-        tax =  sum([float(l['rate']) for l in line['tax_lines']])
-        line_id.price_unit = line_id.price_unit / (1 + tax)
-        line_id.with_context(round=False)._compute_amount()
+        tax_included = order_response.get('taxes_included')
+        if tax_included:
+            tax =  sum([float(l['rate']) for l in line['tax_lines']])
+            line_id.price_unit = line_id.price_unit / (1 + tax)
+            line_id.with_context(round=False)._compute_amount()
         return line_id
 
     def process_orders_and_invoices_ept(self):
