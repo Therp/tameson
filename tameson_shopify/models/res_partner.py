@@ -11,6 +11,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+from odoo.tools.date_utils import add
 
 
 def get_partner_vals(env, address, email):
@@ -42,6 +43,40 @@ def get_partner_vals(env, address, email):
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+
+    def _get_shopify_partner_data(self):
+        self.ensure_one()
+        return {
+            'email': self.email,
+            "return_to": "/collections/all",
+            'first_name': self.name.split(' ')[0] if self.name else '',
+            'last_name': ' '.join(self.name.split(' ')[1:]) if self.name else '',
+            'tag_string': 'odoo',
+            'identifier': self.id,
+            'addresses': self._get_shopify_partner_address(),
+        }
+
+    def _get_shopify_partner_address(self):
+        self.ensure_one()
+        address = []
+        childs = self.child_ids or self
+        for child in childs:
+            address.append({
+                'address1': child.street,
+                'address2': child.street2 or '',
+                'city': child.city,
+                'country': child.country_id.name,
+                'first_name': child.name.split(' ')[0] if child.name else '',
+                'last_name': ' '.join(child.name.split(' ')[1:]) if child.name else '',
+                'company': child.parent_id.name or '',
+                'phone': child.phone,
+                'province': child.state_id.name or '',
+                'zip': child.zip,
+                'province_code': child.state_id.code or '',
+                'country_code': child.country_id.code,
+                'default': False
+            })
+        return address
 
     def shopify_get_contact_data(self):
         self.ensure_one()
