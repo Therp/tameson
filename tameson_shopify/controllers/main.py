@@ -21,7 +21,7 @@ class Shopify(Controller):
     def shopify_auth(self, instance_id=None, shopify_page=None, **kw):
         instance = request.env['shopify.instance.ept'].sudo().browse(instance_id)
         if not instance:
-            instance = request.env.user.partner_id.country_id.shopify_instance_id.id
+            instance = request.env.user.partner_id.country_id.shopify_instance_id
         if not instance:
             instance = request.env["ir.config_parameter"].sudo().get_param("default.shopify.instance", False)
             if instance:
