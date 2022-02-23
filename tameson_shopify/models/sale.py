@@ -38,15 +38,22 @@ class SaleOrder(models.Model):
         })
         return vals
     
+    def prepare_shopify_order_vals(self, instance, partner, shipping_address,
+                                   invoice_address, order_response, payment_gateway,
+                                   workflow):
+        vals = super(SaleOrder, self).prepare_shopify_order_vals(instance, partner, shipping_address,
+                                   invoice_address, order_response, payment_gateway,
+                                   workflow)
+        total_price = float(order_response.get('total_price',0))
+        vals.update({'shopify_total_price': total_price})
+        return vals
+
     def import_shopify_orders(self, order_data_queue_line, log_book_id):
         order_id = super(SaleOrder, self).import_shopify_orders(order_data_queue_line, log_book_id)
-        total_price = float(json.loads(order_data_queue_line.order_data).get('order',{}).get('total_price',0))
         if order_id:
-            order_id.shopify_total_price = total_price
-        if order_id:
-            difference = abs(total_price - order_id.amount_total)
+            difference = abs(order_id.shopify_total_price - order_id.amount_total)
             if float_compare(difference, 0.05, precision_digits=2) == 1:
-                msg = "Total amount missmatch shopify: %.2f odoo: %.2f" % (total_price, order_id.amount_total)
+                msg = "Total amount missmatch shopify: %.2f odoo: %.2f" % (order_id.shopify_total_price, order_id.amount_total)
                 order_id.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
                     note=msg, user_id=order_id.user_id.id or SUPERUSER_ID)
         return order_id
@@ -60,9 +67,11 @@ class SaleOrder(models.Model):
                                        product_name, order_id,
                                        price, order_response, is_shipping,
                                        previous_line, is_discount)
-        tax =  sum([float(l['rate']) for l in line['tax_lines']])
-        line_id.price_unit = line_id.price_unit / (1 + tax)
-        line_id.with_context(round=False)._compute_amount()
+        tax_included = order_response.get('taxes_included')
+        if tax_included:
+            tax =  sum([float(l['rate']) for l in line['tax_lines']])
+            line_id.price_unit = line_id.price_unit / (1 + tax)
+            line_id.with_context(round=False)._compute_amount()
         return line_id
 
     def process_orders_and_invoices_ept(self):
