@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <field name="shopify_password" position="after">
                     <field name="shopify_multipass_secret" password="1" />
+                    <field name="multipass_country_ids" widget="many2many_tags"/>
                 </field>
             </field>
         </record>
