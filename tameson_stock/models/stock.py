@@ -5,7 +5,7 @@ import itertools
 from odoo import api, fields, models, _
 from odoo.tools.pdf import merge_pdf
 from odoo.exceptions import UserError, ValidationError
-
+import re
 
 class StockPicking(models.Model):
     _name = 'stock.picking'
@@ -33,6 +33,34 @@ class StockPicking(models.Model):
         string=_('Fully paid'),
         store=True
     )
+
+    delay_picking_id = fields.Many2one(comodel_name='stock.picking', compute='_get_delay_po')
+    delay_partner_id = fields.Many2one(comodel_name='res.partner', compute='_get_delay_po')
+    old_date_expected = fields.Datetime(string='Old Date', compute='_get_old_date_expected')
+    
+    def _get_delay_po(self):
+        for picking in self:
+            delay_activity = picking.activity_ids.filtered(lambda a: 'The scheduled date' in a.note)
+            picking_id = re.findall('data-oe-id=\"(\d+)\"',delay_activity.note)
+            if len(picking_id) == 1:
+                picking_id = picking_id[0]
+                picking.delay_picking_id = int(picking_id)
+                picking.delay_partner_id = picking.delay_picking_id.partner_id.id
+            else:
+                picking.delay_picking_id = False
+                picking.delay_partner_id = False
+
+    @api.depends('move_lines.old_date_expected', 'move_type')
+    def _get_old_date_expected(self):
+        for record in self:
+            dates = [date for date in record.move_lines.mapped('old_date_expected') if date]
+            if dates:
+                if record.move_type == 'direct':
+                    record.old_date_expected = min(dates)
+                else:
+                    record.old_date_expected = max(dates)
+            else:
+                record.old_date_expected = False
 
     def action_validate_create_backorder(self):
         self.ensure_one()
@@ -64,9 +92,9 @@ class StockPicking(models.Model):
             'res_id': batch.id
         }
         
-    def action_delivery_delay_mail(self):
+    def action_mass_mail(self):
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
-        template_id = self.env['mail.template'].search([('name','ilike','delivery delay')], limit=1).id
+        template_id = self.env['mail.template'].search([('model_id.model','=',self._name)], limit=1).id
 
         return {
             'type': 'ir.actions.act_window',
