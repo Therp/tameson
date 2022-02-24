@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data noupdate="0">
+        <template id="portal_frontend_layout_tameson" inherit_id="portal.frontend_layout">
+            <xpath expr="//ul[@id='top_menu']" position="before">
+                <ul class="nav navbar-nav">
+                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                        <t t-call="website.submenu">
+                            <t t-set="item_class" t-value="'nav-item'"/>
+                            <t t-set="link_class" t-value="'nav-link'"/>
+                        </t>
+                    </t>
+                </ul>
+            </xpath>
+        </template>
+        <template id="layout_tameson" inherit_id="website.layout">
+            <t t-foreach="website.menu_id.child_id" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </t>
+        </template>
         <template id="frontend_layout_tameson" inherit_id="web.frontend_layout">
             <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
                 <attribute name="t-if">False</attribute>
