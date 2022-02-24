@@ -50,7 +50,7 @@ class StockPicking(models.Model):
                 picking.delay_picking_id = False
                 picking.delay_partner_id = False
 
-    @api.depends('move_lines.old_date_expected')
+    @api.depends('move_lines.old_date_expected', 'move_type')
     def _get_old_date_expected(self):
         for record in self:
             dates = [date for date in record.move_lines.mapped('old_date_expected') if date]
