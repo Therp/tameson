@@ -6,14 +6,14 @@
                 <ul class="nav navbar-nav">
                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                         <t t-call="website.submenu">
-                            <t t-set="item_class" t-value="'nav-item'"/>
-                            <t t-set="link_class" t-value="'nav-link'"/>
+                            <t t-set="item_class" t-value="'nav-item'" />
+                            <t t-set="link_class" t-value="'nav-link nav-tameson'" />
                         </t>
                     </t>
                 </ul>
             </xpath>
             <xpath expr="//ul[@id='top_menu']/li[1]" position="before">
-                <t t-call="tameson_website.language_selector"/>
+                <t t-call="tameson_website.language_selector" />
             </xpath>
         </template>
         <template id="layout_tameson" inherit_id="website.layout">
@@ -30,23 +30,26 @@
             </xpath>
         </template>
         <template id="language_selector">
-                <li class="nav-item js_language_selector" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
-                    <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][2].split('/').pop()"/>
-                            <span class="caret ml4"/>
-                        </a>
-                        <div class="dropdown-menu" role="menu">
-                            <t t-foreach="languages" t-as="lg">
-                                <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
-                                   class="dropdown-item js_change_lang"
-                                   t-att-data-url_code="lg[1]">
-                                    <t t-esc="lg[2].split('/').pop()"/>
-                                </a>
-                            </t>
-                        </div>
+            <li class="nav-item js_language_selector" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][2].split('/').pop()" />
+                        <span class="caret ml4" />
+                    </a>
+                    <div class="dropdown-menu" role="menu">
+                        <t t-foreach="languages" t-as="lg">
+                            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])" class="dropdown-item js_change_lang" t-att-data-url_code="lg[1]">
+                                <t t-esc="lg[2].split('/').pop()" />
+                            </a>
+                        </t>
                     </div>
-                </li>
+                </div>
+            </li>
+        </template>
+        <template id="assets_frontend" inherit_id="website.assets_frontend" >
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/tameson_website/static/src/scss/tameson.scss" />
+            </xpath>
         </template>
     </data>
 </odoo>
