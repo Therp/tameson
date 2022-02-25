@@ -11,6 +11,7 @@
         "procurement_purchase_no_grouping",
         "purchase_stock",
         "sale_stock",
+        "tameson_stock",
     ],
     "data": [
         "security/ir.model.access.csv",
