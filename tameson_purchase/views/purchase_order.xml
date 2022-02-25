@@ -18,7 +18,7 @@
                 position="after">
                 <field name="ungrouped_origin"/>
                 <field name="minimal_qty_available" attrs="{'column_invisible': [('state','in',('purchase','done','cancel'))]}" />
-                    <field name="max_reorder" attrs="{'column_invisible': [('state','in',('purchase','done','cancel'))]}" />
+                <field name="max_reorder" attrs="{'column_invisible': [('state','in',('purchase','done','cancel'))]}" />
             </xpath>
         </field>
     </record>
