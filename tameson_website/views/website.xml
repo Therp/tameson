@@ -3,7 +3,7 @@
     <data noupdate="0">
         <template id="portal_frontend_layout_tameson" inherit_id="portal.frontend_layout">
             <xpath expr="//ul[@id='top_menu']" position="before">
-                <ul class="nav navbar-nav">
+                <ul class="ml-4 nav navbar-nav">
                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                         <t t-call="website.submenu">
                             <t t-set="item_class" t-value="'nav-item'" />
