@@ -35,7 +35,7 @@
         </record>
         <record id="action_send_delay_mail" model="ir.actions.act_window">
             <field name="type">ir.actions.act_window</field>
-            <field name="name">Send delay mail</field>
+            <field name="name">Delay email (auto)</field>
             <field name="res_model">picking.delay.mail</field>
             <field name="view_mode">form</field>
             <field name="binding_model_id" ref="stock.model_stock_picking" />
