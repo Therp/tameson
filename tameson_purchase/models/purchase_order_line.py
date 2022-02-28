@@ -52,3 +52,6 @@ class PurchaseOrderLine(models.Model):
     def _get_max_reorder(self):
         for line in self:
             line.max_reorder = line.product_id.orderpoint_ids[:1].product_max_qty
+    
+    incoming_qty = fields.Float(related='product_id.incoming_qty')
+    outgoing_qty = fields.Float(related='product_id.outgoing_qty')
