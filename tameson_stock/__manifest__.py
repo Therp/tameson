@@ -22,6 +22,10 @@
     products with an orderpoint and 'buy' + 'mto+mts' for products which are not
     in an orderpoint.
 
+    Adds action `Send delay mail` on stock.picking list view, can be used to 
+    send Delivery delayed mail to all delayed delivery partners.
+    Pickings auto selected if Delivery, waiting, have exception containing
+    'The scheduled date' string.
     """,
     'author': "Tameson",
     'depends': [
