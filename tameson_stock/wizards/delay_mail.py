@@ -19,8 +19,21 @@ class PickingDelay(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        picking_ids = self.env['stock.picking'].search([('activity_exception_decoration', '!=', False),('state','not in',('done','cancel'))]).\
-            filtered(lambda p: p.activity_ids.filtered(lambda a: 'The scheduled date' in a.note))
+        picking_ids = (
+            self.env["stock.picking"]
+            .search(
+                [
+                    ("activity_exception_decoration", "!=", False),
+                    ("state", "in", ("waiting", "confirmed")),
+                    ("picking_type_code", "=", "outgoing"),
+                ]
+            )
+            .filtered(
+                lambda p: p.activity_ids.filtered(
+                    lambda a: "The scheduled date" in a.note
+                )
+            )
+        )
         res = super(PickingDelay, self).default_get(fields)
         template = self.env.ref('tameson_stock.tameson_picking_order_delay').id
         if not template:
