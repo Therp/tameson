@@ -5,7 +5,7 @@
 ###############################################################################
 
 from odoo.http import request
-from odoo import tools
+from odoo import tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.portal.controllers.portal import CustomerPortal
 
