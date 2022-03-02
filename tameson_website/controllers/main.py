@@ -40,6 +40,8 @@ class CustomerPortal(CustomerPortal):
                     })
                     try:
                         partner_dummy.check_vat()
+                    # append exception to error_message
+                    # displayed to portal user
                     except ValidationError as e:
                         error_message.append(str(e))
                         error["vat"] = 'error'
