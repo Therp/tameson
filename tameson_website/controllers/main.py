@@ -12,59 +12,15 @@ from odoo.addons.base_vat.models.res_partner import _region_specific_vat_codes
 
 
 class CustomerPortal(CustomerPortal):
-    
     def details_form_validate(self, data):
-        error = dict()
-        error_message = []
-
-        # Validation
-        for field_name in self.MANDATORY_BILLING_FIELDS:
-            if not data.get(field_name):
-                error[field_name] = 'missing'
-
-        # email validation
-        if data.get('email') and not tools.single_email_re.match(data.get('email')):
-            error["email"] = 'error'
-            error_message.append(_('Invalid Email! Please enter a valid email address.'))
-
-        # vat validation
+        error, error_message = super(CustomerPortal, self).details_form_validate(data)
         partner = request.env.user.partner_id
-        if data.get("vat") and partner and partner.vat != data.get("vat"):
-            if partner.can_edit_vat():
-                if hasattr(partner, "check_vat"):
-                    if data.get("country_id"):
-                        data["vat"] = request.env["res.partner"].fix_eu_vat_number(int(data.get("country_id")), data.get("vat"))
-                    partner_dummy = partner.new({
-                        'vat': data['vat'],
-                        'country_id': (int(data['country_id'])
-                                       if data.get('country_id') else False),
-                    })
-                    try:
-                        company = request.env.company
-                        eu_countries = request.env.ref('base.europe').country_ids
-                        is_eu_country = partner.country_id in eu_countries
-                        if company.vat_check_vies and is_eu_country and partner.is_company:
-                            # force full VIES online check
-                            message = "VIES VAT verification failed."
-                        else:
-                            # quick and partial off-line checksum validation
-                            message = 'Invalid VAT format.'
-                        partner_dummy.check_vat()
-                    # append exception to error_message
-                    # displayed to portal user
-                    except ValidationError as e:
-                        error_message.append(_(message))
-                        error["vat"] = 'error'
+        if error.get("vat", False) == "error":
+            vat_country_code, vat_number = partner._split_vat(data['vat'])
+            if not partner.simple_vat_check(vat_country_code, vat_number):
+                message = "Invalid VAT format."
             else:
-                error_message.append(_('Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'))
-
-        # error message for empty required fields
-        if [err for err in error.values() if err == 'missing']:
-            error_message.append(_('Some required fields are empty.'))
-
-        unknown = [k for k in data if k not in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS]
-        if unknown:
-            error['common'] = 'Unknown field'
-            error_message.append("Unknown field '%s'" % ','.join(unknown))
-
+                # quick and partial off-line checksum validation
+                message = "VIES VAT verification failed."
+            error_message.append(_(message))
         return error, error_message
