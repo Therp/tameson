@@ -16,8 +16,6 @@
         'views/website.xml',
     ],
     'qweb': [
-        'static/src/xml/qweb.xml',
-        'static/src/xml/qty_at_date.xml',
     ],
     'application': False,
     'license': u'OPL-1',
