@@ -8,6 +8,7 @@ from odoo.http import request
 from odoo import tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.base_vat.models.res_partner import _region_specific_vat_codes
 
 
 class CustomerPortal(CustomerPortal):
@@ -39,11 +40,20 @@ class CustomerPortal(CustomerPortal):
                                        if data.get('country_id') else False),
                     })
                     try:
+                        company = request.env.company
+                        eu_countries = request.env.ref('base.europe').country_ids
+                        is_eu_country = partner.country_id in eu_countries
+                        if company.vat_check_vies and is_eu_country and partner.is_company:
+                            # force full VIES online check
+                            message = "VIES VAT verification failed."
+                        else:
+                            # quick and partial off-line checksum validation
+                            message = 'Invalid VAT format.'
                         partner_dummy.check_vat()
                     # append exception to error_message
                     # displayed to portal user
                     except ValidationError as e:
-                        error_message.append(str(e))
+                        error_message.append(_(message))
                         error["vat"] = 'error'
             else:
                 error_message.append(_('Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'))
