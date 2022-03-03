@@ -20,7 +20,6 @@ class CustomerPortal(CustomerPortal):
             if not partner.simple_vat_check(vat_country_code, vat_number):
                 message = "Invalid VAT format."
             else:
-                # quick and partial off-line checksum validation
                 message = "VIES VAT verification failed."
             error_message.append(_(message))
         return error, error_message
