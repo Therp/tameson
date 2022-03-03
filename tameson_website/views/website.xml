@@ -51,5 +51,21 @@
                 <link rel="stylesheet" type="text/scss" href="/tameson_website/static/src/scss/tameson.scss" />
             </xpath>
         </template>
+        <template id="portal_address" inherit_id="portal.portal_my_details" primary="True">
+            <xpath expr="//form[@action='/my/account']" position="attributes">
+                <attribute name="action"><t t-esc="form" /></attribute>
+            </xpath>
+        </template>
+        <template id="portal_my_home_addresses" inherit_id="portal.portal_my_home" >
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+                <t t-set="partner" t-value="user_id.partner_id" />
+                <t t-foreach="range(len(partner.child_ids))" t-as="child">
+                    <t t-call="portal.portal_docs_entry">
+                        <t t-set="title" t-value="'Address: %s' % partner.child_ids[child].name" />
+                        <t t-set="url" t-value="'/my/address/%d' % child"/>
+                    </t>                            
+                </t>
+            </xpath>
+        </template>
     </data>
 </odoo>

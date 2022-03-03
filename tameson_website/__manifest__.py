@@ -9,6 +9,7 @@
     """,
     'author': "Tameson",
     'depends': [
+        'portal',
         'website',
     ],
     'data': [
