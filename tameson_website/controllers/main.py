@@ -8,7 +8,7 @@ from odoo.http import request, route
 from odoo import tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.addons.base_vat.models.res_partner import _region_specific_vat_codes
+from odoo.addons.base_vat.models.res_partner import _region_specific_vat_codes, _ref_vat
 
 
 class CustomerPortal(CustomerPortal):
@@ -16,12 +16,14 @@ class CustomerPortal(CustomerPortal):
         error, error_message = super(CustomerPortal, self).details_form_validate(data)
         partner = request.env.user.partner_id
         if error.get("vat", False) == "error":
-            vat_country_code, vat_number = partner._split_vat(data['vat'])
-            if not partner.simple_vat_check(vat_country_code, vat_number):
-                message = "Invalid VAT format."
-            else:
-                message = "VIES VAT verification failed."
-            error_message.append(_(message))
+            country = (int(data['country_id']) if data.get('country_id') else False)
+            country = request.env['res.country'].browse(country).code.lower()
+            if not country:
+                country = partner.country_id
+            vat_country_code = country.code.lower()
+            _ref_vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
+            _ref_vat_no = _ref_vat.get(vat_country_code) or _ref_vat_no
+            error_message.append(_('The VAT number either failed the VIES VAT validation check or did not respect the expected format ') + _ref_vat_no)
         return error, error_message
 
     @route(['/my/address/<int:child_pos>'], type='http', auth='user', website=True)
