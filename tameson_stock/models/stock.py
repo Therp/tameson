@@ -34,6 +34,12 @@ class StockPicking(models.Model):
         store=True
     )
 
+    def _latest_expected_skus(self):
+        self.ensure_one()
+        latest_date = self.move_lines.sorted(lambda m: m.date_expected, True)[:1].date_expected
+        return self.move_lines.filtered(lambda m: m.date_expected.date() == latest_date.date()).\
+                mapped('product_id.default_code')
+
     delay_picking_id = fields.Many2one(comodel_name='stock.picking', compute='_get_delay_po')
     delay_partner_id = fields.Many2one(comodel_name='res.partner', compute='_get_delay_po')
     old_date_expected = fields.Datetime(string='Old Date', compute='_get_old_date_expected')
