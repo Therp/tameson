@@ -4,7 +4,7 @@
         <template id="portal_my_home" inherit_id="portal.portal_my_home">
             <xpath expr="//div[hasclass('o_portal_my_home')]" position="after">
                 <br/>
-                <h3>Webshops</h3>
+                <h3>Other</h3>
                 <div class="o_portal_docs list-group">
                     <t t-call="portal.portal_docs_entry">
                         <t t-set="title" t-value="'Back to webshop'" />
