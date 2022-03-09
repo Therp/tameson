@@ -34,7 +34,7 @@ class StockPicking(models.Model):
         store=True
     )
 
-    def _latest_expected_skus(self):
+    def latest_expected_skus(self):
         self.ensure_one()
         latest_date = self.move_lines.sorted(lambda m: m.date_expected, True)[:1].date_expected
         return self.move_lines.filtered(lambda m: m.date_expected.date() == latest_date.date()).\
