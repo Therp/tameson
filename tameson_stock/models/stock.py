@@ -40,7 +40,8 @@ class StockPicking(models.Model):
     
     def _get_delay_po(self):
         for picking in self:
-            delay_activity = picking.activity_ids.filtered(lambda a: 'The scheduled date' in a.note)
+            delay_activity = picking.activity_ids.filtered(lambda a: 'The scheduled date' in a.note).\
+                sorted('create_date',True)[:1]
             picking_id = delay_activity and re.findall('data-oe-id=\"(\d+)\"',delay_activity.note) or []
             if len(picking_id) == 1:
                 picking_id = picking_id[0]
