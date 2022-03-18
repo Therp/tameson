@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_sale_price_history_tree" model="ir.ui.view">
+            <field name="name">view_sale_price_history_tree</field>
+            <field name="model">sale.price.history</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="view_sale_price_history_tree" create="true" delete="true" edit="true">
+                    <field name="product_tmpl_id" />
+                    <field name="sale_price" />
+                    <field name="date" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search view for "model" -->
+        <record id="view_report_sale_price_history_search" model="ir.ui.view">
+            <field name="name">view_report_sale_price_history_search</field>
+            <field name="model">report.sale.price.history</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="model_search">
+                    <field name="product_tmpl_id" />
+                </search>
+            </field>
+        </record>
+
+        <record id="view_sale_price_history_search" model="ir.ui.view">
+            <field name="name">view_sale_price_history_search</field>
+            <field name="model">sale.price.history</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="model_search">
+                    <field name="product_tmpl_id" />
+                </search>
+            </field>
+        </record>
+
+        <!-- Main window action for "model" -->
+        <record id="product_open_sale_price_history_report" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Sale price history graph</field>
+            <field name="res_model">report.sale.price.history</field>
+            <field name="view_mode">graph,grid</field>
+            <field name="target">current</field>
+            <field name="context">{'search_default_product_tmpl_id': active_id}</field>
+            <field name="search_view_id" ref="view_report_sale_price_history_search" />
+        </record>
+        
+        <record id="action_sale_price_history_report" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Sale price history graph</field>
+            <field name="res_model">report.sale.price.history</field>
+            <field name="view_mode">graph,grid</field>
+            <field name="target">current</field>
+            <field name="search_view_id" ref="view_report_sale_price_history_search" />
+        </record>
+
+        <record id="action_sale_price_history" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Sale price history list</field>
+            <field name="res_model">sale.price.history</field>
+            <field name="view_mode">graph,grid</field>
+            <field name="target">current</field>
+            <field name="search_view_id" ref="view_sale_price_history_search" />
+        </record>
+
+        <record id="view_sale_price_history_graph" model="ir.ui.view">
+            <field name="name">view_sale_price_history_graph</field>
+            <field name="model">report.sale.price.history</field>
+            <field name="arch" type="xml">
+                <graph string="view_sale_price_history_graph" type="line" stacked="False">
+                    <field name="date" interval="week" />
+                    <field name="product_tmpl_id" type="row" />
+                    <field name="sale_price" type="measure" />
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_sale_price_history_grid" model="ir.ui.view">
+            <field name="name">view_sale_price_history_grid</field>
+            <field name="model">report.sale.price.history</field>
+            <field name="arch" type="xml">
+                <grid js_class="stock_enterprise_report_grid" string="History" adjustment="object" adjust_name="adjust_grid" class="o_report_stock_quantity">
+                    <field name="product_tmpl_id" type="row" />
+                    <field name="date" type="col">
+                        <range name="week" string="Week" span="week" step="day" />
+                        <range name="month" string="Month" span="month" step="day" />
+                    </field>
+                    <field name="sale_price" type="measure" />
+                </grid>
+            </field>
+        </record>
+
+        <!-- Main menu for "model" -->
+        <record id="menu_sale_price_history_graph" model="ir.ui.menu">
+            <field name="name">Sale price history graph</field>
+            <field name="sequence" eval="10" />
+            <field name="action" ref="action_sale_price_history_report" />
+            <field name="parent_id" ref="sale.menu_sale_report" />
+        </record>
+        <record id="menu_sale_price_history" model="ir.ui.menu">
+            <field name="name">Sale price history list</field>
+            <field name="sequence" eval="10" />
+            <field name="action" ref="action_sale_price_history" />
+            <field name="parent_id" ref="sale.menu_sale_report" />
+        </record>
+
+        
+        <record id="product_template_only_form_view" model="ir.ui.view">
+            <field name="name">product_template_only_form_view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view" />
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button"
+                    name="%(product_open_sale_price_history_report)d"
+                    icon="fa-cubes"
+                    type="action" >
+                    <span class="o_stat_text">Price history</span>
+                    </button>
+                </div>
+            </field>
+        </record>
+                
+    </data>
+</odoo>
