@@ -35,7 +35,7 @@ class AAStock(models.TransientModel):
                 data = json.loads(data_response.text)
             except Exception as e:
                 raise UserError(str(e))
-            vals = [{'sku': result['sku'], 'stock': result['stock']} for result in data['result']]
+            vals = [{'sku': result['sku'], 'stock': result['economicStock']} for result in data['result']]
             self.create(vals)
             locations = self.env['stock.location'].search([('id','child_of',wh.lot_stock_id.id)])
             query = """
