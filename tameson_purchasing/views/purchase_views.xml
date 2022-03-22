@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_approve']" position="after">
                 <field name="t_done_pickings" invisible="1" />
+                <field name="date_planned" required="True"/>        
                 <field name="t_purchase_method"
                        attrs="{'readonly': [('t_done_pickings', '!=', [])]}" />
             </xpath>
