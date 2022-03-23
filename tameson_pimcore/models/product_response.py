@@ -416,6 +416,7 @@ class PimcoreProductResponseLine(models.Model):
             "intrastat_id": commodity_code.id,
             "t_product_description_short": self.short_description,
             "t_use_up": self.use_up,
+            "purchase_ok": not self.use_up,
             "standard_price": price,
             "t_use_up_replacement_sku": self.replacement_sku,
             "intrastat_origin_country_id": origin.id,
