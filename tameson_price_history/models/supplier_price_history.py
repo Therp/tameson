@@ -34,6 +34,24 @@ class SupplierPriceHistory(models.Model):
         default=fields.Date.context_today,
     )
 
+    @api.model
+    def create(self, vals_list):
+        currency_id = vals_list.get("currency_id", False)
+        if not currency_id:
+            currency_id = 1
+            vals_list["currency_id"] = 1
+        if currency_id == 1:
+            vals_list["supplier_price"] = vals_list["supplier_price_orig"]
+        else:
+            currency = self.env["res.currency"].browse(currency_id)
+            price = currency._convert(
+                vals_list["supplier_price_orig"],
+                1,
+                self.env.user.company_id,
+                vals_list.get("date", False) or fields.Date.today(),
+            )
+            vals_list["supplier_price"] = price
+        return super(SupplierPriceHistory, self).create(vals_list)
 
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
@@ -52,13 +70,6 @@ class ProductSupplierinfo(models.Model):
 
     def record_price_history(self):
         for ps in self:
-            price_orig = ps.price
-            ccur= self.env.user.company_id.currency_id
-            price = ps.currency_id._convert(
-                    price_orig, ccur,
-                    self.env.user.company_id, fields.Date.today()
-                ) if ps.currency_id.id != ccur.id else price_orig
-            
             ps.product_tmpl_id.write(
                 {
                     "supplier_price_ids": [
@@ -67,8 +78,7 @@ class ProductSupplierinfo(models.Model):
                             0,
                             {
                                 "supplier_id": ps.name.id,
-                                "supplier_price": price,
-                                "supplier_price_orig": price_orig,
+                                "supplier_price_orig": ps.price,
                                 "supplier_currency_id": ps.currency_id.id,
                                 "supplier_code": ps.product_code,
                             },
