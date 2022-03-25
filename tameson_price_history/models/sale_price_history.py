@@ -44,7 +44,8 @@ class ReportSPH(models.Model):
 CREATE or REPLACE VIEW report_sale_price_history AS (
 with main as (
 	select dt::date date, pt.id product_tmpl_id
-	from generate_series((select min(date) from sale_price_history), (select max(date) from sale_price_history), '7 day'::interval) dt, 
+	from generate_series((now() at time zone 'utc')::date - interval '6month',
+        (now() at time zone 'utc')::date, '7 day'::interval) dt, 
 	product_template pt 
 	where pt.id in (select distinct product_tmpl_id from sale_price_history)
 	order by dt DESC, pt.id asc
