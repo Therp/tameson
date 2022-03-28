@@ -36,10 +36,10 @@ class SupplierPriceHistory(models.Model):
 
     @api.model
     def create(self, vals_list):
-        currency_id = vals_list.get("currency_id", False)
+        currency_id = vals_list.get("supplier_currency_id", False)
         if not currency_id:
             currency_id = 1
-            vals_list["currency_id"] = 1
+            vals_list["supplier_currency_id"] = 1
         if currency_id == 1:
             vals_list["supplier_price"] = vals_list["supplier_price_orig"]
         else:
