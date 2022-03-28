@@ -11,36 +11,17 @@
             <field name="arch" type="xml">
                 <tree string="view_supplier_price_history_tree" create="true" delete="true" edit="true">
                     <field name="product_tmpl_id" />
-                    <field name="supplier_id" />
-                    <field name="supplier_code" />
                     <field name="supplier_price" />
+                    <field name="date" />
+                    <field name="supplier_id" />
                     <field name="supplier_price_orig" />
                     <field name="supplier_currency_id" />
-                    <field name="date" />
+                    <field name="supplier_code" />
                 </tree>
             </field>
         </record>
-        
-        <!-- Form view for "model" -->
-        <record id="view_supplier_price_history_form" model="ir.ui.view">
-            <field name="name">view_supplier_price_history_form</field>
-            <field name="model">supplier.price.history</field>
-            <field name="type">form</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <form string="model_form" create="true" delete="true" edit="true">
-                    <group>
-                        <field name="product_tmpl_id" />
-                        <field name="supplier_price" />
-                        <field name="date" />
-                    </group>
-                </form>
-            </field>
-        </record>
-        
-        <!-- Search view for "model" -->
+
+
         <record id="view_supplier_price_history_search" model="ir.ui.view">
             <field name="name">view_supplier_price_history_search</field>
             <field name="model">supplier.price.history</field>
@@ -54,36 +35,60 @@
                 </search>
             </field>
         </record>
-        
-        <!-- Main window action for "model" -->
-        <record id="action_supplier_price_history_act_window" model="ir.actions.act_window">
+
+        <record id="action_supplier_price_history" model="ir.actions.act_window">
             <field name="type">ir.actions.act_window</field>
-            <field name="name">supplier price history</field>
+            <field name="name">supplier price history list</field>
             <field name="res_model">supplier.price.history</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">graph,list</field>
             <field name="target">current</field>
             <field name="search_view_id" ref="view_supplier_price_history_search" />
         </record>
-        
+        <record id="action_supplier_price_history_product" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">supplier price history list</field>
+            <field name="res_model">supplier.price.history</field>
+            <field name="view_mode">graph,list</field>
+            <field name="target">current</field>
+            <field name="context">{'search_default_product_tmpl_id': active_id}</field>
+            <field name="search_view_id" ref="view_supplier_price_history_search" />
+        </record>
+
         <record id="view_supplier_price_history_graph" model="ir.ui.view">
             <field name="name">view_supplier_price_history_graph</field>
             <field name="model">supplier.price.history</field>
             <field name="arch" type="xml">
                 <graph string="view_supplier_price_history_graph" type="bar" stacked="False">
-                        <field name="date" interval="day" />
-                        <field name="product_tmpl_id" type="row"/>
-                        <field name="supplier_price" type="measure"/>
+                    <field name="date" interval="week" />
+                    <field name="product_tmpl_id" type="row" />
+                    <field name="supplier_price" type="measure" />
                 </graph>
             </field>
         </record>
-    
 
         <!-- Main menu for "model" -->
-        <!-- <record id="menu_supplier_price_history" model="ir.ui.menu" >
-            <field name="name">Supplier price history</field>
+        <record id="menu_supplier_price_history" model="ir.ui.menu">
+            <field name="name">supplier price history</field>
             <field name="sequence" eval="10" />
-            <field name="action" ref="action_supplier_price_history_act_window" />
-        </record> -->
+            <field name="action" ref="action_supplier_price_history" />
+            <field name="parent_id" ref="purchase.purchase_report" />
+        </record>
 
+        
+        <record id="product_template_only_form_view" model="ir.ui.view">
+            <field name="name">product_template_only_form_view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view" />
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button"
+                    name="%(action_supplier_price_history_product)d"
+                    icon="fa-cubes"
+                    type="action" >
+                    <span class="o_stat_text">Price history</span>
+                    </button>
+                </div>
+            </field>
+        </record>
     </data>
 </odoo>
