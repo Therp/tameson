@@ -46,7 +46,7 @@ class SupplierPriceHistory(models.Model):
             currency = self.env["res.currency"].browse(currency_id)
             price = currency._convert(
                 vals_list["supplier_price_orig"],
-                1,
+                self.env.user.company_id.currency_id,
                 self.env.user.company_id,
                 vals_list.get("date", False) or fields.Date.today(),
             )
