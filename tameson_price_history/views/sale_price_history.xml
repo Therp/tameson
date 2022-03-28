@@ -55,7 +55,7 @@
             <field name="model">sale.price.history</field>
             <field name="arch" type="xml">
                 <graph string="view_sale_price_history_graph" type="bar" stacked="False">
-                    <field name="date" interval="week" />
+                    <field name="date" interval="day" />
                     <field name="product_tmpl_id" type="row" />
                     <field name="sale_price" type="measure" />
                 </graph>
