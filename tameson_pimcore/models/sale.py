@@ -31,8 +31,9 @@ class SaleOrder(models.Model):
         draft_lines = PimLineModel.search([('create_date','<', datetime.now() - relativedelta(days=1)), 
                                             ('state','=','draft')])
         ## Check for lines from previous day having error
-        error_lines = PimLineModel.search([('create_date','>', (datetime.now() - relativedelta(days=1)).date()), 
-                                            ('state','=','error')])
+        error_lines = PimLineModel.search([('state','=','error'),
+                                            '|', ('create_date','>', (datetime.now() - relativedelta(days=1)).date()),
+                                            ('write_date','>', (datetime.now() - relativedelta(days=1)).date())])
         if draft_lines:
             vals.append({
                 'name': 'Pimcore Response Import',
