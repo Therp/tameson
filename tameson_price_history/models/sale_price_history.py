@@ -18,6 +18,12 @@ class SalePriceHistory(models.Model):
     product_tmpl_id = fields.Many2one(
         string="Product", comodel_name="product.template", ondelete="cascade"
     )
+    categ_id = fields.Many2one(
+        string='Category',
+        comodel_name='product.category',
+        ondelete='restrict',
+        related='product_tmpl_id.categ_id'
+    )
     sale_price = fields.Float()
     date = fields.Date(
         string="Date",

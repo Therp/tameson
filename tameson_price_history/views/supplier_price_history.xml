@@ -32,6 +32,8 @@
             <field name="arch" type="xml">
                 <search string="model_search">
                     <field name="product_tmpl_id" />
+                    <field name="categ_id" />
+                    <field name="supplier_id" />
                 </search>
             </field>
         </record>
