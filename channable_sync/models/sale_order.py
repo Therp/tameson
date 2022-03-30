@@ -517,18 +517,21 @@ class SaleOrder(models.Model):
     def update_status_canceled_channable(self):
         if not self.channable_order_id:
             raise UserError(_('This Order Is Not a Channable Order, Unable To Update!'))
-        endpoint = '/orders/{order_id}/cancel'.format(order_id=self.channable_order_id)
-        payload = {}
-        response = self.env.user.company_id.channable_request(method="POST",
-                                                              endpoint=endpoint,
-                                                              payload=payload,
+        order_response = self.env.user.company_id.channable_request(method="GET",
+                                                              endpoint="/orders/%s" % self.channable_order_id,
+                                                              payload={},
                                                               timeout=120)
-        if response.get('status', '') != 'success':
-            raise Warning(_('Channable Order Cancel Failure: %s' % str(response.get('message', ''))))
-        self.write({
-            'channable_to_update_cancel': False,
-            'channable_order_status': 'cancelled',
-        })
+        if order_response.get('order', {}).get('status_shipped', False) == 'cancelled':
+            self.write({
+                'channable_to_update_cancel': False,
+                'channable_order_status': 'cancelled',
+            })
+        else:
+            self.env.user.company_id.channable_request(method="POST",
+                                                        endpoint="/orders/%s/cancel" % self.channable_order_id,
+                                                        payload={},
+                                                        timeout=120)
+
 
     def update_status_shipped_channable(self):
         if not self.channable_order_id:
