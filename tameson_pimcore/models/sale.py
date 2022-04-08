@@ -30,10 +30,19 @@ class SaleOrder(models.Model):
         ## Check for lines older than 1 day still not imported, must be imported (none in draft) everyday by cron
         draft_lines = PimLineModel.search([('create_date','<', datetime.now() - relativedelta(days=1)), 
                                             ('state','=','draft')])
+        ## Check for lines from previous day having error
+        error_lines = PimLineModel.search([('state','=','error'),
+                                            '|', ('create_date','>', (datetime.now() - relativedelta(days=1)).date()),
+                                            ('write_date','>', (datetime.now() - relativedelta(days=1)).date())])
         if draft_lines:
             vals.append({
                 'name': 'Pimcore Response Import',
                 'orders': [(len(draft_lines),'Pimcore response data not imported')]
+            })
+        if error_lines:
+            vals.append({
+                'name': 'Pimcore Response Import Error',
+                'orders': [(len(error_lines),'Pimcore Response Import failed for Error')]
             })
         return vals
 
