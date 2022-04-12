@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_supplier_price_history_tree" model="ir.ui.view">
+            <field name="name">view_supplier_price_history_tree</field>
+            <field name="model">supplier.price.history</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="view_supplier_price_history_tree" create="true" delete="true" edit="true">
+                    <field name="product_tmpl_id" />
+                    <field name="supplier_price" />
+                    <field name="date" />
+                    <field name="supplier_id" />
+                    <field name="supplier_price_orig" />
+                    <field name="supplier_currency_id" />
+                    <field name="supplier_code" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_supplier_price_history_search" model="ir.ui.view">
+            <field name="name">view_supplier_price_history_search</field>
+            <field name="model">supplier.price.history</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="model_search">
+                    <field name="product_tmpl_id" />
+                    <field name="categ_id" />
+                    <field name="supplier_id" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_supplier_price_history" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">supplier price history list</field>
+            <field name="res_model">supplier.price.history</field>
+            <field name="view_mode">list,graph</field>
+            <field name="target">current</field>
+            <field name="search_view_id" ref="view_supplier_price_history_search" />
+        </record>
+        <record id="action_supplier_price_history_product" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">supplier price history list</field>
+            <field name="res_model">supplier.price.history</field>
+            <field name="view_mode">graph,list</field>
+            <field name="target">current</field>
+            <field name="context">{'search_default_product_tmpl_id': active_id}</field>
+            <field name="search_view_id" ref="view_supplier_price_history_search" />
+        </record>
+
+        <record id="view_supplier_price_history_graph" model="ir.ui.view">
+            <field name="name">view_supplier_price_history_graph</field>
+            <field name="model">supplier.price.history</field>
+            <field name="arch" type="xml">
+                <graph string="view_supplier_price_history_graph" type="bar" stacked="False">
+                    <field name="date" interval="day" />
+                    <field name="product_tmpl_id" type="row" />
+                    <field name="supplier_price" type="measure" />
+                </graph>
+            </field>
+        </record>
+
+        <!-- Main menu for "model" -->
+        <record id="menu_supplier_price_history" model="ir.ui.menu">
+            <field name="name">Supplier price history</field>
+            <field name="sequence" eval="170" />
+            <field name="action" ref="action_supplier_price_history" />
+            <field name="parent_id" ref="stock.menu_warehouse_report" />
+        </record>
+
+    </data>
+</odoo>
