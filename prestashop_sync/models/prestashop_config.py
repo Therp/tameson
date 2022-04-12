@@ -165,7 +165,8 @@ class PrestashopConfig(models.Model):
                     invoice_country_code = all_country_data.get(invoice_data.get('id_country', '0'),{}).get('iso_code', '')
                     delivery_state_code = all_states_data.get(delivery_data.get('id_state', '0'),{}).get('iso_code', '')
                     invoice_state_code = all_states_data.get(invoice_data.get('id_state', '0'),{}).get('iso_code', '')
-                    delivery_data.update(country_code=delivery_country_code, state_code=delivery_state_code)
+                    if delivery_data:
+                        delivery_data.update(country_code=delivery_country_code, state_code=delivery_state_code)
                     invoice_data.update(country_code=invoice_country_code, state_code=invoice_state_code)
                     data = {
                         'order': order,
