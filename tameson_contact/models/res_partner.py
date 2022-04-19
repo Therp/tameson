@@ -60,17 +60,16 @@ class ResPartner(models.Model):
     def extract_house_from_street(self):
         extract_pattern = "(\d+)[\s/-]?(\w\s|\w$)?"
         for partner in self:
-            if not partner.street_number:
-                street = partner.street
-                split_parts = re.findall(extract_pattern, street)
-                if len(split_parts) == 1:
-                    remaining_part = re.compile(extract_pattern).sub('', street)
-                    partner.write({
-                        'street_number': split_parts[0][0],
-                        'street_number2': split_parts[0][1],
-                        'street_name': remaining_part,
-                    })
-                    partner.message_post(body='House number extracted from address:\n%s' % street)
-                else:
-                    partner.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
-                note='House number extraction failed.', user_id=self.env.user.id or SUPERUSER_ID)
+            street = partner.street
+            split_parts = re.findall(extract_pattern, street)
+            if len(split_parts) == 1:
+                remaining_part = re.compile(extract_pattern).sub('', street)
+                partner.write({
+                    'street_number': split_parts[0][0],
+                    'street_number2': split_parts[0][1],
+                    'street_name': remaining_part,
+                })
+                partner.message_post(body='House number extracted from address:\n%s' % street)
+            else:
+                partner.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
+            note='House number extraction failed.', user_id=self.env.user.id or SUPERUSER_ID)
