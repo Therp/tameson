@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
         if aa_data:
             res.append({
                 'name': 'AA Stock mismatch',
-                'header': ['SKU', 'Product Name', 'AA Quantity', 'Odoo Quantity'],
+                'header': ['Product ID', 'SKU', 'Product Name', 'AA Quantity', 'Odoo Quantity'],
                 'orders': aa_data
             })
         return res

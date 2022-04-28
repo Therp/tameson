@@ -41,6 +41,7 @@
         'purchase_stock',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'data/params.xml',
         'data/cron.xml',
         'data/cron_min_qty.xml',
@@ -56,6 +57,7 @@
         'views/templates.xml',
         'data/mail_data.xml',
         'wizards/delay_mail.xml',
+        'views/aa_views.xml',
     ],
     'qweb': [
         'static/src/xml/qweb.xml',

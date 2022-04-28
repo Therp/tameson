@@ -41,5 +41,16 @@
             <field name="state">code</field>
             <field name="code">model.product_stock_export()</field>
         </record>
+        <record forcecreate="True" id="aa_stock_comparison" model="ir.cron">
+            <field name="name">Tameson: AA Stock comparison</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="stock.model_stock_warehouse" />
+            <field name="state">code</field>
+            <field name="code">model.compare_aa_stock()</field>
+        </record>
     </data>
 </odoo>
