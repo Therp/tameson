@@ -15,6 +15,15 @@ class StockWarehouse(models.Model):
     aa_api = fields.Char()
     aa_password = fields.Char(password=True)
     
+    def compare_aa_stock(self):
+        if not self:
+            self = self.search([('aa_api','!=', False),('aa_username','!=', False),('aa_password','!=', False)])
+        for wh in self:
+            data = self.env['aa.stock'].get_data(wh)
+            vals_list = [{'product_id': val[0], 'aa_stock': val[3], 'odoo_stock': val[4]} for val in data]
+            comparison = self.env['aa.stock.comparison']
+            comparison.create(vals_list)
+        
 
 class StockWarehouseOrderpoint(models.Model):
     _inherit = 'stock.warehouse.orderpoint'

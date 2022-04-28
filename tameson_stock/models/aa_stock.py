@@ -21,9 +21,11 @@ class AAStock(models.TransientModel):
         self.search([]).unlink()
         super(AAStock, self).create(vals_list)
 
-    def get_data(self):
+    def get_data(self, whs=False):
         aa_data = []
-        for wh in self.env['stock.warehouse'].search([('aa_username','!=',False),('aa_password','!=',False)]):
+        if not whs:
+            whs = self.env['stock.warehouse'].search([('aa_api','!=', False),('aa_username','!=', False),('aa_password','!=', False)])
+        for wh in whs:
             try:
                 token_response = requests.post("%s/token" % wh.aa_api,data={
                     "grant_type": "password",
@@ -55,6 +57,7 @@ WITH onhand_query AS (
         pt.default_code
 )
 SELECT
+    pt.id product_id,
     aas.sku sku,
 	pt.name ptname,
     aas.stock aa_quantity,
@@ -70,3 +73,41 @@ WHERE
             aa_data += self.env.cr.fetchall()
         return aa_data
             
+
+class AAStockCompare(models.Model):
+    _name = 'aa.stock.comparison'
+    _description = 'AA Stock'
+    
+    product_id = fields.Many2one(comodel_name='product.template',ondelete='set null',)
+    aa_stock = fields.Float()
+    odoo_stock = fields.Float()
+    difference = fields.Float(compute='get_difference', store=True)
+
+    @api.depends('aa_stock','odoo_stock')
+    def get_difference(self):
+        for record in self:
+            record.difference = record.aa_stock - record.odoo_stock
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        result = super(AAStockCompare, self).create(vals_list)
+        return result
+    
+    def action_open_product(self):
+        return {
+            'name': _('Product'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'product.template',
+            'res_id': self.product_id.id,
+            'target': 'new',
+        }
+        
+    @api.model
+    def read_grid(self, row_fields, col_field, cell_field, domain=None, range=None, readonly_field=None, orderby=None):
+        if not orderby:
+            orderby = 'create_date'
+        read_grid = super(AAStockCompare, self).read_grid(row_fields,
+            col_field, cell_field, domain=domain, range=range,
+            readonly_field=readonly_field, orderby=orderby)
+        return read_grid
