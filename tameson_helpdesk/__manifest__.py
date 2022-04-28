@@ -12,6 +12,7 @@
     ],
     'data': [
         'views/helpdesk_views.xml',
+        'views/rma.xml',
     ],
     'application': False,
     'license': u'OPL-1',
