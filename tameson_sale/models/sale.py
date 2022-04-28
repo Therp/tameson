@@ -1,4 +1,4 @@
-import base64, re
+import base64, re, json
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -410,6 +410,9 @@ where sot.aml_count = 0
     def process_channel_payment(self):
         return True
 
+    def get_skus_json(self):
+        products = self.mapped('order_line.product_id.product_tmpl_id').filtered(lambda pt: pt.type == 'product')
+        return json.dumps(products.mapped(lambda p: [p.default_code, p.display_name]))
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
