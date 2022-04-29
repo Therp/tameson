@@ -178,6 +178,13 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
                 Line.browse(line[0]).write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))
                 continue
+        do_archive = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("tameson_pimcore.product_archive", "0")
+        ) == "1"
+        if not do_archive:
+            return
         unpublished_products = self.env["product.template"].search(
             [("published", "=", False)]
         )
