@@ -178,6 +178,9 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
                 Line.browse(line[0]).write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))
                 continue
+        self.search(
+            [("create_date", "<", datetime.now() - relativedelta(days=14))]
+        ).unlink()
         do_archive = (
             self.env["ir.config_parameter"]
             .sudo()
@@ -212,9 +215,6 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
                 ),
             ]
         ).action_unarchive()
-        self.search(
-            [("create_date", "<", datetime.now() - relativedelta(days=14))]
-        ).unlink()
 
 
 class PimcoreProductResponseLine(models.Model):
