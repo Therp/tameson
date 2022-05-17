@@ -178,9 +178,26 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
                 Line.browse(line[0]).write({"state": "error", "error": str(e)})
                 _logger.warn(str(e))
                 continue
+        self.search(
+            [("create_date", "<", datetime.now() - relativedelta(days=14))]
+        ).unlink()
+        do_archive = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("tameson_pimcore.product_archive", "0")
+        ) == "1"
+        if not do_archive:
+            return
         unpublished_products = self.env["product.template"].search(
             [("published", "=", False)]
         )
+        unpublished_product_variants = unpublished_products.mapped('product_variant_ids')
+        active_products = self.emv['stock.move'].search([('product_id','in',unpublished_product_variants.ids,('state','not in',('done','cancel')))]).mapped('product_id')
+        active_products += self.emv['purchase.order.line'].search([('product_id','in',unpublished_product_variants.ids),('state','=','draft')]).mapped('product_id')
+        active_products += self.emv['sale.order.line'].search([('product_id','in',unpublished_product_variants.ids),('state','=','draft')]).mapped('product_id')
+        active_pts = active_products.mapped('product_tmpl_id')
+        _logger.info("%s not archived from pimcore response due to active pos/so/move" % active_pts.mapped('default_code'))
+        unpublished_products = unpublished_products - active_pts
         self.env["stock.warehouse.orderpoint"].search(
             [
                 (
@@ -191,6 +208,7 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
             ]
         ).action_archive()
         unpublished_products.action_archive()
+        _logger.info("%s archived from pimcore response" % unpublished_products.mapped('default_code'))
         published_products = self.env["product.template"].search(
             [("published", "=", True), ("active", "=", False)]
         )
@@ -205,9 +223,6 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
                 ),
             ]
         ).action_unarchive()
-        self.search(
-            [("create_date", "<", datetime.now() - relativedelta(days=14))]
-        ).unlink()
 
 
 class PimcoreProductResponseLine(models.Model):
