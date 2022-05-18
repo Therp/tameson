@@ -7,6 +7,11 @@ from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DSDF
 
 _logger = logging.getLogger(__name__)
 
+def list_split(listA, n):
+    for start in range(0, len(listA), n):
+        stop = len(listA) if len(listA) < n+start else n+start
+        every_chunk = listA[start: stop]
+        yield every_chunk
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -157,16 +162,6 @@ class ProductProduct(models.Model):
                 precision_rounding=product.uom_id.rounding
             )
 
-    def _minimal_qty_available_stored(self, field_names=None, arg=False):
-        for product in self:
-            product._minimal_qty_available()
-            try:
-                product.minimal_qty_available_stored = \
-                    product.minimal_qty_available
-            except:
-                pass
-        _logger.info('ReCompute Update for Prs complete')
-
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',
         digits='Product Unit of Measure',
@@ -174,39 +169,6 @@ class ProductProduct(models.Model):
         help="Compute minimal QTY available in the future, including incoming "
              "and outgoing pickings."
     )
-
-    minimal_qty_available_stored = fields.Float(
-        digits='Product Unit of Measure',
-        string=_('Minimal QTY Available pre-calculated for export'),
-        store=True,
-        help="Compute minimal QTY available in the future, including incoming "
-             "and outgoing pickings. this is a stored field, precalculated for"
-             "faster exports."
-    )
-
-    def cron_recompute_min_qty_avail(self):
-        lasthour = datetime.now() - timedelta(hours=1)
-        lasthour_formatted = lasthour.strftime(DSDF)
-        domain = ['|', ('create_date', '>', lasthour_formatted),
-                  ('write_date', '>', lasthour_formatted)]
-        to_update_products = self.env['stock.move.line'].search(domain).mapped(
-            'product_id') + self.env['stock.move'].search(domain).mapped(
-                'product_id')
-        # add products with these products in BOM
-        if not to_update_products:
-            return
-        bom_product_query = '''
-SELECT DISTINCT mb.product_tmpl_id FROM product_product pp
-    LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
-    LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
-WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
-        self.env.cr.execute(bom_product_query)
-        bom_products = [item[0] for item in self.env.cr.fetchall()]
-        to_update_products += self.env['product.template'].browse(bom_products).mapped('product_variant_ids')
-        to_update_products._minimal_qty_available_stored()
-
-    def cron_recompute_all_min_qty_avail_stored(self):
-        self.env['product.product'].search([])._minimal_qty_available_stored()
 
     def action_view_stock_moves(self):
         self.ensure_one()
@@ -216,8 +178,7 @@ WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
             'context': {'create': 0, 'search_default_future': True}
         })
         return action
-
-
+ 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
@@ -294,10 +255,6 @@ class ProductTemplate(models.Model):
                 product.minimal_qty_available = False
         _logger.info('ReCompute Update for Prtmpl complete')
 
-    def _minimal_qty_available_stored(self, field_names=None, arg=False):
-        for product in self:
-            product.minimal_qty_available_stored = \
-                product.minimal_qty_available
 
     def cron_recompute_min_qty_avail(self):
         lasthour = datetime.now() - timedelta(hours=1)
@@ -307,21 +264,12 @@ class ProductTemplate(models.Model):
         to_update_products = self.env['stock.move.line'].search(domain).mapped(
             'product_id') + self.env['stock.move'].search(domain).mapped(
                 'product_id')
-        # add products with these products in BOM
-        if not to_update_products:
-            return
-        bom_product_query = '''
-SELECT DISTINCT mb.product_tmpl_id FROM product_product pp
-    LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
-    LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
-WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
-        self.env.cr.execute(bom_product_query)
-        bom_products = [item[0] for item in self.env.cr.fetchall()]
-        to_update_product_tmpls = to_update_products.mapped('product_tmpl_id') + self.browse(bom_products)
-        to_update_product_tmpls._minimal_qty_available_stored()
+        to_update_products.mapped('product_tmpl_id')._minimal_qty_available_stored()            
 
     def cron_recompute_all_min_qty_avail_stored_tmpl(self):
-        self.env['product.template'].search([])._minimal_qty_available_stored()
+        to_update_products = self.env['stock.move'].search([]).mapped(
+                'product_id')
+        to_update_products.mapped('product_tmpl_id')._minimal_qty_available_stored()
 
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',
@@ -355,3 +303,36 @@ WHERE pp.id IN (%s)''' % ','.join(map(str, to_update_products.ids))
             'context': {'create': 0, 'search_default_future': True}
         })
         return action
+
+    def _minimal_qty_available_stored(self, field_names=None, arg=False):
+        if not self:
+            return
+        CeleryTask = self.env['celery.task']
+        bom_product_query = '''
+SELECT DISTINCT mb.product_tmpl_id FROM product_product pp
+    LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
+    LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
+WHERE pp.id IN (%s)''' % ','.join(map(str, self.mapped('product_variant_ids').ids))
+        self.env.cr.execute(bom_product_query)
+        bom_products = [item[0] for item in self.env.cr.fetchall()]
+        to_update_product_tmpls = self + self.browse(bom_products)
+        pt_ids = to_update_product_tmpls.ids
+        split_size = 1000
+        for chunk in list_split(pt_ids, split_size):
+            CeleryTask.call_task('product.template', 
+                                    'store_min_qty_celery', 
+                                    pt_ids=chunk,
+                                    celery={
+                                        'countdown': 1,
+                                        'retry': True,
+                                        'max_retries': 3,
+                                        'interval_start': 5,
+                                        'queue': 'celery',
+                                        },
+                                    celery_task_vals={'ref': 'store_min_qty'})
+
+    def store_min_qty_celery(self, task_uuid, pt_ids, **kwargs):
+        for id in pt_ids:
+            pt = self.browse(id)
+            pt.minimal_qty_available_stored = pt.minimal_qty_available
+        return True
