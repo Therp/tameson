@@ -56,7 +56,7 @@ class ResPartner(models.Model):
         self._set_street()
         return True
 
-    @api.model
+    @api.multi
     def extract_house_from_street(self):
         extract_pattern = "(\d+)[\s/-]?(\w\s|\w$)?"
         unit_pattern = 'unit\W*\d+'
