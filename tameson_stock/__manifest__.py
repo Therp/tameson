@@ -39,6 +39,7 @@
         'sale_sourced_by_line',
         'stock_mts_mto_rule',
         'purchase_stock',
+        'celery'
     ],
     'data': [
         'security/ir.model.access.csv',

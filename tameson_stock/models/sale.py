@@ -22,13 +22,13 @@ class SaleOrderLine(models.Model):
     # need to add this so that the tooltip widget will have necessary data to
     # render the min qty field
     minimal_qty_available = fields.Float(
-        related='product_id.minimal_qty_available',
+        related='product_id.product_tmpl_id.minimal_qty_available',
         string=_('Product min qty available'),
         readonly=True
     )
 
     minimal_qty_available_stored = fields.Float(
-        related='product_id.minimal_qty_available_stored',
+        related='product_id.product_tmpl_id.minimal_qty_available_stored',
         string=_('Product min qty available stored'),
         readonly=True
     )
