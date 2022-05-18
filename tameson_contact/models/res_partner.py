@@ -56,20 +56,30 @@ class ResPartner(models.Model):
         self._set_street()
         return True
 
-    @api.model
+    @api.multi
     def extract_house_from_street(self):
         extract_pattern = "(\d+)[\s/-]?(\w\s|\w$)?"
+        unit_pattern = 'unit\W*\d+'
         for partner in self:
+            split_success = False
             street = partner.street
-            split_parts = re.findall(extract_pattern, street)
-            if len(split_parts) == 1:
-                remaining_part = re.compile(extract_pattern).sub('', street)
-                partner.write({
-                    'street_number': split_parts[0][0],
-                    'street_number2': split_parts[0][1],
-                    'street_name': remaining_part,
-                })
-                partner.message_post(body='House number extracted from address:\n%s' % street)
+            unit_part = re.findall(unit_pattern, street, flags=re.IGNORECASE)
+            if unit_part:
+                street_number = False
+                street_number2 = unit_part[0]
+                street_name = re.compile(street_number2).sub('', street)
+                split_success = True
             else:
-                partner.activity_schedule('mail.mail_activity_data_warning', datetime.today().date(),
-            note='House number extraction failed.', user_id=self.env.user.id or SUPERUSER_ID)
+                split_parts = re.findall(extract_pattern, street)
+                if len(split_parts) == 1:
+                    street_number = split_parts[0][0]
+                    street_number2 = split_parts[0][1]
+                    street_name = re.compile(extract_pattern).sub('', street)
+                    split_success = True
+            if split_success:
+                partner.write({
+                        'street_number': street_number,
+                        'street_number2': street_number2,
+                        'street_name': street_name,
+                    })
+                partner.message_post(body='House number extracted from address:\n%s' % street)
