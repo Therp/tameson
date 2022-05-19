@@ -485,9 +485,8 @@ class PimcoreProductResponseLine(models.Model):
                 "bom_signature": self.bom,
             }
         )
-        main_product.standard_price = (
-            main_product.product_variant_id._get_price_from_bom()
-        )
+        std_price = main_product.product_variant_id._get_price_from_bom()
+        main_product.standard_price = std_price
         self.env.cr.commit()
 
     def get_supplier_info(self):
