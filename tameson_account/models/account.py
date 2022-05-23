@@ -39,6 +39,27 @@ class AccountMove(models.Model):
         payment = self.env['account.payment'].create(payment_vals)
         payment.post() 
 
+    def button_draft(self):
+        user = self.env.user
+        if user.has_group('sales_team.group_sale_salesman'):
+            self = self.sudo()
+        return super(AccountMove, self).button_draft()
+    def action_post(self):
+        user = self.env.user
+        if user.has_group('sales_team.group_sale_salesman'):
+            self = self.sudo()
+        return super(AccountMove, self).action_post()
+    def action_invoice_register_payment(self):
+        user = self.env.user
+        if user.has_group('sales_team.group_sale_salesman'):
+            self = self.sudo()
+        return super(AccountMove, self).action_invoice_register_payment()
+    def button_cancel(self):
+        user = self.env.user
+        if user.has_group('sales_team.group_sale_salesman'):
+            self = self.sudo()
+        return super(AccountMove, self).button_cancel()
+
 class AccountPaymentTerm(models.Model):
     _inherit = 'account.payment.term'
 
