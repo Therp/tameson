@@ -303,7 +303,7 @@ class SaleOrder(models.Model):
         new_invoice_ids = self.invoice_ids.filtered(
             lambda inv: inv.id not in invoice_ids
         )
-        new_invoice_ids.action_post()
+        new_invoice_ids.sudo().action_post()
 
     def _send_invoice(self):
         for new_invoice in self.invoice_ids.filtered(lambda i: not i.invoice_sent and i.state != 'cancel' and i.type == 'out_invoice'):
