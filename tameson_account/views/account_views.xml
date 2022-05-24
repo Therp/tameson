@@ -23,6 +23,15 @@
                     <field name="help_text" />                
                 </page>
             </xpath>
+            <button name="action_post" position="attributes">
+                <attribute name="groups">account.group_account_invoice,sales_team.group_sale_salesman,purchase.group_purchase_user</attribute>
+            </button>
+            <button name="button_draft" position="attributes">
+                <attribute name="groups">account.group_account_invoice,sales_team.group_sale_salesman,purchase.group_purchase_user</attribute>
+            </button>
+            <button name="button_cancel" position="attributes">
+                <attribute name="groups">account.group_account_invoice,sales_team.group_sale_salesman,purchase.group_purchase_user</attribute>
+            </button>
         </field>
     </record>
     
