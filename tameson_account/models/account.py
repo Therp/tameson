@@ -41,22 +41,22 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         user = self.env.user
-        if user.has_group('sales_team.group_sale_salesman'):
+        if user.has_group('sales_team.group_sale_salesman') or user.has_group('purchase.group_purchase_user'):
             self = self.sudo()
         return super(AccountMove, self).button_draft()
     def action_post(self):
         user = self.env.user
-        if user.has_group('sales_team.group_sale_salesman'):
+        if user.has_group('sales_team.group_sale_salesman') or user.has_group('purchase.group_purchase_user'):
             self = self.sudo()
         return super(AccountMove, self).action_post()
     def action_invoice_register_payment(self):
         user = self.env.user
-        if user.has_group('sales_team.group_sale_salesman'):
+        if user.has_group('sales_team.group_sale_salesman') or user.has_group('purchase.group_purchase_user'):
             self = self.sudo()
         return super(AccountMove, self).action_invoice_register_payment()
     def button_cancel(self):
         user = self.env.user
-        if user.has_group('sales_team.group_sale_salesman'):
+        if user.has_group('sales_team.group_sale_salesman') or user.has_group('purchase.group_purchase_user'):
             self = self.sudo()
         return super(AccountMove, self).button_cancel()
 
