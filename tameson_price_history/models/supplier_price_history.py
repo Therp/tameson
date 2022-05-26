@@ -61,6 +61,8 @@ class SupplierPriceHistory(models.Model):
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
 
+    list_price_eur = fields.Float(string='List price (EUR)')
+
     @api.model
     def create(self, vals_list):
         records = super(ProductSupplierinfo, self).create(vals_list)
