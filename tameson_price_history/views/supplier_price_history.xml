@@ -16,6 +16,7 @@
                     <field name="supplier_id" />
                     <field name="supplier_price_orig" />
                     <field name="supplier_currency_id" />
+                    <field name="list_price_eur" />
                     <field name="supplier_code" />
                 </tree>
             </field>
