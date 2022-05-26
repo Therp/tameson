@@ -33,7 +33,8 @@ class StockPicking(models.Model):
         string=_('Fully paid'),
         store=True
     )
-
+    unknown_date = fields.Boolean()
+    
     def latest_expected_skus(self):
         self.ensure_one()
         latest_date = self.move_lines.sorted(lambda m: m.date_expected, True)[:1].date_expected

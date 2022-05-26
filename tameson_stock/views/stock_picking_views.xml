@@ -9,6 +9,9 @@
                 <filter name="t_partner_not_in_eu"
                         string="Partner outside EU"
                         domain="[('t_partner_outside_eu', '=', True)]" />
+                <filter name="t_unknown_date"
+                        string="Unknown date"
+                        domain="[('unknown_date', '=', True)]" />
             </xpath>
         </field>
     </record>
@@ -37,6 +40,7 @@
                             <field name="t_delivery_allowed" />
                             <field name="t_partner_outside_eu" />
                             <field name="t_payment_status" />
+                            <field name="unknown_date" />
                         </group>
                     </group>
                 </page>
@@ -60,6 +64,7 @@
                 <field name="t_payment_status" optional="hide" />
                 <field name="t_delivery_allowed" optional="hide" />
                 <field name="t_partner_outside_eu" optional="hide" />
+                <field name="unknown_date" optional="hide" />
             </xpath>
         </field>
     </record>
