@@ -72,7 +72,7 @@ class ProductSupplierinfo(models.Model):
 
     def write(self, vals):
         res = super(ProductSupplierinfo, self).write(vals)
-        if "price" in vals or "name" in vals:
+        if "price" in vals or "name" in vals or "list_price_eur" in vals:
             self.record_price_history()
         return res
 
