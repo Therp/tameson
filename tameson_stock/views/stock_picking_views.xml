@@ -10,7 +10,7 @@
                         string="Partner outside EU"
                         domain="[('t_partner_outside_eu', '=', True)]" />
             </xpath>
-            <xpath expr="//seperator[last()]" position="before">
+            <xpath expr="//separator[last()]" position="before">
                 <separator/>
                 <filter name="t_unknown_date"
                         string="Unknown date"
