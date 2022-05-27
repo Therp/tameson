@@ -5,6 +5,12 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
+            <xpath expr="//form[1]/*[1]" position="before">
+                <field name="supposed_fiscal_match" invisible="1"/>
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('supposed_fiscal_match', '=', False)]}">
+                    Please double check main contact fiscal position, VAT number and SO fiscal position. <field name="supposed_fiscal_id" />
+                </div>                
+            </xpath>
             <xpath expr="//header/button[last()]" position="after">
                 <button name="action_create_product" string="Create Custom Product" type="object" />
             </xpath>

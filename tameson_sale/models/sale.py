@@ -56,7 +56,26 @@ class SaleOrder(models.Model):
     uu_replacement_skus = fields.Char(compute='_check_any_non_returnable')
     uu_replacement_skus_en = fields.Char(compute='_check_any_non_returnable')
     weight_over_25 = fields.Char(compute='_check_any_non_returnable')
+    supposed_fiscal_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', compute='get_supposed_fiscal')
+    fiscal_position_id = fields.Many2one(copy=False)
+    supposed_fiscal_match = fields.Boolean(compute='get_supposed_fiscal')
     
+    def copy(self, default=None):
+        fiscal = self.env['account.fiscal.position'].with_context(
+            force_company=self.company_id.id).get_fiscal_position(
+                self.partner_id.id,
+                self.partner_shipping_id.id)
+        default = dict(default or {}, fiscal_position_id=fiscal)
+        return super().copy(default)
+
+    @api.depends('partner_id.vat','partner_id.country_id', 'partner_shipping_id','fiscal_position_id')
+    def get_supposed_fiscal(self):
+        self.supposed_fiscal_id = self.env['account.fiscal.position'].with_context(
+            force_company=self.company_id.id).get_fiscal_position(
+                self.partner_id.id,
+                self.partner_shipping_id.id)
+        self.supposed_fiscal_match = (self.supposed_fiscal_id != self.fiscal_position_id)
+
     @api.depends('order_line.product_id.non_returnable', 'order_line.product_id.t_use_up', 'order_line.product_id.weight', 'partner_id')
     def _check_any_non_returnable(self):
         self.env.context = dict(self.env.context, lang=self.partner_id.lang or 'en_US')
@@ -384,6 +403,7 @@ where sot.aml_count = 0
         for order in res:
             if not order.carrier_id and order.order_line and order.partner_id.country_id and order.partner_id.country_id.select_shipment_id:
                 order._add_default_shipping()
+            order.order_line._compute_tax_id()
         return res
     #Function for adding defaulr delivery method from partner country configuration.
     def _add_default_shipping(self):
