@@ -1,6 +1,6 @@
 import base64, re, json
 
-from odoo import api, fields, models, tools, _, SUPERUSER_ID
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.tools import formataddr, float_compare, float_is_zero
 
@@ -261,7 +261,7 @@ class SaleOrder(models.Model):
             open_orders = self.search([('partner_id', 'child_of', parent_partner.id), ('state','=','sale'), ('state','=','sale')]).\
                 filtered(lambda so: 'posted' not in so.invoice_ids.mapped('state'))
             open_invoices = parent_partner.unreconciled_aml_ids.mapped('move_id')
-            credit = parent_partner.with_user(SUPERUSER_ID).credit
+            credit = parent_partner.sudo().credit
             open_orders_total = 0
             for order in open_orders + self:
                 open_orders_total += order.currency_id._convert(order.amount_total, self.env.user.company_id.currency_id,
