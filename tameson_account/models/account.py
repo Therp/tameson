@@ -68,7 +68,7 @@ class AccountPaymentTerm(models.Model):
     )
 
 
-class AccountMoveReversal(models.Model):
+class AccountMoveReversal(models.TransientModel):
     _inherit = 'account.move.reversal'
 
     def reverse_moves(self):
