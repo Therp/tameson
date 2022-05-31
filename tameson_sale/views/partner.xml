@@ -9,7 +9,7 @@
                 <xpath expr="//group[@name='misc']" position="after">
                     <group name="group_credit_limit" string="Credit Limit" attrs="{'invisible': [('parent_id','!=',False)]}" groups="sales_team.group_sale_manager,account.group_account_manager" >
                         <field name="credit_limit" />
-                        <field name="credit" />
+                        <!-- <field name="credit" /> -->
                     </group>
                 </xpath>
             </field>
