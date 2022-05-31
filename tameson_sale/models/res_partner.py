@@ -19,3 +19,4 @@ class ResPartnet(models.Model):
         if self.country_id.select_lang:
             self.lang = self.country_id.select_lang
 
+    credit = fields.Monetary(compute_sudo=True)
