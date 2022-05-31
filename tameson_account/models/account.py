@@ -66,3 +66,13 @@ class AccountPaymentTerm(models.Model):
     t_invoice_delivered_quantities = fields.Boolean(
         string=_('Invoice delivered quantities')
     )
+
+
+class AccountMoveReversal(models.Model):
+    _inherit = 'account.move.reversal'
+
+    def reverse_moves(self):
+        user = self.env.user
+        if user.has_group('sales_team.group_sale_salesman') or user.has_group('purchase.group_purchase_user'):
+            self = self.sudo()
+        return super(AccountMoveReversal, self).reverse_moves()
