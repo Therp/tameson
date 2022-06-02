@@ -16,6 +16,7 @@
                     <field name="supplier_id" />
                     <field name="supplier_price_orig" />
                     <field name="supplier_currency_id" />
+                    <field name="list_price_eur" />
                     <field name="supplier_code" />
                 </tree>
             </field>
@@ -75,6 +76,27 @@
             <field name="action" ref="action_supplier_price_history" />
             <field name="parent_id" ref="stock.menu_warehouse_report" />
         </record>
-
+        
+        <record id="product_supplierinfo_tree_view" model="ir.ui.view">
+            <field name="name">product_supplierinfo_tree_view</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_tree_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[last()]" position="after">
+                    <field name="list_price_eur" />
+                </xpath>
+            </field>
+        </record>
+        <record id="product_supplierinfo_form_view" model="ir.ui.view">
+            <field name="name">product_supplierinfo_form_view</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[last()]" position="after">
+                    <field name="list_price_eur" />
+                </xpath>
+            </field>
+        </record>
+        
     </data>
 </odoo>

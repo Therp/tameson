@@ -22,6 +22,7 @@ class SupplierPriceHistory(models.Model):
         comodel_name="res.partner",
         ondelete="restrict",
     )
+    list_price_eur = fields.Float()
     supplier_price = fields.Float()
     supplier_price_orig = fields.Float()
     supplier_currency_id = fields.Many2one(
@@ -61,6 +62,8 @@ class SupplierPriceHistory(models.Model):
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
 
+    list_price_eur = fields.Float(string='List price (EUR)')
+
     @api.model
     def create(self, vals_list):
         records = super(ProductSupplierinfo, self).create(vals_list)
@@ -69,7 +72,7 @@ class ProductSupplierinfo(models.Model):
 
     def write(self, vals):
         res = super(ProductSupplierinfo, self).write(vals)
-        if "price" in vals or "name" in vals:
+        if "price" in vals or "name" in vals or "list_price_eur" in vals:
             self.record_price_history()
         return res
 
@@ -86,6 +89,7 @@ class ProductSupplierinfo(models.Model):
                                 "supplier_price_orig": ps.price,
                                 "supplier_currency_id": ps.currency_id.id,
                                 "supplier_code": ps.product_code,
+                                "list_price_eur": ps.list_price_eur,
                             },
                         )
                     ]
