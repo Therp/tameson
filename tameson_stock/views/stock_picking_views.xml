@@ -36,7 +36,8 @@
                 <button name="action_create_batch" string="Batch for ready shipments" type="object" attrs="{'invisible': ['|', ('state','not in',('done')), ('picking_type_code','!=','incoming')]}" />
             </xpath>
             <field name="scheduled_date" position="before">
-                <field name="unknown_date" attrs="{'invisible': [('picking_type_code','!=','outgoing')]}"/>
+                <field name="picking_type_code" invisible="1" />
+                <field name="unknown_date" attrs="{'invisible': [('picking_type_code','!=','outgoing')]}" />
             </field>
             <xpath expr="//page[last()]" position="after">
                 <page name="tameson" string="Tameson">
