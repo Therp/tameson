@@ -35,7 +35,9 @@
                 <button name="action_mail_send" string="Send" type="object" class="oe_highlight"/>
                 <button name="action_create_batch" string="Batch for ready shipments" type="object" attrs="{'invisible': ['|', ('state','not in',('done')), ('picking_type_code','!=','incoming')]}" />
             </xpath>
-
+            <field name="scheduled_date" position="before">
+                <field name="unknown_date" attrs="{'invisible': [('picking_type_code','!=','outgoing')]}"/>
+            </field>
             <xpath expr="//page[last()]" position="after">
                 <page name="tameson" string="Tameson">
                     <group>
@@ -43,7 +45,6 @@
                             <field name="t_delivery_allowed" />
                             <field name="t_partner_outside_eu" />
                             <field name="t_payment_status" />
-                            <field name="unknown_date" />
                         </group>
                     </group>
                 </page>
