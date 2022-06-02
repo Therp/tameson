@@ -5,6 +5,8 @@ import itertools
 from odoo import api, fields, models, _
 from odoo.tools.pdf import merge_pdf
 from odoo.exceptions import UserError, ValidationError
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import re
 
 class StockPicking(models.Model):
@@ -33,6 +35,12 @@ class StockPicking(models.Model):
         string=_('Fully paid'),
         store=True
     )
+    unknown_date = fields.Boolean()
+    
+    def write(self, vals):
+        if 'unknown_date' in vals and vals.get('unknown_date', False):
+            vals['scheduled_date'] = datetime.now() + relativedelta(days=90)
+        return super(StockPicking, self).write(vals)        
 
     def latest_expected_skus(self):
         self.ensure_one()
