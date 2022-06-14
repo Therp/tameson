@@ -59,12 +59,12 @@
             </xpath>
             <xpath expr="//field[@name='move_ids_without_package']/form/group" position="after">
                 <group string="Orig" attrs="{'invisible': [('move_orig_ids','=',[])]}">
-                    <field name="move_orig_ids" nolabel="1" />
                     <button name="action_remove_orig" string="Remove Orig Relation" type="object" class="oe_link"/>
+                    <field name="move_orig_ids" nolabel="1" />
                 </group>
                 <group string="Dest" attrs="{'invisible': [('move_dest_ids','=',[])]}">
-                    <field name="move_dest_ids" nolabel="1" />
                     <button name="action_remove_dest" string="Remove Dest Relation" type="object" class="oe_link"/>    
+                    <field name="move_dest_ids" nolabel="1" />
                 </group>
             </xpath>
         </field>
