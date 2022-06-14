@@ -57,6 +57,12 @@
             <xpath expr="//page[3]" position="attributes">
                 <attribute name="autofocus">autofocus</attribute>
             </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/form/group" position="inside">
+                <field name="move_orig_ids" nolabel="1" />
+                <field name="move_dest_ids" nolabel="1" />
+                <button name="action_remove_orig" string="Remove Orig Relation" type="object" class="oe_link"/>
+                <button name="action_remove_dest" string="Remove Dest Relation" type="object" class="oe_link"/>
+            </xpath>
         </field>
     </record>
 

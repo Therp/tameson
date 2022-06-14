@@ -50,6 +50,12 @@ class StockMove(models.Model):
         ## end
         return res
 
+    def action_remove_orig(self):
+        self.move_orig_ids = False
+
+    def action_remove_dest(self):
+        self.move_dest_ids = False
+
 
     ## parameters
     ## hours: number of hours to check for last stock operation
