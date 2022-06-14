@@ -58,10 +58,12 @@
                 <attribute name="autofocus">autofocus</attribute>
             </xpath>
             <xpath expr="//field[@name='move_ids_without_package']/form/group" position="after">
-                <group string="Relations">
+                <group string="Orig" attrs="{'invisible': [('move_orig_ids','=',[])]}">
                     <field name="move_orig_ids" nolabel="1" />
-                    <field name="move_dest_ids" nolabel="1" />
                     <button name="action_remove_orig" string="Remove Orig Relation" type="object" class="oe_link"/>
+                </group>
+                <group string="Dest" attrs="{'invisible': [('move_dest_ids','=',[])]}">
+                    <field name="move_dest_ids" nolabel="1" />
                     <button name="action_remove_dest" string="Remove Dest Relation" type="object" class="oe_link"/>    
                 </group>
             </xpath>
