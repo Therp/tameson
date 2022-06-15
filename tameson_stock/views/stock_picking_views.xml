@@ -42,7 +42,7 @@
             <xpath 
                 expr="//field[@name='move_ids_without_package']/tree//field[last()]" 
                 position="after">
-                <field name="state" />
+                <field name="state" optional="hide" />
             </xpath>
             <xpath expr="//page[last()]" position="after">
                 <page name="tameson" string="Tameson">
