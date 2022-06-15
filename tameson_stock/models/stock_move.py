@@ -52,6 +52,8 @@ class StockMove(models.Model):
 
     def action_remove_orig(self):
         self.move_orig_ids = False
+        self.procure_method = 'make_to_stock'
+        self.picking_id.action_assign()
 
     def action_remove_dest(self):
         self.move_dest_ids = False
