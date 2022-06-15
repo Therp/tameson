@@ -39,6 +39,11 @@
                 <field name="picking_type_code" invisible="1" />
                 <field name="unknown_date" attrs="{'invisible': [('picking_type_code','!=','outgoing')]}" />
             </field>
+            <xpath 
+                expr="//field[@name='move_ids_without_package']/tree//field[last()]" 
+                position="after">
+                <field name="state" optional="hide" />
+            </xpath>
             <xpath expr="//page[last()]" position="after">
                 <page name="tameson" string="Tameson">
                     <group>
@@ -56,6 +61,16 @@
             </xpath>
             <xpath expr="//page[3]" position="attributes">
                 <attribute name="autofocus">autofocus</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/form/group" position="after">
+                <group string="Origin, press button to remove relation and allow reserve from stock" attrs="{'invisible': [('move_orig_ids','=',[])]}">
+                    <button name="action_remove_orig" string="Remove Relation" type="object" class="oe_highlight"/>
+                    <field name="move_orig_ids" nolabel="1" />
+                </group>
+                <group string="Destination, press button to remove relation" attrs="{'invisible': [('move_dest_ids','=',[])]}">
+                    <button name="action_remove_dest" string="Remove Relation" type="object" class="oe_highlight"/>    
+                    <field name="move_dest_ids" nolabel="1" />
+                </group>
             </xpath>
         </field>
     </record>
