@@ -103,13 +103,12 @@ class AccountInvoiceImport(models.TransientModel):
         pp_parsed_inv = self.pre_process_parsed_inv(parsed_inv)
         return pp_parsed_inv
 
-
     def parse_edi_data(self, file_data):
         parsed_inv = {
             'lines': []
         }
         interchange = Interchange.from_str(file_data.decode('latin-1'))
-        
+        calc_total = 0
         for line in interchange.split_by('LIN'):
             sku = get_product_ref(line,)
             if sku:
@@ -129,6 +128,7 @@ class AccountInvoiceImport(models.TransientModel):
                 'price_unit': total/qty,
                 'name': name,
             })
+            calc_total += total
         parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
         parsed_inv['invoice_number'] = get_ref(interchange)
         for segments in interchange.split_by('UNS'):
@@ -136,6 +136,15 @@ class AccountInvoiceImport(models.TransientModel):
             parsed_inv['amount_total'] = amount
             parsed_inv['amount_untaxed'] = amount
             break
+        if parsed_inv['amount_total'] != calc_total:
+            diff = parsed_inv['amount_total'] - calc_total
+            parsed_inv['lines'].append({
+                'product': {'id': 93646},
+                'qty': 1,
+                'tax': [],
+                'price_unit': diff,
+                'name': 'Total difference adjustment line.',
+            })
         return self.edi_data_to_parsed_inv(parsed_inv)
 
     def edi_data_to_parsed_inv(self, data):
