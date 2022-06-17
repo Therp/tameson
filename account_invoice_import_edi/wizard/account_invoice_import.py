@@ -138,7 +138,7 @@ class AccountInvoiceImport(models.TransientModel):
     def edi_data_to_parsed_inv(self, data):
         parsed_inv = {
             "partner": {
-                'id': 9
+                'id': 12
             },
             "currency": {
                 "id": 1,
