@@ -113,7 +113,7 @@ class AccountInvoiceImport(models.TransientModel):
         for line in interchange.split_by('LIN'):
             sku = get_product_ref(line,)
             if sku:
-                product = {'default_code': sku}
+                product = {'code': sku}
             else:
                 product = {'id': 93646}
             total = float(get_total(line))
