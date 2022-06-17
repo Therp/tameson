@@ -1061,17 +1061,18 @@ class AccountInvoiceImport(models.TransientModel):
                     invoice._check_balanced()
                     break
             if not has_tax_line:
-                raise UserError(
-                    _(
-                        "The total amount is different from the untaxed amount, "
-                        "but no tax has been configured !"
-                    )
-                )
-        assert not float_compare(
-            parsed_inv["amount_total"],
-            invoice.amount_total,
-            precision_rounding=prec,
-        )
+                logger.info("The total amount is different from the untaxed amount, but no tax has been configured !")
+                # raise UserError(
+                #     _(
+                #         "The total amount is different from the untaxed amount, "
+                #         "but no tax has been configured !"
+                #     )
+                # )
+        # assert not float_compare(
+        #     parsed_inv["amount_total"],
+        #     invoice.amount_total,
+        #     precision_rounding=prec,
+        # )
 
     def update_invoice_lines(self, parsed_inv, invoice, seller):
         chatter = parsed_inv["chatter_msg"]
