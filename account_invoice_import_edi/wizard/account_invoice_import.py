@@ -172,3 +172,24 @@ class AccountInvoiceImport(models.TransientModel):
             if key.startswith("date") and value:
                 parsed_inv[key] = fields.Date.to_string(value)
         return parsed_inv
+    
+    @api.model
+    def _match_product_search(self, product_dict):
+        product = self.env["product.product"].browse()
+        cdomain = self._match_company_domain()
+        if product_dict.get("barcode"):
+            domain = cdomain + [
+                "|",
+                ("barcode", "=", product_dict["barcode"]),
+                ("packaging_ids.barcode", "=", product_dict["barcode"]),
+            ]
+            product = product.search(domain, limit=1)
+        if not product and product_dict.get("code"):
+            # TODO: this domain could be probably included in the former one
+            domain = cdomain + [
+                "|",
+                ("barcode", "=", product_dict["code"]),
+                ("default_code", "=ilike", product_dict["code"]),
+            ]
+            product = product.search(domain, limit=1)
+        return product
