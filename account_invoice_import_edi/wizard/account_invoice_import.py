@@ -109,22 +109,25 @@ class AccountInvoiceImport(models.TransientModel):
             'lines': []
         }
         interchange = Interchange.from_str(file_data.decode('latin-1'))
-        # def get_segments_code(line, tag, number=None, postfix=None):
-        #     return [segment.elements for segment in line.get_segments(tag)]
+        
         for line in interchange.split_by('LIN'):
             sku = get_product_ref(line,)
+            if sku:
+                product = {'default_code': sku}
+            else:
+                product = {'id': 93646}
             total = float(get_total(line))
             qty = float(get_qty(line))
-            supcode = get_product_ref(line, 'SA'),
+            supcode = get_product_ref(line, 'SA')
+            description = get_desc(line)
+            ref = get_rff(line),
+            name = "%s, %s, %s" % (ref, description, supcode)
             parsed_inv['lines'].append({
-                'product': {'code': sku},
-                'supcode': supcode,
+                'product': product,
                 'qty': qty,
                 'tax': get_tax(line),
-                'total': total,
                 'price_unit': total/qty,
-                'ref': get_rff(line),
-                'description': get_desc(line),
+                'name': name,
             })
         parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
         parsed_inv['invoice_number'] = get_ref(interchange)
@@ -149,7 +152,8 @@ class AccountInvoiceImport(models.TransientModel):
             "date_start": data.get("date_start"),
             "date_end": data.get("date_end"),
             'invoice_number': data['invoice_number'],
-            'lines': data['lines']
+            'lines': data['lines'],
+            "type": "in_invoice",
         }
         for field in ["invoice_number", "description"]:
             if isinstance(data.get(field), list):
@@ -167,5 +171,4 @@ class AccountInvoiceImport(models.TransientModel):
         for key, value in parsed_inv.items():
             if key.startswith("date") and value:
                 parsed_inv[key] = fields.Date.to_string(value)
-        parsed_inv["type"] = "in_invoice"
         return parsed_inv
