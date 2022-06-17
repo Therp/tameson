@@ -117,7 +117,7 @@ class AccountInvoiceImport(models.TransientModel):
             qty = float(get_qty(line))
             supcode = get_product_ref(line, 'SA'),
             parsed_inv['lines'].append({
-                'product': {'default_code': sku},
+                'product': {'code': sku},
                 'supcode': supcode,
                 'qty': qty,
                 'tax': get_tax(line),
