@@ -1003,12 +1003,12 @@ class AccountInvoiceImport(models.TransientModel):
             )
             invoice._check_balanced()
             logger.info("Global adjustment invoice line created ID %d", mline.id)
-            logger.info("%f - %f" %(parsed_inv["amount_untaxed"], invoice.amount_untaxed))
-        assert not float_compare(
-            parsed_inv["amount_untaxed"],
-            invoice.amount_untaxed,
-            precision_rounding=prec,
-        )
+        #     logger.info("%f - %f" %(parsed_inv["amount_untaxed"], invoice.amount_untaxed))
+        # assert not float_compare(
+        #     parsed_inv["amount_untaxed"],
+        #     invoice.amount_untaxed,
+        #     precision_rounding=prec,
+        # )
         # Force tax amount if necessary
         if float_compare(
             invoice.amount_total, parsed_inv["amount_total"], precision_rounding=prec
