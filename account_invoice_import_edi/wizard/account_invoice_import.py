@@ -120,6 +120,11 @@ class AccountInvoiceImport(models.TransientModel):
             supcode = get_product_ref(line, 'SA')
             description = get_desc(line)
             ref = get_rff(line),
+            plines = self.env['purchase.order.line'].search([
+                    ('order_id.name','=',ref),
+                    ('product_id.default_code','=',sku),
+                ])
+            pline = plines.filtered(lambda l: ((l.product_qty - l.qty_invoiced) >= qty))[:1]
             name = "%s, %s, %s" % (ref, description, supcode)
             parsed_inv['lines'].append({
                 'product': product,
@@ -127,6 +132,7 @@ class AccountInvoiceImport(models.TransientModel):
                 'tax': get_tax(line),
                 'price_unit': total/qty,
                 'name': name,
+                'pline': pline.id
             })
             calc_total += total
         parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
@@ -202,3 +208,10 @@ class AccountInvoiceImport(models.TransientModel):
             ]
             product = product.search(domain, limit=1)
         return product
+
+    def _prepare_line_vals_nline(self, partner, vals, parsed_inv, import_config):
+        super(AccountInvoiceImport, self)._prepare_line_vals_nline(partner, vals, parsed_inv, import_config)
+        for line, invoice_line in zip(parsed_inv["lines"], vals["invoice_line_ids"]):
+            pline = line.get('pline', False)
+            if pline:
+                invoice_line[2]['purchase_line_id'] = pline
