@@ -5,6 +5,7 @@
 import logging
 import base64
 import mimetypes
+import re
 
 from lxml import etree
 
@@ -109,6 +110,14 @@ class AccountInvoiceImport(models.TransientModel):
         }
         interchange = Interchange.from_str(file_data.decode('latin-1'))
         calc_total = 0
+        pos=[]
+        for Lines in interchange.split_by('FTX'):
+            for segment in Lines.segments:
+                if segment.tag == 'RFF':
+                    break
+                pon = re.findall('Webshop-order (P[0-9]{8})', segment.elements[3])
+                if pon:
+                    pos += pon
         for line in interchange.split_by('LIN'):
             sku = get_product_ref(line,)
             if sku:
@@ -121,9 +130,9 @@ class AccountInvoiceImport(models.TransientModel):
             description = get_desc(line)
             ref = get_rff(line),
             plines = self.env['purchase.order.line'].search([
-                    ('order_id.name','=',ref),
-                    ('product_id.default_code','=',sku),
-                ])
+                ('order_id.name','in',pos),
+                ('product_id.default_code','=',sku),
+            ])
             pline = plines.filtered(lambda l: ((l.product_qty - l.qty_invoiced) >= qty))[:1]
             name = "%s, %s, %s" % (ref, description, supcode)
             parsed_inv['lines'].append({
