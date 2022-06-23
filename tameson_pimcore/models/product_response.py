@@ -192,7 +192,7 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
             [("published", "=", False)]
         )
         unpublished_product_variants = unpublished_products.mapped('product_variant_ids')
-        active_products = self.env['stock.move'].search([('product_id','in',unpublished_product_variants.ids,('state','not in',('done','cancel')))]).mapped('product_id')
+        active_products = self.env['stock.move'].search([('product_id','in',unpublished_product_variants.ids),('state','not in',('done','cancel'))]).mapped('product_id')
         active_products += self.env['purchase.order.line'].search([('product_id','in',unpublished_product_variants.ids),('state','=','draft')]).mapped('product_id')
         active_products += self.env['sale.order.line'].search([('product_id','in',unpublished_product_variants.ids),('state','=','draft')]).mapped('product_id')
         active_pts = active_products.mapped('product_tmpl_id')
