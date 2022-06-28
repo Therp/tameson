@@ -23,3 +23,5 @@ class EDIExchangeInvoiceInput(Component):
         wiz.invoice_file = self.exchange_record._get_file_content(binary=False)
         wiz.invoice_filename = self.exchange_record.exchange_filename
         res = wiz.import_invoice()
+        if wiz.state == 'update':
+            res = wiz.create_invoice_action_button()
