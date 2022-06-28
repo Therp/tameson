@@ -19,4 +19,7 @@ class EDIExchangeInvoiceInput(Component):
     _usage = "input.process.invoice.landefeld"
 
     def process(self):
-        _logger.info("Process called")
+        wiz = self.env['account.invoice.import'].sudo().create({})
+        wiz.invoice_file = self.exchange_record._get_file_content(binary=False)
+        wiz.invoice_filename = self.exchange_record.exchange_filename
+        res = wiz.import_invoice()
