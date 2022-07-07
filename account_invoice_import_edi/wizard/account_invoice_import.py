@@ -123,7 +123,7 @@ class AccountInvoiceImport(models.TransientModel):
             if sku:
                 product = {'code': sku}
             else:
-                product = {'id': 93646}
+                product = {'code': 'shipping_cost'}
             total = float(get_total(line))
             qty = float(get_qty(line))
             supcode = get_product_ref(line, 'SA')
@@ -154,7 +154,7 @@ class AccountInvoiceImport(models.TransientModel):
         if parsed_inv['amount_total'] != calc_total:
             diff = parsed_inv['amount_total'] - calc_total
             parsed_inv['lines'].append({
-                'product': {'id': 93646},
+                'product': {'code': 'purchase_price_diff'},
                 'qty': 1,
                 'tax': [],
                 'price_unit': diff,
