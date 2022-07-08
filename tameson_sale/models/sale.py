@@ -277,10 +277,10 @@ class SaleOrder(models.Model):
         parent_partner = self.env['res.partner'].search([('id', 'parent_of', self.partner_id.id), ('parent_id','=',False)], limit=1)
         if not self.bypass_credit_limit and self.t_invoice_policy == 'delivery':
             credit_limit = parent_partner.credit_limit
-            open_orders = self.search([('partner_id', 'child_of', parent_partner.id), ('state','=','sale'), ('state','=','sale')]).\
+            open_orders = self.search([('partner_id', 'child_of', parent_partner.id), ('state','=','sale')]).\
                 filtered(lambda so: 'posted' not in so.invoice_ids.mapped('state'))
             open_invoices = parent_partner.unreconciled_aml_ids.mapped('move_id')
-            credit = parent_partner.credit
+            credit = parent_partner.sudo().credit
             open_orders_total = 0
             for order in open_orders + self:
                 open_orders_total += order.currency_id._convert(order.amount_total, self.env.user.company_id.currency_id,

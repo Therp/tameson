@@ -18,4 +18,3 @@ class ResPartnet(models.Model):
     def onchange_country_lang(self):
         if self.country_id.select_lang:
             self.lang = self.country_id.select_lang
-

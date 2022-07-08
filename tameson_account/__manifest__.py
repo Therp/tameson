@@ -10,6 +10,7 @@
     """,
     'author': "Tameson",
     'depends': [
+        'tameson_base',
         'account_intrastat',  # enterprise
         'l10n_nl_intrastat',  # enterprise, with 'account.move.line.intrastat_product_origin_country_id field'
         'payment_adyen',
