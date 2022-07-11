@@ -142,7 +142,6 @@ class AccountInvoiceImport(models.TransientModel):
                 'price_unit': total/qty,
                 'name': name,
                 'pline': pline.id,
-                'uom': {'id': 1},
             })
             calc_total += total
         parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
@@ -160,6 +159,7 @@ class AccountInvoiceImport(models.TransientModel):
                 'tax': [],
                 'price_unit': diff,
                 'name': 'Total difference adjustment line.',
+                'uom': {'id': 1},
             })
         return self.edi_data_to_parsed_inv(parsed_inv)
 
