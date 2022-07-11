@@ -167,6 +167,9 @@ class AccountInvoiceImport(models.TransientModel):
             "partner": {
                 'id': 12
             },
+            'uom': {
+                'id': 1
+            },
             "currency": {
                 "id": 1,
             },
