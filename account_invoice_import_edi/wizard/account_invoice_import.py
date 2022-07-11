@@ -49,7 +49,7 @@ def get_date(interchange, code='137'):
         if segment.elements[0][0] == code:
             return segment.elements[0][1]
 
-def get_ref(interchange, code='380'):
+def get_invoice_number(interchange, code='380'):
     for segment in interchange.get_segments('BGM'):
         if segment.elements[0] == code:
             return segment.elements[1]
@@ -145,7 +145,7 @@ class AccountInvoiceImport(models.TransientModel):
             })
             calc_total += total
         parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
-        parsed_inv['invoice_number'] = get_ref(interchange)
+        parsed_inv['invoice_number'] = get_invoice_number(interchange)
         for segments in interchange.split_by('UNS'):
             amount = float(get_total(segments, '77'))
             parsed_inv['amount_total'] = amount
