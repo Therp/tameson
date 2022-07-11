@@ -141,7 +141,8 @@ class AccountInvoiceImport(models.TransientModel):
                 'tax': get_tax(line),
                 'price_unit': total/qty,
                 'name': name,
-                'pline': pline.id
+                'pline': pline.id,
+                'uom': {'id': 1},
             })
             calc_total += total
         parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
@@ -166,9 +167,6 @@ class AccountInvoiceImport(models.TransientModel):
         parsed_inv = {
             "partner": {
                 'id': 12
-            },
-            'uom': {
-                'id': 1
             },
             "currency": {
                 "id": 1,
