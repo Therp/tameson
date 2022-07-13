@@ -119,6 +119,7 @@ class AccountInvoiceImport(models.TransientModel):
                 if pon:
                     pos += pon
         parsed_inv['sku_warning'] = []
+        parsed_inv['description'] = pos
         for line in interchange.split_by('LIN'):
             sku = get_product_ref(line,)
             supcode = get_product_ref(line, 'SA')
