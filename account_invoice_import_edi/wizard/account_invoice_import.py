@@ -119,14 +119,17 @@ class AccountInvoiceImport(models.TransientModel):
                 if pon:
                     pos += pon
         for line in interchange.split_by('LIN'):
+            sku_warning = []
             sku = get_product_ref(line,)
+            supcode = get_product_ref(line, 'SA')
             if sku:
                 product = {'code': sku}
             else:
+                if supcode not in ('_PORTO DPD', '_WGN'):
+                    sku_warning.append(supcode)
                 product = {'code': 'shipping_cost'}
             total = float(get_total(line))
             qty = float(get_qty(line))
-            supcode = get_product_ref(line, 'SA')
             description = get_desc(line)
             ref = get_rff(line),
             plines = self.env['purchase.order.line'].search([
@@ -143,6 +146,7 @@ class AccountInvoiceImport(models.TransientModel):
                 'name': name,
                 'pline': pline.id,
                 'uom': {'id': 1},
+                'sku_warning': sku_warning
             })
             calc_total += total
         parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
@@ -181,7 +185,7 @@ class AccountInvoiceImport(models.TransientModel):
             'lines': data['lines'],
             "type": "in_invoice",
         }
-        for field in ["invoice_number", "description"]:
+        for field in ["invoice_number", "description", "sku_warning"]:
             if isinstance(data.get(field), list):
                 parsed_inv[field] = " ".join(data[field])
             else:
@@ -226,3 +230,9 @@ class AccountInvoiceImport(models.TransientModel):
             pline = line.get('pline', False)
             if pline:
                 invoice_line[2]['purchase_line_id'] = pline
+
+    def create_invoice(self, parsed_inv, import_config=False, origin=None):
+        res = super(AccountInvoiceImport, self).create_invoice(parsed_inv, import_config, origin)
+        if parsed_inv['sku_warning']:
+            res.message_post(body="Warning for lines: %s" % parsed_inv['sku_warning'])
+        return res
