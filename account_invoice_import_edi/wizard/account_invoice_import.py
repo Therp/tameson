@@ -118,15 +118,15 @@ class AccountInvoiceImport(models.TransientModel):
                 pon = re.findall('Webshop-order (P[0-9]{8})', segment.elements[3])
                 if pon:
                     pos += pon
+        parsed_inv['sku_warning'] = []
         for line in interchange.split_by('LIN'):
-            sku_warning = []
             sku = get_product_ref(line,)
             supcode = get_product_ref(line, 'SA')
             if sku:
                 product = {'code': sku}
             else:
                 if supcode not in ('_PORTO DPD', '_WGN'):
-                    sku_warning.append(supcode)
+                    parsed_inv['sku_warning'].append(supcode)
                 product = {'code': 'shipping_cost'}
             total = float(get_total(line))
             qty = float(get_qty(line))
@@ -146,7 +146,6 @@ class AccountInvoiceImport(models.TransientModel):
                 'name': name,
                 'pline': pline.id,
                 'uom': {'id': 1},
-                'sku_warning': sku_warning
             })
             calc_total += total
         parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
