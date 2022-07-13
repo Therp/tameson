@@ -126,9 +126,11 @@ class AccountInvoiceImport(models.TransientModel):
             if sku:
                 product = {'code': sku}
             else:
-                if supcode not in ('_PORTO DPD', '_WGN'):
+                if supcode in ('_PORTO DPD', '_WGN'):
+                    product = {'code': 'shipping_cost'}
+                else:
                     parsed_inv['sku_warning'].append(supcode)
-                product = {'code': 'shipping_cost'}
+                    product = {'code': 'purchase_price_diff'}
             total = float(get_total(line))
             qty = float(get_qty(line))
             description = get_desc(line)
