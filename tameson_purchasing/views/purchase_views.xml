@@ -23,6 +23,12 @@
                     <field name="help_text" />
                 </page>
             </xpath>
+            <xpath expr="//notebook[1]" position="before">
+                <field name="is_product_supplier" invisible="True" />
+                <h2 class="text-danger" attrs="{'invisible': [('is_product_supplier','=',True)]}" >
+                    Warning:  This contact is not set as a 'product supplier' , please update the contact settings if it is. 
+                </h2>
+            </xpath>
         </field>
     </record>
 </odoo>
