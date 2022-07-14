@@ -12,6 +12,7 @@ from odoo.exceptions import UserError, ValidationError
 class PickingDelay(models.TransientModel):
     _name = 'picking.delay.mail'
     _inherits = {'mail.compose.message':'composer_id'}
+    _description = 'Picking Delay'
 
     composer_id = fields.Many2one('mail.compose.message', string='Composer', required=True, ondelete='cascade')
     template_id = fields.Many2one('mail.template', 'Use template', index=True, domain="[('model', '=', 'stock.picking')]")

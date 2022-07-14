@@ -183,7 +183,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
-    wh_id = fields.Many2one(string="Warehouse", comodel_name='stock.warehouse',ondelete='restrict',)    
+    wh_id = fields.Many2one(string="Product Warehouse", comodel_name='stock.warehouse',ondelete='restrict',)    
 
     def _get_buy_route(self):
         mtos_id = self.env.ref('stock_mts_mto_rule.route_mto_mts', raise_if_not_found=False)

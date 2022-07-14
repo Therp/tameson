@@ -49,7 +49,7 @@ class ProductTemplate(models.Model):
 ## Pimcore fields
     modification_date = fields.Float()
     pimcore_id = fields.Char("Pimcore ID")
-    brand_name = fields.Char("Brand")
+    brand_name = fields.Char("Brand name")
     full_path = fields.Char("Full Path")
     category_path = fields.Char("Category Path")
     manufacturer_name = fields.Char("Manufacturer")
