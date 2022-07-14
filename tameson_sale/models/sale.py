@@ -56,7 +56,7 @@ class SaleOrder(models.Model):
     uu_replacement_skus = fields.Char(compute='_check_any_non_returnable')
     uu_replacement_skus_en = fields.Char(compute='_check_any_non_returnable')
     weight_over_25 = fields.Char(compute='_check_any_non_returnable')
-    supposed_fiscal_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', compute='get_supposed_fiscal')
+    supposed_fiscal_id = fields.Many2one('account.fiscal.position', string='Supposed Fiscal Position', compute='get_supposed_fiscal')
     fiscal_position_id = fields.Many2one(copy=False)
     supposed_fiscal_match = fields.Boolean(compute='get_supposed_fiscal')
     

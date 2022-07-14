@@ -170,7 +170,7 @@ class ShopifyInstanceEpt(models.Model):
     shopify_company_id = fields.Many2one('res.company', string='Company', required=True,
                                          default=lambda self:
                                          self.env.company)
-    shopify_warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
+    shopify_warehouse_id = fields.Many2one('stock.warehouse', string='Shopify Warehouse',
                                            default=_get_default_warehouse)
     shopify_pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     shopify_order_prefix = fields.Char(size=10, string='Order Prefix',
@@ -208,7 +208,7 @@ class ShopifyInstanceEpt(models.Model):
     # payment_term_id = fields.Many2one('account.payment.term', string='Payment Term')
     last_date_order_import = fields.Datetime(string="Last Date Of Order Import",
                                              help="Last date of sync orders from Shopify to Odoo")
-    shopify_section_id = fields.Many2one('crm.team', 'Sales Team')
+    shopify_section_id = fields.Many2one('crm.team', 'Shopify Sales Team')
     # global_channel_id = fields.Many2one('global.channel.ept', string="Global Channel")
     is_use_default_sequence = fields.Boolean("Use Odoo Default Sequence?",
                                              help="If checked,Then use default sequence of odoo while create sale order.")
