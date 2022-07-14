@@ -19,6 +19,7 @@
         "views/stock_picking.xml",
         "views/reports.xml",
         "report/stock_report_views.xml",
+        "security/security.xml",
     ],
     "installable": True,
 }

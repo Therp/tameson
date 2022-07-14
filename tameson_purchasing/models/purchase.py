@@ -6,7 +6,7 @@ class PurchaseOrder(models.Model):
     _name= 'purchase.order'
     _inherit = ['purchase.order', 'set.help.mixin']
 
-
+    is_product_supplier = fields.Boolean(default=True, compute='get_is_product_supplier')
     t_purchase_method = fields.Selection(
         [
             ('purchase', 'Ordered quantities'),
@@ -28,6 +28,13 @@ class PurchaseOrder(models.Model):
         compute="_compute_clipboard_text_handle",
     )
 
+
+    def get_is_product_supplier(self):
+        for po in self:
+            if po.partner_id and not po.partner_id.is_product_supplier:
+                po.is_product_supplier = False
+            else:
+                po.is_product_supplier = True
 
     ## compute invoice_status based on t_purchase_method instead of each product purchase_method
     @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty', 't_purchase_method')

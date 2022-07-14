@@ -16,8 +16,10 @@
         'account_bank_statement_import_online_paypal',  # online paypal import for interval change
     ],
     'data': [
+        'security/account_security.xml',
         'views/account_views.xml',
-        'views/invoice_report.xml'
+        'views/invoice_report.xml',
+        'views/res_partner.xml',
     ],
     'application': False,
     'license': u'OPL-1',
