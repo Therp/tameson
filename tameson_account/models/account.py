@@ -1,5 +1,5 @@
 from odoo import api, fields, models, _
-
+from odoo.tools.misc import format_date
 
 class AccountMove(models.Model):
     _name = 'account.move'
@@ -76,3 +76,24 @@ class AccountMoveReversal(models.TransientModel):
         if user.has_group('sales_team.group_sale_salesman') or user.has_group('purchase.group_purchase_user'):
             self = self.sudo()
         return super(AccountMoveReversal, self).reverse_moves()
+
+
+class AccountReconciliation(models.AbstractModel):
+    _inherit = "account.reconciliation.widget"
+
+    @api.model
+    def _prepare_move_lines(
+        self, move_lines, target_currency=False, target_date=False, recs_count=0
+    ):
+        res = super(AccountReconciliation, self)._prepare_move_lines(
+            move_lines,
+            target_currency=target_currency,
+            target_date=target_date,
+            recs_count=recs_count,
+        )
+        for line in res:
+            if line['ref']:
+                invoice = self.env['account.move'].search([('name','=',line['ref'])], limit=1)
+                if invoice.invoice_date:
+                    line['ref'] += " - Inv. Date: %s" % format_date(self.env, invoice.invoice_date)
+        return res
