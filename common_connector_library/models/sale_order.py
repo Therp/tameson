@@ -44,6 +44,8 @@ class SaleOrder(models.Model):
         new_record.onchange_partner_id()  # Return Pricelist- Payment terms- Invoice address- Delivery address
         order_vals = sale_order._convert_to_write(
             {name: new_record[name] for name in new_record._cache})
+        # update shipping address in order vals
+        order_vals.update({'partner_shipping_id': vals.get('partner_shipping_id', False)})
         new_record = sale_order.new(order_vals)
         new_record.onchange_partner_shipping_id()  # Return Fiscal Position
         order_vals = sale_order._convert_to_write(
@@ -88,10 +90,10 @@ class SaleOrder(models.Model):
             is_amz_customer=getattr(self.partner_id,'is_amz_customer', False)
             is_bol_customer = getattr(self.partner_id, 'is_bol_customer', False)
             is_eu_country = self.is_eu_country_ept(origin_country_id)
-            context.update({'is_amazon_fpos':is_amz_customer,'is_bol_fiscal_position':is_bol_customer,
-                            'force_company': warehouse.company_id.id})
+            context.update(is_amazon_fpos=is_amz_customer, is_bol_fiscal_position=is_bol_customer,
+                           force_company=warehouse.company_id.id)
             if is_eu_country:
-                context.update({'origin_country_ept': origin_country_id})
+                context.update(origin_country_ept=origin_country_id)
             fiscal_position = self.env['account.fiscal.position'].with_context(context).get_fiscal_position(
                     self.partner_id.id, self.partner_shipping_id.id)
             self.fiscal_position_id = fiscal_position
@@ -110,12 +112,12 @@ class SaleOrder(models.Model):
             is_amz_customer=getattr(self.partner_id,'is_amz_customer', False)
             is_bol_customer = getattr(self.partner_id, 'is_bol_customer', False)
             is_eu_country = self.is_eu_country_ept(origin_country_id)
-            context.update({'is_amazon_fpos':is_amz_customer,'is_bol_fiscal_position':is_bol_customer,
-                            'force_company': warehouse.company_id.id})
+            context.update(is_amazon_fpos=is_amz_customer, is_bol_fiscal_position=is_bol_customer,
+                           force_company=warehouse.company_id.id)
             if is_eu_country:
-                context.update({'origin_country_ept': origin_country_id})
+                context.update(origin_country_ept=origin_country_id)
             fiscal_position_id = self.env['account.fiscal.position'].with_context(context).get_fiscal_position(
-                    self.partner_id.id, self.partner_shipping_id.id)
+                self.partner_id.id, self.partner_shipping_id.id)
             self.fiscal_position_id = fiscal_position_id
 
     def _prepare_invoice(self):

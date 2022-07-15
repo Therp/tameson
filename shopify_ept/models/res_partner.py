@@ -11,7 +11,7 @@ class res_partner(models.Model):
     # shopify_customer_id = fields.Char("Shopify Cutstomer Id")
     # shopify_instance_id = fields.Many2one('shopify.instance.ept', string='Shopify Instance')
     is_shopify_customer = fields.Boolean(string="Is Shopify Customer?",
-                                     help="Used for identified that the customer is imported from Shopify store.")
+                                         help="Used for identified that the customer is imported from Shopify store.")
 
     @api.model
     def create_shopify_pos_customer(self, order_response, log_book_id, instance):
@@ -34,7 +34,7 @@ class res_partner(models.Model):
 
         shopify_partner = shopify_partner_obj.search([("shopify_customer_id", "=", customer_id),
                                                       ("shopify_instance_id", "=", instance.id)],
-                                                      limit=1)
+                                                     limit=1)
         name = ("%s %s" % (first_name, last_name)).strip()
         if name == "":
             if email:
@@ -42,30 +42,33 @@ class res_partner(models.Model):
             elif phone:
                 name = phone
         partner_vals = {
-                "name": name,
-                "phone": phone,
-                "email": email,
-                }
+            "name": name,
+            "phone": phone,
+            "email": email,
+        }
 
         if address.get("city"):
             state_name = address.get("province")
-    
-            country = self.env["res.country"].search(["|", ("name", "=", address.get("country")), ("code", "=", address.get("country_code"))])
+
+            country = self.env["res.country"].search(
+                ["|", ("name", "=", address.get("country")), ("code", "=", address.get("country_code"))])
             if not country:
-                state = self.env["res.country.state"].search(["|", ("code", "=", address.get("province_code")), ("name", "=", state_name)], limit=1)
+                state = self.env["res.country.state"].search(
+                    ["|", ("code", "=", address.get("province_code")), ("name", "=", state_name)], limit=1)
             else:
                 state = self.env["res.country.state"].search(
-                    ["|", ("code", "=", address.get("province_code")), ("name", "=", state_name), ("country_id", "=", country.id)],
+                    ["|", ("code", "=", address.get("province_code")), ("name", "=", state_name),
+                     ("country_id", "=", country.id)],
                     limit=1)
 
             partner_vals.update({
-                    "street": address.get("address1"),
-                    "street2": address.get("address2"),
-                    "city": address.get("city"),
-                    "state_id":state.id or False,
-                    "country_id":country.id or False,
-                    "zip": address.get("zip"),
-                })
+                "street": address.get("address1"),
+                "street2": address.get("address2"),
+                "city": address.get("city"),
+                "state_id": state.id or False,
+                "country_id": country.id or False,
+                "zip": address.get("zip"),
+            })
 
         if shopify_partner:
             parent_id = shopify_partner.partner_id.id
@@ -77,7 +80,8 @@ class res_partner(models.Model):
                 key_list = list(partner_vals.keys())
                 res_partner = self._find_partner(partner_vals, key_list, [])
                 if not res_partner:
-                    partner_vals.update({'is_company': False, 'type':'invoice', 'customer_rank':0, 'is_shopify_customer':True})
+                    partner_vals.update(
+                        {'is_company': False, 'type': 'invoice', 'customer_rank': 0, 'is_shopify_customer': True})
                     res_partner = self.create(partner_vals)
             return res_partner
         else:
@@ -90,7 +94,7 @@ class res_partner(models.Model):
                 res_partner = res_partner.parent_id
 
             if res_partner:
-                partner_vals.update({"is_shopify_customer": True, "type":"invoice", "parent_id":res_partner.id})
+                partner_vals.update({"is_shopify_customer": True, "type": "invoice", "parent_id": res_partner.id})
                 res_partner = self.create(partner_vals)
             else:
                 key_list = list(partner_vals.keys())
@@ -98,9 +102,9 @@ class res_partner(models.Model):
                 if res_partner:
                     res_partner.write({"is_shopify_customer": True})
                 else:
-                    partner_vals.update({"is_shopify_customer": True, "type":"contact"})
+                    partner_vals.update({"is_shopify_customer": True, "type": "contact"})
                     res_partner = self.create(partner_vals)
-            
+
             shopify_partner_obj.create({"shopify_instance_id": instance.id,
                                         "shopify_customer_id": customer_id,
                                         "partner_id": res_partner.id})
@@ -122,7 +126,7 @@ class res_partner(models.Model):
                 email = vals.get('customer').get('email')
                 if vals.get('billing_address'):
                     address = vals.get('billing_address')
-                #Below line added because while we receive an order from other platforms to Shopify store and store to
+                # Below line added because while we receive an order from other platforms to Shopify store and store to
                 # Odoo at that moment some time we did not receive a billing address.
                 if not vals.get('billing_address') and vals.get('shipping_address'):
                     address = vals.get('shipping_address')
@@ -158,13 +162,16 @@ class res_partner(models.Model):
             # some time name is blank so we are write email as name in odoo
             if name == 'None None':
                 name = email
-            country = country_obj.search(["|", ('name', '=', address.get('country')), ('code', '=', address.get('country_code'))])
+            country = country_obj.search(
+                ["|", ('name', '=', address.get('country')), ('code', '=', address.get('country_code'))])
             state_name = address.get('province')
             if not country:
-                state = state_obj.search(["|", ('code', '=', address.get('province_code')), ('name', '=', state_name)], limit=1)
+                state = state_obj.search(["|", ('code', '=', address.get('province_code')), ('name', '=', state_name)],
+                                         limit=1)
             else:
                 state = state_obj.search(
-                    ["|", ('code', '=', address.get('province_code')), ('name', '=', state_name), ('country_id', '=', country.id)],
+                    ["|", ('code', '=', address.get('province_code')), ('name', '=', state_name),
+                     ('country_id', '=', country.id)],
                     limit=1)
             partner_vals = {
                 'name': name,
@@ -177,13 +184,13 @@ class res_partner(models.Model):
                 'country_name': country,
                 'phone': address.get('phone'),
                 'email': email,
-                'state_id':state.id or False,
+                'state_id': state.id or False,
                 'zip': address.get('zip'),
-                'country_id':country.id or False,
+                'country_id': country.id or False,
                 'is_company': False,
             }
-
-            partner_vals = partner_obj._prepare_partner_vals(partner_vals)
+            update_partner_vals = self.remove_special_chars_from_partner_vals(partner_vals)
+            partner_vals = self._prepare_partner_vals(update_partner_vals)
             partner_vals.update({'customer_rank': 1})
             res_partner_id = shopify_partner_obj.search(
                 [('shopify_customer_id', '=', customer_id), ('shopify_instance_id', '=', instance.id)], limit=1)
@@ -191,13 +198,16 @@ class res_partner(models.Model):
                 parent_id = res_partner_id.partner_id.id
                 partner_vals.update({'parent_id': parent_id})
                 key_list = ['name', 'state_id', 'city', 'zip', 'street', 'street2', 'country_id', 'email', 'parent_id']
-                res_partner = self.shopify_search_partner_with_and_without_company_name(key_list, company_name, partner_vals)
+                res_partner = self.shopify_search_partner_with_and_without_company_name(key_list, company_name,
+                                                                                        partner_vals)
                 if not res_partner:
                     key_list = ['name', 'state_id', 'city', 'zip', 'street', 'street2', 'country_id', 'email']
-                    res_partner = self.shopify_search_partner_with_and_without_company_name(key_list, company_name, partner_vals)
+                    res_partner = self.shopify_search_partner_with_and_without_company_name(key_list, company_name,
+                                                                                            partner_vals)
                     if not res_partner:
                         # here we are create child partner so its is_company is False
-                        partner_vals.update({'is_company': False, 'type':'invoice', 'customer_rank':0, 'is_shopify_customer':True})
+                        partner_vals.update(
+                            {'is_company': False, 'type': 'invoice', 'customer_rank': 0, 'is_shopify_customer': True})
                         res_partner = partner_obj.create(partner_vals)
                         if company_name:
                             res_partner.company_name = company_name
@@ -211,7 +221,8 @@ class res_partner(models.Model):
                     return res_partner
             else:
                 key_list = ['name', 'state_id', 'city', 'zip', 'street', 'street2', 'country_id', 'email']
-                res_partner = self.shopify_search_partner_with_and_without_company_name(key_list, company_name, partner_vals)
+                res_partner = self.shopify_search_partner_with_and_without_company_name(key_list, company_name,
+                                                                                        partner_vals)
                 if res_partner:
                     # here we need to discuss shopify customer id set in founded partner or not
                     # shopify_partner_obj.create({'shopify_instance_id': instance.id,
@@ -219,9 +230,9 @@ class res_partner(models.Model):
                     #                             'partner_id': new_res_partner_id_3.id})
                     return res_partner
                 else:
-                    partner_vals.update({'is_shopify_customer': True, 'type':'contact'})
+                    partner_vals.update({'is_shopify_customer': True, 'type': 'contact'})
                     if company_name:
-                        partner_vals.update({'company_name':company_name})
+                        partner_vals.update({'company_name': company_name})
                     res_partner = partner_obj.create(partner_vals)
                     shopify_partner_obj.create({'shopify_instance_id': instance.id,
                                                 'shopify_customer_id': customer_id,
@@ -229,7 +240,8 @@ class res_partner(models.Model):
                     return res_partner
         else:
             company_name = vals.get("company")
-            country = country_obj.search(["|", ('name', '=', vals.get('country')), ('code', '=', vals.get('country_code'))])
+            country = country_obj.search(
+                ["|", ('name', '=', vals.get('country')), ('code', '=', vals.get('country_code'))])
             state_name = vals.get('province')
             if not country:
                 state = state_obj.search(["|", ('code', '=', vals.get('province_code')), ('name', '=', state_name)],
@@ -253,16 +265,19 @@ class res_partner(models.Model):
                 'zip': vals.get('zip'),
                 'parent_id': parent_id,
                 'type': type,
-                'state_id':state.id or False,
+                'state_id': state.id or False,
                 'country_id': country.id or False,
             }
-            partner_vals = partner_obj._prepare_partner_vals(partner_vals)
+            update_partner_vals = self.remove_special_chars_from_partner_vals(partner_vals)
+            partner_vals = self._prepare_partner_vals(update_partner_vals)
             partner_vals.update({'customer_rank': 0})
             key_list = ['name', 'state_id', 'city', 'zip', 'street', 'street2', 'country_id', 'email', 'parent_id']
-            address_child = self.shopify_search_partner_with_and_without_company_name(key_list, company_name, partner_vals)
+            address_child = self.shopify_search_partner_with_and_without_company_name(key_list, company_name,
+                                                                                      partner_vals)
             if not address_child:
                 key_list = ['name', 'state_id', 'city', 'zip', 'street', 'street2', 'country_id', 'email']
-                address_parent = self.shopify_search_partner_with_and_without_company_name(key_list, company_name, partner_vals)
+                address_parent = self.shopify_search_partner_with_and_without_company_name(key_list, company_name,
+                                                                                           partner_vals)
                 if not address_parent:
                     address = partner_obj.create(partner_vals)
                     if company_name:
@@ -285,7 +300,7 @@ class res_partner(models.Model):
             partner_vals.update({'company_name': company_name})
             key_list.append('company_name')
             res_partner = self._find_partner(partner_vals, key_list, [])
-        #If company name exists in response and customer exists in odoo with address, so we search the customer with
+        # If company name exists in response and customer exists in odoo with address, so we search the customer with
         # company False and set the company name in the existing customer.
         if not res_partner and company_name:
             res_partner = self._find_partner(partner_vals, key_list, [('company_name', '=', False)])

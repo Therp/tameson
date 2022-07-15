@@ -3,10 +3,11 @@ import time
 
 from datetime import datetime, timedelta
 from odoo import models, fields
-#from datetime import datetime
+# from datetime import datetime
 from .. import shopify
 from ..shopify.pyactiveresource.connection import ClientError
 from odoo.exceptions import Warning, UserError
+
 
 class ShopifyPaymentGateway(models.Model):
     _name = 'shopify.payment.gateway.ept'
@@ -64,7 +65,7 @@ class ShopifyPaymentGateway(models.Model):
         return shopify_payment_gateway
 
     def shopify_search_create_gateway_workflow(self, instance, order_data_queue_line,
-                                               order_response,log_book_id):
+                                               order_response, log_book_id, gateway):
         """This method used to search or create a payment gateway and workflow in odoo when importing orders from Shopify to Odoo.
             @param : self, instance, order_data_queue_line,order_response
             @return: gateway, workflow
@@ -75,16 +76,16 @@ class ShopifyPaymentGateway(models.Model):
         model = "sale.order"
         model_id = comman_log_line_obj.get_model_id(model)
         auto_workflow_id = False
-        gateway = order_response.get('gateway') or "no_payment_gateway"
+        # gateway = order_response.get('gateway') or "no_payment_gateway"
         shopify_payment_gateway = self.search(
-                [('code', '=', gateway), ('shopify_instance_id', '=', instance.id)], limit=1)
+            [('code', '=', gateway), ('shopify_instance_id', '=', instance.id)], limit=1)
         if not shopify_payment_gateway:
             shopify_payment_gateway = self.create(
-                    {'name':gateway, 'code':gateway, 'shopify_instance_id':instance.id})
+                {'name': gateway, 'code': gateway, 'shopify_instance_id': instance.id})
         workflow_config = self.env['sale.auto.workflow.configuration.ept'].search(
-                [('shopify_instance_id', '=', instance.id),
-                 ('payment_gateway_id', '=', shopify_payment_gateway.id),
-                 ('financial_status', '=', order_response.get('financial_status'))])
+            [('shopify_instance_id', '=', instance.id),
+             ('payment_gateway_id', '=', shopify_payment_gateway.id),
+             ('financial_status', '=', order_response.get('financial_status'))])
         if not workflow_config:
             message = "Workflow Configuration not found for this order %s and payment gateway is " \
                       "'%s' and financial status is '%s'. You can see the auto workflow " \
@@ -92,8 +93,8 @@ class ShopifyPaymentGateway(models.Model):
                           order_response.get('name'), gateway,
                           order_response.get('financial_status'))
             comman_log_line_obj.shopify_create_order_log_line(message, model_id,
-                                                              order_data_queue_line,log_book_id)
-            order_data_queue_line.write({'state':'failed', 'processed_at':datetime.now()})
+                                                              order_data_queue_line, log_book_id)
+            order_data_queue_line.write({'state': 'failed', 'processed_at': datetime.now()})
             return shopify_payment_gateway, auto_workflow_id
         auto_workflow_id = workflow_config and workflow_config.auto_workflow_id or False
         if auto_workflow_id and not auto_workflow_id.picking_policy:
@@ -102,7 +103,7 @@ class ShopifyPaymentGateway(models.Model):
                       "workflow configuration here: Shopify => Configuration => Sale Auto " \
                       "workflow" % (auto_workflow_id.name)
             comman_log_line_obj.shopify_create_order_log_line(message, model_id,
-                                                              order_data_queue_line,log_book_id)
-            order_data_queue_line.write({'state':'failed', 'processed_at':datetime.now()})
+                                                              order_data_queue_line, log_book_id)
+            order_data_queue_line.write({'state': 'failed', 'processed_at': datetime.now()})
             auto_workflow_id = False
         return shopify_payment_gateway, auto_workflow_id

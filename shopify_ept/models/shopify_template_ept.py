@@ -228,7 +228,9 @@ class ShopifyProductTemplateEpt(models.Model):
                                                                                      variant.get(
                                                                                          'sku', ''),
                                                                                      variant.get(
-                                                                                         'id'), variant.get('barcode'),template_dic.get('shopify_tmpl_id'))
+                                                                                         'id'), variant.get('barcode'),
+                                                                                     template_dic.get(
+                                                                                         'shopify_tmpl_id'))
             if shopify_product:
                 available_shopify_products.update({variant["id"]: shopify_product})
                 shopify_template = shopify_product.shopify_template_id
@@ -242,6 +244,7 @@ class ShopifyProductTemplateEpt(models.Model):
 
             shopify_product = odoo_product = False
         product_image_dict = {}
+        not_update_product = []
         for variant in response_template.get('variants'):
             variant_id = variant.get("id")
             product_sku = variant.get("sku")
@@ -253,7 +256,7 @@ class ShopifyProductTemplateEpt(models.Model):
                 'inventory_item_id': variant.get('inventory_item_id'),
                 'inventory_management': variant.get('inventory_management') if variant.get(
                     'inventory_management') == 'shopify' else 'Dont track Inventory',
-                'taxable': variant.get('taxable'),
+                # 'taxable': variant.get('taxable'),
                 #                 'fulfillment_service': variant.get('fulfillment_service'),
                 'created_at': self.convert_shopify_date_into_odoo_format(variant.get('created_at')),
                 'updated_at': self.convert_shopify_date_into_odoo_format(variant.get('updated_at')),
@@ -264,13 +267,18 @@ class ShopifyProductTemplateEpt(models.Model):
             odoo_product = available_odoo_products.get(variant_id)
             if shopify_product and not odoo_product:
                 odoo_product = shopify_product.product_id
+                # if not shopify_product.shopify_template_id.exported_in_shopify and not shopify_product.shopify_template_id.shopify_tmpl_id and shopify_template:
+                #     variant_info.update({'shopify_template_id': shopify_template.id})
+                #     shopify_product.shopify_template_id.write({'active': False})
+                # shopify_product.write(variant_info)
             ####################################
             # Need to discuss if odoo product found from the shopify_product but with  new attribute
             ###################################
             """Added below 2 line condition to map products which have different product skus in shopify store and odoo.
             case: from odoo product screen export product in csv file and modified the skus
             in csv file which have set in shopify store and then perform import product operation"""
-            if not is_importable_checked and len(list(available_shopify_products)) > 1 and len(list(available_shopify_products)) == len(list(available_odoo_products)):
+            if not is_importable_checked and len(list(available_shopify_products)) > 1 and len(
+                    list(available_shopify_products)) == len(list(available_odoo_products)):
                 is_importable_checked = True
 
             if not is_importable_checked:
@@ -473,7 +481,7 @@ class ShopifyProductTemplateEpt(models.Model):
                     {"product_id": odoo_product.id, "shopify_template_id": shopify_template.id,
                      "name": odoo_product.name})
                 #                 variant_info.pop('fulfillment_service')
-                variant_info.pop('taxable')
+                # variant_info.pop('taxable')
                 shopify_product = self.env["shopify.product.product.ept"].create(variant_info)
             else:
                 if not template_updated:
@@ -482,20 +490,24 @@ class ShopifyProductTemplateEpt(models.Model):
                                                            shopify_template, product_category)
                     template_updated = True
                 #                 variant_info.pop('fulfillment_service')
-                variant_info.pop('taxable')
+                # variant_info.pop('taxable')
+                # shopify_product.write(variant_info)
+
+                if not shopify_product.shopify_template_id.exported_in_shopify and not shopify_product.shopify_template_id.shopify_tmpl_id and shopify_template:
+                    variant_info.update({'shopify_template_id': shopify_template.id})
+                    not_update_product.append((0, 0, {
+                        'name': odoo_product.name,
+                        'shopify_instance_id': instance.id,
+                        'default_code': product_sku,
+                        'product_id': odoo_product.id,
+                        'variant_id': variant_id,
+                        'exported_in_shopify': True,
+                    }))
+                    shopify_product.shopify_template_id.write({'active': False})
+                else:
+                    shopify_template.write({'shopify_product_ids': not_update_product})
                 shopify_product.write(variant_info)
             self.update_variant_price(shopify_product, variant_price)
-            # if instance.sync_product_with_images:
-            #     if not shopify_template.product_tmpl_id.image_1920:
-            #         set_in_template = False
-            #     self.env['common.product.image.ept'].shopify_sync_product_images(instance,
-            #                                                                      response_template,
-            #                                                                      shopify_template,
-            #                                                                      shopify_product,
-            #                                                                      template_image_updated,
-            #                                                                      set_in_template)
-            #     template_image_updated = True'
-
             if not is_data_line_process:
                 if shopify_template and product_data_line_id:
                     product_data_line_id.write({
@@ -636,7 +648,7 @@ class ShopifyProductTemplateEpt(models.Model):
                         shopify_product_images += shopify_product_image
 
         all_shopify_product_images = shopify_product_image_obj.search([("shopify_template_id",
-                                                                     "=", self.id)])
+                                                                        "=", self.id)])
         need_to_remove = all_shopify_product_images - shopify_product_images
         need_to_remove.unlink()
         _logger.info("Images Updated for shopify {0}".format(self.name))
@@ -725,6 +737,7 @@ class ShopifyProductTemplateEpt(models.Model):
         # shopify_product_date = datetime.strptime(time_zone_remove, "%Y-%m-%dT%H:%M:%S")
         shopify_product_date = parser.parse(product_date).astimezone(utc).strftime('%Y-%m-%d %H:%M:%S')
         return shopify_product_date
+
     def shopify_search_odoo_product_variant(self, shopify_instance, product_sku, variant_id, barcode, s_template_id):
         """
         Author: Bhavesh Jadav 10/12/2019 for find odoo and shopify product based on the variant_id(shopify) or default_code
@@ -747,7 +760,7 @@ class ShopifyProductTemplateEpt(models.Model):
                 shopify_product = shopify_product_obj.search(
                     [('product_id.default_code', '=', product_sku),
                      ('shopify_instance_id', '=', shopify_instance.id), ('shopify_template_id.shopify_tmpl_id', '=',
-                                                                       s_template_id)], limit=1)
+                                                                         s_template_id)], limit=1)
             if not shopify_product:
                 odoo_product = odoo_product.search([('default_code', '=', product_sku)], limit=1)
             if not shopify_product:
@@ -787,7 +800,6 @@ class ShopifyProductTemplateEpt(models.Model):
             odoo_product = shopify_product.product_id
 
         return shopify_product, odoo_product
-
 
     def shopify_search_odoo_product(self, instance, sku, barcode):
         """This method used to search odoo product based on product configuration in res setting.Shopify => Configuration => Setting => Sync Product With

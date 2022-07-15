@@ -13,7 +13,7 @@ class StockPicking(models.Model):
     def get_set_product(self, product):
         try:
             bom_obj = self.env['mrp.bom']
-            bom_point = bom_obj.sudo()._bom_find(product=product)
+            bom_point = bom_obj.sudo()._bom_find(product=product,company_id=self.company_id.id, bom_type='phantom')
             from_uom = product.uom_id
             to_uom = bom_point.product_uom_id
             factor = from_uom._compute_quantity(1, to_uom) / bom_point.product_qty

@@ -124,3 +124,31 @@ class ResCountry(models.Model):
 
     shopify_instance_id = fields.Many2one(comodel_name='shopify.instance.ept',ondelete='restrict',)
     
+class ShopifyProcessImportExport(models.TransientModel):
+    _inherit = 'shopify.process.import.export'
+
+    shopify_operation = fields.Selection(
+        [
+            # ('sync_product',
+            #  'Sync New Products - Set To Queue'),
+            # ('sync_product_by_remote_ids',
+            #  'Sync New Products - By Remote Ids'),
+            ('import_orders',
+             'Import Orders'),
+            ('import_orders_by_remote_ids',
+             'Import Orders - By Remote Ids'),
+            ('update_order_status',
+             'Update Order Status'),
+            # ('import_customers',
+            #  'Import Customers'),
+            ('export_stock',
+             'Export Stock'),
+            # ('import_stock',
+            #  'Import Stock'),
+            # ('update_order_status',
+            #  'Update Order Status'),
+            # ('import_payout_report',
+            #  'Import Payout Report'),
+        ],
+        string="Operation",
+        default="import_orders_by_remote_ids")
