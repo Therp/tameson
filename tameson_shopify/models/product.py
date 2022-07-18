@@ -186,7 +186,7 @@ where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::
         #         "Exporting Stock by Cron for instance - %s....." % instance.name)
         # products = product_obj.get_products_based_on_movement_date(
         #     last_update_date, False)
-        _logger.warn('Missmatched products %d' % len(mismatch_products))
+        _logger.info('Missmatched products %d' % len(mismatch_products))
         if mismatch_products:
             product_id_array = sorted(mismatch_products)
             shopify_products = shopify_product_obj.export_stock_in_shopify(

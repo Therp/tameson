@@ -146,7 +146,7 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
         data = self.env.cr.fetchall()
         skipped = [row[0] for row in data if row[2] <= row[3]]
         updated = [row for row in data if row[2] > row[3]]
-        _logger.warn("Skipped lines: %d" % len(skipped))
+        _logger.info("Skipped lines: %d" % len(skipped))
         Line = self.env["pimcore.product.response.line"]
         self.env["pimcore.product.response.line"].browse(skipped).unlink()
         Eur = self.env["product.pricelist"].search(
@@ -158,7 +158,7 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
         Usd = self.env["product.pricelist"].search(
             [("currency_id", "=", "USD")], limit=1
         )
-        _logger.warn("Start importing data from %d lines" % len(updated))
+        _logger.info("Start importing data from %d lines" % len(updated))
         for count, row in enumerate(updated):
             try:
                 if not row[1]:
@@ -168,15 +168,15 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
                     Line.browse(row[0]).sudo().update_product(row[1], Eur, Gbp, Usd)
                     _logger.info("Updated from %d / %d " % (count, len(updated)))
             except Exception as e:
-                _logger.warn("Error from %d / %d " % (count, len(updated)))
-                _logger.warn(str(e))
+                _logger.info("Error from %d / %d " % (count, len(updated)))
+                _logger.info(str(e))
                 Line.browse(row[0]).write({"state": "error", "error": str(e)})
         for line in updated:
             try:
                 Line.browse(line[0]).sudo().create_bom()
             except Exception as e:
                 Line.browse(line[0]).write({"state": "error", "error": str(e)})
-                _logger.warn(str(e))
+                _logger.info(str(e))
                 continue
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
