@@ -25,4 +25,4 @@ class EdiInvoiceProcess(Component):
         name = self.exchange_record.backend_id.backend_type_id.name
         res = wiz.with_context(partner=name).import_invoice()
         if wiz.state == 'update':
-            res = wiz.create_invoice_action_button()
+            res = wiz.with_context(partner=name).create_invoice_action_button()
