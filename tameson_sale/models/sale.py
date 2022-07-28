@@ -170,9 +170,6 @@ class SaleOrder(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Price')
 
         for r in self:
-            if len(r.invoice_ids) == 0:
-                r.t_is_paid = False
-                continue
             full_paid = all(r.order_line.mapped(lambda l: l.product_uom_qty <= l.qty_invoiced))
             all_paid = all(r.invoice_ids.mapped(lambda i: i.invoice_payment_state == 'paid'))
             r.t_is_paid == full_paid and all_paid
