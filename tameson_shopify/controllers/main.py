@@ -10,10 +10,20 @@ from werkzeug.exceptions import NotFound
 
 from multipass import Multipass
 
+import logging
+_logger = logging.getLogger(__name__)
+
+
 class Shopify(Controller):
 
     @route(['/shopify_hosts'], type='http', auth="user", website=True)
     def shopify_hosts(self, **kw):
+        instances = request.env['shopify.instance.ept'].sudo().search([('shopify_multipass_secret','!=',False)])
+        return request.render("tameson_shopify.portal_shopify_hosts", {'instances': instances})
+
+    @route(['/shopify/cart_migrate'], type='http', auth="user", website=True)
+    def shopify_hosts(self, **kw):
+        _logger.info(kw)
         instances = request.env['shopify.instance.ept'].sudo().search([('shopify_multipass_secret','!=',False)])
         return request.render("tameson_shopify.portal_shopify_hosts", {'instances': instances})
 
