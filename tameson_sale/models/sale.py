@@ -165,7 +165,7 @@ class SaleOrder(models.Model):
                 lambda picking: picking.state == 'done'
             )
 
-    @api.depends('invoice_ids.state', 'invoice_ids.amount_total')
+    @api.depends('invoice_ids.state', 'invoice_ids.amount_total','order_line.product_uom_qty', 'order_line.invoiced_qty', 'invoice_ids.invoice_payment_state')
     def _get_t_is_paid(self):
         precision = self.env['decimal.precision'].precision_get('Product Price')
 
