@@ -21,7 +21,7 @@ class Shopify(Controller):
         instances = request.env['shopify.instance.ept'].sudo().search([('shopify_multipass_secret','!=',False)])
         return request.render("tameson_shopify.portal_shopify_hosts", {'instances': instances})
 
-    @route(['/shopify/cart_migrate'], type='http', auth="user", website=True)
+    @route(['/shopify/cart_migrate'], type='http', auth="user", website=True, methods=["POST"], csrf=False)
     def shopify_hosts(self, **kw):
         _logger.info(kw)
         instances = request.env['shopify.instance.ept'].sudo().search([('shopify_multipass_secret','!=',False)])
