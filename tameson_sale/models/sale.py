@@ -167,12 +167,10 @@ class SaleOrder(models.Model):
 
     @api.depends('invoice_ids.state', 'invoice_ids.amount_total','order_line.product_uom_qty', 'order_line.qty_invoiced', 'invoice_ids.invoice_payment_state')
     def _get_t_is_paid(self):
-        precision = self.env['decimal.precision'].precision_get('Product Price')
-
         for r in self:
             full_paid = all(r.order_line.mapped(lambda l: l.product_uom_qty <= l.qty_invoiced))
             all_paid = all(r.invoice_ids.mapped(lambda i: i.invoice_payment_state == 'paid'))
-            r.t_is_paid == full_paid and all_paid
+            r.t_is_paid = full_paid and all_paid
 
     @api.onchange('payment_term_id')
     def _onchange_payment_term_id(self):
