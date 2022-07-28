@@ -173,20 +173,9 @@ class SaleOrder(models.Model):
             if len(r.invoice_ids) == 0:
                 r.t_is_paid = False
                 continue
-
-            paid_invoices = r.invoice_ids.search_read(
-                [
-                    ['id', 'in', r.invoice_ids.ids],
-                    ['invoice_payment_state', '=', 'paid'],
-                ],
-                ['amount_total']
-            )
-
-            r.t_is_paid = float_compare(
-                r.amount_total,
-                sum(inv['amount_total'] for inv in paid_invoices),
-                precision_digits=precision
-            ) == 0
+            full_paid = all(r.order_line.mapped(lambda l: l.product_uom_qty <= l.invoiced_qty))
+            all_paid = all(r.invoice_ids.mapped(lambda i: i.invoice_payment_state == 'paid'))
+            r.t_is_paid == full_paid and all_paid
 
     @api.onchange('payment_term_id')
     def _onchange_payment_term_id(self):
