@@ -24,7 +24,12 @@ class ProcurementGroup(models.Model):
     def _get_moves_to_assign_domain(self, company_id):
         days = int(self.env["ir.config_parameter"].sudo().get_param("tameson_stock.auto_reservation_days", 7))
         moves_domain =  super(ProcurementGroup, self)._get_moves_to_assign_domain(company_id)
-        return expression.AND([moves_domain, [('date_expected', '<=', (datetime.now() + relativedelta(days=days)).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]])
+        new_domain = [
+            '|',
+            ('date_expected', '<=', (datetime.now() + relativedelta(days=days)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+            ('picking_id.move_type','=','direct')
+        ]
+        return expression.AND([moves_domain, new_domain])
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
@@ -33,7 +38,8 @@ class ProcurementGroup(models.Model):
             ('state', 'in', ['assigned', 'partially_available']),
             ('product_uom_qty', '!=', 0.0),
             ('date_expected', '>', (datetime.now() + relativedelta(days=days)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
-            ('picking_code', '=', 'outgoing')
+            ('picking_code', '=', 'outgoing'),
+            ('picking_id.move_type','!=','direct')
         ]
         if company_id:
             moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
