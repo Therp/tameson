@@ -22,12 +22,17 @@ class Shopify(Controller):
         return request.render("tameson_shopify.portal_shopify_hosts", {'instances': instances})
 
     @route(['/shopify/cart_migrate'], type='http', auth="user", website=True, methods=["POST"], csrf=False)
-    def shopify_hosts(self, data):
+    def shopify_cart_migration(self, data):
         data = json.loads(data)
-        import pprint
-        _logger.info(pprint.pformat(data))
-        instances = request.env['shopify.instance.ept'].sudo().search([('shopify_multipass_secret','!=',False)])
-        return request.render("tameson_shopify.portal_shopify_hosts", {'instances': instances})
+        order = request.website.sale_get_order()
+        order.sudo().order_line.unlink()
+        for item in data.get('items', []):
+            sku = item['sku']
+            qty = item['quantity']
+            pp = self.env['product.product'].search([('default_code','=ilike',sku)], limit=1).id
+            if pp:
+                order._cart_update(product_id=pp, set_qty=qty)
+        return request.redirect('/shop/cart')
 
     @route(['/shopify_auth', '/shopify_auth/<int:instance_id>'], type='http', auth="user", website=True)
     def shopify_auth(self, instance_id=None, shopify_page=None, **kw):
