@@ -27,6 +27,6 @@ class ProductTemplate(models.Model):
         if seller.name.id == 12: ## 12 for landefeld
             sku = seller.product_code.replace(' ', '+')
             url = 'https://www.landefeld.de/cgi/main.cgi?DISPLAY=suche&filter_suche_artikelmenge=&filter_suche_suchstring=%s' % sku
-        if seller.name.id == 12:
-            url = 'https://www.burkert.nl/en/products/%d' % seller.product_code
+        if seller.name.id == 24990: ## 24990 for burkert
+            url = 'https://www.burkert.nl/en/products/%s' % seller.product_code
         return url
