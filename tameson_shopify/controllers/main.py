@@ -29,7 +29,7 @@ class Shopify(Controller):
         for item in data.get('items', []):
             sku = item['sku']
             qty = item['quantity']
-            pp = self.env['product.product'].search([('default_code','=ilike',sku)], limit=1).id
+            pp = request.env['product.product'].sudo().search([('default_code','=ilike',sku)], limit=1).id
             if pp:
                 order._cart_update(product_id=pp, set_qty=qty)
         return request.redirect('/shop/cart')
