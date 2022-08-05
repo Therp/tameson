@@ -7,8 +7,10 @@
     """,
     'author': "Tameson",
     'depends': [
-        'helpdesk',
+        'helpdesk_sale',
         'tameson_base',
+        'tameson_sale',
+        'website',
     ],
     'data': [
         'views/helpdesk_views.xml',
