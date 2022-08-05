@@ -14,4 +14,6 @@ class ModelName(models.Model):
     _name = 'helpdesk.ticket'
     _inherit = ['helpdesk.ticket', 'set.help.mixin']
 
-    
+    any_non_returnable = fields.Boolean(related='sale_order_id.any_non_returnable')
+    non_returnable_skus = fields.Char(related='sale_order_id.non_returnable_skus')
+
