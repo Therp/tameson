@@ -127,7 +127,7 @@ query {
         data.encoding = data.apparent_encoding
         mismatch_products = self.env['product.product']
         lines = data.text.split("\n")
-        self.env['shopify.stock.level'].create(process_export(lines))
+        levels = tuple(self.env['shopify.stock.level'].create(process_export(lines)).ids)
         size = len(lines)
         missing_map_query = '''
 select pp.id product_id, pt.id tmpl_id, sl.name sku, sl.inventory_item_id, sl.variant_id, sl.shopify_tmpl_id 
@@ -135,7 +135,7 @@ from shopify_stock_level sl
 left join product_product pp on pp.default_code = sl.name
 left join product_template pt on pp.product_tmpl_id = pt.id
 left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify_instance_id = %d
-where sp.id is null''' % instance.id
+where sp.id is null and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(missing_map_query)
         missing_map_data = self.env.cr.fetchall()
         for product_id, tmpl_id, sku, inventory_item_id, variant_id, shopify_tmpl_id  in missing_map_data:
@@ -167,7 +167,8 @@ select pp.id product_id
 from shopify_stock_level sl
 left join product_product pp on pp.default_code = sl.name
 left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify_instance_id = %d
-where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::numeric, 2)''' % instance.id
+where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::numeric, 2)
+and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(qty_mismatch_query)
         qty_mismatch_data = self.env.cr.fetchall()
         mismatch_products = [row[0] for row in qty_mismatch_data]
