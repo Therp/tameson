@@ -237,7 +237,7 @@ class PrestashopConfig(models.Model):
         order_data_dict = Request.get_by_ids('orders', ids=prestashop_order_ids, fields='[id,module,total_paid_tax_incl]')
         for order in orders:
             data = order_data_dict[order.prestashop_id]
-            if order.prestashop_id in confirmed_prestashop_order_ids or (data['module'] == 'ps_wirepayment' and not order.invoice_ids):
+            if order.prestashop_id in confirmed_prestashop_order_ids: # or (data['module'] == 'ps_wirepayment' and not order.invoice_ids):
                 CeleryTask.call_task('sale.order', 'prestashop_order_process', so_id=order.id, data=data, celery=celery, celery_task_vals={'ref': order.name})
         return True
 
