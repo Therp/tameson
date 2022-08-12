@@ -45,13 +45,18 @@ class PurchaseOrderLine(models.Model):
         readonly=True,
     )
     
-    max_reorder = fields.Float(
-        compute='_get_max_reorder'
-    )
+    max_reorder = fields.Float(compute='_get_max_reorder', digits=(4,2))
+    max_reorder_percentage = fields.Float(compute='_get_max_reorder', digits=(4,2))
     
     def _get_max_reorder(self):
+        reorder = line.product_id.orderpoint_ids[:1]
         for line in self:
-            line.max_reorder = line.product_id.orderpoint_ids[:1].product_max_qty
+            if not reorder:
+                line.max_reorder = 0
+                line.max_reorder_percentage = 0
+            else:
+                line.max_reorder = reorder.product_max_qty
+                line.max_reorder_percentage = reorder.product_max_qty / reorder.product_min_qty * 100
     
     incoming_qty = fields.Float(related='product_id.incoming_qty')
     outgoing_qty = fields.Float(related='product_id.outgoing_qty')
