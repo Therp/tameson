@@ -41,12 +41,12 @@ class PurchaseOrderLine(models.Model):
 
     minimal_qty_available = fields.Float(
         related="product_id.minimal_qty_available",
-        string=_("Product min qty available"),
+        string=_("Min qty"),
         readonly=True,
     )
     
     max_reorder = fields.Float(compute='_get_max_reorder', digits=(4,2))
-    max_reorder_percentage = fields.Float(compute='_get_max_reorder', digits=(4,2))
+    max_reorder_percentage = fields.Float(string=_("Percentage"), compute='_get_max_reorder', digits=(4,2))
     
     def _get_max_reorder(self):
         for line in self:
