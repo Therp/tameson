@@ -34,6 +34,11 @@ def get_total(line, code="203"):
         if segment.elements[0][0] == code:
             return segment.elements[0][1]
 
+def get_price(line, code="AAA"):
+    for segment in line.get_segments("PRI"):
+        if segment.elements[0][0] == code:
+            return segment.elements[0][1]
+
 
 def get_rff(line, code="ON"):
     for segment in line.get_segments("RFF"):
@@ -219,7 +224,7 @@ class AccountInvoiceImport(models.TransientModel):
                 product = {"code": sku}
             else:
                 product = {"code": "purchase_price_diff"}
-            total = float(get_total(line, '66'))
+            unit_price = float(get_price(line))
             qty = float(get_qty(line, '47'))
             description = get_desc(line)
             ref = (get_rff(line),)
@@ -229,16 +234,16 @@ class AccountInvoiceImport(models.TransientModel):
                     "product": product,
                     "qty": qty,
                     "tax": get_tax(line),
-                    "price_unit": total / qty,
+                    "price_unit": unit_price,
                     "name": name,
                     "uom": {"id": 1},
                 }
             )
-            calc_total += total
+            calc_total += unit_price * qty
         parsed_inv["date"] = datetime.strptime(get_date(interchange, '2'), "%Y%m%d")
         parsed_inv["invoice_number"] = get_invoice_number(interchange)
         for segments in interchange.split_by("UNS"):
-            amount = float(get_total(segments, "77"))
+            amount = float(get_total(segments, "79"))
             parsed_inv["amount_total"] = amount
             parsed_inv["amount_untaxed"] = amount
             break
