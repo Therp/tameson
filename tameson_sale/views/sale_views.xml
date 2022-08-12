@@ -61,6 +61,13 @@
                     Warning: <field name="uu_skus" /> will be discontinued. <field name="uu_replacement_skus_en" />
                 </h2>
             </xpath>
+            <xpath expr="//button[@name='action_view_invoice']" position="before">
+                <field name="opportunity_id" invisible="1"/>
+                <button type="object" name="action_open_opportunity" class="oe_stat_button" icon="fa-dollar" attrs="{'invisible': [('opportunity_id', '=', False)]}">
+                    Opportunity
+                </button>
+            </xpath>
         </field>
+        
     </record>
 </odoo>

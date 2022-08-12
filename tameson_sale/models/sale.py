@@ -423,6 +423,15 @@ where sot.aml_count = 0
             'order_ids': [(6, 0, self.ids)]
         })
 
+    def action_open_opportunity(self):
+        return {
+            'name': _('Opportunity'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'crm.lead',
+            'res_id': self.opportunity_id.id
+        }
+        
     #Function for adding defaulr delivery method from partner country configuration.
     def _add_default_shipping(self):
         choose_carrier = self.env['choose.delivery.carrier'].with_context({
