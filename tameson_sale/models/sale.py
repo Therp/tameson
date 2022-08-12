@@ -405,6 +405,24 @@ where sot.aml_count = 0
                 order._add_default_shipping()
             order.order_line._compute_tax_id()
         return res
+
+    def create_assign_crm(self):
+        lines = self.order_line.filtered(lambda l: l.product_id.type == 'product').\
+            mapped(lambda l: '%.0fx %s' % (l.product_uom_qty, l.product_id.default_code))
+        if lines:
+            title = ','.join(lines)
+        else:
+            title = self.name
+        self.env['crm.lead'].create({
+            'type': 'opportunity',
+            'name': title,
+            'expected_revenue': self.amount_total,
+            'user_id': self.user_id.id,
+            'team_id': self.team_id.id,
+            'partner_id': self.partner_id.id,
+            'order_ids': [(6, 0, self.ids)]
+        })
+
     #Function for adding defaulr delivery method from partner country configuration.
     def _add_default_shipping(self):
         choose_carrier = self.env['choose.delivery.carrier'].with_context({
