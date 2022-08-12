@@ -10,8 +10,6 @@
                 position="after">
                     <field name="ungrouped_origin"/>
                     <field name="minimal_qty_available" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
-                    <field name="incoming_qty" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
-                    <field name="outgoing_qty" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
                     <field name="max_reorder" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
                     <field name="max_reorder_percentage" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
             </xpath>
