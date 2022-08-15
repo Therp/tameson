@@ -121,7 +121,7 @@ query {
                 created = True
                 url = bulk_status_data.get("url", "")
             count += 1
-            if count > 5:
+            if count > 10:
                 raise UserError("Bulk operation timeout.")
         data = requests.get(url)
         data.encoding = data.apparent_encoding
