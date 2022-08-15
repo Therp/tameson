@@ -56,7 +56,7 @@ class PurchaseOrderLine(models.Model):
                 line.max_reorder_percentage = 0
             else:
                 line.max_reorder = reorder.product_max_qty
-                line.max_reorder_percentage = reorder.product_max_qty / reorder.product_min_qty * 100
+                line.max_reorder_percentage = reorder.product_min_qty / reorder.product_max_qty * 100
     
     incoming_qty = fields.Float(related='product_id.incoming_qty')
     outgoing_qty = fields.Float(related='product_id.outgoing_qty')
