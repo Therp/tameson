@@ -1,7 +1,6 @@
 import base64
 import codecs
 import itertools
-from turtle import back
 
 from odoo import api, fields, models, _
 from odoo.tools.pdf import merge_pdf
