@@ -24,8 +24,10 @@ class Shopify(Controller):
     @route(['/shopify/cart_migrate'], type='http', auth="user", website=True, methods=["POST"], csrf=False)
     def shopify_cart_migration(self, data):
         data = json.loads(data)
+        order = request.website.sale_get_order()
+        if order:
+            order.sudo().action_cancel()
         order = request.website.sale_get_order(force_create=True)
-        order.sudo().order_line.unlink()
         for item in data.get('items', []):
             sku = item['sku']
             qty = item['quantity']
