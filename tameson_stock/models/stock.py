@@ -40,7 +40,7 @@ class StockPicking(models.Model):
     def _create_backorder(self):
         backorders = super(StockPicking, self)._create_backorder()
         backorders.write({
-            'move_type': 'direct'
+            'move_type': 'one'
         })
         return backorders
 
