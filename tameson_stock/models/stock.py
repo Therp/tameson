@@ -1,6 +1,7 @@
 import base64
 import codecs
 import itertools
+from turtle import back
 
 from odoo import api, fields, models, _
 from odoo.tools.pdf import merge_pdf
@@ -36,7 +37,14 @@ class StockPicking(models.Model):
         store=True
     )
     unknown_date = fields.Boolean()
-    
+
+    def _create_backorder(self):
+        backorders = super(StockPicking, self)._create_backorder()
+        backorders.write({
+            'move_type': 'direct'
+        })
+        return backorders
+
     def write(self, vals):
         if 'unknown_date' in vals and vals.get('unknown_date', False):
             vals['scheduled_date'] = datetime.now() + relativedelta(days=90)
