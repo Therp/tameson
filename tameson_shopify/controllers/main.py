@@ -25,6 +25,7 @@ class Shopify(Controller):
     def shopify_cart_migration(self, data):
         data = json.loads(data)
         order = request.website.sale_get_order(update_pricelist=True)
+        order.order_line.unlink()
         for item in data.get('items', []):
             sku = item['sku']
             qty = item['quantity']
