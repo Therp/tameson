@@ -407,6 +407,7 @@ where sot.aml_count = 0
         return res
 
     def create_assign_crm(self):
+        self.ensure_one()
         lines = self.order_line.filtered(lambda l: l.product_id.type == 'product').\
             mapped(lambda l: '%.0fx %s' % (l.product_uom_qty, l.product_id.default_code))
         if lines:
