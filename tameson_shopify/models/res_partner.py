@@ -195,5 +195,9 @@ class ResPartner(models.Model):
                     contact.parent_id.extract_house_from_street()
                 else:
                     contact.onchange_country_lang()
+            if not type:
+                wizard = self.env['portal.wizard'].with_context(active_ids=contact.ids).create({})
+                wizard.user_ids.write({'in_portal': True})
+                wizard.with_context(send_mail=False).action_apply()
         return contact
                 
