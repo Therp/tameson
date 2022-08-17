@@ -12,6 +12,16 @@ from odoo.exceptions import UserError, ValidationError
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    is_vendor_url_available = fields.Boolean(compute="get_vendor_url_available")
+
+    def get_vendor_url_available(self):
+        for pt in self:
+            seller = pt.seller_ids[:1]
+            if seller.name.id in (12, 24990):
+                pt.is_vendor_url_available = True
+            else:
+                pt.is_vendor_url_available = False
+
     def action_open_vendor_sku(self):
         url = self.get_vendor_url()
         if url:
