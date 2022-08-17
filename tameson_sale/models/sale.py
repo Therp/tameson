@@ -165,7 +165,7 @@ class SaleOrder(models.Model):
                 lambda picking: picking.state == 'done'
             )
 
-    @api.depends('invoice_ids.state', 'invoice_ids.amount_total','order_line.product_uom_qty', 'order_line.qty_invoiced', 'invoice_ids.invoice_payment_state')
+    @api.depends('invoice_ids', 'order_line', 'order_line.product_uom_qty', 'order_line.qty_invoiced', 'invoice_ids.invoice_payment_state')
     def _get_t_is_paid(self):
         for r in self:
             full_paid = all(r.order_line.mapped(lambda l: l.product_uom_qty <= l.qty_invoiced))
