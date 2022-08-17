@@ -38,7 +38,9 @@
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <div name="options" position="before">
-                <button class="oe_right oe_link text-danger" name="action_open_vendor_sku" type="object" string="Goto supplier product page"/>
+                <field name="is_vendor_url_available" invisible="1" />
+                <button class="oe_right oe_link text-danger" name="action_open_vendor_sku" type="object" 
+                    string="Goto supplier product page" attrs="{'invisible': [('is_vendor_url_available','!=',True)]}"/>
             </div>
         </field>
     </record>
