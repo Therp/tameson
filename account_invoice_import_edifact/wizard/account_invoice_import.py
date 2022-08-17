@@ -131,9 +131,10 @@ class AccountInvoiceImport(models.TransientModel):
         return self.edi_data_to_parsed_inv(parsed_inv)
 
     def parse_edi_landefeld(self, file_data):
+        partner = self.env['res.partner'].search([('name','=','Landefeld')], limit=1)
         parsed_inv = {
             "lines": [],
-            'partner': {'id': 12}, ## 12 for Landefeld contact id
+            "partner": {"id": partner.id},  ## 12 for Landefeld contact id
         }
         interchange = Interchange.from_str(file_data.decode("latin-1"))
         calc_total = 0
@@ -208,9 +209,10 @@ class AccountInvoiceImport(models.TransientModel):
         return parsed_inv
 
     def parse_edi_burkert(self, file_data):
+        partner = self.env['res.partner'].search([('name','=','Burkert Benelux B.V.')], limit=1)
         parsed_inv = {
             "lines": [],
-            'partner': {'id': 24990}, ## Burkert id
+            "partner": {"id": partner.id},  ## Burkert id
         }
         interchange = Interchange.from_str(file_data.decode("latin-1"))
         calc_total = 0
