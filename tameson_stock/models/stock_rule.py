@@ -27,7 +27,7 @@ class ProcurementGroup(models.Model):
         new_domain = [
             '|',
             ('date_expected', '<=', (datetime.now() + relativedelta(days=days)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
-            ('picking_id.move_type','=','direct')
+            ('picking_move_type','=','direct')
         ]
         return expression.AND([moves_domain, new_domain])
 
@@ -39,7 +39,7 @@ class ProcurementGroup(models.Model):
             ('product_uom_qty', '!=', 0.0),
             ('date_expected', '>', (datetime.now() + relativedelta(days=days)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
             ('picking_code', '=', 'outgoing'),
-            ('picking_id.move_type','!=','direct')
+            ('picking_move_type','!=','direct')
         ]
         if company_id:
             moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
