@@ -34,6 +34,7 @@ def get_total(line, code="203"):
         if segment.elements[0][0] == code:
             return segment.elements[0][1]
 
+
 def get_price(line, code="AAA"):
     for segment in line.get_segments("PRI"):
         if segment.elements[0][0] == code:
@@ -116,8 +117,8 @@ class AccountInvoiceImport(models.TransientModel):
         return pp_parsed_inv
 
     def parse_edi_data(self, file_data, invoice_filename):
-        partner = self.env.context.get('partner', False)
-        maps = self.env['account.invoice.import.config'].search([])
+        partner = self.env.context.get("partner", False)
+        maps = self.env["account.invoice.import.config"].search([])
         if not partner:
             for mapping in maps:
                 if mapping.name.lower() in invoice_filename.lower():
@@ -126,12 +127,12 @@ class AccountInvoiceImport(models.TransientModel):
         else:
             mapping = maps.filtered(lambda m: m.name.lower() == partner.lower())
         if not partner:
-            raise UserError('No partner')
-        parsed_inv = getattr(self, 'parse_edi_%s' % partner)(file_data)
+            raise UserError("No partner")
+        parsed_inv = getattr(self, "parse_edi_%s" % partner)(file_data)
         return self.edi_data_to_parsed_inv(parsed_inv)
 
     def parse_edi_landefeld(self, file_data):
-        partner = self.env['res.partner'].search([('name','=','Landefeld')], limit=1)
+        partner = self.env["res.partner"].search([("name", "=", "Landefeld")], limit=1)
         parsed_inv = {
             "lines": [],
             "partner": {"id": partner.id},  ## 12 for Landefeld contact id
@@ -209,7 +210,9 @@ class AccountInvoiceImport(models.TransientModel):
         return parsed_inv
 
     def parse_edi_burkert(self, file_data):
-        partner = self.env['res.partner'].search([('name','=','Burkert Benelux B.V.')], limit=1)
+        partner = self.env["res.partner"].search(
+            [("name", "=", "Burkert Benelux B.V.")], limit=1
+        )
         parsed_inv = {
             "lines": [],
             "partner": {"id": partner.id},  ## Burkert id
@@ -217,17 +220,15 @@ class AccountInvoiceImport(models.TransientModel):
         interchange = Interchange.from_str(file_data.decode("latin-1"))
         calc_total = 0
         for line in interchange.split_by("LIN"):
-            sku = get_product_ref(
-                line, "SA"
-            )
+            sku = get_product_ref(line, "SA")
             supcode = get_product_ref(line, "SA")
             if sku:
-                sku = sku.lstrip('0')
+                sku = sku.lstrip("0")
                 product = {"code": sku}
             else:
                 product = {"code": "purchase_price_diff"}
             unit_price = float(get_price(line))
-            qty = float(get_qty(line, '47'))
+            qty = float(get_qty(line, "47"))
             description = get_desc(line)
             ref = (get_rff(line),)
             name = "%s, %s, %s" % (ref, description, supcode)
@@ -242,7 +243,7 @@ class AccountInvoiceImport(models.TransientModel):
                 }
             )
             calc_total += unit_price * qty
-        parsed_inv["date"] = datetime.strptime(get_date(interchange, '2'), "%Y%m%d")
+        parsed_inv["date"] = datetime.strptime(get_date(interchange, "2"), "%Y%m%d")
         parsed_inv["invoice_number"] = get_invoice_number(interchange)
         for segments in interchange.split_by("UNS"):
             amount = float(get_total(segments, "79"))
@@ -265,7 +266,7 @@ class AccountInvoiceImport(models.TransientModel):
 
     def edi_data_to_parsed_inv(self, data):
         parsed_inv = {
-            "partner": data['partner'],
+            "partner": data["partner"],
             "currency": {
                 "id": 1,
             },
