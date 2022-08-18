@@ -142,7 +142,7 @@ class AccountInvoiceImport(models.TransientModel):
         pos = []
         for Lines in interchange.split_by("FTX"):
             for segment in Lines.segments:
-                if segment.tag == "RFF":
+                if segment.tag != 'FTX':
                     break
                 pon = re.findall("Webshop-order (P[0-9]{8})", segment.elements[3])
                 if pon:
