@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
     def get_vendor_url_available(self):
         for pt in self:
             seller = pt.seller_ids[:1]
-            if seller.name.id in (12, 24990):
+            if seller.name.name in ('Landefeld', 'Burkert Benelux B.V.'):
                 pt.is_vendor_url_available = True
             else:
                 pt.is_vendor_url_available = False
@@ -34,9 +34,9 @@ class ProductTemplate(models.Model):
     def get_vendor_url(self):
         url = ''
         seller = self.seller_ids[:1]
-        if seller.name.id == 12: ## 12 for landefeld
+        if seller.name.name == 'Landefeld': ## 12 for landefeld
             sku = seller.product_code.replace(' ', '+')
             url = 'https://www.landefeld.de/cgi/main.cgi?DISPLAY=suche&filter_suche_artikelmenge=&filter_suche_suchstring=%s' % sku
-        if seller.name.id == 24990: ## 24990 for burkert
+        if seller.name.name == 'Burkert Benelux B.V.': ## 24990 for burkert
             url = 'https://www.burkert.nl/en/products/%s' % seller.product_code
         return url
