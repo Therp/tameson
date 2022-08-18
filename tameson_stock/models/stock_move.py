@@ -19,7 +19,8 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
     
     old_date_expected = fields.Datetime()
-    
+    picking_move_type = fields.Selection(related="picking_id.move_type", stored=True, index=True)
+
     def write(self, vals):
         propagated_date_field = False
         if vals.get('date_expected'):
