@@ -105,20 +105,13 @@ query {
         session = shopify.Session(instance.shopify_host, "2021-04", instance.shopify_password)
         shopify.ShopifyResource.activate_session(session)
         result = json.loads(shopify.GraphQL().execute(query_all_sku_available))
-        bulk_data = result.get("data", {}).get("bulkOperationRunQuery", {}).get("bulkOperation", {})
-        if bulk_data.get("status", False) == "CREATED":
-            gid = bulk_data["id"]
-        else:
-            raise UserError('Buk export operation not created.')
-        created = False
         url = ""
         count = 0
-        while(not created):
+        while(not url):
             time.sleep(60)
             bulk_status = json.loads(shopify.GraphQL().execute(bulk_status_query))
             bulk_status_data = bulk_status.get("data", {}).get("currentBulkOperation", {})
             if bulk_status_data.get("status", False) == "COMPLETED":
-                created = True
                 url = bulk_status_data.get("url", "")
             count += 1
             if count > 10:
