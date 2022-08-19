@@ -19,6 +19,7 @@
         'tameson_account',
         'tameson_base',
         'tameson_product',
+        'sale_crm',
     ],
     'data': [
         'data/group.xml',

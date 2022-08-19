@@ -165,28 +165,12 @@ class SaleOrder(models.Model):
                 lambda picking: picking.state == 'done'
             )
 
-    @api.depends('invoice_ids.state', 'invoice_ids.amount_total')
+    @api.depends('invoice_ids', 'order_line', 'order_line.product_uom_qty', 'order_line.qty_invoiced', 'invoice_ids.invoice_payment_state')
     def _get_t_is_paid(self):
-        precision = self.env['decimal.precision'].precision_get('Product Price')
-
         for r in self:
-            if len(r.invoice_ids) == 0:
-                r.t_is_paid = False
-                continue
-
-            paid_invoices = r.invoice_ids.search_read(
-                [
-                    ['id', 'in', r.invoice_ids.ids],
-                    ['invoice_payment_state', '=', 'paid'],
-                ],
-                ['amount_total']
-            )
-
-            r.t_is_paid = float_compare(
-                r.amount_total,
-                sum(inv['amount_total'] for inv in paid_invoices),
-                precision_digits=precision
-            ) == 0
+            full_paid = all(r.order_line.mapped(lambda l: l.product_uom_qty <= l.qty_invoiced))
+            all_paid = all(r.invoice_ids.mapped(lambda i: i.invoice_payment_state == 'paid'))
+            r.t_is_paid = full_paid and all_paid
 
     @api.onchange('payment_term_id')
     def _onchange_payment_term_id(self):
@@ -405,6 +389,34 @@ where sot.aml_count = 0
                 order._add_default_shipping()
             order.order_line._compute_tax_id()
         return res
+
+    def create_assign_crm(self):
+        self.ensure_one()
+        lines = self.order_line.filtered(lambda l: l.product_id.type == 'product').\
+            mapped(lambda l: '%.0fx %s' % (l.product_uom_qty, l.product_id.default_code))
+        if lines:
+            title = ','.join(lines)
+        else:
+            title = self.name
+        self.env['crm.lead'].create({
+            'type': 'opportunity',
+            'name': title,
+            'expected_revenue': self.amount_total,
+            'user_id': self.user_id.id,
+            'team_id': self.team_id.id,
+            'partner_id': self.partner_id.id,
+            'order_ids': [(6, 0, self.ids)]
+        })
+
+    def action_open_opportunity(self):
+        return {
+            'name': _('Opportunity'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'crm.lead',
+            'res_id': self.opportunity_id.id
+        }
+        
     #Function for adding defaulr delivery method from partner country configuration.
     def _add_default_shipping(self):
         choose_carrier = self.env['choose.delivery.carrier'].with_context({
