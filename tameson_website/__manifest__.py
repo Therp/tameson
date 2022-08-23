@@ -11,6 +11,7 @@
     'depends': [
         'portal',
         'website',
+        'auth_signup',
     ],
     'data': [
         'views/website.xml',
