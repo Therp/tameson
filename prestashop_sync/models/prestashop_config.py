@@ -82,7 +82,7 @@ class PrestashopConfig(models.Model):
                 id_currency,id_lang,id_customer,id_carrier,current_state,module,\
                 date_upd,id_shop,total_paid_tax_excl,total_shipping_tax_excl,\
                 reference,user_invoice_email,ups_id_access_point,ups_country_iso,\
-                user_reference,total_discounts_tax_excl]',
+                user_reference,total_discounts_tax_excl,payment]',
             'filter[date_upd]': '[%s,%s]' % (from_time, to_time),
             'filter[date_add]': '[2020-12-22 00:00:00,%s]' % (to_time),
             'date': '1',
