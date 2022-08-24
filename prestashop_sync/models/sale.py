@@ -235,15 +235,18 @@ class SaleOrderPresta(models.Model):
 
     def process_channel_payment(self):
         for record in self.search([('channel_process_payment', '=', True), ('prestashop_id','!=',False), ('state', '=', 'sale')]):
-            if record.prestashop_module and record.prestashop_module == 'mollie' and record.prestashop_payment == 'PayPal':
+            if (record.prestashop_module and record.prestashop_module == 'mollie' and record.prestashop_payment == 'PayPal') or\
+                (record.prestashop_module and record.prestashop_module == 'adyencw_paypal'):
                 if record.currency_id.name == 'USD':
                     name = 'PayPal USD'
                 elif record.currency_id.name == 'GBP':
                     name = 'PayPal GBP'
                 else:
                     name = 'PayPal EUR'
-            elif record.prestashop_module and record.prestashop_module == 'mollie' and record.prestashop_payment == 'iDEAL':
+            elif record.prestashop_module and record.prestashop_module == 'mollie':
                     name = 'Mollie'
+            elif record.prestashop_module and record.prestashop_module.startswith('adyencw'):
+                    name = 'adyen'
             else:
                 msg = "Module name not match %s" % record.name
                 _log_logging(self.env, msg, 'process_payment', record.id)
