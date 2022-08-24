@@ -42,6 +42,7 @@ class SaleOrderPresta(models.Model):
     
     prestashop_id = fields.Char(string='Prestashop ID', index=True, copy=False)
     prestashop_module = fields.Char(string='Prestashop Module', index=True, copy=False)
+    prestashop_payment = fields.Char(string='Prestashop Payment', index=True, copy=False)
     prestashop_date_upd = fields.Datetime(string='Prestashop update time', index=True, copy=False)
     prestashop_config_id = fields.Many2one(string='Prestashop', comodel_name='prestashop.config', ondelete='set null',index=True, copy=False)
     prestashop_state = fields.Char(string='Prestashop current state', index=True, copy=False)
@@ -88,6 +89,7 @@ class SaleOrderPresta(models.Model):
         prestashop_id = order_data['id']
         partner, delivery, invoice = self.env['res.partner'].match_or_create_prestashop(order)
         prestashop_module = order_data['module']
+        prestashop_payment = order_data['payment']
         prestashop_date_upd = order_data['date_upd']
         prestashop_config_id = order['config_id']
         config_id = self.env['prestashop.config'].browse(prestashop_config_id)
@@ -118,6 +120,7 @@ class SaleOrderPresta(models.Model):
             'pricelist_id': pricelist_id.id,
             'prestashop_id': prestashop_id,
             'prestashop_module': prestashop_module,
+            'prestashop_payment': prestashop_payment,
             't_invoice_policy': 'delivery' if prestashop_module == 'invoicepayment' else False,
             'prestashop_date_upd': prestashop_date_upd,
             'prestashop_config_id': prestashop_config_id,
@@ -175,10 +178,12 @@ class SaleOrderPresta(models.Model):
     
     def update_from_prestashop(self, task_uuid, so_id, order, **kwargs):
         prestashop_module = order['module']
+        prestashop_payment = order['payment']
         prestashop_date_upd = order['date_upd']
         so_id = self.browse(so_id)
         so_id.write({
             'prestashop_module': prestashop_module,
+            'prestashop_payment': prestashop_payment,
             'prestashop_date_upd': prestashop_date_upd,
             'prestashop_state': order['current_state'],
         })
@@ -230,8 +235,15 @@ class SaleOrderPresta(models.Model):
 
     def process_channel_payment(self):
         for record in self.search([('channel_process_payment', '=', True), ('prestashop_id','!=',False), ('state', '=', 'sale')]):
-            if record.prestashop_module and record.prestashop_module == 'Adyen':
-                name = 'adyen'
+            if record.prestashop_module and record.prestashop_module == 'mollie' and record.prestashop_payment == 'PayPal':
+                if record.currency_id.name == 'USD':
+                    name = 'PayPal USD'
+                elif record.currency_id.name == 'GBP':
+                    name = 'PayPal GBP'
+                else:
+                    name = 'PayPal EUR'
+            elif record.prestashop_module and record.prestashop_module == 'mollie' and record.prestashop_payment == 'iDEAL':
+                    name = 'Mollie'
             else:
                 msg = "Module name not match %s" % record.name
                 _log_logging(self.env, msg, 'process_payment', record.id)
