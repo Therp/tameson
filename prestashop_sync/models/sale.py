@@ -169,10 +169,10 @@ class SaleOrderPresta(models.Model):
         Order._compute_tax_id()
         for line in Order.order_line:
             line._onchange_product_id_set_customer_lead()
-        Order.flush()
         invoice_email = order_data.get('user_invoice_email', {}).get('value', False)
         if invoice_email:
             Order.partner_invoice_id.email = invoice_email
+        Order.flush()
         return Order.name
     
     def update_from_prestashop(self, task_uuid, so_id, order, **kwargs):
