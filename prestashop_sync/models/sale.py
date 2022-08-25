@@ -172,8 +172,7 @@ class SaleOrderPresta(models.Model):
         Order.flush()
         invoice_email = order_data.get('user_invoice_email', {}).get('value', False)
         if invoice_email:
-            if not Order.partner_invoice_id.email:
-                Order.partner_invoice_id.email = invoice_email
+            Order.partner_invoice_id.email = invoice_email
         return Order.name
     
     def update_from_prestashop(self, task_uuid, so_id, order, **kwargs):
