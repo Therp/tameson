@@ -22,7 +22,7 @@ class Shopify(Controller):
         return request.render("tameson_shopify.portal_shopify_hosts", {'instances': instances})
 
     @route(['/shopify/cart_migrate'], type='http', auth="public", website=True, methods=["POST"], csrf=False)
-    def shopify_cart_migration(self, data):
+    def shopify_cart_migration(self, data, **kw):
         data = json.loads(data)
         order = request.website.sale_get_order(update_pricelist=True)
         order.order_line.unlink()
@@ -31,7 +31,7 @@ class Shopify(Controller):
             qty = item['quantity']
             pp = request.env['product.product'].sudo().search([('default_code','=ilike',sku)], limit=1).id
             if pp:
-                order._cart_update(product_id=pp, set_qty=qty)
+                order.sudo()._cart_update(product_id=pp, set_qty=qty)
         return request.redirect('/shop/cart')
 
     @route(['/shopify_auth', '/shopify_auth/<int:instance_id>'], type='http', auth="user", website=True)
