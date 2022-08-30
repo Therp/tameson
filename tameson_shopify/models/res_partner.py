@@ -65,7 +65,7 @@ class ResPartner(models.Model):
                 'address1': child.street,
                 'address2': child.street2 or '',
                 'city': child.city,
-                'country': child.country_id.name,
+                'country': child.with_context(lang='en_US').country_id.name,
                 'first_name': child.name.split(' ')[0] if child.name else '',
                 'last_name': ' '.join(child.name.split(' ')[1:]) if child.name else '',
                 'company': child.parent_id.name or '',
