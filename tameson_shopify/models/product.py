@@ -92,7 +92,7 @@ mutation {
         _logger.info("ShopifyStock: Start %s" % (instance.name))
 
     @api.model
-    def update_stock_in_shopify(self, instance_id, gid):
+    def compare_and_sync(self, instance_id, gid):
         map_obj = self.env['shopify.product.template.ept']
         instance = self.env['shopify.instance.ept'].browse(instance_id)
         _logger.info("ShopifyStock: webhook received %s" % (instance.name))
