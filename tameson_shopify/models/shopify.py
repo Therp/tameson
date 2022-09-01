@@ -116,8 +116,39 @@ class ShopifyInstanceEpt(models.Model):
     _inherit = "shopify.instance.ept"
 
     shopify_multipass_secret = fields.Char("Multipass secret", )
+    export_done_webhook = fields.Char()
     multipass_country_ids = fields.One2many(comodel_name='res.country', inverse_name='shopify_instance_id',)
     
+
+    def create_bulk_export_wh(self):
+        odoo_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        query = '''mutation {
+  webhookSubscriptionCreate(
+    topic: BULK_OPERATIONS_FINISH
+    webhookSubscription: {
+      format: JSON,
+      callbackUrl: "%s/shopify/export_done/%d"}
+  ) {
+    userErrors {
+      field
+      message
+    }
+    webhookSubscription {
+      id
+    }
+  }
+}''' % (odoo_host, self.id)
+        session = shopify.Session(self.shopify_host, "2021-04", self.shopify_password)
+        shopify.ShopifyResource.activate_session(session)
+        result = json.loads(shopify.GraphQL().execute(query))
+        self.export_done_webhook = result['data']['webhookSubscription']['id']
+
+    def delete_bulk_export_wh(self):
+        session = shopify.Session(self.shopify_host, "2021-04", self.shopify_password)
+        shopify.ShopifyResource.activate_session(session)
+        webhook = shopify.Webhook()
+        webhook.destroy(self.export_done_webhook)
+        self.export_done_webhook = False
 
 class ResCountry(models.Model):
     _inherit = 'res.country'

@@ -4,7 +4,8 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo.http import route, request, Controller
+import json
+from odoo.http import route, request, Controller, Response
 from odoo.exceptions import UserError, ValidationError
 from werkzeug.exceptions import NotFound
 
@@ -39,3 +40,12 @@ class Shopify(Controller):
         multipass = Multipass(instance.shopify_multipass_secret)
         url = multipass.generateURL(partner_data, instance.shopify_host)
         return request.redirect(url)
+
+
+    @route(['/shopify/export_done/<int:instance_id>'], type='json', auth="public", methods=["POST"], csrf=False)
+    def shopify_export_done(self, instance_id, **kw):
+        data = json.loads(request.httprequest.data.decode())
+        bulk = data['admin_graphql_api_id']
+        host = request.httprequest.headers['X-Shopify-Shop-Domain']
+        request.env['shopify.process.import.export'].sudo().update_stock_in_shopify(instance_id, bulk)
+        return Response('success', status=200)
