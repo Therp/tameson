@@ -106,7 +106,7 @@ mutation {
             }
         }''' % gid
         query_result = json.loads(shopify.GraphQL().execute(api_url_query))
-        url = query_result['url']
+        url = query_result['data']['node']['url']
         data = requests.get(url)
         data.encoding = data.apparent_encoding
         mismatch_products = self.env['product.product']
