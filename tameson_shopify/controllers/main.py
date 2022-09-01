@@ -47,5 +47,5 @@ class Shopify(Controller):
         data = json.loads(request.httprequest.data.decode())
         bulk = data['admin_graphql_api_id']
         host = request.httprequest.headers['X-Shopify-Shop-Domain']
-        request.env['shopify.process.import.export'].sudo().update_stock_in_shopify(instance_id, bulk)
+        request.env['shopify.process.import.export'].sudo().compare_and_sync(instance_id, bulk)
         return Response('success', status=200)
