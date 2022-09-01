@@ -176,6 +176,8 @@ class SaleOrder(models.Model):
     def _onchange_payment_term_id(self):
         if self.payment_term_id and self.payment_term_id.t_invoice_delivered_quantities:
             self.t_invoice_policy = 'delivery'
+        else:
+            self.t_invoice_policy = 'order'
 
     @api.model
     def get_deliveries(self):
