@@ -134,18 +134,17 @@ class ShopifyInstanceEpt(models.Model):
       message
     }
     webhookSubscription {
-      id
+      legacyResourceId
     }
   }
 }''' % (odoo_host, self.id)
         session = shopify.Session(self.shopify_host, "2021-04", self.shopify_password)
         shopify.ShopifyResource.activate_session(session)
         result = json.loads(shopify.GraphQL().execute(query))
-        self.export_done_webhook = result['data']['webhookSubscription']['id']
+        self.export_done_webhook = result['data']['webhookSubscriptionCreate']['webhookSubscription']['legacyResourceId']
 
     def delete_bulk_export_wh(self):
-        session = shopify.Session(self.shopify_host, "2021-04", self.shopify_password)
-        shopify.ShopifyResource.activate_session(session)
+        self.connect_in_shopify()
         webhook = shopify.Webhook().find(self.export_done_webhook)
         webhook.destroy()
         self.export_done_webhook = False
