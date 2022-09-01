@@ -41,7 +41,6 @@ class ShopifyProcessImportExport(models.TransientModel):
 
     @api.model
     def update_stock_in_shopify(self, ctx={}):
-        map_obj = self.env['shopify.product.template.ept']
         if self.shopify_instance_id:
             instance = self.shopify_instance_id
         elif ctx.get('shopify_instance_id'):
@@ -86,36 +85,28 @@ mutation {
     }
 }""" % location.shopify_location_id
 
-        bulk_status_query = """
-query {
-    currentBulkOperation {
-        id
-        status
-        errorCode
-        createdAt
-        completedAt
-        objectCount
-        fileSize
-        url
-        partialDataUrl
-    }
-}
-"""
         # with shopify.Session.temp(instance.shopify_host, "2021-04", instance.shopify_password):
         session = shopify.Session(instance.shopify_host, "2021-04", instance.shopify_password)
         shopify.ShopifyResource.activate_session(session)
-        result = json.loads(shopify.GraphQL().execute(query_all_sku_available))
-        url = ""
-        count = 0
-        while(not url):
-            time.sleep(60)
-            bulk_status = json.loads(shopify.GraphQL().execute(bulk_status_query))
-            bulk_status_data = bulk_status.get("data", {}).get("currentBulkOperation", {})
-            if bulk_status_data.get("status", False) == "COMPLETED":
-                url = bulk_status_data.get("url", "")
-            count += 1
-            if count > 10:
-                raise UserError("Bulk operation timeout.")
+        query_result = json.loads(shopify.GraphQL().execute(query_all_sku_available))
+        _logger.info("ShopifyStock: Start %s" % (instance.name))
+
+    @api.model
+    def update_stock_in_shopify(self, instance_id, gid):
+        map_obj = self.env['shopify.product.template.ept']
+        instance = self.env['shopify.instance.ept'].browse(instance_id)
+        _logger.info("ShopifyStock: webhook received %s" % (instance.name))
+        session = shopify.Session(instance.shopify_host, "2021-04", instance.shopify_password)
+        shopify.ShopifyResource.activate_session(session)
+        api_url_query = '''query {
+            node(id: "%s") {
+                ... on BulkOperation {
+                url
+                }
+            }
+        }''' % gid
+        query_result = json.loads(shopify.GraphQL().execute(api_url_query))
+        url = query_result['url']
         data = requests.get(url)
         data.encoding = data.apparent_encoding
         mismatch_products = self.env['product.product']
@@ -191,7 +182,9 @@ and sl.id in %s''' % (instance.id, str(levels))
         else:
             _logger.info("No products to export stock.....")
             instance.write({'shopify_last_date_update_stock': datetime.now()})
+        _logger.info("ShopifyStock: Stop %s" % (instance.name))
         return True
+
 
 class ShopifyProductProductEpt(models.Model):
     _inherit = "shopify.product.product.ept"
