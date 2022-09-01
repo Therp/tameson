@@ -1,7 +1,7 @@
 import base64, re, json
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import formataddr, float_compare, float_is_zero
 
 class SaleOrder(models.Model):
@@ -60,6 +60,12 @@ class SaleOrder(models.Model):
     fiscal_position_id = fields.Many2one(copy=False)
     supposed_fiscal_match = fields.Boolean(compute='get_supposed_fiscal')
     
+    def action_cancel(self):
+        if any(self.order_line.mapped(lambda l: l.qty_invoiced)):
+            raise UserError('Cannot cancel this sale order with open or non-refunded invoices.')
+        res = super(SaleOrder, self).action_cancel()
+        return res
+
     def copy(self, default=None):
         fiscal = self.env['account.fiscal.position'].with_context(
             force_company=self.company_id.id).get_fiscal_position(
