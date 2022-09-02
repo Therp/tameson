@@ -11,6 +11,11 @@ from werkzeug.exceptions import NotFound
 
 from multipass import Multipass
 
+
+import logging
+_logger = logging.getLogger(__name__)
+
+
 class Shopify(Controller):
 
     @route(['/shopify_hosts'], type='http', auth="user", website=True)
@@ -45,7 +50,9 @@ class Shopify(Controller):
     @route(['/shopify/export_done/<int:instance_id>'], type='json', auth="public", methods=["POST"], csrf=False)
     def shopify_export_done(self, instance_id, **kw):
         data = json.loads(request.httprequest.data.decode())
+        _logger.info('ShopifyStock: %s' % str(data))
         bulk = data['admin_graphql_api_id']
         host = request.httprequest.headers['X-Shopify-Shop-Domain']
         request.env['shopify.process.import.export'].sudo().compare_and_sync(instance_id, bulk)
+        _logger.info('ShopifyStock: Return true')
         return True
