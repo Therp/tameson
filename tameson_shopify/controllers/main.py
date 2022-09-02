@@ -48,4 +48,4 @@ class Shopify(Controller):
         bulk = data['admin_graphql_api_id']
         host = request.httprequest.headers['X-Shopify-Shop-Domain']
         request.env['shopify.process.import.export'].sudo().compare_and_sync(instance_id, bulk)
-        return Response('success', status=200)
+        return True
