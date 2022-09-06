@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 import time, json, requests
 from odoo.addons.shopify_ept import shopify
 from odoo.tools.float_utils import float_compare
+from odoo.addons.queue_job.delay import group, chain
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -93,7 +94,6 @@ mutation {
 
     @api.model
     def compare_and_sync(self, instance_id, gid):
-        map_obj = self.env['shopify.product.template.ept']
         instance = self.env['shopify.instance.ept'].browse(instance_id)
         _logger.info("ShopifyStock: webhook received %s" % (instance.name))
         session = shopify.Session(instance.shopify_host, "2021-04", instance.shopify_password)
@@ -106,10 +106,10 @@ mutation {
             }
         }''' % gid
         query_result = json.loads(shopify.GraphQL().execute(api_url_query))
+        shopify.ShopifyResource.clear_session()
         url = query_result['data']['node']['url']
         data = requests.get(url)
         data.encoding = data.apparent_encoding
-        mismatch_products = self.env['product.product']
         lines = data.text.split("\n")
         levels = tuple(self.env['shopify.stock.level'].create(process_export(lines)).ids)
         _logger.info("ShopifyStock: downloaded export %d" % len(levels))
@@ -122,6 +122,24 @@ left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify
 where sp.id is null and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(missing_map_query)
         missing_map_data = self.env.cr.fetchall()
+        chunked_map = [missing_map_data[i:i + 10000] for i in range(0, len(missing_map_data), 10000)]
+        map_group = group(*[self.delayable().create_missing_maps(cm, instance) for cm in chunked_map])
+        qty_mismatch_query = '''
+select pp.id product_id
+from shopify_stock_level sl
+left join product_product pp on pp.default_code = sl.name
+left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify_instance_id = %d
+where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::numeric, 2)
+and sl.id in %s''' % (instance.id, str(levels))
+        self.env.cr.execute(qty_mismatch_query)
+        qty_mismatch_data = self.env.cr.fetchall()
+        chunked_mismatch = [qty_mismatch_data[i:i + 100] for i in range(0, len(qty_mismatch_data), 100)]
+        mismatch_group = group(*[self.delayable().sync_mismatch_qty(cm, instance) for cm in chunked_mismatch])
+        chain(map_group, mismatch_group).delay()
+        return True
+
+    def create_missing_maps(self, missing_map_data, instance):
+        map_obj = self.env['shopify.product.template.ept']
         for product_id, tmpl_id, sku, inventory_item_id, variant_id, shopify_tmpl_id  in missing_map_data:
             if not sku or not product_id:
                 continue
@@ -146,19 +164,10 @@ where sp.id is null and sl.id in %s''' % (instance.id, str(levels))
                 })]
             }
             map_obj.create(map_data)
-            _logger.info("ShopifyStock: map data %s" % sku)
-        qty_mismatch_query = '''
-select pp.id product_id
-from shopify_stock_level sl
-left join product_product pp on pp.default_code = sl.name
-left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify_instance_id = %d
-where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::numeric, 2)
-and sl.id in %s''' % (instance.id, str(levels))
-        self.env.cr.execute(qty_mismatch_query)
-        qty_mismatch_data = self.env.cr.fetchall()
+        return True
+
+    def sync_mismatch_qty(self, qty_mismatch_data, instance):
         mismatch_products = [row[0] for row in qty_mismatch_data]
-        shopify.ShopifyResource.clear_session()
-        product_obj = self.env['product.product']
         shopify_product_obj = self.env['shopify.product.product.ept']
 
         # if self.export_stock_from:
