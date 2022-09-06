@@ -9,6 +9,7 @@
     'depends': [
         'shopify_ept',
         'tameson_contact',
+        'queue_job',
     ],
     'data': [
         # 'security/ir.model.access.csv',
