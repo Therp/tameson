@@ -53,6 +53,6 @@ class Shopify(Controller):
         _logger.info('ShopifyStock: %s' % str(data))
         bulk = data['admin_graphql_api_id']
         host = request.httprequest.headers['X-Shopify-Shop-Domain']
-        request.env['shopify.process.import.export'].sudo().compare_and_sync(instance_id, bulk)
+        request.env['shopify.process.import.export'].sudo().with_delay().compare_and_sync(instance_id, bulk)
         _logger.info('ShopifyStock: Return true')
         return True

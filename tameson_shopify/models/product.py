@@ -112,7 +112,7 @@ mutation {
         mismatch_products = self.env['product.product']
         lines = data.text.split("\n")
         levels = tuple(self.env['shopify.stock.level'].create(process_export(lines)).ids)
-        size = len(lines)
+        _logger.info("ShopifyStock: downloaded export %d" % len(levels))
         missing_map_query = '''
 select pp.id product_id, pt.id tmpl_id, sl.name sku, sl.inventory_item_id, sl.variant_id, sl.shopify_tmpl_id 
 from shopify_stock_level sl
@@ -146,6 +146,7 @@ where sp.id is null and sl.id in %s''' % (instance.id, str(levels))
                 })]
             }
             map_obj.create(map_data)
+            _logger.info("ShopifyStock: map data %s" % sku)
         qty_mismatch_query = '''
 select pp.id product_id
 from shopify_stock_level sl
