@@ -133,7 +133,7 @@ and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(qty_mismatch_query)
         qty_mismatch_data = self.env.cr.fetchall()
         mismatch_products = [row[0] for row in qty_mismatch_data]
-        chunked_mismatch = [qty_mismatch_data[i:i + 100] for i in range(0, len(mismatch_products), 100)]
+        chunked_mismatch = [mismatch_products[i:i + 100] for i in range(0, len(mismatch_products), 100)]
         for cm in chunked_mismatch:
             self.with_delay().sync_mismatch_qty(cm, instance)
         return True
