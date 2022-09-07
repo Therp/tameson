@@ -12,7 +12,6 @@ import time, json, requests
 from odoo.addons.shopify_ept import shopify
 from odoo.tools.float_utils import float_compare
 from odoo.addons.queue_job.delay import group, chain
-from odoo.addons.queue_job.job import job
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -138,7 +137,6 @@ and sl.id in %s''' % (instance.id, str(levels))
         chain(map_group, mismatch_group).delay()
         return True
 
-    @job
     def create_missing_maps(self, missing_map_data, instance):
         map_obj = self.env['shopify.product.template.ept']
         for product_id, tmpl_id, sku, inventory_item_id, variant_id, shopify_tmpl_id  in missing_map_data:
@@ -167,7 +165,6 @@ and sl.id in %s''' % (instance.id, str(levels))
             map_obj.create(map_data)
         return True
 
-    @job
     def sync_mismatch_qty(self, qty_mismatch_data, instance):
         mismatch_products = [row[0] for row in qty_mismatch_data]
         shopify_product_obj = self.env['shopify.product.product.ept']
