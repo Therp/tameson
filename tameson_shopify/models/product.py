@@ -11,7 +11,6 @@ from datetime import datetime, timedelta
 import time, json, requests
 from odoo.addons.shopify_ept import shopify
 from odoo.tools.float_utils import float_compare
-from odoo.addons.queue_job.delay import group, chain
 import logging
 _logger = logging.getLogger(__name__)
 
