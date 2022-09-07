@@ -121,8 +121,7 @@ left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify
 where sp.id is null and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(missing_map_query)
         missing_map_data = self.env.cr.fetchall()
-        chunked_map = [missing_map_data[i:i + 10000] for i in range(0, len(missing_map_data), 10000)]
-        map_group = group(*[self.delayable().create_missing_maps(cm, instance) for cm in chunked_map])
+        self.with_delay().create_missing_maps(missing_map_data, instance)
         qty_mismatch_query = '''
 select pp.id product_id
 from shopify_stock_level sl
@@ -132,9 +131,7 @@ where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::
 and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(qty_mismatch_query)
         qty_mismatch_data = self.env.cr.fetchall()
-        chunked_mismatch = [qty_mismatch_data[i:i + 100] for i in range(0, len(qty_mismatch_data), 100)]
-        mismatch_group = group(*[self.delayable().sync_mismatch_qty(cm, instance) for cm in chunked_mismatch])
-        chain(map_group, mismatch_group).delay()
+        self.with_delay().sync_mismatch_qty(qty_mismatch_data, instance)
         return True
 
     def create_missing_maps(self, missing_map_data, instance):
