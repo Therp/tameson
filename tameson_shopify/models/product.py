@@ -136,7 +136,7 @@ and sl.id in %s''' % (instance.id, str(levels))
         chunked_mismatch = [mismatch_products[i:i + 100] for i in range(0, len(mismatch_products), 100)]
         for cm in chunked_mismatch:
             self.with_delay().sync_mismatch_qty(cm, instance)
-        return True
+        return "Synced stock: %d" % len(mismatch_products)
 
     def create_missing_maps(self, missing_map_data, instance):
         map_obj = self.env['shopify.product.template.ept']
@@ -185,7 +185,8 @@ WHERE bl.product_id IN (%s)''' % ','.join(map(str, to_update_products))
         for instance in self.env['shopify.instance.ept'].search([]):
             for cm in chunked_mismatch:
                 self.with_delay().sync_mismatch_qty(cm, instance)
-    
+        return "Synced stock: %d" % len(to_update)
+
     def sync_mismatch_qty(self, mismatch_products, instance):
         shopify_product_obj = self.env['shopify.product.product.ept']
         if mismatch_products:
