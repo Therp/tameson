@@ -179,7 +179,7 @@ and sl.id in %s''' % (instance.id, str(levels))
         _logger.info('Missmatched products %d' % len(mismatch_products))
         if mismatch_products:
             product_id_array = sorted(mismatch_products)
-            shopify_products = shopify_product_obj.export_stock_in_shopify(
+            shopify_products = shopify_product_obj.with_context(is_process_from_selected_product=True).export_stock_in_shopify(
                 instance, product_id_array)
             if shopify_products:
                 instance.write(
