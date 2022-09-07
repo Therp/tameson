@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 import time, json, requests
 from odoo.addons.shopify_ept import shopify
 from odoo.tools.float_utils import float_compare
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DSDF
+
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -130,7 +132,10 @@ where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::
 and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(qty_mismatch_query)
         qty_mismatch_data = self.env.cr.fetchall()
-        self.with_delay().sync_mismatch_qty(qty_mismatch_data, instance)
+        mismatch_products = [row[0] for row in qty_mismatch_data]
+        chunked_mismatch = [qty_mismatch_data[i:i + 100] for i in range(0, len(mismatch_products), 100)]
+        for cm in chunked_mismatch:
+            self.with_delay().sync_mismatch_qty(cm, instance)
         return True
 
     def create_missing_maps(self, missing_map_data, instance):
@@ -161,22 +166,28 @@ and sl.id in %s''' % (instance.id, str(levels))
             map_obj.create(map_data)
         return True
 
-    def sync_mismatch_qty(self, qty_mismatch_data, instance):
-        mismatch_products = [row[0] for row in qty_mismatch_data]
+    def update_stock_all_shop(self):
+        lasthour = datetime.now() - timedelta(hours=2)
+        lasthour_formatted = lasthour.strftime(DSDF)
+        domain = ['|', ('create_date', '>', lasthour_formatted),
+                  ('write_date', '>', lasthour_formatted)]
+        to_update_products = self.env['stock.move.line'].search(domain).mapped(
+            'product_id') + self.env['stock.move'].search(domain).mapped('product_id').ids
+        bom_product_query = '''
+SELECT DISTINCT ppl.id FROM mrp_bom_line bl
+    LEFT JOIN mrp_bom mb ON mb.id = bl.bom_id
+    LEFT JOIN product_product ppl mb.product_tmpl_id = ppl.product_tmpl_id
+WHERE bl.product_id IN (%s)''' % ','.join(map(str, to_update_products))
+        self.env.cr.execute(bom_product_query)
+        bom_products = [item[0] for item in self.env.cr.fetchall()]
+        to_update = set(to_update_products + bom_products)
+        chunked_mismatch = [to_update[i:i + 100] for i in range(0, len(to_update), 100)]
+        for instance in self.env['shopify.instance.ept'].search([]):
+            for cm in chunked_mismatch:
+                self.with_delay().sync_mismatch_qty(cm, instance)
+    
+    def sync_mismatch_qty(self, mismatch_products, instance):
         shopify_product_obj = self.env['shopify.product.product.ept']
-
-        # if self.export_stock_from:
-        #     last_update_date = self.export_stock_from
-        #     _logger.info(
-        #         "Exporting Stock from Operations wizard for instance - %s....." % instance.name)
-        # else:
-        #     last_update_date = instance.shopify_last_date_update_stock or datetime.now() - \
-        #         timedelta(30)
-        #     _logger.info(
-        #         "Exporting Stock by Cron for instance - %s....." % instance.name)
-        # products = product_obj.get_products_based_on_movement_date(
-        #     last_update_date, False)
-        _logger.info('Missmatched products %d' % len(mismatch_products))
         if mismatch_products:
             product_id_array = sorted(mismatch_products)
             shopify_products = shopify_product_obj.with_context(is_process_from_selected_product=True).export_stock_in_shopify(
@@ -187,7 +198,6 @@ and sl.id in %s''' % (instance.id, str(levels))
         else:
             _logger.info("No products to export stock.....")
             instance.write({'shopify_last_date_update_stock': datetime.now()})
-        _logger.info("ShopifyStock: Stop %s" % (instance.name))
         return True
 
 
