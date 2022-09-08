@@ -140,6 +140,7 @@ and sl.id in %s''' % (instance.id, str(levels))
 
     def create_missing_maps(self, missing_map_data, instance):
         map_obj = self.env['shopify.product.template.ept']
+        vals_list = []
         for product_id, tmpl_id, sku, inventory_item_id, variant_id, shopify_tmpl_id  in missing_map_data:
             if not sku or not product_id:
                 continue
@@ -163,7 +164,8 @@ and sl.id in %s''' % (instance.id, str(levels))
                     'default_code': sku
                 })]
             }
-            map_obj.create(map_data)
+            vals_list.append(map_data)
+        map_obj.create(map_data)
         return True
 
     def update_stock_all_shop(self):
