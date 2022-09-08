@@ -9,7 +9,14 @@
                 <field name="shopify_password" position="after">
                     <field name="shopify_multipass_secret" password="1" />
                     <field name="multipass_country_ids" widget="many2many_tags"/>
+                    <field name="export_done_webhook" />
                 </field>
+                <xpath expr="//header[1]" position="after">
+                    <button name="create_bulk_export_wh" string="Bulk" type="object" 
+                        class="oe_highlight" attrs="{'invisible': [('export_done_webhook','!=',False)]}"/>
+                    <button name="delete_bulk_export_wh" string="Bulk remove" type="object" 
+                        class="oe_highlight" attrs="{'invisible': [('export_done_webhook','=',False)]}"/>
+                </xpath>                
             </field>
         </record>
         
