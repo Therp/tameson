@@ -122,7 +122,9 @@ left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify
 where sp.id is null and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(missing_map_query)
         missing_map_data = self.env.cr.fetchall()
-        self.with_delay().create_missing_maps(missing_map_data, instance)
+        chunked_map = [missing_map_data[i:i + 100] for i in range(0, len(missing_map_data), 10000)]
+        for cm in chunked_map:
+            self.with_delay().create_missing_maps(cm, instance)
         qty_mismatch_query = '''
 select pp.id product_id
 from shopify_stock_level sl
