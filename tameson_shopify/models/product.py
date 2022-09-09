@@ -142,7 +142,7 @@ and sl.id in %s''' % (instance.id, str(levels))
 
     def create_missing_maps(self, missing_map_data, instance):
         map_obj = self.env['shopify.product.template.ept']
-        vals_list = []
+        created = 0
         for product_id, tmpl_id, sku, inventory_item_id, variant_id, shopify_tmpl_id  in missing_map_data:
             if not sku or not product_id:
                 continue
@@ -166,8 +166,8 @@ and sl.id in %s''' % (instance.id, str(levels))
                     'default_code': sku
                 })]
             }
-            vals_list.append(map_data)
-        created = map_obj.create(map_data)
+            map_obj.create(map_data)
+            created += 1
         return len(created)
 
     def update_stock_all_shop(self):
@@ -216,10 +216,3 @@ class ShopifyProductProductEpt(models.Model):
             product_stock_dict.update({i.get('id'): i.get('minimal_qty_available_stored')})
         return product_stock_dict
 
-class ProductTemplateEpt(models.Model):
-    _inherit = 'shopify.product.template.ept'
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        result = super(ProductTemplateEpt, self).create(vals_list)
-        return result
