@@ -61,13 +61,13 @@
                 <attribute name="t-if">False</attribute>
             </xpath>
             <xpath expr="//div[hasclass('small')]" position="after">
-                <div class="mt-2 text-left">
+                <div class="mt-4 text-left">
                     <strong>Did you order before, but do not have an account?</strong> <br/>
-                    <a t-attf-href="/web/reset_password?{{ keep_query() }}" >Activate account and password</a><br/><br/>
+                    <a class="btn btn-secondary btn-block" t-attf-href="/web/reset_password?{{ keep_query() }}" >Activate account and password</a><br/><br/>
                     <strong>Would you like to create an account?</strong><br/>
-                    <a t-attf-href="/web/signup?{{ keep_query() }}">Register a new account</a><br/><br/>
+                    <a class="btn btn-secondary btn-block" t-attf-href="/web/signup?{{ keep_query() }}">Register a new account</a><br/><br/>
                     <strong>Did you lose your password?</strong><br/>
-                    <a t-attf-href="/web/reset_password?{{ keep_query() }}" >Request a new password</a><br/><br/>
+                    <a class="btn btn-secondary btn-block" t-attf-href="/web/reset_password?{{ keep_query() }}" >Request a new password</a><br/><br/>
                 </div>
             </xpath>            
         </template>
