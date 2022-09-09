@@ -215,3 +215,11 @@ class ShopifyProductProductEpt(models.Model):
         for i in product_data:
             product_stock_dict.update({i.get('id'): i.get('minimal_qty_available_stored')})
         return product_stock_dict
+
+class ProductTemplateEpt(models.Model):
+    _inherit = 'shopify.product.template.ept'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        result = super(ProductTemplateEpt, self).create(vals_list)
+        return result
