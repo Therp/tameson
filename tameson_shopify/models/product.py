@@ -168,7 +168,7 @@ and sl.id in %s''' % (instance.id, str(levels))
             }
             map_obj.create(map_data)
             created += 1
-        return len(created)
+        return created
 
     def update_stock_all_shop(self):
         lasthour = datetime.now() - timedelta(hours=2)
