@@ -129,8 +129,9 @@ where sp.id is null and sl.id in %s''' % (instance.id, str(levels))
 select pp.id product_id
 from shopify_stock_level sl
 left join product_product pp on pp.default_code = sl.name
+left join product_template pt on pp.product_tmpl_id = pt.id
 left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify_instance_id = %d
-where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::numeric, 2)
+where round(sl.available::numeric, 2) != round(pt.minimal_qty_available_stored::numeric, 2)
 and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(qty_mismatch_query)
         qty_mismatch_data = self.env.cr.fetchall()
