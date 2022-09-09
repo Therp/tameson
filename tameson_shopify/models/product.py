@@ -122,13 +122,16 @@ left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify
 where sp.id is null and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(missing_map_query)
         missing_map_data = self.env.cr.fetchall()
-        self.with_delay().create_missing_maps(missing_map_data, instance)
+        chunked_map = [missing_map_data[i:i+10000] for i in range(0, len(missing_map_data), 10000)]
+        for cm in chunked_map:
+            self.with_delay().create_missing_maps(cm, instance)
         qty_mismatch_query = '''
 select pp.id product_id
 from shopify_stock_level sl
 left join product_product pp on pp.default_code = sl.name
+left join product_template pt on pp.product_tmpl_id = pt.id
 left join shopify_product_product_ept sp on sp.product_id = pp.id and sp.shopify_instance_id = %d
-where round(sl.available::numeric, 2) != round(pp.minimal_qty_available_stored::numeric, 2)
+where round(sl.available::numeric, 2) != round(pt.minimal_qty_available_stored::numeric, 2)
 and sl.id in %s''' % (instance.id, str(levels))
         self.env.cr.execute(qty_mismatch_query)
         qty_mismatch_data = self.env.cr.fetchall()
@@ -140,6 +143,7 @@ and sl.id in %s''' % (instance.id, str(levels))
 
     def create_missing_maps(self, missing_map_data, instance):
         map_obj = self.env['shopify.product.template.ept']
+        created = 0
         for product_id, tmpl_id, sku, inventory_item_id, variant_id, shopify_tmpl_id  in missing_map_data:
             if not sku or not product_id:
                 continue
@@ -164,7 +168,8 @@ and sl.id in %s''' % (instance.id, str(levels))
                 })]
             }
             map_obj.create(map_data)
-        return True
+            created += 1
+        return created
 
     def update_stock_all_shop(self):
         lasthour = datetime.now() - timedelta(hours=2)
@@ -211,3 +216,4 @@ class ShopifyProductProductEpt(models.Model):
         for i in product_data:
             product_stock_dict.update({i.get('id'): i.get('minimal_qty_available_stored')})
         return product_stock_dict
+
