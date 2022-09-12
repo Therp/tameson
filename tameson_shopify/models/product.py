@@ -139,6 +139,7 @@ and sl.id in %s''' % (instance.id, str(levels))
         chunked_mismatch = [mismatch_products[i:i + 100] for i in range(0, len(mismatch_products), 100)]
         for cm in chunked_mismatch:
             self.with_delay().sync_mismatch_qty(cm, instance)
+        instance.write({'shopify_last_date_update_stock': datetime.now()})
         return "Synced stock: %d" % len(mismatch_products)
 
     def create_missing_maps(self, missing_map_data, instance):
@@ -198,12 +199,6 @@ WHERE bl.product_id IN (%s)''' % ','.join(map(str, to_update_products))
             product_id_array = sorted(mismatch_products)
             shopify_products = shopify_product_obj.with_context(is_process_from_selected_product=True).export_stock_in_shopify(
                 instance, product_id_array)
-            if shopify_products:
-                instance.write(
-                    {'shopify_last_date_update_stock': shopify_products[0].last_stock_update_date})
-        else:
-            _logger.info("No products to export stock.....")
-            instance.write({'shopify_last_date_update_stock': datetime.now()})
         return True
 
 
