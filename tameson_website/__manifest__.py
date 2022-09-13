@@ -10,7 +10,7 @@
     'author': "Tameson",
     'depends': [
         'portal',
-        'website',
+        'website_sale',
         'auth_signup',
     ],
     'data': [
