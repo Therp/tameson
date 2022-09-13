@@ -105,6 +105,9 @@ class WebsiteSale(WebsiteSale):
 
         PaymentProcessing.remove_payment_transaction(tx)
         if tx.acquirer_id.provider == 'transfer' and order:
-            order.require_payment = False
+            order.write({
+                'require_payment': False,
+                'require_signature': True,
+            })
             return request.redirect(order.get_portal_url())
         return request.redirect('/shop/confirmation')
