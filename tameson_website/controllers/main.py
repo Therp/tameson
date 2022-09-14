@@ -111,3 +111,10 @@ class WebsiteSale(WebsiteSale):
             })
             return request.redirect(order.get_portal_url())
         return request.redirect('/shop/confirmation')
+    
+    def _get_shop_payment_values(self, order, **kwargs):
+        values = super(WebsiteSale, self)._get_shop_payment_values(order, **kwargs)
+        if not order.partner_id.property_payment_term_id.t_invoice_delivered_quantities:
+            acquirers = [acq for acq in values['acquirers'] if acq.provider != 'transfer'] 
+            values['acquirers'] = acquirers
+        return values
