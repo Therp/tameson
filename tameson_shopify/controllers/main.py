@@ -38,7 +38,7 @@ class Shopify(Controller):
             pp = request.env['product.product'].sudo().search([('default_code','=ilike',sku)], limit=1).id
             if pp:
                 order.sudo()._cart_update(product_id=pp, set_qty=qty)
-        return request.redirect('/shop/cart')
+        return request.redirect('/shop/payment')
 
     @route(['/shopify_auth', '/shopify_auth/<int:instance_id>'], type='http', auth="user", website=True)
     def shopify_auth(self, instance_id=None, shopify_page=None, **kw):
