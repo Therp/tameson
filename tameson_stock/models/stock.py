@@ -36,7 +36,14 @@ class StockPicking(models.Model):
         store=True
     )
     unknown_date = fields.Boolean()
-    
+
+    def _create_backorder(self):
+        backorders = super(StockPicking, self)._create_backorder()
+        backorders.write({
+            'move_type': 'one'
+        })
+        return backorders
+
     def write(self, vals):
         if 'unknown_date' in vals and vals.get('unknown_date', False):
             vals['scheduled_date'] = datetime.now() + relativedelta(days=90)

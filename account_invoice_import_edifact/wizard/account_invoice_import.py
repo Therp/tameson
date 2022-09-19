@@ -13,52 +13,67 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from pydifact.segmentcollection import Interchange
 from datetime import datetime
+
 logger = logging.getLogger(__name__)
 
-def get_product_ref(line, code='BP'):
-    for segment in line.get_segments('PIA'):
+
+def get_product_ref(line, code="BP"):
+    for segment in line.get_segments("PIA"):
         if segment.elements[1][1] == code:
             return segment.elements[1][0]
 
-def get_qty(line, code='21'):
-    for segment in line.get_segments('QTY'):
+
+def get_qty(line, code="21"):
+    for segment in line.get_segments("QTY"):
         if segment.elements[0][0] == code:
             return segment.elements[0][1]
 
-def get_total(line, code='203'):
-    for segment in line.get_segments('MOA'):
+
+def get_total(line, code="203"):
+    for segment in line.get_segments("MOA"):
         if segment.elements[0][0] == code:
             return segment.elements[0][1]
 
-def get_rff(line, code='ON'):
-    for segment in line.get_segments('RFF'):
+
+def get_price(line, code="AAA"):
+    for segment in line.get_segments("PRI"):
         if segment.elements[0][0] == code:
             return segment.elements[0][1]
 
-def get_tax(line, code='7'):
-    for segment in line.get_segments('TAX'):
+
+def get_rff(line, code="ON"):
+    for segment in line.get_segments("RFF"):
+        if segment.elements[0][0] == code:
+            return segment.elements[0][1]
+
+
+def get_tax(line, code="7"):
+    for segment in line.get_segments("TAX"):
         if segment.elements[0] == code:
             return segment.elements[-1]
 
-def get_desc(line, code='F'):
-    for segment in line.get_segments('IMD'):
+
+def get_desc(line, code="F"):
+    for segment in line.get_segments("IMD"):
         return segment.elements[2][3]
 
-def get_date(interchange, code='137'):
-    for segment in interchange.get_segments('DTM'):
+
+def get_date(interchange, code="137"):
+    for segment in interchange.get_segments("DTM"):
         if segment.elements[0][0] == code:
             return segment.elements[0][1]
 
-def get_invoice_number(interchange, code='380'):
-    for segment in interchange.get_segments('BGM'):
+
+def get_invoice_number(interchange, code="380"):
+    for segment in interchange.get_segments("BGM"):
         if segment.elements[0] == code:
             return segment.elements[1]
 
-def get_ref(interchange, code='77'):
-    for segment in interchange.get_segments('MOA'):
+
+def get_ref(interchange, code="77"):
+    for segment in interchange.get_segments("MOA"):
         if segment.elements[0] == code:
             return segment.elements[1]
-
 
 
 class AccountInvoiceImport(models.TransientModel):
@@ -72,7 +87,6 @@ class AccountInvoiceImport(models.TransientModel):
         file_data = base64.b64decode(invoice_file_b64)
         filetype = mimetypes.guess_type(invoice_filename)
         logger.debug("Invoice mimetype: %s", filetype)
-
         if filetype and filetype[0] in ["application/xml", "text/xml"]:
             try:
                 xml_root = etree.fromstring(file_data)
@@ -92,10 +106,8 @@ class AccountInvoiceImport(models.TransientModel):
                         "of file?"
                     )
                 )
-        elif 'edi' in invoice_filename:
-           parsed_inv = self.parse_edi_data(file_data)
         else:
-            parsed_inv = self.parse_pdf_invoice(file_data)
+            parsed_inv = self.parse_edi_data(file_data, invoice_filename)
         if "attachments" not in parsed_inv:
             parsed_inv["attachments"] = {}
         parsed_inv["attachments"][invoice_filename] = invoice_file_b64
@@ -104,77 +116,157 @@ class AccountInvoiceImport(models.TransientModel):
         pp_parsed_inv = self.pre_process_parsed_inv(parsed_inv)
         return pp_parsed_inv
 
-    def parse_edi_data(self, file_data):
-        parsed_inv = {
-            'lines': []
-        }
-        interchange = Interchange.from_str(file_data.decode('latin-1'))
-        calc_total = 0
-        pos=[]
-        for Lines in interchange.split_by('FTX'):
-            for segment in Lines.segments:
-                if segment.tag == 'RFF':
+    def parse_edi_data(self, file_data, invoice_filename):
+        partner = self.env.context.get("partner", False)
+        maps = self.env["account.invoice.import.config"].search([])
+        if not partner:
+            for mapping in maps:
+                if mapping.name.lower() in invoice_filename.lower():
+                    partner = mapping.name.lower()
                     break
-                pon = re.findall('Webshop-order (P[0-9]{8})', segment.elements[3])
+        else:
+            mapping = maps.filtered(lambda m: m.name.lower() == partner.lower())
+        if not partner:
+            raise UserError("No partner")
+        parsed_inv = getattr(self, "parse_edi_%s" % partner)(file_data)
+        return self.edi_data_to_parsed_inv(parsed_inv)
+
+    def parse_edi_landefeld(self, file_data):
+        partner = self.env["res.partner"].search([("name", "=", "Landefeld")], limit=1)
+        parsed_inv = {
+            "lines": [],
+            "partner": {"id": partner.id},  ## 12 for Landefeld contact id
+        }
+        interchange = Interchange.from_str(file_data.decode("latin-1"))
+        calc_total = 0
+        pos = []
+        for Lines in interchange.split_by("FTX"):
+            for segment in Lines.segments:
+                if segment.tag != 'FTX':
+                    break
+                pon = re.findall("Webshop-order (P[0-9]{8})", segment.elements[3])
                 if pon:
                     pos += pon
-        parsed_inv['sku_warning'] = []
-        parsed_inv['description'] = pos
-        for line in interchange.split_by('LIN'):
-            sku = get_product_ref(line,)
-            supcode = get_product_ref(line, 'SA')
+        parsed_inv["sku_warning"] = []
+        parsed_inv["description"] = pos
+        for line in interchange.split_by("LIN"):
+            sku = get_product_ref(
+                line,
+            )
+            supcode = get_product_ref(line, "SA")
             if sku:
-                product = {'code': sku}
+                product = {"code": sku}
             else:
-                if supcode in ('_PORTO DPD', '_WGN'):
-                    product = {'code': 'shipping_cost'}
+                if supcode in ("_PORTO DPD", "_WGN"):
+                    product = {"code": "shipping_cost"}
                 else:
-                    parsed_inv['sku_warning'].append(supcode)
-                    product = {'code': 'purchase_price_diff'}
+                    parsed_inv["sku_warning"].append(supcode)
+                    product = {"code": "purchase_price_diff"}
             total = float(get_total(line))
             qty = float(get_qty(line))
             description = get_desc(line)
-            ref = get_rff(line),
-            plines = self.env['purchase.order.line'].search([
-                ('order_id.name','in',pos),
-                ('product_id.default_code','=',sku),
-            ])
-            pline = plines.filtered(lambda l: ((l.product_qty - l.qty_invoiced) >= qty))[:1]
+            ref = (get_rff(line),)
+            plines = self.env["purchase.order.line"].search(
+                [
+                    ("order_id.name", "in", pos),
+                    ("product_id.default_code", "=", sku),
+                ]
+            )
+            pline = plines.filtered(
+                lambda l: ((l.product_qty - l.qty_invoiced) >= qty)
+            )[:1]
             name = "%s, %s, %s" % (ref, description, supcode)
-            parsed_inv['lines'].append({
-                'product': product,
-                'qty': qty,
-                'tax': get_tax(line),
-                'price_unit': total/qty,
-                'name': name,
-                'pline': pline.id,
-                'uom': {'id': 1},
-            })
+            parsed_inv["lines"].append(
+                {
+                    "product": product,
+                    "qty": qty,
+                    "tax": get_tax(line),
+                    "price_unit": total / qty,
+                    "name": name,
+                    "pline": pline.id,
+                    "uom": {"id": 1},
+                }
+            )
             calc_total += total
-        parsed_inv['date'] = datetime.strptime(get_date(interchange), '%Y%m%d')
-        parsed_inv['invoice_number'] = get_invoice_number(interchange)
-        for segments in interchange.split_by('UNS'):
-            amount = float(get_total(segments, '77'))
-            parsed_inv['amount_total'] = amount
-            parsed_inv['amount_untaxed'] = amount
+        parsed_inv["date"] = datetime.strptime(get_date(interchange), "%Y%m%d")
+        parsed_inv["invoice_number"] = get_invoice_number(interchange)
+        for segments in interchange.split_by("UNS"):
+            amount = float(get_total(segments, "77"))
+            parsed_inv["amount_total"] = amount
+            parsed_inv["amount_untaxed"] = amount
             break
-        if parsed_inv['amount_total'] != calc_total:
-            diff = parsed_inv['amount_total'] - calc_total
-            parsed_inv['lines'].append({
-                'product': {'code': 'purchase_price_diff'},
-                'qty': 1,
-                'tax': [],
-                'price_unit': diff,
-                'name': 'Total difference adjustment line.',
-                'uom': {'id': 1},
-            })
-        return self.edi_data_to_parsed_inv(parsed_inv)
+        if parsed_inv["amount_total"] != calc_total:
+            diff = parsed_inv["amount_total"] - calc_total
+            parsed_inv["lines"].append(
+                {
+                    "product": {"code": "purchase_price_diff"},
+                    "qty": 1,
+                    "tax": [],
+                    "price_unit": diff,
+                    "name": "Total difference adjustment line.",
+                    "uom": {"id": 1},
+                }
+            )
+        return parsed_inv
+
+    def parse_edi_burkert(self, file_data):
+        partner = self.env["res.partner"].search(
+            [("name", "=", "Burkert Benelux B.V.")], limit=1
+        )
+        parsed_inv = {
+            "lines": [],
+            "partner": {"id": partner.id},  ## Burkert id
+        }
+        interchange = Interchange.from_str(file_data.decode("latin-1"))
+        calc_total = 0
+        for line in interchange.split_by("LIN"):
+            sku = get_product_ref(line, "SA")
+            supcode = get_product_ref(line, "SA")
+            if sku:
+                sku = sku.lstrip("0")
+                product = {"code": sku}
+            else:
+                product = {"code": "purchase_price_diff"}
+            unit_price = float(get_price(line))
+            qty = float(get_qty(line, "47"))
+            description = get_desc(line)
+            ref = (get_rff(line),)
+            name = "%s, %s, %s" % (ref, description, supcode)
+            parsed_inv["lines"].append(
+                {
+                    "product": product,
+                    "qty": qty,
+                    "tax": get_tax(line),
+                    "price_unit": unit_price,
+                    "name": name,
+                    "uom": {"id": 1},
+                }
+            )
+            calc_total += unit_price * qty
+        parsed_inv["date"] = datetime.strptime(get_date(interchange, "2"), "%Y%m%d")
+        parsed_inv["invoice_number"] = get_invoice_number(interchange)
+        for segments in interchange.split_by("UNS"):
+            amount = float(get_total(segments, "79"))
+            parsed_inv["amount_total"] = amount
+            parsed_inv["amount_untaxed"] = amount
+            break
+        if parsed_inv["amount_total"] != calc_total:
+            diff = parsed_inv["amount_total"] - calc_total
+            parsed_inv["lines"].append(
+                {
+                    "product": {"code": "purchase_price_diff"},
+                    "qty": 1,
+                    "tax": [],
+                    "price_unit": diff,
+                    "name": "Total difference adjustment line.",
+                    "uom": {"id": 1},
+                }
+            )
+        return parsed_inv
 
     def edi_data_to_parsed_inv(self, data):
         parsed_inv = {
-            "partner": {
-                'id': 12
-            },
+            "partner": data["partner"],
             "currency": {
                 "id": 1,
             },
@@ -183,8 +275,8 @@ class AccountInvoiceImport(models.TransientModel):
             "date_due": data.get("date_due"),
             "date_start": data.get("date_start"),
             "date_end": data.get("date_end"),
-            'invoice_number': data['invoice_number'],
-            'lines': data['lines'],
+            "invoice_number": data["invoice_number"],
+            "lines": data["lines"],
             "type": "in_invoice",
         }
         for field in ["invoice_number", "description", "sku_warning"]:
@@ -204,7 +296,7 @@ class AccountInvoiceImport(models.TransientModel):
             if key.startswith("date") and value:
                 parsed_inv[key] = fields.Date.to_string(value)
         return parsed_inv
-    
+
     @api.model
     def _match_product_search(self, product_dict):
         product = self.env["product.product"].browse()
@@ -227,14 +319,18 @@ class AccountInvoiceImport(models.TransientModel):
         return product
 
     def _prepare_line_vals_nline(self, partner, vals, parsed_inv, import_config):
-        super(AccountInvoiceImport, self)._prepare_line_vals_nline(partner, vals, parsed_inv, import_config)
+        super(AccountInvoiceImport, self)._prepare_line_vals_nline(
+            partner, vals, parsed_inv, import_config
+        )
         for line, invoice_line in zip(parsed_inv["lines"], vals["invoice_line_ids"]):
-            pline = line.get('pline', False)
+            pline = line.get("pline", False)
             if pline:
-                invoice_line[2]['purchase_line_id'] = pline
+                invoice_line[2]["purchase_line_id"] = pline
 
     def create_invoice(self, parsed_inv, import_config=False, origin=None):
-        res = super(AccountInvoiceImport, self).create_invoice(parsed_inv, import_config, origin)
-        if parsed_inv['sku_warning']:
-            res.message_post(body="Warning for lines: %s" % parsed_inv['sku_warning'])
+        res = super(AccountInvoiceImport, self).create_invoice(
+            parsed_inv, import_config, origin
+        )
+        if parsed_inv["sku_warning"]:
+            res.message_post(body="Warning for lines: %s" % parsed_inv["sku_warning"])
         return res

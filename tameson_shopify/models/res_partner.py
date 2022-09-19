@@ -69,7 +69,7 @@ class ResPartner(models.Model):
                 'address1': child.street,
                 'address2': child.street2 or '',
                 'city': child.city,
-                'country': child.country_id.name,
+                'country': child.with_context(lang='en_US').country_id.name,
                 'first_name': child.name.split(' ')[0] if child.name else '',
                 'last_name': ' '.join(child.name.split(' ')[1:]) if child.name else '',
                 'company': child.parent_id.name or '',
@@ -199,5 +199,14 @@ class ResPartner(models.Model):
                     contact.parent_id.extract_house_from_street()
                 else:
                     contact.onchange_country_lang()
+            if not type:
+                try:
+                    wizard = self.env['portal.wizard'].with_context(active_ids=contact.ids).create({})
+                    line = wizard.user_ids.filtered(lambda u: u.partner_id == contact)
+                    if not line.in_portal:
+                        line.write({'in_portal': True})
+                        wizard.with_context(send_mail=False).action_apply()
+                except:
+                    pass
         return contact
                 

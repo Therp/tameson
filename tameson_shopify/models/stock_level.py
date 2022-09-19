@@ -9,8 +9,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
 
-
-class ShopifyStockLevel(models.Model):
+class ShopifyStockLevel(models.TransientModel):
     _name = 'shopify.stock.level'
     _description = 'Shopify Stock Level'
 
@@ -25,7 +24,6 @@ class ShopifyStockLevel(models.Model):
     
     @api.model_create_multi
     def create(self, vals_list):
-        self.search([]).unlink()
         result = super(ShopifyStockLevel, self).create(vals_list)    
         return result
     

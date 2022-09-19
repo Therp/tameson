@@ -4,6 +4,7 @@
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="priority" eval="1000" />
         <field name="arch" type="xml">
             <xpath expr="//form[1]/*[1]" position="before">
                 <field name="supposed_fiscal_match" invisible="1"/>
@@ -61,6 +62,12 @@
                     Warning: <field name="uu_skus" /> will be discontinued. <field name="uu_replacement_skus_en" />
                 </h2>
             </xpath>
+            <xpath expr="//button[@name='action_view_invoice']" position="before">
+                <button type="object" name="action_open_opportunity" class="oe_stat_button" icon="fa-dollar" attrs="{'invisible': [('opportunity_id', '=', False)]}">
+                    Opportunity
+                </button>
+            </xpath>
         </field>
+        
     </record>
 </odoo>

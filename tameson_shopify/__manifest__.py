@@ -9,9 +9,10 @@
     'depends': [
         'shopify_ept',
         'tameson_contact',
+        'queue_job',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv',
         'views/stock_level.xml',
         'views/sale.xml',
         'views/templates.xml',

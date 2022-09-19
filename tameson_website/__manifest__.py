@@ -10,7 +10,9 @@
     'author': "Tameson",
     'depends': [
         'portal',
-        'website',
+        'website_sale',
+        'auth_signup',
+        'tameson_account',
     ],
     'data': [
         'views/website.xml',
