@@ -52,7 +52,7 @@ class ResPartner(models.Model):
             tag_string = 'ODOO-checkout'
         return {
             'email': self.email,
-            "return_to": "/collections/all",
+            "return_to": "/",
             'first_name': self.name.split(' ')[0] if self.name else '',
             'last_name': ' '.join(self.name.split(' ')[1:]) if self.name else '',
             'tag_string': tag_string,
