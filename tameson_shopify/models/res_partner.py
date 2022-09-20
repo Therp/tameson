@@ -47,9 +47,12 @@ class ResPartner(models.Model):
     def _get_shopify_partner_data(self):
         self.ensure_one()
         tag_string = 'odoo'
-        if self.property_payment_term_id.t_invoice_delivered_quantities \
-            or self.property_product_pricelist.discount_policy == 'without_discount':
-            tag_string = 'ODOO-checkout'
+        if self.property_payment_term_id.t_invoice_delivered_quantities:
+            tag_string = 'ODOO-checkout, ODOO-invoice'
+        elif self.property_product_pricelist.discount_policy == 'without_discount':
+            tag_string = 'ODOO-checkout, ODOO-discount'
+        else:
+            tag_string = 'odoo'
         return {
             'email': self.email,
             "return_to": "/",
