@@ -106,6 +106,9 @@
             </xpath>
         </template>
         <template id="cart_lines" inherit_id="website_sale.cart_lines">
+            <xpath expr="//table[@id='cart_products']" position="attributes">
+                <attribute name="class">mb16 table table-sm js_cart_lines</attribute>
+            </xpath>
             <xpath expr="//div[1]" position="after">
                 <t t-set="orders" t-value="website.get_open_orders()" />
                 <div t-if="orders and not website_sale_order or not website_sale_order.website_order_line">
@@ -169,6 +172,11 @@
                         </a>
                     </div>
                 </div>
+            </xpath>
+        </template>
+        <template id="cart_summary" inherit_id="website_sale.cart_summary">
+            <xpath expr="//table[@id='cart_products']" position="attributes">
+                <attribute name="class">table table-sm</attribute>
             </xpath>
         </template>
     </data>
