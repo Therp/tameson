@@ -201,5 +201,10 @@
                 <t t-set="submit_txt">Checkout</t>
             </xpath>
         </template>
+        <template id="web_assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/tameson_website/static/src/js/payment.js"></script>
+            </xpath>
+        </template>    
     </data>
 </odoo>
