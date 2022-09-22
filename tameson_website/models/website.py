@@ -19,5 +19,5 @@ class Website(models.Model):
                 ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
                 ('state', 'in', ['draft','sent'])
             ]
-        orders = orders.search(domain, limit=10, order='create_date')
+        orders = orders.search(domain, limit=10, order='create_date DESC')
         return orders
