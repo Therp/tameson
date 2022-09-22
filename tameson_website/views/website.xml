@@ -196,5 +196,10 @@
                 <attribute name="class">table table-sm</attribute>
             </xpath>
         </template>
+        <template id="payment" inherit_id="website_sale.payment">
+            <xpath expr="//t[@t-set='submit_txt']" position="replace">
+                <t t-set="submit_txt">Checkout</t>
+            </xpath>
+        </template>
     </data>
 </odoo>
