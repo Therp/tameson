@@ -149,8 +149,11 @@
             <xpath expr="//a[@href='/shop/checkout?express=1']/span[1]" position="replace">
                 <span class="">Checkout</span>
             </xpath>
-            <xpath expr="//a[@href='/shop']" position="attributes">                
-                <attribute name="href">/shopify_auth</attribute>
+            <xpath expr="//a[@href='/shop']" position="replace">                
+                <a role="button" href="/shopify_auth" class="btn btn-secondary mb32 d-none d-xl-inline-block">
+                    <span class="fa fa-chevron-left" />
+                    <span class="">Back</span>
+                </a>
             </xpath>
             <xpath expr="//div[@id='o_cart_summary']" position="replace">
                 <div class="col-12 col-xl-4" id="o_cart_summary">
