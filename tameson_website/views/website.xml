@@ -140,5 +140,33 @@
                 </div>
             </xpath>
         </template>
+        <template id="short_cart_summary" inherit_id="website_sale.short_cart_summary" >
+            <xpath expr="//a[@href='/shop/checkout?express=1'][1]/span[1]" position="replace">
+                <span class="">Checkout</span>
+            </xpath>
+        </template>
+        <template id="cart" inherit_id="website_sale.cart" >
+            <xpath expr="//a[@href='/shop/checkout?express=1']/span[1]" position="replace">
+                <span class="">Checkout</span>
+            </xpath>
+            <xpath expr="//a[@href='/shop']" position="attributes">                
+                <attribute name="href">/shopify_auth</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_cart_summary']" position="replace">
+                <div class="col-12 col-xl-4" id="o_cart_summary">
+                    <t t-call="website_sale.short_cart_summary"/>
+                    <div class="d-xl-none mt8">
+                        <a role="button" href="/shopify_auth" class="btn btn-secondary mb32">
+                            <span class="fa fa-chevron-left" />
+                            Continue<span class="d-none d-md-inline"> Shopping</span>
+                        </a>
+                        <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right" href="/shop/checkout?express=1">
+                            <span class="">Checkout</span>
+                            <span class="fa fa-chevron-right" />
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </template>
     </data>
 </odoo>
