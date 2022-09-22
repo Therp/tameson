@@ -108,7 +108,7 @@
         <template id="cart_lines" inherit_id="website_sale.cart_lines">
             <xpath expr="//div[1]" position="after">
                 <t t-set="orders" t-value="website.get_open_orders()" />
-                <div t-if="orders">
+                <div t-if="orders and not website_sale_order or not website_sale_order.website_order_line">
                     <h3>Open orders</h3>
                     <div class="table-responsive border rounded border-top-0 my-3">
                         <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
