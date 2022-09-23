@@ -1,7 +1,10 @@
 odoo.define("tameson_helpdesk.rma", function (require) {
     "use strict";
     require('web.dom_ready');
-    document.querySelector('#rma-order').addEventListener('input', onInputRmaOrder);
+    var rma = document.querySelector('#rma-order');
+    if (rma){
+        rma.addEventListener('input', onInputRmaOrder);
+    }
     function onInputRmaOrder(e) {
         var input = e.target,
             val = input.value;

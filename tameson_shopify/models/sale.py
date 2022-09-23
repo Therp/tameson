@@ -15,6 +15,17 @@ def filter_orders(order):
     difference = abs(order.shopify_total_price - order.amount_total)
     return float_compare(difference, 0.05, precision_digits=2) != 1
 
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    virtual_available_at_date = fields.Float(compute_sudo=True)
+    scheduled_date = fields.Datetime(compute_sudo=True)
+    free_qty_today = fields.Float(compute_sudo=True)
+    qty_available_today = fields.Float(compute_sudo=True)
+    warehouse_id = fields.Many2one(compute_sudo=True)
+
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
