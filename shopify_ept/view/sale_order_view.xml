@@ -48,6 +48,8 @@
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
                 <filter name="my_sale_orders_filter" position="after">
+                    <field name="shopify_order_number" string="Shopify Order Number"/>
+                    <field name="shopify_order_id" string="Shopify Order Ref"/>
                     <filter string="Shipped Order"
                             domain="[('shopify_order_status', '=', 'fulfilled')]"
                             help="While import order from shopify at time shipped order"
@@ -90,6 +92,7 @@
                                     <field name="auto_workflow_process_id" readonly="True"/>
                                     <field name="shopify_location_id" readonly="1"/>
                                     <field name="is_pos_order" readonly="1" invisible="1"/>
+                                    <field name="is_shopify_multi_payment" invisible="1"/>
                                 </group>
                             </group>
                             <group string="Risks" name="risk">
@@ -121,9 +124,47 @@
                                     </form>
                                 </field>
                             </group>
+                            <group string="Multi Payments" name="multi_payments"
+                                   attrs="{'invisible':[('is_shopify_multi_payment','=',False)]}">
+                                <field name="shopify_payment_ids" readonly="1" nolabel="1">
+                                    <tree>
+                                        <field name="payment_gateway_id"/>
+                                        <field name="workflow_id"/>
+                                        <field name="amount"/>
+                                        <field name="remaining_refund_amount"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="payment_gateway_id"/>
+                                                <field name="workflow_id"/>
+                                            </group>
+                                            <group>
+                                                <field name="amount"/>
+                                                <field name="remaining_refund_amount"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </group>
                         </page>
                     </notebook>
                 </data>
+            </field>
+        </record>
+
+        <!--Tree view of multi payments which used to display the multi-payment gateway in an invoice-->
+        <record id="shopify_multi_payment_gateway_tree_view_ept"
+                model="ir.ui.view">
+            <field name="name">Multi Payment</field>
+            <field name="model">shopify.order.payment.ept</field>
+            <field name="arch" type="xml">
+                <tree create="false" duplicate="false">
+                    <field name="payment_gateway_id"/>
+                    <field name="workflow_id"/>
+                    <field name="amount"/>
+                    <field name="remaining_refund_amount"/>
+                </tree>
             </field>
         </record>
 

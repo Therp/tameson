@@ -14,6 +14,11 @@ import json
 import logging
 _logger = logging.getLogger(__name__)
 
+
+import logging
+_logger = logging.getLogger(__name__)
+
+
 class Shopify(Controller):
 
     @route(['/shopify_hosts'], type='http', auth="user", website=True)

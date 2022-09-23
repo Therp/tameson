@@ -23,6 +23,8 @@ class AccountFiscalPosition(models.Model):
                                                                          zipcode=zipcode, vat_required=vat_required)
         if not country_id:
             return False
+        if self._context.get('is_b2b_amz_order', False):
+            vat_required = self._context.get('is_b2b_amz_order', False)
         base_domain = [('auto_apply', '=', True), ('vat_required', '=', vat_required)]
         company_id = self.env.context.get('force_company', self.env.company.id)
         base_domain.append(('company_id', '=', company_id))

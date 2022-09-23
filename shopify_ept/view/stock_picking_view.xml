@@ -8,11 +8,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
-                    <page name="shopify_info" string="Shopify Info">
-                        <group name="shopify_info" string="Shopify">
-                            <field name="shopify_source"/>
-                            <field name="shopify_code"/>
-                            <field name="shopify_tracking_company"/>
+                    <page name="shopify_info" string="Shopify Carrier Info">
+                        <group>
+                            <group>
+                                <field name="shopify_source"/>
+                                <field name="shopify_tracking_company"/>
+                            </group>
+                            <group>
+                                <field name="shopify_code"/>
+                            </group>
                         </group>
                     </page>
                 </xpath>

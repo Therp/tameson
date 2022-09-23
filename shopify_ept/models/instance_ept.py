@@ -147,6 +147,15 @@ class ShopifyInstanceEpt(models.Model):
         records = self._cr.dictfetchall()
         return records[0].get('count')
 
+    @api.model
+    def _default_refund_adjustment_product(self):
+        """
+        This method is used to set the gift card product in an instance.
+        @author: Meera Sidapara on Date 05-Jan-2022.
+        """
+        refund_adjustment_product = self.env.ref('shopify_ept.shopify_refund_adjustment_product', False)
+        return refund_adjustment_product
+
     def _default_tip_product(self):
         """
         This method is used to set the tip product in an instance.
@@ -164,13 +173,13 @@ class ShopifyInstanceEpt(models.Model):
         instances = self.search([])
         tip_product = self.env.ref('shopify_ept.shopify_tip_product', False)
         if instances and tip_product:
-            instances.write({'tip_product_id':tip_product.id})
+            instances.write({'tip_product_id': tip_product.id})
 
     name = fields.Char(size=120, string='Name', required=True)
     shopify_company_id = fields.Many2one('res.company', string='Company', required=True,
                                          default=lambda self:
                                          self.env.company)
-    shopify_warehouse_id = fields.Many2one('stock.warehouse', string='Shopify Warehouse',
+    shopify_warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
                                            default=_get_default_warehouse)
     shopify_pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     shopify_order_prefix = fields.Char(size=10, string='Order Prefix',
@@ -208,7 +217,7 @@ class ShopifyInstanceEpt(models.Model):
     # payment_term_id = fields.Many2one('account.payment.term', string='Payment Term')
     last_date_order_import = fields.Datetime(string="Last Date Of Order Import",
                                              help="Last date of sync orders from Shopify to Odoo")
-    shopify_section_id = fields.Many2one('crm.team', 'Shopify Sales Team')
+    shopify_section_id = fields.Many2one('crm.team', 'Sales Team')
     # global_channel_id = fields.Many2one('global.channel.ept', string="Global Channel")
     is_use_default_sequence = fields.Boolean("Use Odoo Default Sequence?",
                                              help="If checked,Then use default sequence of odoo while create sale order.")
@@ -331,6 +340,10 @@ class ShopifyInstanceEpt(models.Model):
     tip_product_id = fields.Many2one("product.product", "TIP", domain=[('type', '=', 'service')],
                                      default=_default_tip_product,
                                      help="This is used for set tip product in a sale order lines")
+    refund_adjustment_product_id = fields.Many2one("product.product", "Refund Adjustment",
+                                                   domain=[('type', '=', 'service')],
+                                                   default=_default_refund_adjustment_product,
+                                                   help="This is used for set refund adjustment in a credit note")
 
     @api.model
     def create(self, vals):
@@ -360,10 +373,10 @@ class ShopifyInstanceEpt(models.Model):
         shop = self.shopify_host.split("//")
         if len(shop) == 2:
             shop_url = shop[0] + "//" + self.shopify_api_key + ":" + self.shopify_password + "@" + \
-                       shop[1] + "/admin/api/2021-01"
+                       shop[1] + "/admin/api/2022-01"
         else:
             shop_url = "https://" + self.shopify_api_key + ":" + self.shopify_password + "@" + shop[
-                0] + "/admin/api/2021-01"
+                0] + "/admin/api/2022-01"
         shopify.ShopifyResource.set_site(shop_url)
         try:
             shop_id = shopify.Shop.current()
@@ -390,10 +403,10 @@ class ShopifyInstanceEpt(models.Model):
         if len(shop) == 2:
             shop_url = shop[
                            0] + "//" + instance.shopify_api_key + ":" + instance.shopify_password + "@" + \
-                       shop[1] + "/admin/api/2021-01"
+                       shop[1] + "/admin/api/2022-01"
         else:
             shop_url = "https://" + instance.shopify_api_key + ":" + instance.shopify_password + "@" + \
-                       shop[0] + "/admin/api/2021-01"
+                       shop[0] + "/admin/api/2022-01"
 
         shopify.ShopifyResource.set_site(shop_url)
         return True

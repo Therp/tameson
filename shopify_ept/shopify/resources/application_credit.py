@@ -1,5 +1,5 @@
 from ..base import ShopifyResource
 
 
-class TenderTransaction(ShopifyResource):
+class ApplicationCredit(ShopifyResource):
     pass
