@@ -16,6 +16,9 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'set.help.mixin']
 
+    def check_vat_gb(self, vat):
+        return True
+
     @api.model
     def _address_fields(self):
         res = super(ResPartner, self)._address_fields()
