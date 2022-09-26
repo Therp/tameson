@@ -72,3 +72,15 @@ class Shopify(Controller):
         request.env['shopify.process.import.export'].sudo().with_delay().compare_and_sync(instance_id, bulk)
         _logger.info('ShopifyStock: Return true')
         return True
+
+
+    @route(['/shopify/email_check'], type='json', auth="public", csrf=False, methods=["POST"])
+    def check_email(self, email, **kw):
+        partner = request.env['res.partner'].sudo().search([('email','=',email)], order='parent_id DESC', limit=1)
+        checkout = bool(partner) and (partner.property_payment_term_id.t_invoice_delivered_quantities or \
+            partner.property_product_pricelist.discount_policy == 'without_discount')
+        value = {
+            'email': email,
+            'ODOO-checkout': checkout,
+        }
+        return value
