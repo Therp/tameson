@@ -26,7 +26,7 @@
             <field name="arch" type="xml">
                 <field name="shopify_operation" position="attributes">
                     <attribute name="invisible">1</attribute>
-                    <attribute name="force_save=">1</attribute>
+                    <attribute name="force_save">1</attribute>
                 </field>
                 <field name="shopify_operation" position="after">
                     <field name="shopify_operation_t" required="1" />                    
