@@ -88,7 +88,7 @@ class SaleOrderPresta(models.Model):
         order_data = order['order']
         prestashop_id = order_data['id']
         if order_data['invoice']['country_code'].lower() == 'gb':
-            partner, delivery, invoice = self.env['res.partner'].with_contect(no_vat_validation=True).match_or_create_prestashop(order)
+            partner, delivery, invoice = self.env['res.partner'].with_context(no_vat_validation=True).match_or_create_prestashop(order)
         prestashop_module = order_data['module']
         prestashop_payment = order_data['payment']
         prestashop_date_upd = order_data['date_upd']
