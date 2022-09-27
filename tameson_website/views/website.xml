@@ -205,6 +205,11 @@
             <xpath expr="//script[last()]" position="after">
                 <script type="text/javascript" src="/tameson_website/static/src/js/payment.js"></script>
             </xpath>
-        </template>    
+        </template> 
+        <template id="payment_confirmation_status" inherit_id="payment.payment_confirmation_status">
+            <xpath expr="//div[@role='status']" position="attributes">
+                <attribute name="t-if">payment_tx_id and payment_tx_id.state == 'pending' and 'sale' not in payment_tx_id.mapped('sale_order_ids.state')</attribute>
+            </xpath>
+        </template>           
     </data>
 </odoo>
