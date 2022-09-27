@@ -118,7 +118,7 @@
                 <attribute name="style">width:20%;</attribute>
             </xpath>
             <xpath expr="//th[hasclass('td-price')]" position="replace">
-                <th class="text-center td-price">Price excl.</th>
+                <th class="text-center td-price" style="width:25%;">Price excl.</th>
             </xpath>
             <xpath expr="//div[1]" position="after">
                 <t t-set="orders" t-value="website.get_open_orders()" />
