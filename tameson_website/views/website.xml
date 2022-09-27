@@ -109,13 +109,10 @@
             <xpath expr="//table[@id='cart_products']" position="attributes">
                 <attribute name="class">mb16 table table-sm js_cart_lines</attribute>
             </xpath>
-            <xpath expr="//th[hasclass('td-qty')]" position="before">
-                <th class="text-center td-sku">Reference</th>
-            </xpath>
-            <xpath expr="//td[hasclass('td-qty')]" position="before">
-                <td class='td-sku'>
-                    <div t-field="line.product_id.default_code" />
-                </td>
+            <xpath expr="//strong[@t-field='line.name_short']" position="replace">
+                <strong>
+                    <t t-esc="'[%s] %s' % (line.product_id.default_code,line.name_short)" />
+                </strong>
             </xpath>
             <xpath expr="//th[hasclass('td-qty')]" position="attributes">
                 <attribute name="style">width:20%;</attribute>
@@ -191,9 +188,22 @@
                 </div>
             </xpath>
         </template>
+        <template id="cart_delivery" inherit_id="website_sale_delivery.cart_delivery">
+            <xpath expr="//tr[@id='order_delivery']/td[1]" position="attributes">
+                <attribute name="class">text-right border-0</attribute>
+            </xpath>
+            <xpath expr="//tr[@id='order_delivery']/td[2]" position="attributes">
+                <attribute name="class">text-xl-right border-0</attribute>
+            </xpath>
+        </template>
         <template id="cart_summary" inherit_id="website_sale.cart_summary">
             <xpath expr="//table[@id='cart_products']" position="attributes">
                 <attribute name="class">table table-sm</attribute>
+            </xpath>
+            <xpath expr="//strong[@t-field='line.name_short']" position="replace">
+                <strong>
+                    <t t-esc="'[%s] %s' % (line.product_id.default_code,line.name_short)" />
+                </strong>
             </xpath>
         </template>
         <template id="payment" inherit_id="website_sale.payment">
@@ -210,6 +220,16 @@
             <xpath expr="//div[@role='status']" position="attributes">
                 <attribute name="t-if">payment_tx_id and payment_tx_id.state == 'pending' and 'sale' not in payment_tx_id.mapped('sale_order_ids.state')</attribute>
             </xpath>
-        </template>           
+        </template>
+        <template id="sale_order_portal_template" inherit_id="sale.sale_order_portal_template">
+            <xpath expr="//div[@id='sale_order_communication']" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//li[@t-if='sale_order.user_id']" position="after">
+                <li class="list-group-item flex-grow-1">
+                    <a t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}">Send message</a>
+                </li>
+            </xpath>
+        </template>
     </data>
 </odoo>
