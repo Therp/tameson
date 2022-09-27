@@ -18,7 +18,20 @@
                         class="oe_highlight" attrs="{'invisible': [('export_done_webhook','=',False)]}"/>
                 </xpath>                
             </field>
+        </record>        
+        <record id="view_shopify_process_import_export_ept" model="ir.ui.view">
+            <field name="name">view_shopify_process_import_export_ept</field>
+            <field name="model">shopify.process.import.export</field>
+            <field name="inherit_id" ref="shopify_ept.view_shopify_process_import_export_ept" />
+            <field name="arch" type="xml">
+                <field name="shopify_operation" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="force_save=">1</attribute>
+                </field>
+                <field name="shopify_operation" position="after">
+                    <field name="shopify_operation_t" required="1" />                    
+                </field>
+            </field>
         </record>
-        
     </data>
 </odoo>

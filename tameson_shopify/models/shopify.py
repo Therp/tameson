@@ -157,7 +157,7 @@ class ResCountry(models.Model):
 class ShopifyProcessImportExport(models.TransientModel):
     _inherit = 'shopify.process.import.export'
 
-    shopify_operation = fields.Selection(
+    shopify_operation_t = fields.Selection(
         [
             # ('sync_product',
             #  'Sync New Products - Set To Queue'),
@@ -182,3 +182,7 @@ class ShopifyProcessImportExport(models.TransientModel):
         ],
         string="Operation",
         default="import_orders_by_remote_ids")
+
+    @api.onchange('shopify_operation_t')
+    def onchange_shopify_operation_t(self):
+        self.shopify_operation = self.shopify_operation_t
