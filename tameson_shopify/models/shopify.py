@@ -186,3 +186,31 @@ class ShopifyProcessImportExport(models.TransientModel):
     @api.onchange('shopify_operation_t')
     def onchange_shopify_operation_t(self):
         self.shopify_operation = self.shopify_operation_t
+
+
+
+def nested_set_presentment(data_dict):
+    for k,v in data_dict.items():
+        if k.endswith('_set') and isinstance(v, dict):
+            kk = k.replace('_set', '')
+            if kk in data_dict:
+                data_dict[kk] = v['presentment_money']['amount']
+        elif isinstance(v, dict):
+            nested_set_presentment(v)
+        elif isinstance(v, list):
+            for item in v:
+                if isinstance(item, dict):
+                    nested_set_presentment(item)
+
+
+class ShopifyOrderDataQueueLineEpt(models.Model):
+    _inherit = "shopify.order.data.queue.line.ept"
+
+    def create(self, vals):
+        data = json.loads(vals['order_data'])
+        presentment_cur = data['order']['current_subtotal_price_set']['presentment_money']['currency_code']
+        if presentment_cur != 'EUR':
+            data['order']['currency'] == presentment_cur
+            nested_set_presentment(data)
+        vals['order_data'] = json.dumps(data)
+        return super(ShopifyOrderDataQueueLineEpt, self).create(vals)
