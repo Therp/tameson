@@ -164,10 +164,10 @@ class ResPartner(models.Model):
                 company = address.get('company', False)
                 partner_vals = get_partner_vals(self.env, address, email)
                 matched_contact = self.env['res.partner'].search([('email','=',email), ('parent_id','=',False)], limit=1)
+                partner_vals['vat'] = vals.get('metafields', {}).get('vat-id', False)
                 if company:
                     company_vals = partner_vals.copy()
-                    vat = vals.get('metafields', {}).get('vat-id', False)
-                    company_vals.update(name=company, is_company=True, vat=vat)
+                    company_vals.update(name=company, is_company=True)
                     if matched_contact:
                         partner_vals.update(parent_id=matched_contact.id,type='contact')
                         contact = matched_contact.child_ids.filtered(lambda c: c.type == 'contact')[:1]
