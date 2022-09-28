@@ -16,3 +16,5 @@ class ResPartner(models.Model):
     def can_edit_vat(self):
         if not (self.vat or self.parent_id):
             return True
+        else:
+            return super(ResPartner, self).can_edit_vat()
