@@ -210,7 +210,7 @@ class ShopifyOrderDataQueueLineEpt(models.Model):
         data = json.loads(vals['order_data'])
         presentment_cur = data['order']['presentment_currency']
         if presentment_cur != 'EUR':
-            data['order']['currency'] == presentment_cur
+            data['order']['currency'] = presentment_cur
             nested_set_presentment(data)
         vals['order_data'] = json.dumps(data)
         return super(ShopifyOrderDataQueueLineEpt, self).create(vals)
