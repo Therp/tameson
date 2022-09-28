@@ -91,7 +91,7 @@
                 <h3>Accounts</h3>
                 <div class="o_portal_docs list-group">
                     <t t-call="portal.portal_docs_entry">
-                        <t t-set="title" t-value="'Main Account'" />
+                        <t t-set="title" t-value="'Main Account Details'" />
                         <t t-set="url" t-value="'/my/account'"/>
                     </t>
                     <t t-set="partner" t-value="user_id.partner_id" />
@@ -103,6 +103,132 @@
                         </t>                            
                     </t>    
                 </div>
+            </xpath>
+        </template>
+        <template id="cart_lines" inherit_id="website_sale.cart_lines">
+            <xpath expr="//table[@id='cart_products']" position="attributes">
+                <attribute name="class">mb16 table table-sm js_cart_lines</attribute>
+            </xpath>
+            <xpath expr="//strong[@t-field='line.name_short']" position="replace">
+                <strong>
+                    <t t-esc="'[%s] %s' % (line.product_id.default_code,line.name_short)" />
+                </strong>
+            </xpath>
+            <xpath expr="//th[hasclass('td-qty')]" position="attributes">
+                <attribute name="style">width:20%;</attribute>
+            </xpath>
+            <xpath expr="//th[hasclass('td-price')]" position="replace">
+                <th class="text-center td-price" style="width:25%;">Price excl.</th>
+            </xpath>
+            <xpath expr="//div[1]" position="after">
+                <t t-set="orders" t-value="website.get_open_orders()" />
+                <div t-if="orders and not website_sale_order or not website_sale_order.website_order_line">
+                    <h3>Your open quotations</h3>
+                    <div class="table-responsive border rounded border-top-0 my-3">
+                        <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                            <t t-foreach="orders" t-as="order">
+                                <tr>
+                                    <td>
+                                        <a t-att-href="order.get_portal_url()">
+                                            <t t-esc="order.name" />
+                                        </a>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="order.date_order" t-options="{'widget': 'date'}" />
+                                        &amp;nbsp;
+                                        <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}" />
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-if="order.state == 'done'" class="badge badge-pill badge-success">
+                                            <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done" />
+                                            Done
+                                        </span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="order.amount_total" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="short_cart_summary" inherit_id="website_sale.short_cart_summary" >
+            <xpath expr="//a[@href='/shop/checkout?express=1'][1]/span[1]" position="replace">
+                <span class="">Checkout</span>
+            </xpath>
+            <xpath expr="//a[@href='/shop/checkout?express=1']" position="attributes">
+                <attribute name="class">btn btn-primary float-right d-none d-xl-inline-block</attribute>
+            </xpath>
+        </template>
+        <template id="cart" inherit_id="website_sale.cart" >
+            <xpath expr="//a[@href='/shop/checkout?express=1']/span[1]" position="replace">
+                <span class="">Checkout</span>
+            </xpath>
+            <xpath expr="//a[@href='/shop']" position="replace">                
+                <a role="button" href="/shopify_auth" class="btn btn-secondary mb32 d-none d-xl-inline-block">
+                    <span class="fa fa-chevron-left" />
+                    <span class="">Back</span>
+                </a>
+            </xpath>
+            <xpath expr="//div[@id='o_cart_summary']" position="replace">
+                <div class="col-12 col-xl-4" id="o_cart_summary">
+                    <t t-call="website_sale.short_cart_summary"/>
+                    <div class="d-xl-none mt8">
+                        <a role="button" href="/shopify_auth" class="btn btn-secondary mb32">
+                            <span class="fa fa-chevron-left" />
+                            Continue<span class="d-none d-md-inline"> Shopping</span>
+                        </a>
+                        <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right" href="/shop/checkout?express=1">
+                            <span class="">Checkout</span>
+                            <span class="fa fa-chevron-right" />
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="cart_delivery" inherit_id="website_sale_delivery.cart_delivery">
+            <xpath expr="//tr[@id='order_delivery']/td[1]" position="attributes">
+                <attribute name="class">text-right border-0</attribute>
+            </xpath>
+            <xpath expr="//tr[@id='order_delivery']/td[2]" position="attributes">
+                <attribute name="class">text-xl-right border-0</attribute>
+            </xpath>
+        </template>
+        <template id="cart_summary" inherit_id="website_sale.cart_summary">
+            <xpath expr="//table[@id='cart_products']" position="attributes">
+                <attribute name="class">table table-sm</attribute>
+            </xpath>
+            <xpath expr="//strong[@t-field='line.name_short']" position="replace">
+                <strong>
+                    <t t-esc="'[%s] %s' % (line.product_id.default_code,line.name_short)" />
+                </strong>
+            </xpath>
+        </template>
+        <template id="payment" inherit_id="website_sale.payment">
+            <xpath expr="//t[@t-set='submit_txt']" position="replace">
+                <t t-set="submit_txt">Checkout</t>
+            </xpath>
+        </template>
+        <template id="web_assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/tameson_website/static/src/js/payment.js"></script>
+            </xpath>
+        </template> 
+        <template id="payment_confirmation_status" inherit_id="payment.payment_confirmation_status">
+            <xpath expr="//div[@role='status']" position="attributes">
+                <attribute name="t-if">payment_tx_id and payment_tx_id.state == 'pending' and 'sale' not in payment_tx_id.mapped('sale_order_ids.state')</attribute>
+            </xpath>
+        </template>
+        <template id="sale_order_portal_template" inherit_id="sale.sale_order_portal_template">
+            <xpath expr="//div[@id='sale_order_communication']" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//li[@t-if='sale_order.user_id']" position="after">
+                <li class="list-group-item flex-grow-1">
+                    <a t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}">Send message</a>
+                </li>
             </xpath>
         </template>
     </data>

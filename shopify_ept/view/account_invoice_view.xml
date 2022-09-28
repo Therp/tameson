@@ -15,7 +15,17 @@
                 <field name="partner_id" position="after">
                     <field name='shopify_instance_id' invisible="1"/>
                     <field name="is_refund_in_shopify" invisible="1"/>
+                    <field name="is_shopify_multi_payment" invisible="1"/>
                 </field>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible':['|','|','|',('is_shopify_multi_payment','=',False),('state','!=','posted'),('type','!=','out_invoice'),('invoice_payment_state','not in',['not_paid','in_payment','partial'])]}">
+                        <div>Orders are paid through a variety of
+                            <button name="open_shopify_multi_payment" type="object" string="Payment Methods"/>
+                            We recommend to register payment with different Journal and Amount.
+                        </div>
+                    </div>
+                </xpath>
             </field>
         </record>
         <record id="action_refund_shopify_invoices" model="ir.actions.act_window">
@@ -74,7 +84,8 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.move</field>
             <field name="domain">
-                [('type','=','out_invoice'),('shopify_instance_id','=',active_id),('state','=','posted'), ('invoice_payment_state', '!=', 'paid')]
+                [('type','=','out_invoice'),('shopify_instance_id','=',active_id),('state','=','posted'),
+                ('invoice_payment_state', '!=', 'paid')]
             </field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice',
                 'journal_type': 'sale'}
@@ -86,7 +97,8 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.move</field>
             <field name="domain">
-                [('type','=','out_invoice'),('shopify_instance_id','=',active_id),('state','=','posted'), ('invoice_payment_state', '=', 'paid')]
+                [('type','=','out_invoice'),('shopify_instance_id','=',active_id),('state','=','posted'),
+                ('invoice_payment_state', '=', 'paid')]
             </field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice',
                 'journal_type': 'sale'}

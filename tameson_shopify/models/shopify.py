@@ -154,3 +154,63 @@ class ResCountry(models.Model):
 
     shopify_instance_id = fields.Many2one(comodel_name='shopify.instance.ept',ondelete='restrict',)
     
+class ShopifyProcessImportExport(models.TransientModel):
+    _inherit = 'shopify.process.import.export'
+
+    shopify_operation_t = fields.Selection(
+        [
+            # ('sync_product',
+            #  'Sync New Products - Set To Queue'),
+            # ('sync_product_by_remote_ids',
+            #  'Sync New Products - By Remote Ids'),
+            ('import_orders',
+             'Import Orders'),
+            ('import_orders_by_remote_ids',
+             'Import Orders - By Remote Ids'),
+            ('update_order_status',
+             'Update Order Status'),
+            # ('import_customers',
+            #  'Import Customers'),
+            ('export_stock',
+             'Export Stock'),
+            # ('import_stock',
+            #  'Import Stock'),
+            # ('update_order_status',
+            #  'Update Order Status'),
+            # ('import_payout_report',
+            #  'Import Payout Report'),
+        ],
+        string="Operation",
+        default="import_orders_by_remote_ids")
+
+    @api.onchange('shopify_operation_t')
+    def onchange_shopify_operation_t(self):
+        self.shopify_operation = self.shopify_operation_t
+
+
+
+def nested_set_presentment(data_dict):
+    for k,v in data_dict.items():
+        if k.endswith('_set') and isinstance(v, dict):
+            kk = k.replace('_set', '')
+            if kk in data_dict:
+                data_dict[kk] = v['presentment_money']['amount']
+        elif isinstance(v, dict):
+            nested_set_presentment(v)
+        elif isinstance(v, list):
+            for item in v:
+                if isinstance(item, dict):
+                    nested_set_presentment(item)
+
+
+class ShopifyOrderDataQueueLineEpt(models.Model):
+    _inherit = "shopify.order.data.queue.line.ept"
+
+    def create(self, vals):
+        data = json.loads(vals['order_data'])
+        presentment_cur = data['order']['presentment_currency']
+        if presentment_cur != 'EUR':
+            data['order']['currency'] = presentment_cur
+            nested_set_presentment(data)
+        vals['order_data'] = json.dumps(data)
+        return super(ShopifyOrderDataQueueLineEpt, self).create(vals)

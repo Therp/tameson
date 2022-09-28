@@ -32,3 +32,4 @@ from . import shopify_payout_account_config
 from . import account_bank_statement
 from . import data_queue_mixin_ept
 from . import ir_cron
+from . import order_payment_ept

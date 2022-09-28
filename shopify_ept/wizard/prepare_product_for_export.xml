@@ -39,11 +39,11 @@
                                         <li>
                                             Please do not change in this three columns
                                             'PRODUCT_TEMPLATE_ID', 'PRODUCT_ID' and 'CATEGORY_ID' in
-                                            CSV file.
+                                            CSV/XLSX file.
                                         </li>
                                         <li>
-                                            You can import CSV file here: Shopify => Products
-                                            =>Import Products
+                                            You can import CSV/XLSX file here: Shopify => Products
+                                            => Import Products
                                         </li>
                                     </ol>
                                     <ol attrs="{'invisible':[('export_method','=','csv')]}">
@@ -92,7 +92,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="import_products_from_csv" string="Import Products from CSV"
+                        <button name="import_products_from_file" string="Import Products from CSV/XLSX"
                                 type="object" class="oe_highlight"/>
                         <button string="Cancel" class="oe_highlight" special="cancel"/>
                     </footer>

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Common Connector Library',
-    'version': '13.0.21',
+    'version': '13.0.26',
     'category': 'Sale',
     'license': 'OPL-1',
     'author': 'Emipro Technologies Pvt. Ltd.',

@@ -10,6 +10,9 @@ from odoo.exceptions import UserError, ValidationError
 from werkzeug.exceptions import NotFound
 
 from multipass import Multipass
+import json
+import logging
+_logger = logging.getLogger(__name__)
 
 
 import logging
@@ -22,6 +25,19 @@ class Shopify(Controller):
     def shopify_hosts(self, **kw):
         instances = request.env['shopify.instance.ept'].sudo().search([('shopify_multipass_secret','!=',False)])
         return request.render("tameson_shopify.portal_shopify_hosts", {'instances': instances})
+
+    @route(['/shopify/cart_migrate'], type='http', auth="public", website=True, methods=["POST"], csrf=False)
+    def shopify_cart_migration(self, data, **kw):
+        data = json.loads(data)
+        order = request.website.sale_get_order(update_pricelist=True, force_create=True)
+        order.sudo().order_line.unlink()
+        for item in data.get('items', []):
+            sku = item['sku']
+            qty = item['quantity']
+            pp = request.env['product.product'].sudo().search([('default_code','=ilike',sku)], limit=1).id
+            if pp:
+                order.sudo()._cart_update(product_id=pp, set_qty=qty)
+        return request.redirect('/shop/cart')
 
     @route(['/shopify_auth', '/shopify_auth/<int:instance_id>'], type='http', auth="user", website=True)
     def shopify_auth(self, instance_id=None, shopify_page=None, **kw):
@@ -56,3 +72,15 @@ class Shopify(Controller):
         request.env['shopify.process.import.export'].sudo().with_delay().compare_and_sync(instance_id, bulk)
         _logger.info('ShopifyStock: Return true')
         return True
+
+
+    @route(['/shopify/email_check'], type='json', auth="public", csrf=False, methods=["POST"])
+    def check_email(self, email, **kw):
+        partner = request.env['res.partner'].sudo().search([('email','=',email)], order='parent_id DESC', limit=1)
+        checkout = bool(partner) and (partner.property_payment_term_id.t_invoice_delivered_quantities or \
+            partner.property_product_pricelist.discount_policy == 'without_discount')
+        value = {
+            'email': email,
+            'ODOO-checkout': checkout,
+        }
+        return value

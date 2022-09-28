@@ -106,7 +106,7 @@
                                 <field name="shopify_api_key"
                                        attrs="{'readonly': [('active','=',True)]}"/>
                                 <field name="shopify_password" password="1"
-                                       attrs="{'readonly': [('active','=',True)]}"/>
+                                       attrs="{'readonly': [('active','=',True)]}" string="Access Token"/>
                             </group>
                             <group>
                                 <field name="shopify_shared_secret"
@@ -221,16 +221,25 @@
                                     </field>
                                 </group>
                             </page>
-                            <!--<page string="Webhook" name="Webhook">
-                                <field name="webhook_ids">
-                                    <tree editable="bottom" delete="1"
-                                          decoration-success="state=='active'">
-                                        <field name="webhook_name" required="1"/>
-                                        <field name="webhook_action" required="1"/>
-                                        <field name="state" required="1"/>
-                                    </tree>
-                                </field>
-                            </page>-->
+                            <page string="Default products" name="default_order_product">
+                                <group name="group_default_order_product">
+                                    <group name="default_product">
+                                        <field name="discount_product_id"
+                                               options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                                        <field name="shopify_shipping_product_id" string="Shipping"
+                                               options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                                        <field name="gift_card_product_id" string="Gift Card"
+                                               options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                                    </group>
+                                    <group>
+                                        <field name="tip_product_id"
+                                               options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                                        <field name="refund_adjustment_product_id"
+                                               options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+
+                                    </group>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>

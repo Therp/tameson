@@ -19,7 +19,7 @@
                         </group>
                         <group>
                             <field name='shopify_api_key' required="1"/>
-                            <field name='shopify_password' required="1" password="1"/>
+                            <field name='shopify_password' required="1" password="1" string="Access Token"/>
                             <field name='shopify_shared_secret' required="1"/>
                             <field name='is_image_url' invisible="1"/>
                         </group>

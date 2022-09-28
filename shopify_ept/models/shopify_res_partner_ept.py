@@ -4,6 +4,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class ShopifyResPartnerEpt(models.Model):
     _name = "shopify.res.partner.ept"
     _description = 'Shopify Res Partner Ept'
@@ -19,7 +20,7 @@ class ShopifyResPartnerEpt(models.Model):
         :return: It will return the odoo and Shopify customer object
         """
         shopify_partner = self.search([('shopify_customer_id', '=', customer.get('id')),
-                                   ('shopify_instance_id', '=', instance.id)]) if customer.get(
+                                       ('shopify_instance_id', '=', instance.id)]) if customer.get(
             'id') else False
         if not shopify_partner:
             odoo_partner = self.env['res.partner'].search(
@@ -35,6 +36,7 @@ class ShopifyResPartnerEpt(models.Model):
         :return: True if successfully process complete
         @author: Angel Patel on Date 09/01/2020.
         """
+        partner_obj = self.env["res.partner"]
         if not partner:
             partner_vals = {
                 'name': response.get('first_name') + ' ' + response.get('last_name'),
@@ -44,7 +46,8 @@ class ShopifyResPartnerEpt(models.Model):
                 'type': 'invoice',
                 'company_type': 'company'
             }
-            partner = self.env['res.partner'].create(partner_vals)
+            update_partner_vals = partner_obj.remove_special_chars_from_partner_vals(partner_vals)
+            partner = self.env['res.partner'].create(update_partner_vals)
         if partner:
             shopify_partner_values = {
                 'shopify_customer_id': response.get('id', False),
