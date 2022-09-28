@@ -16,7 +16,8 @@
         'views/stock_level.xml',
         'views/sale.xml',
         'views/templates.xml',
-        'views/shopify.xml'
+        'views/shopify.xml',
+        'data/job_channel_data.xml',
     ],
     'application': False,
 }
