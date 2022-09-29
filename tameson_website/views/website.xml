@@ -232,7 +232,7 @@
                 <attribute name="t-if">False</attribute>
             </xpath>
             <xpath expr="//li[@t-if='sale_order.user_id']" position="after">
-                <li class="list-group-item flex-grow-1">
+                <li class="list-group-item flex-grow-1 border-bottom">
                     <a t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}">Contact us via email</a>
                 </li>
             </xpath>
