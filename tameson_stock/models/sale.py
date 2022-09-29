@@ -16,6 +16,14 @@ from odoo.tools import float_compare
             # })
         # return res
         
+
+def warehouse_data(env, warehouses, product_id):
+    quant = env['stock.quant']
+    data = {}
+    for warehouse in warehouses:
+        data["stock_%d" % warehouse.id] = quant._get_available_quantity(product_id, warehouse.lot_stock_id)
+    return data
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -33,6 +41,14 @@ class SaleOrderLine(models.Model):
         readonly=True
     )
 
+    supplierinfo_name = fields.Char(related='product_id.supplierinfo_name', string='Supplier')
+    stock_1 = fields.Float(compute='_get_wh_stock', string="S-T", digits='Product Unit of Measure')
+    stock_2 = fields.Float(compute='_get_wh_stock', string="S-AA", digits='Product Unit of Measure')
+    
+    def _get_wh_stock(self):
+        warehouses = self.env['stock.warehouse'].search([])
+        for line in self:
+            line.update(warehouse_data(self.env, warehouses, line.product_id))
 
     @api.onchange('product_id')
     def _onchange_product_warehouse(self):
