@@ -120,6 +120,12 @@
             <xpath expr="//th[hasclass('td-price')]" position="replace">
                 <th class="text-center td-price" style="width:25%;">Price excl.</th>
             </xpath>
+            <xpath expr="//th[hasclass('td-img')]" position="replace">
+                <th class="td-img"></th>
+            </xpath>
+            <xpath expr="//th[2]" position="replace">
+                <th>Product</th>
+            </xpath>
             <xpath expr="//div[1]" position="after">
                 <t t-set="orders" t-value="website.get_open_orders()" />
                 <div t-if="orders and not website_sale_order or not website_sale_order.website_order_line">
