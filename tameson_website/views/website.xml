@@ -233,7 +233,7 @@
             </xpath>
             <xpath expr="//li[@t-if='sale_order.user_id']" position="after">
                 <li class="list-group-item flex-grow-1">
-                    <a t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}">Send message</a>
+                    <a t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}">Contact us via email</a>
                 </li>
             </xpath>
         </template>
