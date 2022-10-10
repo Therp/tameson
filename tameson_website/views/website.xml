@@ -161,16 +161,21 @@
             </xpath>
         </template>
         <template id="short_cart_summary" inherit_id="website_sale.short_cart_summary" >
-            <xpath expr="//a[@href='/shop/checkout?express=1'][1]/span[1]" position="replace">
-                <span class="">Checkout</span>
-            </xpath>
-            <xpath expr="//a[@href='/shop/checkout?express=1']" position="attributes">
+            <xpath expr="//a[@href='/shop/checkout?express=1'][1]" position="replace">
+                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <span>Checkout</span>
+                </a>
+           </xpath>
+           <xpath expr="//a[@href='/shop/checkout?express=1']" position="attributes">
                 <attribute name="class">btn btn-primary float-right d-none d-xl-inline-block</attribute>
             </xpath>
         </template>
         <template id="cart" inherit_id="website_sale.cart" >
-            <xpath expr="//a[@href='/shop/checkout?express=1']/span[1]" position="replace">
-                <span class="">Checkout</span>
+            <xpath expr="//a[@href='/shop/checkout?express=1'][1]" position="replace">
+                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <span class="">Checkout</span>
+                    <span class="fa fa-chevron-right"/>
+                </a>
             </xpath>
             <xpath expr="//a[@href='/shop']" position="replace">                
                 <a role="button" href="/shopify_auth" class="btn btn-secondary mb32 d-none d-xl-inline-block">
