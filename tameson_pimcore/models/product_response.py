@@ -340,7 +340,7 @@ class PimcoreProductResponseLine(models.Model):
         add_translation(self.env, product, "fr_FR", self.name, self.name_fr)
         add_translation(self.env, product, "de_DE", self.name, self.name_de)
         add_translation(self.env, product, "es_ES", self.name, self.name_es)
-        add_pricelist_item(Eur, product, self.eur)
+        # add_pricelist_item(Eur, product, self.eur)
         add_pricelist_item(Gbp, product, self.gbp)
         add_pricelist_item(Usd, product, self.usd)
         self.write(
