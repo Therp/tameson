@@ -68,6 +68,16 @@
                 </button>
             </xpath>
         </field>
-        
+    </record>
+    
+    <record id="product_pricelist_view" model="ir.ui.view">
+        <field name="name">product_pricelist_view</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view" />
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="currency_factor" />
+            </field>
+        </field>
     </record>
 </odoo>
