@@ -287,6 +287,8 @@ class PimcoreProductResponseLine(models.Model):
     brand_name = fields.Char()
     manufacturer_name = fields.Char()
     mpn = fields.Char()
+    pack_model = fields.Char()
+    pack_factor = fields.Float()
 
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env["product.category"]
@@ -447,6 +449,8 @@ class PimcoreProductResponseLine(models.Model):
             "published": self.published,
             "full_path": self.full_path,
             "category_path": self.categories,
+            "pack_model": self.pack_model,
+            "pack_factor": self.pack_factor,
         }
 
     def create_bom(self, bom_type="phantom"):
