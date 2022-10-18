@@ -91,7 +91,7 @@
                 <h3>Accounts</h3>
                 <div class="o_portal_docs list-group">
                     <t t-call="portal.portal_docs_entry">
-                        <t t-set="title" t-value="'Main Account Details'" />
+                        <t t-set="title">Main Account Details</t>
                         <t t-set="url" t-value="'/my/account'"/>
                     </t>
                     <t t-set="partner" t-value="user_id.partner_id" />
@@ -119,6 +119,12 @@
             </xpath>
             <xpath expr="//th[hasclass('td-price')]" position="replace">
                 <th class="text-center td-price" style="width:25%;">Price excl.</th>
+            </xpath>
+            <xpath expr="//th[hasclass('td-img')]" position="replace">
+                <th class="td-img"></th>
+            </xpath>
+            <xpath expr="//th[2]" position="replace">
+                <th>Product</th>
             </xpath>
             <xpath expr="//div[1]" position="after">
                 <t t-set="orders" t-value="website.get_open_orders()" />
@@ -155,16 +161,21 @@
             </xpath>
         </template>
         <template id="short_cart_summary" inherit_id="website_sale.short_cart_summary" >
-            <xpath expr="//a[@href='/shop/checkout?express=1'][1]/span[1]" position="replace">
-                <span class="">Checkout</span>
-            </xpath>
-            <xpath expr="//a[@href='/shop/checkout?express=1']" position="attributes">
+            <xpath expr="//a[@href='/shop/checkout?express=1'][1]" position="replace">
+                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <span>Checkout</span>
+                </a>
+           </xpath>
+           <xpath expr="//a[@href='/shop/checkout?express=1']" position="attributes">
                 <attribute name="class">btn btn-primary float-right d-none d-xl-inline-block</attribute>
             </xpath>
         </template>
         <template id="cart" inherit_id="website_sale.cart" >
-            <xpath expr="//a[@href='/shop/checkout?express=1']/span[1]" position="replace">
-                <span class="">Checkout</span>
+            <xpath expr="//a[@href='/shop/checkout?express=1'][1]" position="replace">
+                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <span class="">Checkout</span>
+                    <span class="fa fa-chevron-right"/>
+                </a>
             </xpath>
             <xpath expr="//a[@href='/shop']" position="replace">                
                 <a role="button" href="/shopify_auth" class="btn btn-secondary mb32 d-none d-xl-inline-block">
@@ -226,8 +237,8 @@
                 <attribute name="t-if">False</attribute>
             </xpath>
             <xpath expr="//li[@t-if='sale_order.user_id']" position="after">
-                <li class="list-group-item flex-grow-1">
-                    <a t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}">Send message</a>
+                <li class="list-group-item flex-grow-1 border-bottom">
+                    <a t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}">Contact us via email</a>
                 </li>
             </xpath>
         </template>

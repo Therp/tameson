@@ -7,7 +7,7 @@
                 <h3>Other</h3>
                 <div class="o_portal_docs list-group">
                     <t t-call="portal.portal_docs_entry">
-                        <t t-set="title" t-value="'Back to webshop'" />
+                        <t t-set="title">Shops</t>
                         <t t-set="url" t-value="'/shopify_hosts'"/>
                     </t>
                 </div>
@@ -18,7 +18,7 @@
                 <t t-if="instances" t-call="portal.portal_table">
                     <thead>
                         <tr class="active">
-                            <th>Tameson Shops</th>
+                            <th>Shops</th>
                         </tr>
                     </thead>
                     <t t-foreach="instances" t-as="shopify">
