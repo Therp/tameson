@@ -58,6 +58,8 @@ class ProductTemplate(models.Model):
     imperial = fields.Boolean(string=_('Imperial'))
     published = fields.Boolean(string=_('Published'), default=True)
     non_returnable = fields.Boolean(string=_('Non Returnable'))
+    pack_model = fields.Char()
+    pack_factor = fields.Float()
 ## End
 
     def cron_compute_all_bom_price(self):
