@@ -21,7 +21,11 @@ def warehouse_data(env, warehouses, product_id):
     quant = env['stock.quant']
     data = {}
     for warehouse in warehouses:
-        data["stock_%d" % warehouse.id] = quant._get_available_quantity(product_id, warehouse.lot_stock_id)
+        if product_id:
+            qty = quant._get_available_quantity(product_id, warehouse.lot_stock_id)
+        else:
+            qty = 0
+        data["stock_%d" % warehouse.id] = qty
     return data
 
 class SaleOrderLine(models.Model):
