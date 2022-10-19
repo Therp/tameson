@@ -289,6 +289,7 @@ class PimcoreProductResponseLine(models.Model):
     mpn = fields.Char()
     pack_model = fields.Char()
     pack_factor = fields.Float()
+    sticker_barcode = fields.Char()
 
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env["product.category"]
@@ -451,6 +452,7 @@ class PimcoreProductResponseLine(models.Model):
             "category_path": self.categories,
             "pack_model": self.pack_model,
             "pack_factor": self.pack_factor,
+            # "sticker_barcode": self.sticker_barcode,
         }
 
     def create_bom(self, bom_type="phantom"):

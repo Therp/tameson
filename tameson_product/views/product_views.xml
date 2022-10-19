@@ -20,6 +20,7 @@
                             <field name="t_use_up" />
                             <field name="t_use_up_replacement_sku" />
                             <field name="t_aa_pack_size" />
+                            <field name="sticker_barcode" />
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />
@@ -63,6 +64,7 @@
                             <field name="published" />
                             <field name="t_use_up" />
                             <field name="t_use_up_replacement_sku" />
+                            <field name="sticker_barcode" />
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />
