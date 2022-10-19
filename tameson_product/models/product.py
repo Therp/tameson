@@ -60,6 +60,7 @@ class ProductTemplate(models.Model):
     non_returnable = fields.Boolean(string=_('Non Returnable'))
     pack_model = fields.Char()
     pack_factor = fields.Float()
+    sticker_barcode = fields.Char()
 ## End
 
     def cron_compute_all_bom_price(self):
