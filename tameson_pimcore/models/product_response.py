@@ -452,7 +452,7 @@ class PimcoreProductResponseLine(models.Model):
             "category_path": self.categories,
             "pack_model": self.pack_model,
             "pack_factor": self.pack_factor,
-            "sticker_barcode": self.sticker_barcode,
+            # "sticker_barcode": self.sticker_barcode,
         }
 
     def create_bom(self, bom_type="phantom"):
