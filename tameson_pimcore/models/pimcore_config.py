@@ -93,7 +93,8 @@ product_nodes = {
         "getter": single_field_m2many,
     },
     "pack_model": {"field": "PackModel", "getter": static_getter},
-    "pack_factor": {"field": "PackFactor", "getter": static_getter},
+    "pack_factor": {"field": "PackFactor", "getter": float_getter},
+    "sticker_barcode": {"field": "StickerBarcode", "getter": static_getter},
 }
 
 
