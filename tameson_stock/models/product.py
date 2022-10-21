@@ -221,7 +221,9 @@ class ProductTemplate(models.Model):
         if operator not in ('!=', '='):
             return []
         self._cr.execute("""
-        SELECT product_id FROM stock_warehouse_orderpoint
+        SELECT pp.product_tmpl_id FROM stock_warehouse_orderpoint swo
+        LEFT JOIN product_product pp on pp.id = swo.product_id
+        WHERE swo.product_min_qty != 0
         """)
         product_ids = [row[0] for row in self._cr.fetchall()]
         rhs = (operator == '=' and operand) or (
@@ -233,11 +235,12 @@ class ProductTemplate(models.Model):
     def _compute_has_reordering_rules(self):
         self._cr.execute("""
         SELECT product_id, true FROM stock_warehouse_orderpoint
-            WHERE product_id in %s
-        """, [self.ids])
+            WHERE product_id in %s 
+            AND swo.product_min_qty != 0
+        """, self.mapped('product_variant_ids').ids)
         have_rules = dict(self._cr.fetchall())
         for product in self:
-            product.rr_has_reordering_rules = have_rules.get(product.id, False)
+            product.rr_has_reordering_rules = have_rules.get(product.product_variant_id.id, False)
 
     def _minimal_qty_available(self, field_names=None, arg=False):
         for product in self:
