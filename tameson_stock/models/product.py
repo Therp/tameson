@@ -221,7 +221,8 @@ class ProductTemplate(models.Model):
         if operator not in ('!=', '='):
             return []
         self._cr.execute("""
-        SELECT product_id FROM stock_warehouse_orderpoint
+        SELECT pp.product_tmpl_id FROM stock_warehouse_orderpoint swo
+        Left join product_product pp on pp.id == swo.product_id
         """)
         product_ids = [row[0] for row in self._cr.fetchall()]
         rhs = (operator == '=' and operand) or (
