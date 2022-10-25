@@ -42,6 +42,20 @@ class ProductTemplate(models.Model):
         inverse_name="product_tmpl_id",
     )
 
+    supplierinfo_list_price = fields.Float(
+        string="Vendor List Price",
+        compute='_compute_supplier_list_price',
+        store=True,
+    )
+
+    @api.depends('seller_ids.name', 'seller_ids.list_price_eur')
+    def _compute_supplier_list_price(self):
+        for product in self:
+            first_supplier = product.seller_ids.sorted()[:1]
+            if first_supplier:
+                product.supplierinfo_list_price = first_supplier.list_price_eur
+
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super(ProductTemplate, self).create(vals_list)
