@@ -221,6 +221,7 @@ class PimcoreConfig(models.Model):
             ]
         )
         result = pim_request.execute(product_query.get_query(params % (self.limit, "ASC")))
+        result = product_query.parse_results(result)
         lines_ids = []
         for node in result:
             data = node.get("node")
