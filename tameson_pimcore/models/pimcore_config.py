@@ -229,10 +229,10 @@ class PimcoreConfig(models.Model):
                 val = {
                     key: product_nodes[key]["getter"](val) for key, val in data.items()
                 }
+                val['pimcore_id'] = res.id
+                lines_ids.append(val)
             except Exception as e:
                 _logger.warning(str(e))
                 _logger.warning(data)
                 continue
-            val['pimcore_id'] = res.id
-            lines_ids.append(val)
         self.env['pimcore.product.response.line'].create(lines_ids)
