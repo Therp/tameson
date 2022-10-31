@@ -291,6 +291,10 @@ class PimcoreProductResponseLine(models.Model):
     pack_factor = fields.Float()
     sticker_barcode = fields.Char()
 
+    @api.model_create_multi
+    def create(self, vals):
+        return super(PimcoreProductResponseLine, self).create(vals)
+
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env["product.category"]
 
@@ -511,3 +515,5 @@ class PimcoreProductResponseLine(models.Model):
             "price": self.supplier_price,
             "currency_id": CURRENCY_DICT[self.supplier_price_currency],
         }
+    
+    
