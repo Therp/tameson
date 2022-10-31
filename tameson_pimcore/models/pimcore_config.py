@@ -196,3 +196,41 @@ class PimcoreConfig(models.Model):
                 {"config_id": self.id, "type": "new"}
             )
             response_obj.write({"line_ids": lines_ids})
+
+    def action_fetch_products_jobs(self):
+        self.ensure_one()
+        response_obj = self.env["pimcore.product.response"].create(
+            {"config_id": self.id, "type": "full"}
+        )
+        pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
+        query = GqlQueryBuilder("getProductListing", "edges", {"id": {"field": "id", "getter": static_getter}})
+        params = "first: %d, sortBy: \"o_id\",  sortOrder: \"%s\""
+        first_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "ASC"))))[0]
+        last_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "DESC"))))[0]
+        first_id = int(first_id['node']['id'])
+        last_id = int(last_id['node']['id'])
+        for pos in range(first_id, last_id, self.limit):
+            self.with_delay().request_products_data(pos, response_obj)
+
+    def request_products_data(self, pos, res):
+        params = "first: %d, sortBy: \"o_id\",  sortOrder: \"%s\""
+        pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
+        product_query = GqlQueryBuilder(
+            "getProductListing", "edges", product_nodes, filters=[
+                '\\"o_id\\" : {\\"$gt\\": \\"%d\\"}' % pos
+            ]
+        )
+        result = pim_request.execute(product_query.get_query(params % (self.limit, "ASC")))
+        lines_ids = []
+        for node in result:
+            data = node.get("node")
+            try:
+                val = {
+                    key: product_nodes[key]["getter"](val) for key, val in data.items()
+                }
+            except Exception as e:
+                _logger.warning(str(e))
+                _logger.warning(data)
+                continue
+            lines_ids.append((0, 0, val))
+        res.write({"line_ids": lines_ids})
