@@ -233,5 +233,6 @@ class PimcoreConfig(models.Model):
                 _logger.warning(str(e))
                 _logger.warning(data)
                 continue
-            lines_ids.append((0, 0, val))
-        res.write({"line_ids": lines_ids})
+            val['pimcore_id'] = res.id
+            lines_ids.append(val)
+        self.env['pimcore.product.response.line'].create(lines_ids)
