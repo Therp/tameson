@@ -205,10 +205,13 @@ class PimcoreConfig(models.Model):
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         query = GqlQueryBuilder("getProductListing", "edges", {"id": {"field": "id", "getter": static_getter}})
         params = "first: %d, sortBy: \"o_id\",  sortOrder: \"%s\""
-        first_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "ASC"))))[0]
-        last_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "DESC"))))[0]
-        first_id = int(first_id['node']['id'])
-        last_id = int(last_id['node']['id'])
+        try:
+            first_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "ASC"))))[0]
+            last_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "DESC"))))[0]
+            first_id = int(first_id['node']['id'])
+            last_id = int(last_id['node']['id'])
+        except Exception as e:
+            raise UserError("No valid first, last product ID from pimcore.")
         for pos in range(first_id, last_id, self.limit):
             self.with_delay().request_products_data(pos, response_obj)
 
