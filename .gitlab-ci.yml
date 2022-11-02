@@ -1,0 +1,67 @@
+stages:
+    - format
+    - testing
+precommit:
+  stage: format
+  before_script:
+    - |
+      # ALL PATHS ARE ABSOLUTE
+      # Install pyenv
+      CFLAGS="-O2"
+      echo "Project Path slug $CI_PROJECT_PATH_SLUG"
+      echo "CI JOB ID: $CI_JOB_ID"
+      WORKDIR=$HOME/pipelines/$CI_PROJECT_PATH_SLUG
+      echo "Work directory: $WORKDIR"
+      if [ ! -d $HOME/pipelines/$CI_PROJECT_PATH_SLUG ]; then
+            mkdir -p $HOME/pipelines/$CI_PROJECT_PATH_SLUG
+      fi
+      PYENV_ROOT=$WORKDIR/.pyenv
+      if [ ! -d $PYENV_ROOT ]; then
+        /bin/echo "INFO: Clone https://github.com/pyenv/pyenv in $PYENV_ROOT"
+        /usr/bin/git clone https://github.com/pyenv/pyenv $PYENV_ROOT
+      else
+        /bin/echo "INFO: $WORKDIR/.pyenv exist! Upgrading to latest..."
+        cd $PYENV_ROOT && /usr/bin/git checkout master && /usr/bin/git pull origin master && cd - || { echo 'Failed to upgrade pyenv'; exit 1; }
+      fi
+     
+      # USE THE TAG, without 'v'  TO DETERMINE THE VERSION
+      echo "INSTALLING PYENV" 
+      echo 'setting paths for pyenv'
+      PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+      PYENV=$PYENV_ROOT/bin/pyenv
+      eval "$($PYENV init -)"
+      echo "INSTALLED PYENV VERSION" 
+      $PYENV -v
+      which pyenv
+      echo setting python version
+      PYVERSION=3.8.9
+      echo "init pyenv"
+      echo "installing python version $PYVERSION"
+      $PYENV install -s $PYVERSION
+      $PYENV local $PYVERSION
+      # Install virtualenv
+      # Virtual env does not have subversion we explicitly give it here 
+      VIRTUALENV_VERSION=3.9
+      VIRTUALENV=$PYENV_ROOT/bin/virtualenv.pyz
+      if [ ! -d $WORKDIR/.venv ]; then
+        /bin/echo "INFO: Download $VIRTUALENV"
+        /usr/bin/wget -nv --no-check-certificate https://bootstrap.pypa.io/virtualenv/$VIRTUALENV_VERSION/virtualenv.pyz -O $VIRTUALENV || { echo 'Download of virtualenv package failed' ; exit 1; }
+        /bin/echo "INFO: Build virtual environment in $WORKDIR/.venv"
+        python $VIRTUALENV --python=$PYVERSION $WORKDIR/.venv || { echo 'Virtualenv creation failed' ; exit 1; }
+      else
+        /bin/echo "INFO: $WORKDIR/.venv exist!"
+      fi
+      echo "activating $WORKDIR/.venv virtualenvironment for this job"
+      . $WORKDIR/.venv/bin/activate
+      PYVERSION=$(python -V 2>&1 |sed -rn 's/Python (.*)\..*/\1/p')
+      echo "Python version is $PYVERSION,  interpreter is $(which python) , $(python -V) "
+      # Install pre-commit
+      pip install pre-commit
+      which pre-commit
+      pre-commit clean
+  script:
+    - |
+      source $WORKDIR/.venv/bin/activate
+      pre-commit run --all-files 
+  only:
+    - merge_requests
