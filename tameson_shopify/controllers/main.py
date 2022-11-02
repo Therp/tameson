@@ -74,7 +74,8 @@ class Shopify(Controller):
         return True
 
 
-    @route(['/shopify/email_check'], type='json', auth="public", csrf=False, methods=["POST"])
+    @route(['/shopify/email_check'], type='json', auth="public", 
+            csrf=False, methods=["POST", "OPTIONS"], cors="*")
     def check_email(self, email, **kw):
         partner = request.env['res.partner'].sudo().search([('email','=',email)], order='parent_id DESC', limit=1)
         checkout = bool(partner) and (partner.property_payment_term_id.t_invoice_delivered_quantities or \
