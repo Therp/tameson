@@ -23,3 +23,15 @@ class IrMailServer(models.Model):
         return super(IrMailServer, self).build_email(email_from, email_to, subject, body, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to,
                                                      attachments=attachments, message_id=message_id, references=references, object_id=object_id, subtype=subtype, headers=headers,
                                                      body_alternative=body_alternative, subtype_alternative=subtype_alternative)
+
+
+class MailActivity(models.Model):
+    _inherit = 'mail.activity'
+
+    @api.model
+    def create(self, values):
+        user_id = self.env['res.users'].browse(values['user_id'])
+        res_model = self.env['ir.model'].browse(values['res_model_id']).model
+        res_id = self.env[res_model].browse(values['res_id'])
+        res_id.sudo().message_subscribe(partner_ids=user_id.partner_id.ids)
+        return super(MailActivity, self).create(values)
