@@ -213,7 +213,7 @@ class PimcoreConfig(models.Model):
             self.with_delay().request_products_data(pos, response_obj)
 
     def request_products_data(self, pos, res):
-        params = "first: %d, sortBy: \"o_id\",  sortOrder: \"%s\""
+        params = "sortBy: \"o_id\",  sortOrder: \"%s\""
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder(
             "getProductListing", "edges", product_nodes, filters=[
