@@ -121,7 +121,7 @@ class PimcoreConfig(models.Model):
 
     def action_cron_fetch_products(self):
         for record in self.search([]):
-            record.action_fetch_products()
+            record.action_fetch_products_jobs()
 
     def action_fetch_products(self):
         self.ensure_one()
