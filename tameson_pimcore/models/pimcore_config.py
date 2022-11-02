@@ -213,14 +213,14 @@ class PimcoreConfig(models.Model):
             self.with_delay().request_products_data(pos, response_obj)
 
     def request_products_data(self, pos, res):
-        params = "sortBy: \"o_id\",  sortOrder: \"%s\""
+        params = "sortBy: \"o_id\",  sortOrder: \"ASC\""
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder(
             "getProductListing", "edges", product_nodes, filters=[
                 '\\"$and\\": [{\\"o_id\\": {\\"$gt\\": \\"%d\\"}}, {\\"o_id\\": {\\"$lt\\": \\"%d\\"}}]' % (pos, pos+self.limit)
             ]
         )
-        result = pim_request.execute(product_query.get_query(params % (self.limit, "ASC")))
+        result = pim_request.execute(product_query.get_query(params))
         result = product_query.parse_results(result)
         lines_ids = []
         for node in result:
