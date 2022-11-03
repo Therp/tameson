@@ -26,7 +26,7 @@
             <field name="arch" type="xml">
                 <form string="model_form" create="true" delete="true" edit="true">
                     <header>
-                        <button name="action_fetch_products" string="Pull" type="object" class="oe_highlight"/>
+                        <button name="action_fetch_products_jobs" string="Pull" type="object" class="oe_highlight"/>
                         <button name="action_fetch_new" string="Pull new" type="object" class="oe_highlight"/>
                     </header>
                     <sheet>

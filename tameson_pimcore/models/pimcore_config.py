@@ -121,7 +121,7 @@ class PimcoreConfig(models.Model):
 
     def action_cron_fetch_products(self):
         for record in self.search([]):
-            record.action_fetch_products()
+            record.action_fetch_products_jobs()
 
     def action_fetch_products(self):
         self.ensure_one()
@@ -196,3 +196,46 @@ class PimcoreConfig(models.Model):
                 {"config_id": self.id, "type": "new"}
             )
             response_obj.write({"line_ids": lines_ids})
+
+    def action_fetch_products_jobs(self):
+        self.ensure_one()
+        response_obj = self.env["pimcore.product.response"].create(
+            {"config_id": self.id, "type": "full"}
+        )
+        pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
+        query = GqlQueryBuilder("getProductListing", "edges", {"id": {"field": "id", "getter": static_getter}})
+        params = "first: %d, sortBy: \"o_id\",  sortOrder: \"%s\""
+        try:
+            first_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "ASC"))))[0]
+            last_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "DESC"))))[0]
+            first_id = int(first_id['node']['id'])
+            last_id = int(last_id['node']['id'])
+        except Exception as e:
+            raise UserError("No valid first, last product ID from pimcore.")
+        for pos in range(first_id, last_id, self.limit):
+            self.with_delay().request_products_data(pos, response_obj)
+
+    def request_products_data(self, pos, res):
+        params = "sortBy: \"o_id\",  sortOrder: \"ASC\""
+        pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
+        product_query = GqlQueryBuilder(
+            "getProductListing", "edges", product_nodes, filters=[
+                '\\"$and\\": [{\\"o_id\\": {\\"$gt\\": \\"%d\\"}}, {\\"o_id\\": {\\"$lt\\": \\"%d\\"}}]' % (pos, pos+self.limit)
+            ]
+        )
+        result = pim_request.execute(product_query.get_query(params))
+        result = product_query.parse_results(result)
+        lines_ids = []
+        for node in result:
+            data = node.get("node")
+            try:
+                val = {
+                    key: product_nodes[key]["getter"](val) for key, val in data.items()
+                }
+                val['response_id'] = res.id
+                lines_ids.append(val)
+            except Exception as e:
+                _logger.warning(str(e))
+                _logger.warning(data)
+                continue
+        self.env['pimcore.product.response.line'].create(lines_ids)
