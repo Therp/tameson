@@ -50,5 +50,16 @@
             <field name="state">code</field>
             <field name="code">model.process_channel_payment()</field>
         </record>
+        <record forcecreate="True" id="ir_cron_currency_pricelist_prices" model="ir.cron">
+            <field name="name">Currency Pricelist Price Set</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="product.model_product_pricelist" />
+            <field name="state">code</field>
+            <field name="code">model.set_currency_pricelist_prices()</field>
+        </record>
     </data>
 </odoo>
