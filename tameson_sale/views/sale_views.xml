@@ -76,7 +76,9 @@
         <field name="inherit_id" ref="product.product_pricelist_view" />
         <field name="arch" type="xml">
             <field name="currency_id" position="after">
-                <field name="currency_factor" />
+                <field name="is_currency_factor" />
+                <field name="currency_factor" attrs="{'invisible': [('is_currency_factor','=',False)] }"/>
+                <field name="is_usd_extra" widget="boolean_toggle" attrs="{'invisible': [('is_currency_factor','=',False)] }"/>
             </field>
         </field>
     </record>

@@ -23,6 +23,7 @@
                             <field name="sticker_barcode" />
                             <field name="pack_model" />
                             <field name="pack_factor" />
+                            <field name="usd_extra_price_factor" />
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />
@@ -69,6 +70,7 @@
                             <field name="sticker_barcode" />
                             <field name="pack_model" />
                             <field name="pack_factor" />
+                            <field name="usd_extra_price_factor" />
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />

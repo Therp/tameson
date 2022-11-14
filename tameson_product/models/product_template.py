@@ -69,6 +69,7 @@ class ProductTemplateInherit(models.Model):
     non_returnable = fields.Boolean(string=_("Non Returnable"))
     pack_model = fields.Char()
     pack_factor = fields.Float()
+    usd_extra_price_factor = fields.Float(default=1.0)
     sticker_barcode = fields.Char()
     ## End
 
