@@ -24,6 +24,7 @@
                             <field name="pack_model" />
                             <field name="pack_factor" />
                             <field name="usd_extra_price_factor" />
+                            <field name="additional_cost" />
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />
@@ -75,6 +76,7 @@
                             <field name="pack_model" />
                             <field name="pack_factor" />
                             <field name="usd_extra_price_factor" />
+                            <field name="additional_cost" />
                         </group>
                         <group name="description">
                             <field name="t_product_description_short" />

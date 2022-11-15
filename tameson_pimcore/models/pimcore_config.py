@@ -100,6 +100,7 @@ product_nodes = {
     "supplier_series": {"field": "SupplierSeries", "getter": static_getter},
     "supplier_shipping_type": {"field": "SupplierShippingType", "getter": static_getter},
     "supplier_package_qty": {"field": "SupplierPackageQty", "getter": static_getter},
+    "additional_cost": {"field": "AdditionalCost", "getter": static_getter},
 }
 
 
