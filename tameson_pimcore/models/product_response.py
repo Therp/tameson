@@ -295,6 +295,7 @@ class PimcoreProductResponseLine(models.Model):
     supplier_series = fields.Char()
     supplier_shipping_type = fields.Char()
     supplier_package_qty = fields.Integer()
+    additional_cost = fields.Char()
 
     @api.model_create_multi
     def create(self, vals):
@@ -466,6 +467,7 @@ class PimcoreProductResponseLine(models.Model):
             "min_qty_order": self.min_qty_order,
             "supplier_series": self.supplier_series,
             "supplier_shipping_type": self.supplier_shipping_type,
+            "additional_cost": self.additional_cost,
         }
 
     def create_bom(self, bom_type="phantom"):
