@@ -20,7 +20,7 @@ Tameson price history
     'category': 'Uncategorized',
 
     'depends': [
-        'product',
+        'tameson_product',
     ],
     'external_dependencies': {
         'python': [

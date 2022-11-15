@@ -94,7 +94,12 @@ product_nodes = {
     },
     "pack_model": {"field": "PackModel", "getter": static_getter},
     "pack_factor": {"field": "PackFactor", "getter": static_getter},
-    # "sticker_barcode": {"field": "StickerBarcode", "getter": static_getter},
+    "sticker_barcode": {"field": "StickerBarcode", "getter": static_getter},
+    "max_qty_order": {"field": "maximumQuantityToOrder", "getter": static_getter},
+    "min_qty_order": {"field": "minimumQuantityToOrder", "getter": static_getter},
+    "supplier_series": {"field": "SupplierSeries", "getter": static_getter},
+    "supplier_shipping_type": {"field": "SupplierShippingType", "getter": static_getter},
+    "supplier_package_qty": {"field": "SupplierPackageQty", "getter": static_getter},
 }
 
 

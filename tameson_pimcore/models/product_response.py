@@ -290,6 +290,11 @@ class PimcoreProductResponseLine(models.Model):
     pack_model = fields.Char()
     pack_factor = fields.Float()
     sticker_barcode = fields.Char()
+    max_qty_order = fields.Integer()
+    min_qty_order = fields.Integer()
+    supplier_series = fields.Char()
+    supplier_shipping_type = fields.Char()
+    supplier_package_qty = fields.Integer()
 
     @api.model_create_multi
     def create(self, vals):
@@ -456,7 +461,11 @@ class PimcoreProductResponseLine(models.Model):
             "category_path": self.categories,
             "pack_model": self.pack_model,
             "pack_factor": self.pack_factor,
-            # "sticker_barcode": self.sticker_barcode,
+            "sticker_barcode": self.sticker_barcode,
+            "max_qty_order": self.max_qty_order,
+            "min_qty_order": self.min_qty_order,
+            "supplier_series": self.supplier_series,
+            "supplier_shipping_type": self.supplier_shipping_type,
         }
 
     def create_bom(self, bom_type="phantom"):
@@ -511,7 +520,7 @@ class PimcoreProductResponseLine(models.Model):
             "name": vendor.id,
             "product_code": self.supplier_part_number,
             "delay": self.supplier_lead_time,
-            "min_qty": 1,
+            "min_qty": self.supplier_package_qty,
             "price": self.supplier_price,
             "currency_id": CURRENCY_DICT[self.supplier_price_currency],
         }
