@@ -75,6 +75,7 @@ class ProductTemplateInherit(models.Model):
     min_qty_order = fields.Integer()
     supplier_series = fields.Char()
     supplier_shipping_type = fields.Char()
+    additional_cost = fields.Char()
     ## End
 
     def cron_compute_all_bom_price(self):
