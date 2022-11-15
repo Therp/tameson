@@ -88,6 +88,10 @@
                             <field name="non_returnable" />
                             <field name="full_path" />
                             <field name="category_path" />
+                            <field name="max_qty_order" />
+                            <field name="min_qty_order" />
+                            <field name="supplier_series" />
+                            <field name="supplier_shipping_type" />
                         </group>
                     </group>
                 </page>
