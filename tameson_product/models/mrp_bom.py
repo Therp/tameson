@@ -39,7 +39,7 @@ class MrpBom(models.Model):
                     'max': l.product_id.max_qty_order
                 })
             delay = max([0 if not float_is_zero(item['stock'], precision_digits=1) else item['delay'] for item in data])
-            max_qty_order = max([get_qty(item, delay) for item in data])
+            max_qty_order = min([get_qty(item, delay) for item in data])
 
             bom.product_tmpl_id.write({
                 't_customer_lead_time': delay + 1,
