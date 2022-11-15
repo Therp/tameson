@@ -71,6 +71,10 @@ class ProductTemplateInherit(models.Model):
     pack_factor = fields.Float()
     usd_extra_price_factor = fields.Float(default=1.0)
     sticker_barcode = fields.Char()
+    max_qty_order = fields.Integer()
+    min_qty_order = fields.Integer()
+    supplier_series = fields.Char()
+    supplier_shipping_type = fields.Char()
     ## End
 
     def cron_compute_all_bom_price(self):

@@ -66,12 +66,12 @@ class ProductSupplierinfo(models.Model):
 
     @api.model
     def create(self, vals_list):
-        records = super(ProductSupplierinfo, self).create(vals_list)
+        records = super().create(vals_list)
         records.record_price_history()
         return records
 
     def write(self, vals):
-        res = super(ProductSupplierinfo, self).write(vals)
+        res = super().write(vals)
         if "price" in vals or "name" in vals or "list_price_eur" in vals:
             self.record_price_history()
         return res
