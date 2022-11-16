@@ -40,3 +40,11 @@ class ProductTemplate(models.Model):
         if seller.name.name == 'Burkert Benelux B.V.': ## 24990 for burkert
             url = 'https://www.burkert.nl/en/products/%s' % seller.product_code
         return url
+
+
+class ProductTemplate(models.Model):
+    _inherit = "product.product"
+
+    def action_open_vendor_sku(self):
+        self.ensure_one()
+        return self.product_tmpl_id.action_open_vendor_sku()
