@@ -20,6 +20,7 @@
         'tameson_base',
         'tameson_product',
         'sale_crm',
+        'delivery',
     ],
     'data': [
         'data/group.xml',
