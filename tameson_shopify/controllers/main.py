@@ -8,6 +8,7 @@ import json
 from odoo.http import route, request, Controller, Response
 from odoo.exceptions import UserError, ValidationError
 from werkzeug.exceptions import NotFound
+from urllib.parse import urlparse
 
 from multipass import Multipass
 import json
@@ -40,24 +41,35 @@ class Shopify(Controller):
         return request.redirect('/shop/cart')
 
     @route(['/shopify_auth', '/shopify_auth/<int:instance_id>'], type='http', auth="user", website=True)
-    def shopify_auth(self, instance_id=None, shopify_page=None, **kw):
-        instance = request.env['shopify.instance.ept'].sudo().browse(instance_id)
+    def shopify_auth(self, instance_id=None, **kw):
+        instance = request.env['shopify.instance.ept'].sudo()
+        shopify_page = request.session.get('shopify_page', False)
+        if shopify_page:
+            request.session['shopify_page'] = False
+            url_obj = urlparse(shopify_page)
+            hostname = url_obj.hostname
+            if hostname:
+                instance = instance.search([('shopify_host','ilike',hostname),
+                    ('shopify_multipass_secret','!=',False)], limit=1)
+                if 'checkouts' in shopify_page:
+                    shopify_page = '/cart'
+            else:
+                shopify_page = False
+        if not instance:
+            instance = instance.browse(instance_id)
         if not instance:
             instance = request.env.user.partner_id.country_id.shopify_instance_id
         if not instance:
-            instance = request.env["ir.config_parameter"].sudo().get_param("default.shopify.instance", False)
-            if instance:
-                instance = request.env["shopify.instance.ept"].sudo().browse(int(instance))
+            instance_id = request.env["ir.config_parameter"].sudo().get_param("default.shopify.instance", False)
+            if instance_id:
+                instance = instance.browse(int(instance_id))
         if not instance:
-            instance = request.env['shopify.instance.ept'].sudo().search([('shopify_multipass_secret','!=',False)], limit=1)
+            instance = instance.search([('shopify_multipass_secret','!=',False)], limit=1)
         if not instance:
             raise NotFound()
         partner = request.env.user.partner_id
         partner_data = partner._get_shopify_partner_data()
-        if shopify_page:
-            partner_data.update({
-                'return_to': shopify_page
-            })
+        partner_data['return_to'] = shopify_page or '/'
         multipass = Multipass(instance.shopify_multipass_secret)
         url = multipass.generateURL(partner_data, instance.shopify_host)
         return request.redirect(url)
