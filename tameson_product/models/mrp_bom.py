@@ -20,16 +20,32 @@ class MrpBom(models.Model):
         boms = self.filtered(lambda b: not float_is_zero(b.product_tmpl_id.pack_factor, precision_digits=3))
         for pos in range(0, len(boms), n):
             boms[pos:pos+n].with_delay().set_bom_sale_price_job()
-        all_boms = self.search([])
-        for pos in range(0, len(all_boms), n):
-            all_boms[pos:pos+n].with_delay().set_bom_lead()
+            boms[pos:pos+n].with_delay().set_bom_cost_price_job()
         
     def set_bom_sale_price_job(self):
+        self.env.cr.execute('select default_code, list_price from product_template \
+where default_code in (select distinct additional_cost from product_template);')
+        add_prices = dict(self.env.cr.fetchall())
         for bom in self:
-            component_price = sum(bom.bom_line_ids.mapped(lambda l: l.product_id.lst_price * l.product_qty))
+            component_price = sum(bom.bom_line_ids.mapped(lambda l: l.product_id.list_price * l.product_qty))
             if not float_is_zero(bom.product_qty, precision_digits=3):
-                bom.product_tmpl_id.lst_price = (component_price * bom.product_tmpl_id.pack_factor) / bom.product_qty
+                add_price = add_prices.get(bom.product_tmpl_id.additional_cost, 0) or 0
+                price = ((component_price * bom.product_tmpl_id.pack_factor) / bom.product_qty) + add_price
+                bom.product_tmpl_id.write({'list_price': price})
 
+    def set_bom_cost_price_job(self):
+        self.env.cr.execute('select default_code, id from product_template \
+where default_code in (select distinct additional_cost from product_template);')
+        add_prices = dict(self.env.cr.fetchall())
+        boms = self.search([]).filtered(lambda b: b.product_tmpl_id.active)
+        for bom in boms:
+            product_tmpl_id = bom.product_tmpl_id
+            product = product_tmpl_id.product_variant_id
+            add_price = self.env["product.template"].browse(add_prices.get(product_tmpl_id.additional_cost, False)).standard_price
+            account = product_tmpl_id.property_account_expense_id.id or product_tmpl_id.categ_id.property_account_expense_categ_id.id
+            price = product._compute_bom_price(bom) + add_price
+            product_tmpl_id._change_standard_price(price, account)
+        
     def set_bom_lead(self):
         for bom in self.filtered(lambda bom: bom.bom_line_ids):
             data = bom.bom_line_ids.mapped(lambda l: {
