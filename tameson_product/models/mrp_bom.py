@@ -44,7 +44,7 @@ where default_code in (select distinct additional_cost from product_template);')
             add_price = self.env["product.template"].browse(add_prices.get(product_tmpl_id.additional_cost, False)).standard_price
             account = product_tmpl_id.property_account_expense_id.id or product_tmpl_id.categ_id.property_account_expense_categ_id.id
             price = product._compute_bom_price(bom) + add_price
-            product_tmpl_id._change_standard_price(price, account)
+            product._change_standard_price(price, account)
         
     def set_bom_lead(self):
         for bom in self.filtered(lambda bom: bom.bom_line_ids):
