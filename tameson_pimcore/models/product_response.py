@@ -424,7 +424,7 @@ class PimcoreProductResponseLine(models.Model):
         origin = self.env["res.country"].search(
             [("code", "=", self.origin_country)], limit=1
         )
-        return {
+        data = {
             "name": self.name,
             "pimcore_id": self.pimcore_id,
             "default_code": self.sku,
@@ -445,7 +445,6 @@ class PimcoreProductResponseLine(models.Model):
             "t_use_up_replacement_sku": self.replacement_sku,
             "intrastat_origin_country_id": origin.id,
             "t_customer_backorder_allowed": self.backorder,
-            "t_customer_lead_time": self.customer_lead_time,
             "brand_name": self.brand_name,
             "manufacturer_name": self.manufacturer_name,
             "manufacturer_pn": self.mpn,
@@ -459,12 +458,17 @@ class PimcoreProductResponseLine(models.Model):
             "pack_model": self.pack_model,
             "pack_factor": self.pack_factor,
             "sticker_barcode": self.sticker_barcode,
-            "max_qty_order": self.max_qty_order,
-            "min_qty_order": self.min_qty_order,
-            "supplier_series": self.supplier_series,
-            "supplier_shipping_type": self.supplier_shipping_type,
             "additional_cost": self.additional_cost,
         }
+        if not self.bom:
+            data.update({
+                "max_qty_order": self.max_qty_order,
+                "min_qty_order": self.min_qty_order,
+                "supplier_series": self.supplier_series,
+                "supplier_shipping_type": self.supplier_shipping_type,
+                "t_customer_lead_time": self.customer_lead_time,
+            })
+        return data
 
     def create_bom(self, bom_type="phantom"):
         PT = self.env["product.template"]
