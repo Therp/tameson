@@ -126,3 +126,5 @@ SELECT id from mrp_bom
     def set_all_product_bom_price(self):
         boms = self.env["mrp.bom"].search([])
         boms.set_bom_sale_price()
+        for pos in range(0, len(boms), 5000):
+            boms[pos:pos+5000].with_delay().set_bom_cost_price_job()

@@ -267,7 +267,8 @@ class ProductTemplate(models.Model):
         to_update_products = self.env['stock.move.line'].search(domain).mapped(
             'product_id') + self.env['stock.move'].search(domain).mapped(
                 'product_id')
-        to_update_products.mapped('product_tmpl_id')._minimal_qty_available_stored()            
+        to_update_products.mapped('product_tmpl_id')._minimal_qty_available_stored()
+        to_update_products.mapped('product_tmpl_id.bom_ids').with_delay().set_bom_lead()
 
     def cron_recompute_all_min_qty_avail_stored_tmpl(self):
         to_update_products = self.env['stock.move'].search([]).mapped(
@@ -319,23 +320,12 @@ WHERE pp.id IN (%s)''' % ','.join(map(str, self.mapped('product_variant_ids').id
         self.env.cr.execute(bom_product_query)
         bom_products = [item[0] for item in self.env.cr.fetchall()]
         to_update_product_tmpls = self + self.browse(bom_products)
-        pt_ids = to_update_product_tmpls.ids
         split_size = 1000
-        for chunk in list_split(pt_ids, split_size):
-            CeleryTask.call_task('product.template', 
-                                    'store_min_qty_celery', 
-                                    pt_ids=chunk,
-                                    celery={
-                                        'countdown': 1,
-                                        'retry': True,
-                                        'max_retries': 3,
-                                        'interval_start': 5,
-                                        'queue': 'celery',
-                                        },
-                                    celery_task_vals={'ref': 'store_min_qty'})
+        for pos in range(0, len(to_update_product_tmpls), split_size):
+            to_update_product_tmpls[pos:pos+split_size].with_delay().store_min_qty_jobs()
 
-    def store_min_qty_celery(self, task_uuid, pt_ids, **kwargs):
-        for id in pt_ids:
-            pt = self.browse(id)
+
+    def store_min_qty_jobs(self):
+        for pt in self:
             pt.minimal_qty_available_stored = pt.minimal_qty_available
         return True

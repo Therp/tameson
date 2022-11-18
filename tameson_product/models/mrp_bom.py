@@ -20,7 +20,8 @@ class MrpBom(models.Model):
         boms = self.filtered(lambda b: not float_is_zero(b.product_tmpl_id.pack_factor, precision_digits=3))
         for pos in range(0, len(boms), n):
             boms[pos:pos+n].with_delay().set_bom_sale_price_job()
-            boms[pos:pos+n].with_delay().set_bom_cost_price_job()
+        for pos in range(0, len(self), n):
+            self[pos:pos+n].with_delay().set_bom_cost_price_job()
         
     def set_bom_sale_price_job(self):
         self.env.cr.execute('select default_code, list_price from product_template \
@@ -56,7 +57,6 @@ where default_code in (select distinct additional_cost from product_template);')
                 })
             delay = max([0 if not float_is_zero(item['stock'], precision_digits=1) else item['delay'] for item in data])
             max_qty_order = min([get_qty(item, delay) for item in data])
-
             bom.product_tmpl_id.write({
                 't_customer_lead_time': delay + 1,
                 'max_qty_order': max_qty_order
