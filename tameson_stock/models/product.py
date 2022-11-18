@@ -274,6 +274,10 @@ class ProductTemplate(models.Model):
         to_update_products = self.env['stock.move'].search([]).mapped(
                 'product_id')
         to_update_products.mapped('product_tmpl_id')._minimal_qty_available_stored()
+        boms = self.env['mrp.bom'].search([])
+        for pos in range(0, len(boms), 5000):
+            boms[pos:pos+5000].with_delay().set_bom_lead()
+
 
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',
