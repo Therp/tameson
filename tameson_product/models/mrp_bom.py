@@ -17,7 +17,7 @@ class MrpBom(models.Model):
 
     def set_bom_sale_price(self):
         sale_n = 5000
-        cost_n = 100
+        cost_n = 10
         boms = self.filtered(lambda b: not float_is_zero(b.product_tmpl_id.pack_factor, precision_digits=3))
         for pos in range(0, len(boms), sale_n):
             boms[pos:pos+sale_n].with_delay().set_bom_sale_price_job()
