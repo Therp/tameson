@@ -53,7 +53,7 @@ FROM (select distinct additional_cost from product_template) as ac)''')
             component_price = sum(bom.bom_line_ids.mapped(lambda l: l.product_id.standard_price * l.product_qty))
             for sku in additional_costs.split(','):
                 add_price += self.env["product.template"].browse(add_prices.get(sku, False)).standard_price
-            product_tmpl_id.standard_price = component_price + add_price
+            product.standard_price = component_price + add_price
         
     def set_bom_lead(self):
         for bom in self.filtered(lambda bom: bom.bom_line_ids):
