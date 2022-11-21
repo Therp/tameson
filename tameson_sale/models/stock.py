@@ -28,6 +28,14 @@ class StockPicking(models.Model):
         for record in self:
             record.t_aa_name = "%s - %s" % (record.sale_id.name, record.name)
 
+    def _compute_carrier_tracking_url(self):
+        for picking in self:
+            if picking.t_aa_track_url:
+                picking.carrier_tracking_url = picking.t_aa_track_url
+            else:
+                picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
+
+
 class StockMove(models.Model):
     _inherit = 'stock.move'
     
@@ -53,16 +61,3 @@ class StockMove(models.Model):
                 tax_rate = 0
             move.t_aa_comm_price = commercial_price
             move.t_aa_comm_taxrate = tax_rate
-
-
-class DeliveryCarrier(models.Model):
-    _inherit = 'delivery.carrier'
-
-
-    @api.depends('carrier_id', 'carrier_tracking_ref')
-    def _compute_carrier_tracking_url(self):
-        for picking in self:
-            if picking.t_aa_track_url:
-                picking.carrier_tracking_url = picking.t_aa_track_url
-            else:
-                picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
