@@ -9,8 +9,13 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_is_zero
 
-def get_qty(item, delay):
-    return (item['stock'] + (item['max'] * (1 if item['delay'] <= delay else 0))) / item['bom_line_qty']
+import json
+
+def get_qty(data, delay):
+    delays = []
+    for item in data:
+        delays.append(item['stock'] + (item['max'] * (1 if item['delay'] <= delay else 0))) / item['bom_line_qty']
+    return min(delays or [0])
 
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
@@ -66,8 +71,10 @@ FROM (select distinct additional_cost from product_template) as ac)''')
                     'max': l.product_id.max_qty_order
                 })
             delay = max([0 if not float_is_zero(item['stock'], precision_digits=1) else item['delay'] for item in data])
-            max_qty_order = min([get_qty(item, delay) for item in data])
+            delay_array = [{'lead': lead, 'qty': get_qty(data, lead)} for lead in sorted(set([item['delay'] for item in data]))]
+            max_qty_order = get_qty(data, delay)
             bom.product_tmpl_id.write({
                 't_customer_lead_time': delay + 1,
-                'max_qty_order': max_qty_order
+                'max_qty_order': max_qty_order,
+                'max_qty_order_array': json.dumps(delay_array),
             })

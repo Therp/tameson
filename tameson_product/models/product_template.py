@@ -72,6 +72,7 @@ class ProductTemplateInherit(models.Model):
     usd_extra_price_factor = fields.Float(default=1.0)
     sticker_barcode = fields.Char()
     max_qty_order = fields.Integer()
+    max_qty_order_array = fields.Char()
     min_qty_order = fields.Integer()
     supplier_series = fields.Char()
     supplier_shipping_type = fields.Char()
