@@ -50,10 +50,12 @@ FROM (select distinct additional_cost from product_template) as ac)''')
             product = product_tmpl_id.product_variant_id
             add_price = 0
             additional_costs = bom.product_tmpl_id.additional_cost or ''
-            component_price = sum(bom.bom_line_ids.mapped(lambda l: l.product_id.standard_price * l.product_qty))
             for sku in additional_costs.split(','):
                 add_price += self.env["product.template"].browse(add_prices.get(sku, False)).standard_price
-            product.standard_price = component_price + add_price
+            account = product_tmpl_id.property_account_expense_id.id or product_tmpl_id.categ_id.property_account_expense_categ_id.id
+            price = product._compute_bom_price(bom) + add_price
+            product._change_standard_price(price, account)
+
         
     def set_bom_lead(self):
         for bom in self.filtered(lambda bom: bom.bom_line_ids):
