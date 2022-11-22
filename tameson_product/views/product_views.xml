@@ -39,6 +39,7 @@
                             <field name="full_path" />
                             <field name="category_path" />
                             <field name="max_qty_order" />
+                            <field name="max_qty_order_array" />
                             <field name="min_qty_order" />
                             <field name="supplier_series" />
                             <field name="supplier_shipping_type" />
@@ -91,6 +92,7 @@
                             <field name="full_path" />
                             <field name="category_path" />
                             <field name="max_qty_order" />
+                            <field name="max_qty_order_array" />
                             <field name="min_qty_order" />
                             <field name="supplier_series" />
                             <field name="supplier_shipping_type" />
