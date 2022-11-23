@@ -14,7 +14,11 @@ import json
 def get_qty(data, delay):
     delays = []
     for item in data:
-        delays.append((item['stock'] + (item['max'] * (1 if item['delay'] <= delay else 0)))/ item['bom_line_qty']) 
+        if item['delay'] <= delay:
+            stock = item['stock'] + item['max']
+        else:
+            stock = item['stock']
+        delays.append(stock / item['bom_line_qty']) 
     return min(delays or [0])
 
 class MrpBom(models.Model):
