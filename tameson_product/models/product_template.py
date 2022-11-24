@@ -132,4 +132,5 @@ SELECT id from mrp_bom
 
     def set_non_bom_lead(self):
         for pt in self:
-            pt.write({'t_customer_lead_time': pt.seller_ids[:1].delay + 1})
+            if not self.bom_ids:
+                pt.write({'t_customer_lead_time': pt.seller_ids[:1].delay + 1})
