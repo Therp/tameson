@@ -129,3 +129,7 @@ SELECT id from mrp_bom
         boms.set_bom_sale_price()
         for pos in range(0, len(boms), 5000):
             boms[pos:pos+5000].with_delay().set_bom_cost_price_job()
+
+    def set_non_bom_lead(self):
+        for pt in self:
+            pt.write({'t_customer_lead_time': pt.seller_ds[:1].delay + 1})
