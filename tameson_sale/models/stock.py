@@ -39,9 +39,9 @@ class StockPicking(models.Model):
 
     def action_cancel(self):
         if self.t_aa_id and not self.t_aa_allow_cancel:
-            message = 'Please check the transfer from ActiveAnts and check the \'AA Allow Cancellation\' \
-                        checkbox if it is cancelled on active ants.\n\
-                        URL: https://maya.activeants.nl/en/client/order/detail/%s' % self.t_aa_id
+            message = 'Please check the transfer from ActiveAnts and check the \'AA Allow Cancellation\' checkbox \n\
+if it is cancelled on active ants.\n\
+URL: https://maya.activeants.nl/en/client/order/detail/%s' % self.t_aa_id
             raise UserError(message)
         return super().action_cancel()
 
