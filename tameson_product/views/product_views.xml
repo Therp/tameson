@@ -1,103 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view" id="product_template_only_form_view">
-        <field name="name">product.template.form</field>
+    <record model="ir.ui.view" id="product_template_form_view">
+        <field name="name">product_template_form_view</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//page[last()]" position="after">
                 <page name="tameson" string="Tameson">
                     <group>
-                        <group name="general">
+                        <group string="Pricelist">
+                            <field name="pack_factor" />
+                            <field name="usd_extra_price_factor" />
+                            <field name="additional_cost" />
+                        </group>
+                        <group string="Leadtime and max qty to order">
+                            <field name="t_customer_lead_time" />
+                            <field name="max_qty_order" />
+                            <field name="max_qty_order_array" />
+                            <field name="min_qty_order" />
+                        </group>
+                    </group>
+                    <group string="Product attributes">
+                        <group>
                             <field name="t_height" />
                             <field name="t_length" />
                             <field name="t_width" />
                             <field name="t_location" />
                             <field name="t_customer_backorder_allowed" />
-                            <field name="t_customer_lead_time" />
                             <field name="t_web_sales" />
                             <field name="published" />
                             <field name="t_use_up" />
+                            <field name="t_product_description_short" />
+                            <field name="pimcore_id" />
+                            <field name="modification_date" />
+                            <field name="full_path" />
+                            <field name="category_path" />
+                        </group>
+                        <group>
                             <field name="t_use_up_replacement_sku" />
                             <field name="t_aa_pack_size" />
                             <field name="sticker_barcode" />
                             <field name="pack_model" />
-                            <field name="pack_factor" />
-                            <field name="usd_extra_price_factor" />
-                            <field name="additional_cost" />
-                        </group>
-                        <group name="description">
-                            <field name="t_product_description_short" />
-                            <field name="pimcore_id" />
-                            <field name="modification_date" />
                             <field name="brand_name" />
                             <field name="manufacturer_name" />
                             <field name="manufacturer_pn" />
                             <field name="oversized" />
                             <field name="imperial" />
                             <field name="non_returnable" />
-                            <field name="full_path" />
-                            <field name="category_path" />
-                            <field name="max_qty_order" />
-                            <field name="max_qty_order_array" />
-                            <field name="min_qty_order" />
                             <field name="supplier_series" />
                             <field name="supplier_shipping_type" />
                         </group>
                     </group>
                 </page>
-                <page name="Help" string="Help" >
+                <page name="Help" string="Help">
                     <button name="action_set_help" string="Edit help" type="object" class="oe_link" groups="stock.group_stock_manager" />
                     <field name="help_text" />
-                </page>
-            </xpath>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="product_normal_form_view">
-        <field name="name">product.product.form</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view" />
-        <field name="arch" type="xml">
-            <xpath expr="//page[last()]" position="after">
-                <page name="tameson" string="Tameson">
-                    <group>
-                        <group name="general">
-                            <field name="t_height" />
-                            <field name="t_length" />
-                            <field name="t_width" />
-                            <field name="t_location" />
-                            <field name="t_customer_backorder_allowed" />
-                            <field name="t_customer_lead_time" />
-                            <field name="t_web_sales" />
-                            <field name="published" />
-                            <field name="t_use_up" />
-                            <field name="t_use_up_replacement_sku" />
-                            <field name="sticker_barcode" />
-                            <field name="pack_model" />
-                            <field name="pack_factor" />
-                            <field name="usd_extra_price_factor" />
-                            <field name="additional_cost" />
-                        </group>
-                        <group name="description">
-                            <field name="t_product_description_short" />
-                            <field name="pimcore_id" />
-                            <field name="modification_date" />
-                            <field name="brand_name" />
-                            <field name="manufacturer_name" />
-                            <field name="manufacturer_pn" />
-                            <field name="oversized" />
-                            <field name="imperial" />
-                            <field name="non_returnable" />
-                            <field name="full_path" />
-                            <field name="category_path" />
-                            <field name="max_qty_order" />
-                            <field name="max_qty_order_array" />
-                            <field name="min_qty_order" />
-                            <field name="supplier_series" />
-                            <field name="supplier_shipping_type" />
-                        </group>
-                    </group>
                 </page>
             </xpath>
         </field>
