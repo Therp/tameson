@@ -1,4 +1,5 @@
 from odoo import api, fields, models, tools, _
+from odoo.tools.float_utils import float_is_zero
 
 
 class ProductTemplateInherit(models.Model):
@@ -133,4 +134,8 @@ SELECT id from mrp_bom
     def set_non_bom_lead(self):
         for pt in self:
             if not self.bom_ids:
-                pt.write({'t_customer_lead_time': pt.seller_ids[:1].delay + 1})
+                if not float_is_zero(pt.minimal_qty_available_stored, precision_digits=2):
+                    delay = 0
+                else:
+                    delay = pt.seller_ids[:1].delay
+                pt.write({'t_customer_lead_time': delay + 1})
