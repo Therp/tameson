@@ -271,10 +271,8 @@ class ProductTemplate(models.Model):
         ## set bom lead updated
         to_update_products.mapped('product_tmpl_id.bom_ids').with_delay().set_bom_lead()
         ## non-bom-lead
-        bom_products = self.env["mrp.bom"].search([]).mapped('product_tmpl_id')
-        all_products = self.search([]) - bom_products
-        for pos in range(0, len(all_products), 5000):
-            all_products[pos:pos+5000].with_delay().set_non_bom_lead()
+        for pos in range(0, len(to_update_products), 5000):
+            to_update_products[pos:pos+5000].with_delay().set_non_bom_lead()
 
     def cron_recompute_all_min_qty_avail_stored_tmpl(self):
         to_update_products = self.env['stock.move'].search([]).mapped(
@@ -337,5 +335,5 @@ WHERE pp.id IN (%s)''' % ','.join(map(str, self.mapped('product_variant_ids').id
 
     def store_min_qty_jobs(self):
         for pt in self:
-            pt.minimal_qty_available_stored = pt.minimal_qty_available
+            pt.write({'minimal_qty_available_stored': pt.minimal_qty_available})
         return True
