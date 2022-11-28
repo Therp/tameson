@@ -24,6 +24,7 @@
     ],
     'data': [
         'data/group.xml',
+        'security/ir.model.access.csv',
         'data/cron.xml',
         'data/mail_data.xml',
         'views/sale_views.xml',
