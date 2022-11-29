@@ -137,7 +137,7 @@ WHERE id NOT IN
     WHERE state = 'draft'
     GROUP BY sku
 ) and state = 'draft';
-SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0), rl.bom, rl.bom_import_done
+SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0), rl.bom, rl.bom_import_done, rl.sku
 FROM pimcore_product_response_line rl
     LEFT JOIN product_template pt on lower(rl.sku) = lower(pt.default_code)
     WHERE rl.state = 'draft';""")
