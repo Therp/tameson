@@ -16,7 +16,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}
-
+PRICELIST_DICT = {"USD": 3, "GBP": 2, }
 
 def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
     child_categ = env[model]
@@ -71,6 +71,7 @@ def add_translation(env, product, lang_code, src, value):
 
 
 def add_pricelist_item(pricelist, product, price):
+    pricelist = product.env["product.pricelist"].browse(pricelist)
     pricelist.write(
         {
             "item_ids": [
@@ -90,11 +91,11 @@ def add_pricelist_item(pricelist, product, price):
 
 
 def search_or_add_pricelist_item(pricelist, product, price):
-    item = pricelist.env["product.pricelist.item"].search(
+    item = product.env["product.pricelist.item"].search(
         [
             ("applied_on", "=", "1_product"),
             ("product_tmpl_id", "=", product.id),
-            ("pricelist_id", "=", pricelist.id),
+            ("pricelist_id", "=", pricelist),
         ],
         limit=1,
     )
@@ -139,7 +140,8 @@ WHERE id NOT IN
     WHERE state = 'draft'
     GROUP BY sku
 ) and state = 'draft';
-SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FROM pimcore_product_response_line rl
+SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0), rl.bom, rl.bom_import_done
+FROM pimcore_product_response_line rl
     LEFT JOIN product_template pt on lower(rl.sku) = lower(pt.default_code)
     WHERE rl.state = 'draft';"""
         )
@@ -147,47 +149,42 @@ SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0) FRO
         skipped = [row[0] for row in data if row[2] <= row[3]]
         updated = [row for row in data if row[2] > row[3]]
         _logger.info("Skipped lines: %d" % len(skipped))
-        Line = self.env["pimcore.product.response.line"]
         self.env["pimcore.product.response.line"].browse(skipped).unlink()
-        Eur = self.env["product.pricelist"].search(
-            [("currency_id", "=", "EUR")], limit=1
-        )
-        Gbp = self.env["product.pricelist"].search(
-            [("currency_id", "=", "GBP")], limit=1
-        )
-        Usd = self.env["product.pricelist"].search(
-            [("currency_id", "=", "USD")], limit=1
-        )
-        _logger.info("Start importing data from %d lines" % len(updated))
-        for count, row in enumerate(updated):
-            try:
-                if not row[1]:
-                    Line.browse(row[0]).sudo().create_product(Eur, Gbp, Usd)
-                    _logger.info("Created from %d / %d " % (count, len(updated)))
-                elif row[2] > row[3]:
-                    Line.browse(row[0]).sudo().update_product(row[1], Eur, Gbp, Usd)
-                    _logger.info("Updated from %d / %d " % (count, len(updated)))
-            except Exception as e:
-                _logger.info("Error from %d / %d " % (count, len(updated)))
-                _logger.info(str(e))
-                Line.browse(row[0]).write({"state": "error", "error": str(e)})
-        for line in updated:
-            try:
-                Line.browse(line[0]).sudo().create_bom()
-            except Exception as e:
-                Line.browse(line[0]).write({"state": "error", "error": str(e)})
-                _logger.info(str(e))
-                continue
+        chunk_size = 10
+        ## jobs for import/update products
+        for pos in range(0, len(updated), chunk_size):
+            self.with_delay().job_import_product_data(updated[pos:pos+chunk_size])
+        ## job for import bom for lines with bom data not already imported
+        bom_lines = [row[0] for row in updated if row[4] and not row[5]]
+        for pos in range(0, len(bom_lines), chunk_size):
+            self.with_delay().job_import_bom(bom_lines[pos:pos+chunk_size])
+        ## delete older than 14 days data
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
         ).unlink()
+        ## archive/unarchive products
         do_archive = (
             self.env["ir.config_parameter"]
             .sudo()
             .get_param("tameson_pimcore.product_archive", "0")
         ) == "1"
-        if not do_archive:
-            return
+        if do_archive:
+            self.with_delay().job_archive_unarchive()
+
+    def job_import_product_data(self, lines=[]):
+        Line = self.env["pimcore.product.response.line"]
+        for row in lines:
+            if not row[1]:
+                Line.browse(row[0]).sudo().create_product()
+            elif row[2] > row[3]:
+                Line.browse(row[0]).sudo().update_product(row[1])
+
+    def job_import_bom(self, lines=[]):
+        lines = self.env["pimcore.product.response.line"].browse(lines)
+        for line in lines:
+            line.create_bom()
+
+    def job_archive_unarchive(self):
         unpublished_products = self.env["product.template"].search(
             [("published", "=", False)]
         )
@@ -301,7 +298,7 @@ class PimcoreProductResponseLine(models.Model):
     def create(self, vals):
         return super(PimcoreProductResponseLine, self).create(vals)
 
-    def create_product(self, Eur, Gbp, Usd):
+    def create_product(self):
         Category = self.env["product.category"]
         image_data = False
         try:
@@ -347,14 +344,13 @@ class PimcoreProductResponseLine(models.Model):
         add_translation(self.env, product, "de_DE", self.name, self.name_de)
         add_translation(self.env, product, "es_ES", self.name, self.name_es)
         # add_pricelist_item(Eur, product, self.eur)
-        add_pricelist_item(Gbp, product, self.gbp)
-        add_pricelist_item(Usd, product, self.usd)
+        add_pricelist_item(PRICELIST_DICT['GBP'], product, self.gbp)
+        add_pricelist_item(PRICELIST_DICT['USD'], product, self.usd)
         self.write(
             {
                 "state": "created",
             }
         )
-        self.env.cr.commit()
 
     def update_product(self, product_id, Eur, Gbp, Usd):
         product = self.env["product.template"].browse(product_id)
@@ -392,12 +388,11 @@ class PimcoreProductResponseLine(models.Model):
                 end=0,
             )
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
-        search_or_add_pricelist_item(Gbp, product, self.gbp)
-        search_or_add_pricelist_item(Usd, product, self.usd)
+        search_or_add_pricelist_item(PRICELIST_DICT['GBP'], product, self.gbp)
+        search_or_add_pricelist_item(PRICELIST_DICT['USD'], product, self.usd)
         write_vals = {"state": "updated"}
         product.write(vals)
         self.write(write_vals)
-        self.env.cr.commit()
 
     def get_product_vals(self):
         commodity_code = self.env["account.intrastat.code"].search(
@@ -506,9 +501,7 @@ class PimcoreProductResponseLine(models.Model):
                 "bom_signature": self.bom,
             }
         )
-        std_price = main_product.product_variant_id._get_price_from_bom()
-        main_product.standard_price = std_price
-        self.env.cr.commit()
+        self.write({'bom_import_done': True})
 
     def get_supplier_info(self):
         vendor = self.env["res.partner"]
