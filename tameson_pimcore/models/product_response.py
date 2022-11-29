@@ -12,11 +12,10 @@ from odoo.tools.float_utils import float_is_zero, float_compare
 from dateutil.relativedelta import relativedelta
 
 import logging
-
 _logger = logging.getLogger(__name__)
 
-CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}
-PRICELIST_DICT = {"USD": 3, "GBP": 2, }
+CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150} ## currency ids in Odoo DB
+PRICELIST_DICT = {"USD": 3, "GBP": 2, } ## pricelists ids in Odoo DB
 
 def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
     child_categ = env[model]
@@ -171,10 +170,14 @@ FROM pimcore_product_response_line rl
     def job_import_product_data(self, lines=[]):
         Line = self.env["pimcore.product.response.line"]
         for row in lines:
+            line = Line.browse(row[0])
+            if line.full_path.startswith('/TestFolder'):
+                line.unlink()
+                continue
             if not row[1]:
-                Line.browse(row[0]).sudo().create_product()
-            elif row[2] > row[3]:
-                Line.browse(row[0]).sudo().update_product(row[1])
+                line.sudo().create_product()
+            else:
+                line.sudo().update_product(row[1])
 
     def job_import_bom(self, lines=[]):
         lines = self.env["pimcore.product.response.line"].browse(lines)
@@ -298,30 +301,19 @@ class PimcoreProductResponseLine(models.Model):
     def create_product(self):
         Category = self.env["product.category"]
         image_data = False
-        try:
-            if self.image:
-                image_response = requests.get(self.image, timeout=60)
-                if image_response.status_code == 200:
-                    image_data = codecs.encode(image_response.content, "base64")
-        except Exception as e:
-            _logger.info(str(e))
+        if self.image:
+            image_response = requests.get(self.image, timeout=60)
+            if image_response.status_code == 200:
+                image_data = codecs.encode(image_response.content, "base64")
         vals = self.get_product_vals()
-        try:
-            final_categ = create_or_find_categ(self.env, self.full_path)
-        except Exception as e:
-            final_categ = self.env["product.category"].browse(1)
-            self.error = "Product category recursion condition"
-        try:
-            ecom_categ = create_or_find_categ(
-                self.env,
-                self.categories,
-                model="product.public.category",
-                start=2,
-                end=0,
-            )
-        except Exception as e:
-            ecom_categ = self.env["product.public.category"]
-            self.error = "Ecommerce category recursion condition"
+        final_categ = create_or_find_categ(self.env, self.full_path)
+        ecom_categ = create_or_find_categ(
+            self.env,
+            self.categories,
+            model="product.public.category",
+            start=2,
+            end=0,
+        )
         vals.update(
             {
                 "image_1920": image_data,
