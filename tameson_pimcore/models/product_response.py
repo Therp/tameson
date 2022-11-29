@@ -130,9 +130,7 @@ class PimcoreProductResponse(models.Model):
         return super(PimcoreProductResponse, self).create(vals)
 
     def import_product_data(self):
-        self.env.cr.execute(
-            """
-DELETE FROM pimcore_product_response_line
+        self.env.cr.execute("""DELETE FROM pimcore_product_response_line
 WHERE id NOT IN
 (
     SELECT MAX(id) AS id
@@ -143,8 +141,7 @@ WHERE id NOT IN
 SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0), rl.bom, rl.bom_import_done
 FROM pimcore_product_response_line rl
     LEFT JOIN product_template pt on lower(rl.sku) = lower(pt.default_code)
-    WHERE rl.state = 'draft';"""
-        )
+    WHERE rl.state = 'draft';""")
         data = self.env.cr.fetchall()
         skipped = [row[0] for row in data if row[2] <= row[3]]
         updated = [row for row in data if row[2] > row[3]]
@@ -352,7 +349,7 @@ class PimcoreProductResponseLine(models.Model):
             }
         )
 
-    def update_product(self, product_id, Eur, Gbp, Usd):
+    def update_product(self, product_id):
         product = self.env["product.template"].browse(product_id)
         vals = self.get_product_vals()
         if not float_is_zero(product.standard_price, precision_digits=2):
