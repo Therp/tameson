@@ -30,8 +30,8 @@ class MrpBom(models.Model):
         boms = self.filtered(lambda b: not float_is_zero(b.product_tmpl_id.pack_factor, precision_digits=3))
         for pos in range(0, len(boms), sale_n):
             boms[pos:pos+sale_n].with_delay().set_bom_sale_price_job()
-        for pos in range(0, len(self), cost_n):
-            self[pos:pos+cost_n].with_delay().set_bom_cost_price_job()
+        # for pos in range(0, len(self), cost_n):
+        #     self[pos:pos+cost_n].with_delay().set_bom_cost_price_job()
         
     def set_bom_sale_price_job(self):
         self.env.cr.execute('''select default_code, list_price from product_template
