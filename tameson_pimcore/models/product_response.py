@@ -128,7 +128,7 @@ class PimcoreProductResponse(models.Model):
             vals["name"] = self.env["ir.sequence"].next_by_code("pimcore.response")
         return super(PimcoreProductResponse, self).create(vals)
 
-    def import_product_data(self):
+    def import_product_data(self, chunk_size=10):
         self.env.cr.execute("""DELETE FROM pimcore_product_response_line
 WHERE id NOT IN
 (
@@ -146,7 +146,6 @@ FROM pimcore_product_response_line rl
         updated = [row for row in data if row[2] > row[3]]
         _logger.info("Skipped lines: %d" % len(skipped))
         self.env["pimcore.product.response.line"].browse(skipped).unlink()
-        chunk_size = 10
         ## jobs for import/update products
         for pos in range(0, len(updated), chunk_size):
             self.with_delay().job_import_product_data(updated[pos:pos+chunk_size])
