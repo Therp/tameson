@@ -239,6 +239,8 @@ class PimcoreConfig(models.Model):
                     key: product_nodes[key]["getter"](val) for key, val in data.items()
                 }
                 val['response_id'] = res.id
+                if val['full_path'].startswith('/TestFolder'):
+                    continue
                 lines_ids.append(val)
             except Exception as e:
                 _logger.warning(str(e))

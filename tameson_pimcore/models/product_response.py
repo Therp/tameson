@@ -170,9 +170,6 @@ FROM pimcore_product_response_line rl
         Line = self.env["pimcore.product.response.line"]
         for row in lines:
             line = Line.browse(row[0])
-            if line.full_path.startswith('/TestFolder'):
-                line.unlink()
-                continue
             if not row[1]:
                 line.sudo().create_product()
             else:
