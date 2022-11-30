@@ -7,7 +7,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_is_zero, float_compare
 
 import json
 
@@ -46,7 +46,8 @@ FROM (select distinct additional_cost from product_template) as ac)''')
                 for sku in additional_costs.split(','):
                     add_price += add_prices.get(sku, 0)
                 price = ((component_price * bom.product_tmpl_id.pack_factor) / bom.product_qty) + add_price
-                bom.product_tmpl_id.write({'list_price': price})
+                if float_compare(bom.product_tmpl_id.list_price, price, precision_digits=2) != 0:
+                    bom.product_tmpl_id.write({'list_price': price})
 
     def set_bom_cost_price_job(self):
         self.env.cr.execute('''select default_code, id from product_template
