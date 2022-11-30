@@ -78,7 +78,11 @@ FROM (select distinct additional_cost from product_template) as ac)''')
             delay = max([0 if not float_is_zero(item['stock'], precision_digits=1) else item['delay'] for item in data])
             delay_list = list(sorted(set([item['delay'] for item in data])))
             delay_list.insert(0, 0)
-            delay_array = [{'lead_time': lead+1, 'max_qty': get_qty(data, lead)} for lead in delay_list]
+            delay_array = []
+            for lead in delay_list:
+                max_qty = get_qty(data, lead)
+                if max_qty > 0:
+                    delay_array.append({'lead_time': lead+1, 'max_qty': max_qty})
             max_qty_order = get_qty(data, delay)
             bom.product_tmpl_id.write({
                 't_customer_lead_time': delay + 1,
