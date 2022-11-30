@@ -177,7 +177,7 @@ FROM pimcore_product_response_line rl
 
     def job_import_bom(self, lines=[]):
         lines = self.env["pimcore.product.response.line"].browse(lines)
-        for line in lines:
+        for line in lines.exists():
             line.create_bom()
 
     def job_archive_unarchive(self):
