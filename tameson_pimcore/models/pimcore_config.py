@@ -234,14 +234,11 @@ class PimcoreConfig(models.Model):
         lines_ids = []
         for node in result:
             data = node.get("node")
-            try:
-                val = {
-                    key: product_nodes[key]["getter"](val) for key, val in data.items()
-                }
-                val['response_id'] = res.id
-                lines_ids.append(val)
-            except Exception as e:
-                _logger.warning(str(e))
-                _logger.warning(data)
+            val = {
+                key: product_nodes[key]["getter"](val) for key, val in data.items()
+            }
+            val['response_id'] = res.id
+            if val['full_path'] and val['full_path'].startswith('/TestFolder'):
                 continue
+            lines_ids.append(val)
         self.env['pimcore.product.response.line'].create(lines_ids)
