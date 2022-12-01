@@ -15,6 +15,7 @@ class StockPicking(models.Model):
 
     t_aa_name = fields.Char('Active Ant Name', compute='_get_t_aa_name')
     t_aa_id = fields.Char('Active Ant ID', readonly=True)
+    t_aa_allow_cancel = fields.Boolean(string='AA Allow Cancellation', default=False, track_visibility='onchange')
     t_aa_track_url = fields.Char('Active Ant tracktraceUrl', readonly=True)
     source_so_id = fields.Many2one(comodel_name='sale.order', compute='_get_source_so')
 
@@ -27,6 +28,22 @@ class StockPicking(models.Model):
     def _get_t_aa_name(self):
         for record in self:
             record.t_aa_name = "%s - %s" % (record.sale_id.name, record.name)
+
+    def _compute_carrier_tracking_url(self):
+        for picking in self:
+            if picking.t_aa_track_url:
+                picking.carrier_tracking_url = picking.t_aa_track_url
+            else:
+                picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
+
+
+    def action_cancel(self):
+        if self.t_aa_id and not self.t_aa_allow_cancel:
+            message = 'Please check the transfer from ActiveAnts and check the \'AA Allow Cancellation\' checkbox \n\
+if it is cancelled on active ants.\n\
+https://maya.activeants.nl/en/client/order/detail/%s' % self.t_aa_id
+            raise UserError(message)
+        return super().action_cancel()
 
 class StockMove(models.Model):
     _inherit = 'stock.move'

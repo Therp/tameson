@@ -226,7 +226,7 @@ class PimcoreConfig(models.Model):
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder(
             "getProductListing", "edges", product_nodes, filters=[
-                '\\"$and\\": [{\\"o_id\\": {\\"$gt\\": \\"%d\\"}}, {\\"o_id\\": {\\"$lt\\": \\"%d\\"}}]' % (pos, pos+self.limit)
+                '\\"$and\\": [{\\"o_id\\": {\\"$gte\\": \\"%d\\"}}, {\\"o_id\\": {\\"$lt\\": \\"%d\\"}}]' % (pos, pos+self.limit)
             ]
         )
         result = pim_request.execute(product_query.get_query(params))

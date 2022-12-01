@@ -303,18 +303,14 @@ class PimcoreProductResponseLine(models.Model):
 
     def create_product(self, Eur, Gbp, Usd):
         Category = self.env["product.category"]
-
+        image_data = False
         try:
-            image_response = requests.get(
-                "%s/%s" % (self.response_id.config_id.api_host, self.image), timeout=60
-            )
-            if image_response.status_code == 200:
-                image_data = codecs.encode(image_response.content, "base64")
-            else:
-                image_data = False
+            if self.image:
+                image_response = requests.get(self.image, timeout=60)
+                if image_response.status_code == 200:
+                    image_data = codecs.encode(image_response.content, "base64")
         except Exception as e:
-            image_data = False
-
+            _logger.info(str(e))
         vals = self.get_product_vals()
         try:
             final_categ = create_or_find_categ(self.env, self.full_path)
@@ -428,7 +424,7 @@ class PimcoreProductResponseLine(models.Model):
         origin = self.env["res.country"].search(
             [("code", "=", self.origin_country)], limit=1
         )
-        return {
+        data = {
             "name": self.name,
             "pimcore_id": self.pimcore_id,
             "default_code": self.sku,
@@ -449,7 +445,6 @@ class PimcoreProductResponseLine(models.Model):
             "t_use_up_replacement_sku": self.replacement_sku,
             "intrastat_origin_country_id": origin.id,
             "t_customer_backorder_allowed": self.backorder,
-            "t_customer_lead_time": self.customer_lead_time,
             "brand_name": self.brand_name,
             "manufacturer_name": self.manufacturer_name,
             "manufacturer_pn": self.mpn,
@@ -469,6 +464,15 @@ class PimcoreProductResponseLine(models.Model):
             "supplier_shipping_type": self.supplier_shipping_type,
             "additional_cost": self.additional_cost,
         }
+        if not self.bom:
+            data.update({
+                "max_qty_order": self.max_qty_order,
+                "min_qty_order": self.min_qty_order,
+                "supplier_series": self.supplier_series,
+                "supplier_shipping_type": self.supplier_shipping_type,
+                "t_customer_lead_time": self.customer_lead_time,
+            })
+        return data
 
     def create_bom(self, bom_type="phantom"):
         PT = self.env["product.template"]

@@ -44,4 +44,14 @@
             </div>
         </field>
     </record>
+    <record id="purchase_order_tree" model="ir.ui.view">
+        <field name="name">purchase_order_tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree" />
+        <field name="arch" type="xml">
+            <field name="activity_exception_decoration" position="before">
+                <field name="picking_type_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
 </odoo>
