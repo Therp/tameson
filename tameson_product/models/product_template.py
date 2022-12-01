@@ -1,4 +1,5 @@
 from odoo import api, fields, models, tools, _
+from odoo.tools.float_utils import float_is_zero
 
 
 class ProductTemplateInherit(models.Model):
@@ -71,7 +72,8 @@ class ProductTemplateInherit(models.Model):
     pack_factor = fields.Float()
     usd_extra_price_factor = fields.Float(default=1.0)
     sticker_barcode = fields.Char()
-    max_qty_order = fields.Integer()
+    max_qty_order = fields.Integer(help="Max quantity for \"Customer lead time\"")
+    max_qty_order_array = fields.Char()
     min_qty_order = fields.Integer()
     supplier_series = fields.Char()
     supplier_shipping_type = fields.Char()
@@ -126,3 +128,24 @@ SELECT id from mrp_bom
     def set_all_product_bom_price(self):
         boms = self.env["mrp.bom"].search([])
         boms.set_bom_sale_price()
+        for pos in range(0, len(boms), 5000):
+            boms[pos:pos+5000].with_delay().set_bom_cost_price_job()
+
+    def set_non_bom_lead(self):
+        for pt in self:
+            if not self.bom_ids:
+                delay = pt.seller_ids[:1].delay
+                if not float_is_zero(pt.minimal_qty_available_stored, precision_digits=2):
+                    delay = 0
+                    delay_array = [
+                        {'lead_time': 1, 'max_qty': pt.minimal_qty_available_stored}, 
+                        {'lead_time': delay+1, 'max_qty': pt.minimal_qty_available_stored + pt.max_qty_order}
+                        ]
+                else:
+                    delay_array = [{'lead_time': delay+1, 'max_qty': pt.max_qty_order}]
+                pt.write(
+                    {
+                        "t_customer_lead_time": delay + 1,
+                        "max_qty_order_array": delay_array,
+                    }
+                )

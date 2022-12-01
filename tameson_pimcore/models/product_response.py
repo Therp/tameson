@@ -458,6 +458,10 @@ class PimcoreProductResponseLine(models.Model):
             "pack_model": self.pack_model,
             "pack_factor": self.pack_factor,
             "sticker_barcode": self.sticker_barcode,
+            "max_qty_order": self.max_qty_order,
+            "min_qty_order": self.min_qty_order,
+            "supplier_series": self.supplier_series,
+            "supplier_shipping_type": self.supplier_shipping_type,
             "additional_cost": self.additional_cost,
         }
         if not self.bom:
