@@ -18,3 +18,13 @@ class ResPartnet(models.Model):
     def onchange_country_lang(self):
         if self.country_id.select_lang:
             self.lang = self.country_id.select_lang
+
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        partners = super().create(vals_list)
+        for partner in partners:
+            if partner.parent_id:
+                continue
+            partner.property_product_pricelist = partner.country_id.select_pricelist_id
+        return partner
