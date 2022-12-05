@@ -3,6 +3,7 @@ import base64, re, json
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import formataddr, float_compare, float_is_zero
+from odoo.tools import float_repr
 
 class SaleOrder(models.Model):
     _name= 'sale.order'
@@ -549,3 +550,12 @@ class PricelistItem(models.Model):
         else:
             price = super()._compute_price(price, price_uom, product, quantity, partner)
         return price
+
+    @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
+        'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
+    def _get_pricelist_item_name_price(self):
+        super()._get_pricelist_item_name_price()
+        decimal_places = self.env['decimal.precision'].precision_get('Product Price')
+        for item in self:
+            if item.compute_price == 'fixed' and item.currency_factor > 0:
+                item.price = "Currency converted. Rate: %s" % float_repr(item.currency_factor, decimal_places)
