@@ -555,16 +555,12 @@ from
 (select
     ppi.id,
     case
-    when not pp.is_usd_extra then pp.currency_factor * pt.list_price
-    when pp.is_usd_extra then pp.currency_factor * pt.list_price * pt.usd_extra_price_factor
-    end price
-    case
-        when not pp.is_usd_extra then 1
-        else pt.usd_extra_price_factor
+        when pp.is_usd_extra then pt.usd_extra_price_factor
+        else 1
     end usd_extra,
     case
-        when not pp.extra_shipping_fee then 0
-        else pt.extra_shipping_fee
+        when pp.extra_shipping_fee then pt.extra_shipping_fee
+        else 0.0
     end shipping_extra,
     pp.currency_factor,
     pt.list_price
@@ -577,8 +573,7 @@ where
     AND pp.currency_factor > 0
     AND product_tmpl_id is not null
 ) AS calculate
-WHERE ppi.id = calculate.id
-AND ppi.fixed_price != ROUND(calculate.price::NUMERIC, 3)''')
+WHERE ppi.id = calculate.id''')
         for record in self.search([('currency_factor','>',0)]):
             record.with_delay().add_missing_currency_pricelist_items()
 
