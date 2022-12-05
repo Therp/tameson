@@ -25,6 +25,9 @@
                                 <field name="vendor_id" />
                                 <field name="vendor_code" />
                                 <field name="default_code" />
+                                <field name="hs_code" />
+                                <field name="barcode" />
+                                <field name="country_id" />
                                 <field name="vendor_lead_days" />
                                 <field name="purchase_price" />
                                 <field name="sale_price" />
