@@ -610,3 +610,18 @@ where id in (
             'product_id': False,
             'product_tmpl_id': item[0]} for item in missing_items]
         self.env['product.pricelist.item'].create(product_pricelist_item)
+
+
+class PricelistItem(models.Model):
+    _inherit = "product.pricelist.item"
+
+    compute_price = fields.Selection(selection_add=[('currency_factor', 'Currency factor')])
+
+    def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
+        if self.compute_price == 'currency_factor':
+            extra_shipping = 0.0 if not self.pricelist_id.extra_shipping_fee else product.extra_shipping_fee
+            extra_usd = 1.0 if not self.pricelist_id.is_usd_extra else product.usd_extra_price_factor
+            price = (product.list_price + extra_shipping) * self.pricelist_id.currency_factor * extra_usd
+        else:
+            price = super()._compute_price(price, price_uom, product, quantity, partner)
+        return price
