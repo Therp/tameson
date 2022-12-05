@@ -79,6 +79,7 @@
                 <field name="is_currency_factor" />
                 <field name="currency_factor" attrs="{'invisible': [('is_currency_factor','=',False)] }"/>
                 <field name="is_usd_extra" widget="boolean_toggle" attrs="{'invisible': [('is_currency_factor','=',False)] }"/>
+                <field name="extra_shipping_fee" widget="boolean_toggle" attrs="{'invisible': [('is_currency_factor','=',False)] }"/>
             </field>
         </field>
     </record>
