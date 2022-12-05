@@ -461,13 +461,6 @@ class SaleOrderLine(models.Model):
         compute='_get_t_invoice_policy'
     )
 
-    @api.onchange('product_uom', 'product_uom_qty')
-    def product_uom_change(self):
-        res = super(SaleOrderLine, self).product_uom_change()
-        if self.order_id.pricelist_id.currency_factor > 0:
-            self.price_unit = self.product_id.lst_price * self.order_id.pricelist_id.currency_factor
-        return res
-
     @api.depends('order_id.t_invoice_policy', 'product_id.invoice_policy', 'product_id.type')
     def _get_t_invoice_policy(self):
         for line in self:
