@@ -550,7 +550,7 @@ class ProductPricelist(models.Model):
     def set_currency_pricelist_prices(self):
         self.env.cr.execute(
 '''update product_pricelist_item ppi
-set fixed_price = calculate.price
+set fixed_price = (calculate.list_price + calculate.shipping_extra) * calculate.currency_factor * calculate.usd_extra
 from 
 (select
     ppi.id,
@@ -558,6 +558,16 @@ from
     when not pp.is_usd_extra then pp.currency_factor * pt.list_price
     when pp.is_usd_extra then pp.currency_factor * pt.list_price * pt.usd_extra_price_factor
     end price
+    case
+        when not pp.is_usd_extra then 1
+        else pt.usd_extra_price_factor
+    end usd_extra,
+    case
+        when not pp.extra_shipping_fee then 0
+        else pt.extra_shipping_fee
+    end shipping_extra,
+    pp.currency_factor,
+    pt.list_price
 from
     product_pricelist_item ppi
     left join product_pricelist pp on pp.id = ppi.pricelist_id
