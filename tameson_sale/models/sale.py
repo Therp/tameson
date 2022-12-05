@@ -608,10 +608,10 @@ where id in (
 class PricelistItem(models.Model):
     _inherit = "product.pricelist.item"
 
-    compute_price = fields.Selection(selection_add=[('currency_factor', 'Currency factor')])
+    currency_factor = fields.Boolean(default=False)
 
     def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
-        if self.compute_price == 'currency_factor':
+        if self.compute_price == 'fixed' and self.currency_factor:
             extra_shipping = 0.0 if not self.pricelist_id.extra_shipping_fee else product.extra_shipping_fee
             extra_usd = 1.0 if not self.pricelist_id.is_usd_extra else product.usd_extra_price_factor
             price = (product.list_price + extra_shipping) * self.pricelist_id.currency_factor * extra_usd
