@@ -79,7 +79,7 @@ class ProductTemplateInherit(models.Model):
     supplier_shipping_type = fields.Char()
     additional_cost = fields.Char()
     ## End
-    extra_shipping_fee = fields.Float()
+    extra_shipping_fee = fields.Float(default=0.0)
 
     def cron_compute_all_bom_price(self):
         boms = (
