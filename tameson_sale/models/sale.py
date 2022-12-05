@@ -520,8 +520,9 @@ class MailComposer(models.TransientModel):
             vals['value']['attachment_ids'] += [(4, attachment.id, 0)]
         return vals
 
-class ProductPricelist(models.Model):
-    _inherit = "product.pricelist"
+class PricelistItem(models.Model):
+    _inherit = "product.pricelist.item"
+
 
     is_currency_factor = fields.Boolean(string='Currency converted?', compute='get_currency_factor', inverse='set_currency_factor')
     currency_factor = fields.Float(digits='Product Price')
@@ -540,81 +541,11 @@ class ProductPricelist(models.Model):
         else:
             self.currency_factor = 0
 
-    def set_currency_pricelist_prices(self):
-        self.env.cr.execute(
-'''update product_pricelist_item ppi
-set fixed_price = (calculate.list_price + calculate.shipping_extra) * calculate.currency_factor * calculate.usd_extra
-from 
-(select
-    ppi.id,
-    case
-        when pp.is_usd_extra then pt.usd_extra_price_factor
-        else 1
-    end usd_extra,
-    case
-        when pp.extra_shipping_fee then pt.extra_shipping_fee
-        else 0.0
-    end shipping_extra,
-    pp.currency_factor,
-    pt.list_price
-from
-    product_pricelist_item ppi
-    left join product_pricelist pp on pp.id = ppi.pricelist_id
-    left join product_template pt on pt.id = ppi.product_tmpl_id
-where
-    ppi.active = true
-    AND pp.currency_factor > 0
-    AND product_tmpl_id is not null
-) AS calculate
-WHERE ppi.id = calculate.id''')
-        for record in self.search([('currency_factor','>',0)]):
-            record.with_delay().add_missing_currency_pricelist_items()
-
-    def add_missing_currency_pricelist_items(self):
-        self.ensure_one()
-        missing_item_query = \
-'''select id, list_price, usd_extra_price_factor from product_template pt
-where id in (
-    select id from product_template 
-        where active=true
-    except
-    select distinct product_tmpl_id from product_pricelist_item 
-        where pricelist_id = %d
-    )
-'''
-        self.env.cr.execute(missing_item_query % self.id)
-        missing_items = self.env.cr.fetchall()
-        is_usd_extra = self.is_usd_extra
-        product_pricelist_item = [{'applied_on': '1_product',
-            'base': 'list_price',
-            'categ_id': False,
-            'compute_price': 'fixed',
-            'date_end': False,
-            'date_start': False,
-            'fixed_price': item[1] * self.currency_factor * (item[2] if self.is_usd_extra else 1),
-            'min_quantity': 0,
-            'percent_price': 0,
-            'price_discount': 0,
-            'price_max_margin': 0,
-            'price_min_margin': 0,
-            'price_round': 0,
-            'price_surcharge': 0,
-            'pricelist_id': self.id,
-            'product_id': False,
-            'product_tmpl_id': item[0]} for item in missing_items]
-        self.env['product.pricelist.item'].create(product_pricelist_item)
-
-
-class PricelistItem(models.Model):
-    _inherit = "product.pricelist.item"
-
-    currency_factor = fields.Boolean(default=False)
-
     def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
-        if self.compute_price == 'fixed' and self.currency_factor:
-            extra_shipping = 0.0 if not self.pricelist_id.extra_shipping_fee else product.extra_shipping_fee
-            extra_usd = 1.0 if not self.pricelist_id.is_usd_extra else product.usd_extra_price_factor
-            price = (product.list_price + extra_shipping) * self.pricelist_id.currency_factor * extra_usd
+        if self.compute_price == 'fixed' and self.currency_factor > 0:
+            extra_shipping = 0.0 if not self.extra_shipping_fee else product.extra_shipping_fee
+            extra_usd = 1.0 if not self.is_usd_extra else product.usd_extra_price_factor
+            price = (product.list_price + extra_shipping) * self.currency_factor * extra_usd
         else:
             price = super()._compute_price(price, price_uom, product, quantity, partner)
         return price
