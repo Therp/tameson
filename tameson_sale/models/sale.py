@@ -531,8 +531,9 @@ class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     is_currency_factor = fields.Boolean(string='Currency converted?', compute='get_currency_factor', inverse='set_currency_factor')
-    is_usd_extra = fields.Boolean(string='Use USD extra price?', default=False)
     currency_factor = fields.Float(digits='Product Price')
+    is_usd_extra = fields.Boolean(string='Use USD extra price?', default=False)
+    extra_shipping_fee = fields.Boolean(default=False)
 
     @api.depends('currency_factor')
     def get_currency_factor(self):
