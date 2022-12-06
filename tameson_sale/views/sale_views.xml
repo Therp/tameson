@@ -70,16 +70,20 @@
         </field>
     </record>
     
-    <record id="product_pricelist_view" model="ir.ui.view">
-        <field name="name">product_pricelist_view</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.product_pricelist_view" />
+
+    <record id="product_pricelist_item_form_view" model="ir.ui.view">
+        <field name="name">product_pricelist_item_form_view</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view" />
         <field name="arch" type="xml">
-            <field name="currency_id" position="after">
-                <field name="is_currency_factor" />
-                <field name="currency_factor" attrs="{'invisible': [('is_currency_factor','=',False)] }"/>
-                <field name="is_usd_extra" widget="boolean_toggle" attrs="{'invisible': [('is_currency_factor','=',False)] }"/>
+            <field name="fixed_price" position="replace">
+                <field name="is_currency_factor" attrs="{'invisible':[('compute_price', '!=', 'fixed')]}" />
+                <field name="fixed_price" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','=',True)]}"/>
+                <field name="currency_factor" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
+                <field name="is_usd_extra" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
+                <field name="extra_shipping_fee" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
             </field>
         </field>
     </record>
+    
 </odoo>

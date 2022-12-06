@@ -11,6 +11,7 @@
                         <group string="Pricelist">
                             <field name="pack_factor" />
                             <field name="usd_extra_price_factor" />
+                            <field name="extra_shipping_fee" />
                             <field name="additional_cost" />
                         </group>
                         <group string="Leadtime and max qty to order">

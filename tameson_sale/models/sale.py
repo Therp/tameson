@@ -3,6 +3,7 @@ import base64, re, json
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import formataddr, float_compare, float_is_zero
+from odoo.tools import float_repr
 
 class SaleOrder(models.Model):
     _name= 'sale.order'
@@ -461,13 +462,6 @@ class SaleOrderLine(models.Model):
         compute='_get_t_invoice_policy'
     )
 
-    @api.onchange('product_uom', 'product_uom_qty')
-    def product_uom_change(self):
-        res = super(SaleOrderLine, self).product_uom_change()
-        if self.order_id.pricelist_id.currency_factor > 0:
-            self.price_unit = self.product_id.lst_price * self.order_id.pricelist_id.currency_factor
-        return res
-
     @api.depends('order_id.t_invoice_policy', 'product_id.invoice_policy', 'product_id.type')
     def _get_t_invoice_policy(self):
         for line in self:
@@ -527,12 +521,14 @@ class MailComposer(models.TransientModel):
             vals['value']['attachment_ids'] += [(4, attachment.id, 0)]
         return vals
 
-class ProductPricelist(models.Model):
-    _inherit = "product.pricelist"
+class PricelistItem(models.Model):
+    _inherit = "product.pricelist.item"
+
 
     is_currency_factor = fields.Boolean(string='Currency converted?', compute='get_currency_factor', inverse='set_currency_factor')
-    is_usd_extra = fields.Boolean(string='Use USD extra price?', default=False)
     currency_factor = fields.Float(digits='Product Price')
+    is_usd_extra = fields.Boolean(string='Use USD extra price?', default=False)
+    extra_shipping_fee = fields.Boolean(default=False)
 
     @api.depends('currency_factor')
     def get_currency_factor(self):
@@ -546,61 +542,20 @@ class ProductPricelist(models.Model):
         else:
             self.currency_factor = 0
 
-    def set_currency_pricelist_prices(self):
-        self.env.cr.execute(
-'''update product_pricelist_item ppi
-set fixed_price = calculate.price
-from 
-(select
-    ppi.id,
-    case
-    when not pp.is_usd_extra then pp.currency_factor * pt.list_price
-    when pp.is_usd_extra then pp.currency_factor * pt.list_price * pt.usd_extra_price_factor
-    end price
-from
-    product_pricelist_item ppi
-    left join product_pricelist pp on pp.id = ppi.pricelist_id
-    left join product_template pt on pt.id = ppi.product_tmpl_id
-where
-    ppi.active = true
-    AND pp.currency_factor > 0
-    AND product_tmpl_id is not null
-) AS calculate
-WHERE ppi.id = calculate.id
-AND ppi.fixed_price != ROUND(calculate.price::NUMERIC, 3)''')
-        for record in self.search([('currency_factor','>',0)]):
-            record.with_delay().add_missing_currency_pricelist_items()
+    def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
+        if self.compute_price == 'fixed' and self.currency_factor > 0:
+            extra_shipping = 0.0 if not self.extra_shipping_fee else product.extra_shipping_fee
+            extra_usd = 1.0 if not self.is_usd_extra else product.usd_extra_price_factor
+            price = (product.list_price + extra_shipping) * self.currency_factor * extra_usd
+        else:
+            price = super()._compute_price(price, price_uom, product, quantity, partner)
+        return price
 
-    def add_missing_currency_pricelist_items(self):
-        self.ensure_one()
-        missing_item_query = \
-'''select id, list_price, usd_extra_price_factor from product_template pt
-where id in (
-    select id from product_template 
-        where active=true
-    except
-    select distinct product_tmpl_id from product_pricelist_item 
-        where pricelist_id = %d
-    )
-'''
-        self.env.cr.execute(missing_item_query % self.id)
-        missing_items = self.env.cr.fetchall()
-        is_usd_extra = self.is_usd_extra
-        product_pricelist_item = [{'applied_on': '1_product',
-            'base': 'list_price',
-            'categ_id': False,
-            'compute_price': 'fixed',
-            'date_end': False,
-            'date_start': False,
-            'fixed_price': item[1] * self.currency_factor * (item[2] if self.is_usd_extra else 1),
-            'min_quantity': 0,
-            'percent_price': 0,
-            'price_discount': 0,
-            'price_max_margin': 0,
-            'price_min_margin': 0,
-            'price_round': 0,
-            'price_surcharge': 0,
-            'pricelist_id': self.id,
-            'product_id': False,
-            'product_tmpl_id': item[0]} for item in missing_items]
-        self.env['product.pricelist.item'].create(product_pricelist_item)
+    @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
+        'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
+    def _get_pricelist_item_name_price(self):
+        super()._get_pricelist_item_name_price()
+        decimal_places = self.env['decimal.precision'].precision_get('Product Price')
+        for item in self:
+            if item.compute_price == 'fixed' and item.currency_factor > 0:
+                item.price = "Currency converted. Rate: %s" % float_repr(item.currency_factor, decimal_places)
