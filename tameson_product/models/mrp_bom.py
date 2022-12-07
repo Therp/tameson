@@ -59,6 +59,8 @@ FROM (select distinct additional_cost from product_template) as ac)''')
         for bom in self:
             product_tmpl_id = bom.product_tmpl_id
             product = product_tmpl_id.product_variant_id
+            if not product_tmpl_id.active:
+                continue
             add_price = 0
             additional_costs = bom.product_tmpl_id.additional_cost or ''
             for sku in additional_costs.split(','):
