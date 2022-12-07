@@ -56,8 +56,7 @@ FROM (select distinct additional_cost from product_template) as ac)''')
 where default_code in (SELECT unnest(string_to_array(additional_cost, ',')) AS sku
 FROM (select distinct additional_cost from product_template) as ac)''')
         add_prices = dict(self.env.cr.fetchall())
-        boms = self.search([]).filtered(lambda b: b.product_tmpl_id.active)
-        for bom in boms:
+        for bom in self:
             product_tmpl_id = bom.product_tmpl_id
             product = product_tmpl_id.product_variant_id
             add_price = 0
