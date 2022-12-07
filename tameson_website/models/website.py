@@ -11,6 +11,8 @@ from odoo.exceptions import UserError, ValidationError
 class Website(models.Model):
     _inherit = 'website'
 
+    gtag_key = fields.Char()
+
     def get_open_orders(self):
         orders = self.env['sale.order'].sudo()
         if not self.env.user._is_public():

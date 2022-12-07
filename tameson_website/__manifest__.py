@@ -16,6 +16,7 @@
     ],
     'data': [
         'views/website.xml',
+        'views/website_views.xml',
     ],
     'qweb': [
     ],
