@@ -107,7 +107,7 @@ class ProductTemplateInherit(models.Model):
                 product.supplierinfo_code = first_supplier.product_code
                 product.supplierinfo_delay = first_supplier.delay
 
-    def set_updated_product_bom_price(self):
+    def set_updated_product_bom_price(self, split=2000):
         n_days = 2
         BOM = self.env['mrp.bom']
         updated_bom_query = """
@@ -124,13 +124,11 @@ SELECT id from mrp_bom
 """ % {'n_days': n_days}
         self.env.cr.execute(updated_bom_query)
         boms = BOM.browse([item[0] for item in self.env.cr.fetchall()])
-        boms.set_bom_sale_price()
+        boms.set_bom_price(split)
 
-    def set_all_product_bom_price(self):
+    def set_all_product_bom_price(self, split=2000):
         boms = self.env["mrp.bom"].search([])
-        boms.set_bom_sale_price()
-        for pos in range(0, len(boms), 5000):
-            boms[pos:pos+5000].with_delay().set_bom_cost_price_job()
+        boms.set_bom_price(split)
 
     def set_non_bom_lead(self):
         for pt in self:

@@ -8,6 +8,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_is_zero, float_compare
+from odoo.tools.profiler import profile
 
 import json
 
@@ -24,14 +25,11 @@ def get_qty(data, delay):
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
-    def set_bom_sale_price(self):
-        sale_n = 5000
-        cost_n = 10
-        boms = self.filtered(lambda b: not float_is_zero(b.product_tmpl_id.pack_factor, precision_digits=3))
-        for pos in range(0, len(boms), sale_n):
-            boms[pos:pos+sale_n].with_delay().set_bom_sale_price_job()
-        # for pos in range(0, len(self), cost_n):
-        #     self[pos:pos+cost_n].with_delay().set_bom_cost_price_job()
+    def set_bom_price(self, split=2000):
+        for pos in range(0, len(self), split):
+            self[pos:pos+split].with_delay().set_bom_sale_price_job()
+        for pos in range(0, len(self), split):
+            self[pos:pos+split].with_delay().set_bom_cost_price_job()
         
     def set_bom_sale_price_job(self):
         self.env.cr.execute('''select default_code, list_price from product_template
@@ -39,8 +37,9 @@ where default_code in (SELECT unnest(string_to_array(additional_cost, ',')) AS s
 FROM (select distinct additional_cost from product_template) as ac)''')
         add_prices = dict(self.env.cr.fetchall())
         for bom in self:
-            component_price = sum(bom.bom_line_ids.mapped(lambda l: l.product_id.list_price * l.product_qty))
-            if not float_is_zero(bom.product_qty, precision_digits=3):
+            if not (float_is_zero(bom.product_qty, precision_digits=2) or \
+                float_is_zero(bom.product_tmpl_id.pack_factor, precision_digits=2)):
+                component_price = sum(bom.bom_line_ids.mapped(lambda l: l.product_id.list_price * l.product_qty))
                 add_price = 0
                 additional_costs = bom.product_tmpl_id.additional_cost or ''
                 for sku in additional_costs.split(','):
@@ -54,17 +53,19 @@ FROM (select distinct additional_cost from product_template) as ac)''')
 where default_code in (SELECT unnest(string_to_array(additional_cost, ',')) AS sku
 FROM (select distinct additional_cost from product_template) as ac)''')
         add_prices = dict(self.env.cr.fetchall())
-        boms = self.search([]).filtered(lambda b: b.product_tmpl_id.active)
-        for bom in boms:
+        for bom in self:
             product_tmpl_id = bom.product_tmpl_id
             product = product_tmpl_id.product_variant_id
+            if not product_tmpl_id.active:
+                continue
             add_price = 0
             additional_costs = bom.product_tmpl_id.additional_cost or ''
             for sku in additional_costs.split(','):
                 add_price += self.env["product.template"].browse(add_prices.get(sku, False)).standard_price
             account = product_tmpl_id.property_account_expense_id.id or product_tmpl_id.categ_id.property_account_expense_categ_id.id
             price = product._compute_bom_price(bom) + add_price
-            product._change_standard_price(price, account)
+            if float_compare(bom.product_tmpl_id.standard_price, price, precision_digits=2) != 0:
+                product._change_standard_price(price, account)
 
         
     def set_bom_lead(self):
