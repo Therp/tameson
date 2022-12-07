@@ -14,6 +14,13 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.date_utils import add
 
 
+def get_vat_from_notes(notes):
+    vat = False
+    for item in notes:
+        if item.get('name','') == 'VAT Registration Number':
+            vat = item.get('value', False)
+    return vat
+
 def get_partner_vals(env, address, email):
     state_name = address.get('province')
     state_code = address.get('province_code')
@@ -164,7 +171,11 @@ class ResPartner(models.Model):
                 company = address.get('company', False)
                 partner_vals = get_partner_vals(self.env, address, email)
                 matched_contact = self.env['res.partner'].search([('email','=',email), ('parent_id','=',False)], limit=1)
-                partner_vals['vat'] = vals.get('metafields', {}).get('vat-id', False)
+                vat = get_vat_from_notes(vals.get('note_attributes',[]))
+                if not vat:
+                    vat = vals.get('metafields', {}).get('vat-id', False)
+                if vat:
+                    partner_vals['vat'] = vat
                 if company:
                     company_vals = partner_vals.copy()
                     company_vals.update(name=company, is_company=True)
