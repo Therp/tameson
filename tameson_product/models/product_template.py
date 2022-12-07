@@ -124,11 +124,11 @@ SELECT id from mrp_bom
 """ % {'n_days': n_days}
         self.env.cr.execute(updated_bom_query)
         boms = BOM.browse([item[0] for item in self.env.cr.fetchall()])
-        boms.set_bom_sale_price(split)
+        boms.set_bom_price(split)
 
     def set_all_product_bom_price(self, split=2000):
         boms = self.env["mrp.bom"].search([])
-        boms.set_bom_sale_price(split)
+        boms.set_bom_price(split)
 
     def set_non_bom_lead(self):
         for pt in self:

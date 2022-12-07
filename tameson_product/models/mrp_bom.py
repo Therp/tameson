@@ -25,7 +25,7 @@ def get_qty(data, delay):
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
-    def set_bom_sale_price(self, split=2000):
+    def set_bom_price(self, split=2000):
         for pos in range(0, len(self), split):
             self[pos:pos+split].with_delay().set_bom_sale_price_job()
         for pos in range(0, len(self), split):
