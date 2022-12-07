@@ -15,12 +15,7 @@
             <xpath expr="//ul[@id='top_menu']/li[1]" position="before">
                 <t t-call="tameson_website.language_selector" />
             </xpath>
-        </template>
-        <template id="layout_tameson" inherit_id="website.layout">
-            <t t-foreach="website.menu_id.child_id" position="attributes">
-                <attribute name="t-if">False</attribute>
-            </t>
-            <xpath expr="//script[@id='tracking_code']" position="after">
+            <xpath expr="//t[@t-call-assets='web.assets_frontend']" position="after">
                 <script id="tracking_code_gtag" t-if="website and website.gtag_key and not editable">
                     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -29,6 +24,11 @@
                         })(window,document,'script','dataLayer','<t t-esc="website.gtag_key"/>'.trim());
                 </script>
             </xpath>
+        </template>
+        <template id="layout_tameson" inherit_id="website.layout">
+            <t t-foreach="website.menu_id.child_id" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </t>
         </template>
         <template id="frontend_layout_tameson" inherit_id="web.frontend_layout">
             <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
