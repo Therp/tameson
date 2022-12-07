@@ -8,6 +8,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_is_zero, float_compare
+from odoo.tools.profiler import profile
 
 import json
 
@@ -49,6 +50,7 @@ FROM (select distinct additional_cost from product_template) as ac)''')
                 if float_compare(bom.product_tmpl_id.list_price, price, precision_digits=2) != 0:
                     bom.product_tmpl_id.write({'list_price': price})
 
+    @profile
     def set_bom_cost_price_job(self):
         self.env.cr.execute('''select default_code, id from product_template
 where default_code in (SELECT unnest(string_to_array(additional_cost, ',')) AS sku
