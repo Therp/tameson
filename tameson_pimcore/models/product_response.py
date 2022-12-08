@@ -329,8 +329,8 @@ class PimcoreProductResponseLine(models.Model):
         add_translation(self.env, product, "de_DE", self.name, self.name_de)
         add_translation(self.env, product, "es_ES", self.name, self.name_es)
         # add_pricelist_item(Eur, product, self.eur)
-        add_pricelist_item(PRICELIST_DICT['GBP'], product, self.gbp)
-        add_pricelist_item(PRICELIST_DICT['USD'], product, self.usd)
+        # add_pricelist_item(PRICELIST_DICT['GBP'], product, self.gbp)
+        # add_pricelist_item(PRICELIST_DICT['USD'], product, self.usd)
         self.write(
             {
                 "state": "created",
