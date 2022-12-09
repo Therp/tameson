@@ -11,6 +11,10 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.base_vat.models.res_partner import _region_specific_vat_codes, _ref_vat
 from odoo.addons.payment.controllers.portal import PaymentProcessing
+from odoo.addons.website.controllers.main import Website
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class CustomerPortal(CustomerPortal):
@@ -118,3 +122,17 @@ class WebsiteSale(WebsiteSale):
             acquirers = [acq for acq in values['acquirers'] if acq.provider != 'transfer'] 
             values['acquirers'] = acquirers
         return values
+
+class WebsiteTameson(Website):
+    
+    @route(website=True, auth="public", sitemap=False)
+    def web_login(self, redirect=None, *args, **kw):
+        response = super(WebsiteTameson, self).web_login(redirect=redirect, *args, **kw)
+        try:
+            if not redirect and request.params['login_success']:
+                lang = request.env['res.users'].browse(request.uid).lang
+                lang_code = request.env['res.lang']._lang_get_code(lang)
+                response.set_cookie('frontend_lang', lang_code)
+        except:
+            _logger.warn("Error setting website language.")
+        return response
