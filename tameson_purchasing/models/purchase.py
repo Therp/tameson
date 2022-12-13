@@ -82,12 +82,13 @@ class PurchaseOrder(models.Model):
                     product_code = supplier_rec[0].product_code
                 else:
                     product_code = po_line.product_id.default_code
-                qty = str(po_line.product_qty)
-                text_val_to_clipboard = (
-                    text_val_to_clipboard + "{prod_qty}\t{prod_code}\n".format(
-                        prod_qty=qty, prod_code=product_code
+                if not po_line.product_id.default_code.startswith("LDS-"):
+                    qty = str(po_line.product_qty)
+                    text_val_to_clipboard = (
+                        text_val_to_clipboard + "{prod_qty}\t{prod_code}\n".format(
+                            prod_qty=qty, prod_code=product_code
+                        )
                     )
-                )
             po.t_clipboard_text_handle = text_val_to_clipboard
 
     def tameson_po_copy_clipboard(self):
