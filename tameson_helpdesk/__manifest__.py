@@ -11,6 +11,7 @@
         'helpdesk_account',
         'helpdesk_stock',
         'tameson_base',
+        'tameson_sale',
         'website',
     ],
     'data': [
