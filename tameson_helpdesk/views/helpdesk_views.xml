@@ -30,5 +30,28 @@
             </field>
         </field>
     </record>
+
+    
+    <record id="helpdesk_ticket_view_form_inherit_helpdesk_invoicing" model="ir.ui.view">
+        <field name="name">helpdesk_ticket_view_form_inherit_helpdesk_invoicing</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_account.helpdesk_ticket_view_form_inherit_helpdesk_invoicing" />
+        <field name="arch" type="xml">
+            <button name="%(helpdesk_account.helpdesk_ticket_action_refund)d" position="attributes">
+                <attribute name="groups"></attribute>
+            </button>
+        </field>
+    </record>
+    
+    <record id="helpdesk_ticket_view_form_inherit_stock_user" model="ir.ui.view">
+        <field name="name">helpdesk_ticket_view_form_inherit_stock_user</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_stock.helpdesk_ticket_view_form_inherit_stock_user" />
+        <field name="arch" type="xml">
+            <button name="%(stock.act_stock_return_picking)d" position="attributes">
+                <attribute name="groups"></attribute>
+            </button>
+        </field>
+    </record>
     
 </odoo>

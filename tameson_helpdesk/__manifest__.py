@@ -8,8 +8,9 @@
     'author': "Tameson",
     'depends': [
         'helpdesk_sale',
+        'helpdesk_account',
+        'helpdesk_stock',
         'tameson_base',
-        'tameson_sale',
         'website',
     ],
     'data': [
