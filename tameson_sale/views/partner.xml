@@ -11,6 +11,9 @@
                         <field name="credit_limit" />
                         <!-- <field name="credit" /> -->
                     </group>
+                    <group name="group_credit_limit" string="Credit Limit" attrs="{'invisible': [('parent_id','!=',False)]}" groups="sales_team.group_sale_salesman" >
+                        <field name="credit_limit" readonly="1"/>
+                    </group>
                 </xpath>
             </field>
         </record>
