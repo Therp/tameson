@@ -377,3 +377,11 @@ class DeliveryCarrier(models.Model):
 
     t_aa_shipper_mapping  = fields.Char(string='Active Ant Shipment Mapping',)
     
+
+class ReturnPicking(models.TransientModel):
+    _inherit = 'stock.return.picking'
+
+    @api.onchange('picking_id')
+    def _onchange_picking_id(self):
+        super()._onchange_picking_id()
+        self.location_id = False
