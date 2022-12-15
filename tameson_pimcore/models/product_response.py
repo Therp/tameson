@@ -310,11 +310,24 @@ class PimcoreProductResponseLine(models.Model):
             start=2,
             end=0,
         )
+        price = (
+            self.env["res.currency"]
+            .browse(CURRENCY_DICT[self.supplier_price_currency])
+            ._convert(
+                self.supplier_price,
+                self.env.user.company_id.currency_id,
+                self.env.user.company_id,
+                self.create_date,
+            )
+        )
         vals.update(
             {
                 "image_1920": image_data,
                 "categ_id": final_categ.id,
                 "public_categ_ids": [(6, 0, ecom_categ.ids)],
+                "list_price": self.eur,
+                "standard_price": price,
+                "supplier_series": self.supplier_series,
             }
         )
         if self.supplier_email:
@@ -391,16 +404,6 @@ class PimcoreProductResponseLine(models.Model):
                     "description": "new from pimcore",
                 }
             )
-        price = (
-            self.env["res.currency"]
-            .browse(CURRENCY_DICT[self.supplier_price_currency])
-            ._convert(
-                self.supplier_price,
-                self.env.user.company_id.currency_id,
-                self.env.user.company_id,
-                self.create_date,
-            )
-        )
         origin = self.env["res.country"].search(
             [("code", "=", self.origin_country)], limit=1
         )
@@ -414,14 +417,12 @@ class PimcoreProductResponseLine(models.Model):
             "t_length": self.depth,
             "t_width": self.width,
             "type": "product",
-            "list_price": self.eur,
             "modification_date": self.modification_date,
             "hs_code": self.intrastat,
             "intrastat_id": commodity_code.id,
             "t_product_description_short": self.short_description,
             "t_use_up": self.use_up,
             "purchase_ok": not self.use_up,
-            "standard_price": price,
             "t_use_up_replacement_sku": self.replacement_sku,
             "intrastat_origin_country_id": origin.id,
             "t_customer_backorder_allowed": self.backorder,
@@ -438,9 +439,6 @@ class PimcoreProductResponseLine(models.Model):
             "pack_model": self.pack_model,
             "pack_factor": self.pack_factor,
             "sticker_barcode": self.sticker_barcode,
-            "max_qty_order": self.max_qty_order,
-            "min_qty_order": self.min_qty_order,
-            "supplier_series": self.supplier_series,
             "supplier_shipping_type": self.supplier_shipping_type,
             "additional_cost": self.additional_cost,
         }
@@ -448,9 +446,7 @@ class PimcoreProductResponseLine(models.Model):
             data.update({
                 "max_qty_order": self.max_qty_order,
                 "min_qty_order": self.min_qty_order,
-                "supplier_series": self.supplier_series,
                 "supplier_shipping_type": self.supplier_shipping_type,
-                "t_customer_lead_time": self.customer_lead_time,
             })
         return data
 
