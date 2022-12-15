@@ -14,9 +14,9 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     t_aa_name = fields.Char('Active Ant Name', compute='_get_t_aa_name')
-    t_aa_id = fields.Char('Active Ant ID', readonly=True)
-    t_aa_allow_cancel = fields.Boolean(string='AA Allow Cancellation', default=False, track_visibility='onchange')
-    t_aa_track_url = fields.Char('Active Ant tracktraceUrl', readonly=True)
+    t_aa_id = fields.Char('Active Ant ID', readonly=True, copy=False)
+    t_aa_allow_cancel = fields.Boolean(string='AA Allow Cancellation', default=False, track_visibility='onchange', copy=False)
+    t_aa_track_url = fields.Char('Active Ant tracktraceUrl', readonly=True, copy=False)
     source_so_id = fields.Many2one(comodel_name='sale.order', compute='_get_source_so')
 
     @api.depends('origin')
