@@ -115,8 +115,10 @@ class ShopifyOrderDataQueueLineEpt(models.Model):
 class ShopifyInstanceEpt(models.Model):
     _inherit = "shopify.instance.ept"
 
+    shopify_multipass_host = fields.Char("Shop Address", )
     shopify_multipass_secret = fields.Char("Multipass secret", )
     export_done_webhook = fields.Char()
+    customer_webhook = fields.Char()
     multipass_country_ids = fields.One2many(comodel_name='res.country', inverse_name='shopify_instance_id',)
     
 
@@ -144,10 +146,83 @@ class ShopifyInstanceEpt(models.Model):
         self.export_done_webhook = result['data']['webhookSubscriptionCreate']['webhookSubscription']['legacyResourceId']
 
     def delete_bulk_export_wh(self):
-        self.connect_in_shopify()
-        webhook = shopify.Webhook().find(self.export_done_webhook)
-        webhook.destroy()
+        self.delete_wh(self.export_done_webhook)
         self.export_done_webhook = False
+
+    def delete_wh(self, webhook_id):
+        self.connect_in_shopify()
+        webhook = shopify.Webhook().find(webhook_id)
+        webhook.destroy()
+
+    def create_customer_webhook(self):
+        self.connect_in_shopify()
+        odoo_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        create = shopify.Webhook.create({
+            "topic": "customers/create",
+            "address": "%s/shopify/customer_create/%d" % (odoo_host, self.id),
+            "format": "json"
+        })
+        update = shopify.Webhook.create({
+            "topic": "customers/update",
+            "address": "%s/shopify/customer_update/%d" % (odoo_host, self.id),
+            "format": "json"
+        })
+        self.customer_webhook = '%d,%d' % (create.id, update.id)
+
+    def delete_customer_webhook(self):
+        for id in self.customer_webhook.split(','):
+            self.delete_wh(id)
+        self.customer_webhook = False
+
+    def process_customer_webhook_data(self, data):
+        id = data['id']
+        email = data['email']
+        self.connect_in_shopify()
+        shopify_customer = shopify.Customer.find(id)
+        Partner = self.env['res.partner']
+        shopify_te = data['tax_exempt']
+        contact = Partner.search([('email','=ilike',email)], order='parent_id DESC', limit=1)
+        odoo_te = bool(contact and contact.get_tax_exempt())
+        if odoo_te != shopify_te:
+            shopify_customer.tax_exempt = odoo_te
+            shopify_customer.save()
+        metafields = shopify_customer.metafields()
+        vat_match = False
+        invoice_email_match = False
+        odoo_invoice_email = contact.get_invoice_email()
+        for field in metafields:
+            if field.key == 'vat_number':
+                if field.value != contact.vat:
+                    field.destroy()
+                else:
+                    vat_match = True
+            if field.key == 'invoice_email':
+                if field.value != odoo_invoice_email:
+                    field.destroy()
+                else:
+                    invoice_email_match = True
+        if not vat_match:
+            shopify_customer.add_metafield(shopify.Metafield({
+                'key': 'vat_number',
+                'value': contact.vat,
+                'value_type': 'string',
+                'namespace': 'sufio',
+            }))
+        if not invoice_email_match:
+            shopify_customer.add_metafield(shopify.Metafield({
+                'key': 'invoice_email',
+                'value': odoo_invoice_email,
+                'value_type': 'string',
+                'namespace': 'details',
+            }))
+        return {
+            'vat_match': vat_match,
+            'invoice_email_match': invoice_email_match,
+            'tax_exempt_match': odoo_te == shopify_te,
+        }
+            
+
+
 
 class ResCountry(models.Model):
     _inherit = 'res.country'

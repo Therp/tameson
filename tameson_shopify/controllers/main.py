@@ -16,10 +16,6 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-import logging
-_logger = logging.getLogger(__name__)
-
-
 class Shopify(Controller):
 
     @route(['/shopify_hosts'], type='http', auth="user", website=True)
@@ -49,7 +45,7 @@ class Shopify(Controller):
             url_obj = urlparse(shopify_page)
             hostname = url_obj.hostname
             if hostname:
-                instance = instance.search([('shopify_host','ilike',hostname),
+                instance = instance.search([('shopify_multipass_host','ilike',hostname),
                     ('shopify_multipass_secret','!=',False)], limit=1)
                 if 'checkouts' in shopify_page:
                     shopify_page = '/cart'
@@ -71,7 +67,7 @@ class Shopify(Controller):
         partner_data = partner._get_shopify_partner_data()
         partner_data['return_to'] = shopify_page or '/'
         multipass = Multipass(instance.shopify_multipass_secret)
-        url = multipass.generateURL(partner_data, instance.shopify_host)
+        url = multipass.generateURL(partner_data, instance.shopify_multipass_host)
         return request.redirect(url)
 
 
@@ -97,3 +93,12 @@ class Shopify(Controller):
             'ODOO-checkout': checkout,
         }
         return value
+    
+    @route(['/shopify/customer_create/<int:instance>','/shopify/customer_update/<int:instance>'], 
+        type='json', auth="public", methods=["POST"], csrf=False)
+    def shopify_export_done(self, instance, **kw):
+        data = json.loads(request.httprequest.data.decode())
+        _logger.info('ShopifyCustomerCreate: %s' % str(data))
+        instance = request.env['shopify.instance.ept'].sudo().browse(instance).with_delay()\
+            .process_customer_webhook_data(data)
+        return True

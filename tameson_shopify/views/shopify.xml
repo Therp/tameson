@@ -6,16 +6,24 @@
             <field name="model">shopify.instance.ept</field>
             <field name="inherit_id" ref="shopify_ept.shopify_instance_form_view_ept" />
             <field name="arch" type="xml">
-                <field name="shopify_password" position="after">
-                    <field name="shopify_multipass_secret" password="1" />
-                    <field name="multipass_country_ids" widget="many2many_tags"/>
-                    <field name="export_done_webhook" />
-                </field>
-                <xpath expr="//header[1]" position="after">
-                    <button name="create_bulk_export_wh" string="Bulk" type="object" 
-                        class="oe_highlight" attrs="{'invisible': [('export_done_webhook','!=',False)]}"/>
-                    <button name="delete_bulk_export_wh" string="Bulk remove" type="object" 
-                        class="oe_highlight" attrs="{'invisible': [('export_done_webhook','=',False)]}"/>
+                <xpath expr="//page[last()]" position="after">
+                    <page name="tameson" string="Tameson">
+                        <group>
+                            <field name="shopify_multipass_host" />
+                            <field name="shopify_multipass_secret" password="1" />
+                            <field name="multipass_country_ids" widget="many2many_tags"/>
+                            <field name="export_done_webhook" />
+                            <field name="customer_webhook" />        
+                            <button name="create_bulk_export_wh" string="Bulk export product" type="object" 
+                            class="oe_highlight" attrs="{'invisible': [('export_done_webhook','!=',False)]}"/>
+                            <button name="create_customer_webhook" string="Customer Webhook" type="object" 
+                                class="oe_highlight" attrs="{'invisible': [('customer_webhook','!=',False)]}"/>
+                            <button name="delete_bulk_export_wh" string="Bulk remove" type="object" 
+                                class="oe_highlight" attrs="{'invisible': [('export_done_webhook','=',False)]}"/>
+                            <button name="delete_customer_webhook" string="Customer remove" type="object" 
+                                class="oe_highlight" attrs="{'invisible': [('customer_webhook','=',False)]}"/>
+                        </group>
+                    </page>
                 </xpath>                
             </field>
         </record>        
