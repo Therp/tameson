@@ -13,6 +13,7 @@
                             <field name="usd_extra_price_factor" />
                             <field name="extra_shipping_fee" />
                             <field name="additional_cost" />
+                            <field name="margin_eur_group" />
                         </group>
                         <group string="Leadtime and max qty to order">
                             <field name="t_customer_lead_time" />

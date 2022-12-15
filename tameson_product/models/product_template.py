@@ -80,6 +80,7 @@ class ProductTemplateInherit(models.Model):
     additional_cost = fields.Char()
     ## End
     extra_shipping_fee = fields.Float(default=0.0)
+    margin_eur_group = fields.Float()
 
     def cron_compute_all_bom_price(self):
         boms = (
@@ -129,6 +130,7 @@ SELECT id from mrp_bom
     def set_all_product_bom_price(self, split=2000):
         boms = self.env["mrp.bom"].search([])
         boms.set_bom_price(split)
+        self.set_all_margin_eur_group()
 
     def set_non_bom_lead(self):
         for pt in self:
@@ -148,3 +150,12 @@ SELECT id from mrp_bom
                         "max_qty_order_array": delay_array,
                     }
                 )
+
+    def set_all_margin_eur_group(self, n=25000):
+        products = self.search([])
+        for pos in range(0,len(products),n):
+            products[pos:pos+n].with_delay().set_margin_eur_group()
+    
+    def set_margin_eur_group(self):
+        for product in self:
+            product.write({'margin_eur_group': (product.list_price - product.standard_price)/10})
