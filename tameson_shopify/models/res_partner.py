@@ -51,6 +51,13 @@ def get_partner_vals(env, address, email):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    def get_invoice_email(self):
+        self.ensure_one()
+        if self.parent_id:
+            self = self.parent_id
+        invoices  = self.child_ids.filtered(lambda child: child.type == 'invoice' and self.email != child.email)
+        return invoices[:1].email
+
     def _get_shopify_partner_data(self):
         self.ensure_one()
         tag_string = 'odoo'
@@ -223,4 +230,8 @@ class ResPartner(models.Model):
                 except:
                     pass
         return contact
-                
+
+    def get_tax_exempt(self):
+        self.ensure_one()
+        group = self.env.ref('__export__.europe_excluding_nl', False)
+        return self.vat and group in self.country_id.country_group_ids
