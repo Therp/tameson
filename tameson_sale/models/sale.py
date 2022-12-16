@@ -391,6 +391,10 @@ where sot.aml_count = 0
             if not order.carrier_id and order.order_line and order.partner_id.country_id and order.partner_id.country_id.select_shipment_id:
                 order._add_default_shipping()
             order.order_line._compute_tax_id()
+            if order.partner_id.country_id.customer_note:
+                order.write({
+                    'note': (order.note or '') + order.partner_id.country_id.customer_note
+                })
         return res
 
     def create_assign_crm(self):
