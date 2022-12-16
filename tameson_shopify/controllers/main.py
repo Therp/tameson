@@ -96,7 +96,7 @@ class Shopify(Controller):
     
     @route(['/shopify/customer_create/<int:instance>','/shopify/customer_update/<int:instance>'], 
         type='json', auth="public", methods=["POST"], csrf=False)
-    def shopify_export_done(self, instance, **kw):
+    def shopify_customer_webhook(self, instance, **kw):
         data = json.loads(request.httprequest.data.decode())
         _logger.info('ShopifyCustomerCreate: %s' % str(data))
         instance = request.env['shopify.instance.ept'].sudo().browse(instance).with_delay()\
