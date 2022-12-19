@@ -9,6 +9,7 @@ from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 def filter_orders(order):
@@ -88,3 +89,22 @@ class SaleOrder(models.Model):
     def process_orders_and_invoices_ept(self):
         order = self.filtered(lambda o: filter_orders(o))
         return super(SaleOrder, order).process_orders_and_invoices_ept()
+
+    def _get_sale_order_has_issues(self):
+        vals = super(SaleOrder, self)._get_sale_order_has_issues()
+        from_date = datetime.now() - relativedelta(hours=1)
+        draft_queue = self.env['shopify.order.data.queue.ept'].search([('state','!=','completed'), 
+            ('create_date','<=',from_date)])
+        draft_orders = self.env['sale.order'].search([('state','in',('draft','sent')), ('shopify_order_id','!=',False)
+            ('create_date','<=',from_date)])
+        if draft_queue:
+            vals.append({
+                'name': 'Shopify Order Queue Pending',
+                'orders': [(len(draft_queue),'Shopify order data queue pending import')]
+            })
+        if draft_orders:
+            vals.append({
+                'name': 'Shopify Orders Draft',
+                'orders': draft_orders.mapped(lambda o: (o.id, o.name))
+            })
+        return vals
