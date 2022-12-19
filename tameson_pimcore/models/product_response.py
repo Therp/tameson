@@ -353,8 +353,6 @@ class PimcoreProductResponseLine(models.Model):
     def update_product(self, product_id):
         product = self.env["product.template"].browse(product_id)
         vals = self.get_product_vals()
-        if not float_is_zero(product.standard_price, precision_digits=2):
-            vals.pop("standard_price")
         add_translation(self.env, product, "nl_NL", self.name, self.name_nl)
         add_translation(self.env, product, "fr_FR", self.name, self.name_fr)
         add_translation(self.env, product, "de_DE", self.name, self.name_de)
