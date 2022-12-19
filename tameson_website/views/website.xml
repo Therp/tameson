@@ -29,6 +29,9 @@
             <t t-foreach="website.menu_id.child_id" position="attributes">
                 <attribute name="t-if">False</attribute>
             </t>
+            <meta name="generator" position="after">
+                <meta name="robots" content="noindex" />
+            </meta>
         </template>
         <template id="frontend_layout_tameson" inherit_id="web.frontend_layout">
             <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
