@@ -11,6 +11,7 @@
                     <field name="select_shipment_id" />
                     <field name="select_lang" />
                     <field name="select_pricelist_id" />
+                    <field name="customer_note" />
                 </field>
             </field>
         </record>

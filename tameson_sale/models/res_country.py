@@ -18,5 +18,5 @@ class ResCountry(models.Model):
     select_shipment_id = fields.Many2one(string='Default Shipment',comodel_name='delivery.carrier',ondelete='restrict',)
     select_lang = fields.Selection(_lang_get, string='Default Language',)
     select_pricelist_id = fields.Many2one(string='Default Pricelist', comodel_name='product.pricelist', ondelete='restrict',)
+    customer_note = fields.Text()
     
-
