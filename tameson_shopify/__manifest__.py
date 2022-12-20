@@ -9,6 +9,7 @@
     'depends': [
         'shopify_ept',
         'tameson_contact',
+        'tameson_sale',
         'queue_job',
     ],
     'data': [
