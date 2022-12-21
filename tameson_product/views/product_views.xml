@@ -12,6 +12,7 @@
                             <field name="pack_factor" />
                             <field name="usd_extra_price_factor" />
                             <field name="extra_shipping_fee" />
+                            <field name="extra_shipping_fee_gbp" />
                             <field name="additional_cost" />
                             <field name="margin_eur_group" />
                         </group>

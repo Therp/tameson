@@ -82,6 +82,7 @@
                 <field name="currency_factor" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
                 <field name="is_usd_extra" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
                 <field name="extra_shipping_fee" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
+                <field name="extra_shipping_fee_gbp" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
             </field>
         </field>
     </record>
