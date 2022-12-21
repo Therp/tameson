@@ -51,6 +51,11 @@
                 <strong>Payment Terms:</strong>
                 <p class="m-0" t-field="doc.payment_term_id.name"/>
             </div>
+            <t t-set="lead" t-value="max(doc.order_line.mapped('customer_lead') or [0])" />
+            <div class="col-auto mw-100 mb-2" t-if="lead" name="customer_lead">
+                <strong>Expected lead time:</strong>
+                <p class="m-0"><t t-esc="'%d' % lead" /> Days</p>
+            </div>
         </xpath>
         <xpath expr="//div[@t-if=&quot;doc.user_id.name&quot;]" position="attributes">
             <attribute name="style">display:none</attribute>
