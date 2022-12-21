@@ -12,6 +12,9 @@ from urllib.parse import urlparse
 
 from multipass import Multipass
 import json
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -98,7 +101,10 @@ class Shopify(Controller):
         type='json', auth="public", methods=["POST"], csrf=False)
     def shopify_customer_webhook(self, instance, **kw):
         data = json.loads(request.httprequest.data.decode())
-        _logger.info('ShopifyCustomerCreate: %s' % str(data))
-        instance = request.env['shopify.instance.ept'].sudo().browse(instance).with_delay()\
-            .process_customer_webhook_data(data)
+        from_date = datetime.now() - relativedelta(hours=1)
+        email = data.get('email', False)
+        if email and len(self.env['queue.job'].search([('name','=','shopify.instance.ept.process_customer_webhook_data'),
+            ('func_string','ilike',email), ('date_created','>=',from_date)])) <= 3:
+            instance = request.env['shopify.instance.ept'].sudo().browse(instance).with_delay()\
+                .process_customer_webhook_data(data)
         return True

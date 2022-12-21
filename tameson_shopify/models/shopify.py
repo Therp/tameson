@@ -182,6 +182,10 @@ class ShopifyInstanceEpt(models.Model):
         Partner = self.env['res.partner']
         shopify_te = data['tax_exempt']
         contact = Partner.search([('email','=ilike',email)], order='parent_id DESC', limit=1)
+        if not contact:
+            return {
+                'result': 'Email doesn\'t match with any contact %s' % email
+            }
         odoo_te = bool(contact and contact.get_tax_exempt())
         if odoo_te != shopify_te:
             shopify_customer.tax_exempt = odoo_te
@@ -221,8 +225,6 @@ class ShopifyInstanceEpt(models.Model):
             'tax_exempt_match': odoo_te == shopify_te,
         }
             
-
-
 
 class ResCountry(models.Model):
     _inherit = 'res.country'
