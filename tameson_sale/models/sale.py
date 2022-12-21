@@ -529,7 +529,7 @@ class PricelistItem(models.Model):
     currency_factor = fields.Float(digits='Product Price')
     is_usd_extra = fields.Boolean(string='Use USD extra price?', default=False)
     extra_shipping_fee = fields.Boolean(string="Extra shipping fee USD", default=False)
-    extra_shipping_fee_gbp = fields.Boolean(default=False)
+    extra_shipping_fee_gbp = fields.Boolean(string="Extra shipping fee GBP", default=False)
 
     @api.depends('currency_factor')
     def get_currency_factor(self):

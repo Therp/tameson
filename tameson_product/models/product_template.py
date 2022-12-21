@@ -80,7 +80,7 @@ class ProductTemplateInherit(models.Model):
     additional_cost = fields.Char()
     ## End
     extra_shipping_fee = fields.Float(string="Extra shipping fee USD", default=0.0)
-    extra_shipping_fee_gbp = fields.Float(default=0.0)
+    extra_shipping_fee_gbp = fields.Float(string="Extra shipping fee GBP", default=0.0)
     margin_eur_group = fields.Float()
 
     def cron_compute_all_bom_price(self):
