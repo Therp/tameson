@@ -9,6 +9,20 @@ class AccountMove(models.Model):
         string=_('Comment'),
         required=False
     )
+    restock_fee_limit_warning = fields.Boolean(compute='_get_restock_fee_limit')
+    restock_fee_limit = fields.Char(compute='_get_restock_fee_limit')
+
+    def _get_restock_fee_limit(self):
+        restock_fee_limit = self.env["ir.config_parameter"].sudo().get_param("restock_fee_limit", 0)
+        limit = float(restock_fee_limit)
+        for record in self:
+            if limit > 1 and record.amount_total >= limit:
+                record.restock_fee_limit_warning = True
+                record.restock_fee_limit = restock_fee_limit
+            else:
+                record.restock_fee_limit_warning = False
+                record.restock_fee_limit = ''
+
 
     @api.model
     def get_sale_order(self):
