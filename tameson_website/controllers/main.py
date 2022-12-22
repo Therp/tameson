@@ -18,12 +18,15 @@ _logger = logging.getLogger(__name__)
 
 
 class CustomerPortal(CustomerPortal):
+    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id", "zipcode"]
+    OPTIONAL_BILLING_FIELDS = ["state_id", "vat", "company_name", "street2"]
+
     def details_form_validate(self, data):
         error, error_message = super(CustomerPortal, self).details_form_validate(data)
         partner = request.env.user.partner_id
         if error.get("vat", False) == "error":
             country = (int(data['country_id']) if data.get('country_id') else False)
-            country = request.env['res.country'].browse(country).code.lower()
+            country = request.env['res.country'].browse(country)
             if not country:
                 country = partner.country_id
             vat_country_code = country.code.lower()
