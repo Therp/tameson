@@ -82,7 +82,7 @@
                 </div>
             </xpath>
             <xpath expr="//label[@for='street']" position="replace">
-                <label class="col-form-label" for="street">Street (House and apartment number)</label>
+                <label class="col-form-label" for="street">Street, house and apartment number</label>
             </xpath>
         </template>
         <template id="login" inherit_id="auth_signup.login" >
