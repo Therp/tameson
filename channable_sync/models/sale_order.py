@@ -5,7 +5,6 @@ import json
 from dateutil import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.addons.celery.models.celery_task import STATE_PENDING as CELERY_STATE_PENDING
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -35,33 +34,11 @@ class SaleOrder(models.Model):
 
     @api.model
     def cron_sync_orders_with_channable(self):
-        CeleryTask = self.env['celery.task']
-        domain = [
-            ('model', '=', self._name),
-            ('method', '=', 'sync_orders_with_channable'),
-            ('state', '=', CELERY_STATE_PENDING)
-        ]
-        if CeleryTask.search_count(domain) == 0:
-            celery = {
-                'countdown': 1,
-                'retry': True,
-                'max_retries': 3,
-                'interval_start': 5,
-                'queue': 'high.priority',
-            }
-            celery_task_vals = {'ref': 'Sync Orders From Channable'}
-            CeleryTask.call_task(self._name, 'sync_orders_with_channable', celery=celery, celery_task_vals=celery_task_vals)
+        self.with_delay().sync_orders_with_channable()
         return True
 
     @api.model
-    def sync_orders_with_channable(self, task_uuid, **kwargs):
-        CeleryTask = self.env['celery.task']
-        celery = {
-            'countdown': 1,
-            'retry': True,
-            'max_retries': 2,
-            'interval_start': 1,
-        }
+    def sync_orders_with_channable(self):
         offset, imported_orders_count = 0, 0
         limit_size = self.env['ir.config_parameter'].sudo().get_param(
             'channable_sync.limit_orders_request_size', default=20)
@@ -115,8 +92,7 @@ class SaleOrder(models.Model):
                 existing_order = self.search([('channable_order_id', '=', order.get('id'))], limit=1)
                 if not existing_order:
                     order_body = json.dumps(order)
-                    celery_task_vals = {'ref': 'Import Channable Order: %s' % str(order.get('id'))}
-                    CeleryTask.call_task(self._name, 'import_channable_order', order_body=order_body, celery=celery, celery_task_vals=celery_task_vals)
+                    self.with_delay().import_channable_order(order_body)
                     imported_orders_count += 1
                 else:
                     # existing order, check for status change/cancellation
@@ -143,8 +119,7 @@ class SaleOrder(models.Model):
         _logger.info(msg)
         return msg
 
-    def import_channable_order(self, task_uuid, **kwargs):
-        order_body = kwargs.get('order_body')
+    def import_channable_order(self, order_body):
         try:
             order = json.loads(order_body)
         except Exception as e:
@@ -478,27 +453,11 @@ class SaleOrder(models.Model):
 
     @api.model
     def cron_update_status_in_channable(self):
-        if self.search(['|', ('channable_to_update_cancel', '=', True), ('channable_to_update_shipped', '=', True)]):
-            CeleryTask = self.env['celery.task']
-            domain = [
-                ('model', '=', self._name),
-                ('method', '=', 'update_status_in_channable'),
-                ('state', '=', CELERY_STATE_PENDING)
-            ]
-            if CeleryTask.search_count(domain) == 0:
-                celery = {
-                    'countdown': 1,
-                    'retry': True,
-                    'max_retries': 0,
-                    'interval_start': 5,
-                    'queue': 'high.priority',
-                }
-                celery_task_vals = {'ref': 'Update Order Status To Channable'}
-                CeleryTask.call_task(self._name, 'update_status_in_channable', celery=celery, celery_task_vals=celery_task_vals)
+        self.with_delay().update_status_in_channable()
         return True
 
     @api.model
-    def update_status_in_channable(self, task_uuid, **kwargs):
+    def update_status_in_channable(self):
         updated_orders_count = 0
         update_log = ''
         for order_to_cancel in self.search([('channable_order_id', '!=', False), ('channable_to_update_cancel', '=', True)]):
