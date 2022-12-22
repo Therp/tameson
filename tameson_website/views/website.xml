@@ -68,6 +68,23 @@
                 <attribute name="action"><t t-esc="form" /></attribute>
             </xpath>
         </template>
+        <template id="portal_address_zip" inherit_id="portal.portal_my_details">
+            <xpath expr="//label[@for='zipcode']/parent::div" position="replace">
+                <div t-attf-class="form-group #{error.get('zipcode') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label" for="zipcode">Zip / Postal Code</label>
+                    <input type="text" name="zipcode" t-attf-class="form-control #{error.get('zipcode') and 'is-invalid' or ''}" t-att-value="zipcode or partner.zip" />
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='street']/parent::div" position="after">
+                <div t-attf-class="form-group #{error.get('street2') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label label-optional" for="street2">Street 2</label>
+                    <input type="text" name="street2" t-attf-class="form-control #{error.get('street2') and 'is-invalid' or ''}" t-att-value="street2 or partner.street2" />
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='street']" position="replace">
+                <label class="col-form-label" for="street">Street (House and apartment number)</label>
+            </xpath>
+        </template>
         <template id="login" inherit_id="auth_signup.login" >
             <xpath expr="//div[hasclass('small')]" position="attributes">
                 <attribute name="t-if">False</attribute>
