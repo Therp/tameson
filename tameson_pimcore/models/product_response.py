@@ -384,8 +384,8 @@ class PimcoreProductResponseLine(models.Model):
                 end=0,
             )
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
-        search_or_add_pricelist_item(PRICELIST_DICT['GBP'], product, self.gbp)
-        search_or_add_pricelist_item(PRICELIST_DICT['USD'], product, self.usd)
+        # search_or_add_pricelist_item(PRICELIST_DICT['GBP'], product, self.gbp)
+        # search_or_add_pricelist_item(PRICELIST_DICT['USD'], product, self.usd)
         write_vals = {"state": "updated"}
         product.write(vals)
         self.write(write_vals)
