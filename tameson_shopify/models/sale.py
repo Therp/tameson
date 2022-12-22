@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
         from_date = datetime.now() - relativedelta(hours=1)
         draft_queue = self.env['shopify.order.data.queue.ept'].search([('state','!=','completed'), 
             ('create_date','<=',from_date)])
-        draft_orders = self.env['sale.order'].search([('state','in',('draft','sent')), ('shopify_order_id','!=',False)
+        draft_orders = self.env['sale.order'].search([('state','in',('draft','sent')), ('shopify_order_id','!=',False),
             ('create_date','<=',from_date)])
         if draft_queue:
             vals.append({
