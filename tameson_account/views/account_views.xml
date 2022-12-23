@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group" position="after">
                 <field name="restock_fee_limit_warning" invisible="1" />
-                <h2 class="text-danger" attrs="{'invisible': [('restock_fee_limit_warning','=',False)]}" >
+                <h2 class="text-danger" attrs="{'invisible': ['|',('restock_fee_limit_warning','=',False),('type','!=','out_refund')]}" >
                     Warning: for returning products for more than <field name="restock_fee_limit" />,  we need to calculate a restocking fee.
                 </h2>
             </xpath>
