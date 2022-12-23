@@ -42,7 +42,7 @@
                 <field name="any_non_returnable" invisible="True" />
                 <field name="restock_fee_limit_warning" invisible="True" />
                 <h2 class="text-danger" attrs="{'invisible': [('any_non_returnable','=',False)]}" >
-                    Warning:  the Sales order contains some products that cannot be returned: .
+                    Warning:  the Sales order contains some products that cannot be returned: <field name="non_returnable_skus" />.
                 </h2>
                 <h2 class="text-danger" attrs="{'invisible': [('restock_fee_limit_warning','=',False)]}" >
                     Warning:  for returning products for more than <field name="restock_fee_limit" />,  we need to calculate a restocking fee.
