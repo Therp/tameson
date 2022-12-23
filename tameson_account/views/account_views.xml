@@ -43,4 +43,7 @@
     <record model="ir.ui.view" id="account.partner_view_buttons">
         <field name="groups_id" eval="[(6, 0, [])]"/>
     </record>
+    <record model="ir.actions.report" id="account.account_invoices">
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+    </record>
 </odoo>
