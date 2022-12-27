@@ -586,6 +586,6 @@ class PricelistItem(models.Model):
         partners = [self.env.user.partner_id] * size
         qtys = [0] * size
         prices = self.get_products_price(pts, qtys, partners)
-        for pt, price in prices:
+        for pt, price in prices.items():
             PT.browse(pt).write({fieldname: price})
 
