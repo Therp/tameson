@@ -209,14 +209,14 @@ class ShopifyInstanceEpt(models.Model):
             shopify_customer.add_metafield(shopify.Metafield({
                 'key': 'vat_number',
                 'value': contact.vat,
-                'value_type': 'string',
+                'type': 'single_line_text_field',
                 'namespace': 'sufio',
             }))
         if not invoice_email_match:
             shopify_customer.add_metafield(shopify.Metafield({
                 'key': 'invoice_email',
                 'value': odoo_invoice_email,
-                'value_type': 'string',
+                'type': 'single_line_text_field',
                 'namespace': 'details',
             }))
         return {
