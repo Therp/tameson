@@ -17,6 +17,12 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <field name="restock_fee_limit_warning" invisible="1" />
+                <h2 class="text-danger" attrs="{'invisible': ['|',('restock_fee_limit_warning','=',False),('type','!=','out_refund')]}" >
+                    Warning: for returning products for more than <field name="restock_fee_limit" />,  we need to calculate a restocking fee.
+                </h2>
+            </xpath>
             <xpath expr="//page[last()]" position="after">
                 <page string="Help" >
                     <button name="action_set_help" string="Edit help" type="object" class="oe_link" groups="account.group_account_manager" />
