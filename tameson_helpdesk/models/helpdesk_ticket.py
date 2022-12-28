@@ -17,3 +17,12 @@ class ModelName(models.Model):
     any_non_returnable = fields.Boolean(related='sale_order_id.any_non_returnable')
     non_returnable_skus = fields.Char(related='sale_order_id.non_returnable_skus')
 
+    def action_reship(self):
+        view = self.env.ref('tameson_helpdesk.view_stock_picking_reship')
+        action = self.env.ref('stock.act_stock_return_picking').read()[0]
+        action.update({
+            'views': [(view.id, 'form')],
+            'name': "Reship Delivery",
+            'display_name': "Reship Delivery",
+        })
+        return action

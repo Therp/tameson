@@ -17,6 +17,7 @@
     'data': [
         'views/helpdesk_views.xml',
         'views/rma.xml',
+        'views/stock.xml',
     ],
     'application': False,
     'license': u'OPL-1',

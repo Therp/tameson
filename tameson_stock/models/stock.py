@@ -36,6 +36,7 @@ class StockPicking(models.Model):
         store=True
     )
     unknown_date = fields.Boolean()
+    ignore_invoice_creation = fields.Boolean()
 
     def _create_backorder(self):
         backorders = super(StockPicking, self)._create_backorder()
@@ -202,10 +203,14 @@ class StockPicking(models.Model):
             except ValidationError as e:
                 msg = "%s: %s" % (r.name, e.name)
                 raise ValidationError(msg)
-            if r.sale_id:
-                if r.sale_id.t_invoice_policy == 'delivery' or r.sale_id.all_qty_delivered:
-                    r.sale_id._create_invoice()
-                    r.sale_id._send_invoice()
+            if not r.sale_id:
+                continue
+            # only create invoice for Delivery operation, not reshipment, SO 
+            # Payment term delivery and all qty is delivered
+            if not r.ignore_invoice_creation and r. picking_type_code == 'outgoing' and \
+                (r.sale_id.t_invoice_policy == 'delivery' or r.sale_id.all_qty_delivered):
+                r.sale_id._create_invoice()
+                r.sale_id._send_invoice()
             # SO-45007 don't do auto invoices for purchase orders
             # elif r.purchase_id:
             #     if r.purchase_id.t_purchase_method == 'receive':
@@ -385,3 +390,50 @@ class ReturnPicking(models.TransientModel):
     def _onchange_picking_id(self):
         super()._onchange_picking_id()
         self.location_id = False
+
+    def action_create_reship(self):
+        warehouse = self.env['stock.warehouse'].search([('lot_stock_id','=',self.location_id.id)])
+        picking_type = self.env['stock.picking.type'].search([('code','=','outgoing'),
+            ('warehouse_id','=',warehouse.id)], limit=1)
+        new_picking = self.picking_id.copy({
+            'ignore_invoice_creation': True,
+            'move_lines': [],
+            'picking_type_id': picking_type.id,
+            'state': 'draft',
+            'origin': _("Reship of %s") % self.picking_id.name,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.picking_id.location_dest_id.id,
+        })
+        for return_line in self.product_return_moves:
+            if return_line.quantity:
+                vals = self._prepare_move_default_values(return_line, new_picking)
+                vals.update({
+                    'location_id': self.location_id.id,
+                    'location_dest_id': self.picking_id.location_dest_id.id,
+                    'origin_returned_move_id': False,
+                    'warehouse_id': warehouse.id,
+                })
+                procure_method = vals.pop('procure_method')
+                return_line.move_id.copy(vals)
+        new_picking.action_confirm()
+        new_picking.action_assign()
+        ctx = dict(self.env.context)
+        self.env[ctx['active_model']].browse(ctx['active_id']).write({'picking_ids': [(4, new_picking.id, 0)]})
+        ctx.update({
+            'default_partner_id': self.picking_id.partner_id.id,
+            'search_default_picking_type_id': picking_type.id,
+            'search_default_draft': False,
+            'search_default_assigned': False,
+            'search_default_confirmed': False,
+            'search_default_ready': False,
+            'search_default_late': False,
+            'search_default_available': False,
+        })
+        return {
+            'name': _('Returned Picking'),
+            'view_mode': 'form,tree,calendar',
+            'res_model': 'stock.picking',
+            'res_id': new_picking.id,
+            'type': 'ir.actions.act_window',
+            'context': ctx,
+        }
