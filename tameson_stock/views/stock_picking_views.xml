@@ -51,6 +51,7 @@
                             <field name="t_delivery_allowed" />
                             <field name="t_partner_outside_eu" />
                             <field name="t_payment_status" />
+                            <field name="ignore_invoice_creation" widget="boolean_toggle"/>
                         </group>
                     </group>
                 </page>
