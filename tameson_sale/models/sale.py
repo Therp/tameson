@@ -563,3 +563,29 @@ class PricelistItem(models.Model):
         for item in self:
             if item.compute_price == 'fixed' and item.currency_factor > 0:
                 item.price = "Currency converted. Rate: %s" % float_repr(item.currency_factor, decimal_places)
+
+
+
+class PricelistItem(models.Model):
+    _inherit = "product.pricelist"
+
+    pt_field_name = fields.Char(string="Cache Field on Product")
+    
+    def set_prices_for_export(self, size=20000):
+        pts = self.env['product.template'].search([])
+        pt_count = len(pts)
+        for pl in self.search([('pt_field_name','!=',False)]):
+            for pos in range(0, pt_count, size):
+                pl.with_delay().set_prices_for_export_job(pos, size)
+
+
+    def set_prices_for_export_job(self, start, size):
+        PT = self.env['product.template']
+        fieldname = self.pt_field_name
+        pts = PT.search([])[start:start+size]
+        partners = [self.env.user.partner_id] * size
+        qtys = [0] * size
+        prices = self.get_products_price(pts, qtys, partners)
+        for pt, price in prices.items():
+            PT.browse(pt).write({fieldname: price})
+
