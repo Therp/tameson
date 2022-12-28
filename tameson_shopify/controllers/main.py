@@ -103,7 +103,8 @@ class Shopify(Controller):
         data = json.loads(request.httprequest.data.decode())
         from_date = datetime.now() - relativedelta(hours=1)
         email = data.get('email', False)
-        if email and len(self.env['queue.job'].search([('name','=','shopify.instance.ept.process_customer_webhook_data'),
+        if email and len(request.env['queue.job'].sudo().search([
+            ('name','=','shopify.instance.ept.process_customer_webhook_data'),
             ('func_string','ilike',email), ('date_created','>=',from_date)])) <= 3:
             instance = request.env['shopify.instance.ept'].sudo().browse(instance).with_delay()\
                 .process_customer_webhook_data(data)
