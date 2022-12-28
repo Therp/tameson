@@ -30,3 +30,12 @@ class ModelName(models.Model):
                 record.restock_fee_limit_warning = False
                 record.restock_fee_limit = ''
 
+    def action_reship(self):
+        view = self.env.ref('tameson_helpdesk.view_stock_picking_reship')
+        action = self.env.ref('stock.act_stock_return_picking').read()[0]
+        action.update({
+            'views': [(view.id, 'form')],
+            'name': "Reship Delivery",
+            'display_name': "Reship Delivery",
+        })
+        return action
