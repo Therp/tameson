@@ -69,7 +69,17 @@
             </xpath>
         </field>
     </record>
-    
+
+    <record id="product_pricelist_view" model="ir.ui.view">
+        <field name="name">product_pricelist_view</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view" />
+        <field name="arch" type="xml">
+            <group name="pricelist_settings" position="inside">
+                <field name="pt_field_name" />
+            </group>
+        </field>
+    </record>
 
     <record id="product_pricelist_item_form_view" model="ir.ui.view">
         <field name="name">product_pricelist_item_form_view</field>

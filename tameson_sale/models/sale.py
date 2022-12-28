@@ -569,7 +569,7 @@ class PricelistItem(models.Model):
 class PricelistItem(models.Model):
     _inherit = "product.pricelist"
 
-    pt_field_name = fields.Char()
+    pt_field_name = fields.Char(string="Cache Field on Product")
     
     def set_prices_for_export(self, size=20000):
         pts = self.env['product.template'].search([])
