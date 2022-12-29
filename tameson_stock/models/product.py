@@ -282,7 +282,10 @@ class ProductTemplate(models.Model):
         boms = self.env['mrp.bom'].search([])
         for pos in range(0, len(boms), 30000):
             boms[pos:pos+30000].with_delay().set_bom_lead()
-
+        non_boms = self.search([('bom_ids','=',False)])
+        ## non-bom-lead
+        for pos in range(0, len(non_boms), 5000):
+            non_boms[pos:pos+5000].with_delay().set_non_bom_lead()
 
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',

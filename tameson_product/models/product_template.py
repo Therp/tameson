@@ -137,22 +137,23 @@ SELECT id from mrp_bom
 
     def set_non_bom_lead(self):
         for pt in self:
-            if not self.bom_ids:
-                delay = pt.seller_ids[:1].delay
-                if not float_is_zero(pt.minimal_qty_available_stored, precision_digits=2):
-                    delay = 0
-                    delay_array = [
-                        {'lead_time': 1, 'max_qty': pt.minimal_qty_available_stored}, 
-                        {'lead_time': delay+1, 'max_qty': pt.minimal_qty_available_stored + pt.max_qty_order}
-                        ]
-                else:
-                    delay_array = [{'lead_time': delay+1, 'max_qty': pt.max_qty_order}]
-                pt.write(
-                    {
-                        "t_customer_lead_time": delay + 1,
-                        "max_qty_order_array": delay_array,
-                    }
-                )
+            if self.bom_ids:
+                continue
+            delay = pt.seller_ids[:1].delay
+            if not float_is_zero(pt.minimal_qty_available_stored, precision_digits=2):
+                delay_array = [
+                    {'lead_time': 1, 'max_qty': pt.minimal_qty_available_stored}, 
+                    {'lead_time': delay+1, 'max_qty': pt.minimal_qty_available_stored + pt.max_qty_order}
+                    ]
+                delay = 0
+            else:
+                delay_array = [{'lead_time': delay+1, 'max_qty': pt.max_qty_order}]
+            pt.write(
+                {
+                    "t_customer_lead_time": delay + 1,
+                    "max_qty_order_array": delay_array,
+                }
+            )
 
     def set_all_margin_eur_group(self, n=25000):
         products = self.search([])
