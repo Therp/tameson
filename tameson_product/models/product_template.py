@@ -139,8 +139,6 @@ SELECT id from mrp_bom
     @profile
     def set_non_bom_lead(self):
         for pt in self:
-            if self.bom_ids:
-                continue
             delay = pt.seller_ids[:1].delay
             if not float_is_zero(pt.minimal_qty_available_stored, precision_digits=2):
                 delay_array = [
