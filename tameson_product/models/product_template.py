@@ -1,5 +1,6 @@
 from odoo import api, fields, models, tools, _
 from odoo.tools.float_utils import float_is_zero
+from odoo.tools.profiler import profile
 
 
 class ProductTemplateInherit(models.Model):
@@ -135,6 +136,7 @@ SELECT id from mrp_bom
         boms.set_bom_price(split)
         self.set_all_margin_eur_group()
 
+    @profile
     def set_non_bom_lead(self):
         for pt in self:
             if self.bom_ids:
