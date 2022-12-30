@@ -336,6 +336,6 @@ WHERE pp.id IN (%s)''' % ','.join(map(str, self.mapped('product_variant_ids').id
     def store_min_qty_jobs(self):
         for pt in self:
             min_qty = pt.minimal_qty_available
-            if float_compare(min_qty, pt.minimal_qty_available_stored):
+            if float_compare(min_qty, pt.minimal_qty_available_stored, precision_digits=2):
                 pt.write({'minimal_qty_available_stored': min_qty})
         return True
