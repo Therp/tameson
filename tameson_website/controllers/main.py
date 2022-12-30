@@ -25,9 +25,10 @@ class CustomerPortal(CustomerPortal):
         error, error_message = super(CustomerPortal, self).details_form_validate(data)
         partner = request.env.user.partner_id
         if error.get("vat", False) == "error":
-            country = (int(data['country_id']) if data.get('country_id') else False)
-            country = request.env['res.country'].browse(country)
-            if not country:
+            country_val = data.get('country_id', False)
+            if country_val:
+                country = request.env['res.country'].sudo().browse(int(country_val))
+            else:
                 country = partner.country_id
             vat_country_code = country.code.lower()
             _ref_vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
