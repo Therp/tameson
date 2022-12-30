@@ -136,7 +136,6 @@ SELECT id from mrp_bom
         boms.set_bom_price(split)
         self.set_all_margin_eur_group()
 
-    @profile
     def set_non_bom_lead(self):
         for pt in self:
             delay = pt.seller_ids[:1].delay
