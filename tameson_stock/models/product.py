@@ -275,17 +275,17 @@ class ProductTemplate(models.Model):
         for pos in range(0, len(to_update_pts), 5000):
             to_update_pts[pos:pos+5000].with_delay().set_non_bom_lead()
 
-    def cron_recompute_all_min_qty_avail_stored_tmpl(self):
+    def cron_recompute_all_min_qty_avail_stored_tmpl(self, split=15000):
         to_update_products = self.env['stock.move'].search([]).mapped(
                 'product_id')
         to_update_products.mapped('product_tmpl_id')._minimal_qty_available_stored()
         boms = self.env['mrp.bom'].search([])
-        for pos in range(0, len(boms), 30000):
-            boms[pos:pos+30000].with_delay().set_bom_lead()
+        for pos in range(0, len(boms), split):
+            boms[pos:pos+split].with_delay().set_bom_lead()
         non_boms = self.search([('bom_ids','=',False)])
         ## non-bom-lead
-        for pos in range(0, len(non_boms), 15000):
-            non_boms[pos:pos+15000].with_delay().set_non_bom_lead()
+        for pos in range(0, len(non_boms), split):
+            non_boms[pos:pos+split].with_delay().set_non_bom_lead()
 
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',
