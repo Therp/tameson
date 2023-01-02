@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timedelta
 from collections import Counter
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DSDF
 
 _logger = logging.getLogger(__name__)
@@ -275,14 +275,17 @@ class ProductTemplate(models.Model):
         for pos in range(0, len(to_update_pts), 5000):
             to_update_pts[pos:pos+5000].with_delay().set_non_bom_lead()
 
-    def cron_recompute_all_min_qty_avail_stored_tmpl(self):
+    def cron_recompute_all_min_qty_avail_stored_tmpl(self, split=15000):
         to_update_products = self.env['stock.move'].search([]).mapped(
                 'product_id')
         to_update_products.mapped('product_tmpl_id')._minimal_qty_available_stored()
         boms = self.env['mrp.bom'].search([])
-        for pos in range(0, len(boms), 30000):
-            boms[pos:pos+30000].with_delay().set_bom_lead()
-
+        for pos in range(0, len(boms), split):
+            boms[pos:pos+split].with_delay().set_bom_lead()
+        non_boms = self.search([('bom_ids','=',False)])
+        ## non-bom-lead
+        for pos in range(0, len(non_boms), split):
+            non_boms[pos:pos+split].with_delay().set_non_bom_lead()
 
     minimal_qty_available = fields.Float(
         compute='_minimal_qty_available',
@@ -317,10 +320,7 @@ class ProductTemplate(models.Model):
         })
         return action
 
-    def _minimal_qty_available_stored(self, field_names=None, arg=False):
-        if not self:
-            return
-        CeleryTask = self.env['celery.task']
+    def _minimal_qty_available_stored(self, split_size=1000):
         bom_product_query = '''
 SELECT DISTINCT mb.product_tmpl_id FROM product_product pp
     LEFT JOIN mrp_bom_line bl ON bl.product_id = pp.id
@@ -329,12 +329,13 @@ WHERE pp.id IN (%s)''' % ','.join(map(str, self.mapped('product_variant_ids').id
         self.env.cr.execute(bom_product_query)
         bom_products = [item[0] for item in self.env.cr.fetchall()]
         to_update_product_tmpls = self + self.browse(bom_products)
-        split_size = 1000
         for pos in range(0, len(to_update_product_tmpls), split_size):
             to_update_product_tmpls[pos:pos+split_size].with_delay().store_min_qty_jobs()
 
 
     def store_min_qty_jobs(self):
         for pt in self:
-            pt.write({'minimal_qty_available_stored': pt.minimal_qty_available})
+            min_qty = pt.minimal_qty_available
+            if float_compare(min_qty, pt.minimal_qty_available_stored, precision_digits=2):
+                pt.write({'minimal_qty_available_stored': min_qty})
         return True
