@@ -82,7 +82,7 @@ class PurchaseOrder(models.Model):
                     product_code = supplier_rec[0].product_code
                 else:
                     product_code = po_line.product_id.default_code
-                if not po_line.product_id.default_code.startswith("LDS-"):
+                if not po_line.product_id.default_code.startswith("LDS"):
                     qty = str(po_line.product_qty)
                     text_val_to_clipboard = (
                         text_val_to_clipboard + "{prod_qty}\t{prod_code}\n".format(
