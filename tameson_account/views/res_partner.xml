@@ -21,5 +21,17 @@
                 </tree>
             </field>
         </record>
+        <record id="view_partner_property_form_average" model="ir.ui.view">
+            <field name="name">view_partner_property_form_average</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form" />
+            <field name="arch" type="xml">
+                <group name="accounting_entries" position="inside">
+                    <group string="Average Payment Days" >
+                        <field name="average_payment_days" />
+                    </group>
+                </group>
+            </field>
+        </record>
     </data>
 </odoo>
