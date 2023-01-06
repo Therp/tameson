@@ -17,7 +17,7 @@
             <field name="inherit_id" ref="account_followup.customer_statements_tree_view" />
             <field name="arch" type="xml">
                 <tree position="inside">
-                    <field name="average_payment_days" optional="hide" />
+                    <field name="average_payment_days" optional="show" />
                 </tree>
             </field>
         </record>
