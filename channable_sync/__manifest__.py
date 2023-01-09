@@ -13,7 +13,7 @@
     'depends': [
         'tameson_sale',
         'delivery',
-        'celery',
+        'queue_job',
     ],
     'data': [
         'data/ir_config_param_data.xml',
