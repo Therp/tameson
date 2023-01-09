@@ -176,18 +176,17 @@ class SaleOrder(models.Model):
                 partner.property_account_position_id = fp_id
         pricelist_id = retval.get('pricelist_id', False)
         # check the pricelist (coming from the partner) and the order currency
-        if pricelist_id and res_currency:
-            pricelist = self.env['product.pricelist'].browse(pricelist_id)
-            if pricelist.currency_id != res_currency:
-                if partner.country_id:
-                    # filter by country
-                    applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id), ('country_group_ids.country_ids', '=', partner.country_id.id)], limit=1)
-                    if not applicable_pricelist:
-                        applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)], limit=1)
-                else:
+        pricelist = self.env['product.pricelist'].browse(pricelist_id)
+        if pricelist.currency_id != res_currency:
+            if partner.country_id:
+                # filter by country
+                applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id), ('country_group_ids.country_ids', '=', partner.country_id.id)], limit=1)
+                if not applicable_pricelist:
                     applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)], limit=1)
-                if applicable_pricelist:
-                    pricelist_id = applicable_pricelist.id
+            else:
+                applicable_pricelist = self.env['product.pricelist'].search([('currency_id', '=', res_currency.id)], limit=1)
+            if applicable_pricelist:
+                pricelist_id = applicable_pricelist.id
         payment_term = retval.get('payment_term_id', False)
 
         # Adjust timezone for the order date (sent in CET from Channable)
