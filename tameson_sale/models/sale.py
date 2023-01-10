@@ -530,8 +530,7 @@ class PricelistItem(models.Model):
     is_currency_factor = fields.Boolean(string='Currency converted?', compute='get_currency_factor', inverse='set_currency_factor')
     currency_factor = fields.Float(digits='Product Price')
     is_usd_extra = fields.Boolean(string='Use USD extra price?', default=False)
-    extra_shipping_fee = fields.Boolean(string="Extra shipping fee USD", default=False)
-    extra_shipping_fee_gbp = fields.Boolean(string="Extra shipping fee GBP", default=False)
+    shipping_fee_factor = fields.Float(digits='Shipping fee factor')
 
     @api.depends('currency_factor')
     def get_currency_factor(self):
@@ -547,10 +546,12 @@ class PricelistItem(models.Model):
 
     def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
         if self.compute_price == 'fixed' and self.currency_factor > 0:
-            extra_shipping = 0.0 if not self.extra_shipping_fee else product.extra_shipping_fee
-            extra_shipping_gbp = 0.0 if not self.extra_shipping_fee_gbp else product.extra_shipping_fee_gbp
+            shipping_fee = 0
+            if self.shipping_fee_factor > 0:
+                volume = (product.t_height * product.t_length * product.t_width) / 5000000
+                shipping_fee = self.shipping_fee_factor * max(product.weight, volume),
             extra_usd = 1.0 if not self.is_usd_extra else product.usd_extra_price_factor
-            price = (product.list_price + extra_shipping + extra_shipping_gbp) * self.currency_factor * extra_usd
+            price = (product.list_price + shipping_fee) * self.currency_factor * extra_usd
         else:
             price = super()._compute_price(price, price_uom, product, quantity, partner)
         return price
