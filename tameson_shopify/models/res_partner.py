@@ -178,11 +178,6 @@ class ResPartner(models.Model):
                 company = address.get('company', False)
                 partner_vals = get_partner_vals(self.env, address, email)
                 matched_contact = self.env['res.partner'].search([('email','=',email), ('parent_id','=',False)], limit=1)
-                vat = get_vat_from_notes(vals.get('note_attributes',[]))
-                if not vat:
-                    vat = vals.get('metafields', {}).get('vat-id', False)
-                if vat:
-                    partner_vals['vat'] = vat
                 if company:
                     company_vals = partner_vals.copy()
                     company_vals.update(name=company, is_company=True)
@@ -220,6 +215,14 @@ class ResPartner(models.Model):
                     contact.parent_id.extract_house_from_street()
                 else:
                     contact.onchange_country_lang()
+                vat = get_vat_from_notes(vals.get('note_attributes',[]))
+                if not vat:
+                    vat = vals.get('metafields', {}).get('vat-id', False)
+                if vat:
+                    try:
+                        contact.write({'vat': vat})
+                    except Exception as e:
+                        pass
             if not type:
                 try:
                     wizard = self.env['portal.wizard'].with_context(active_ids=contact.ids).create({})
