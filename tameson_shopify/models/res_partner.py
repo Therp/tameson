@@ -215,9 +215,6 @@ class ResPartner(models.Model):
                     contact.parent_id.extract_house_from_street()
                 else:
                     contact.onchange_country_lang()
-                vat = get_vat_from_notes(vals.get('note_attributes',[]))
-                if not vat:
-                    vat = vals.get('metafields', {}).get('vat-id', False)
             if not type:
                 try:
                     wizard = self.env['portal.wizard'].with_context(active_ids=contact.ids).create({})
@@ -227,12 +224,15 @@ class ResPartner(models.Model):
                         wizard.with_context(send_mail=False).action_apply()
                 except:
                     pass
-            if vat:
-                pcontact = contact.parent_id or contact
-                try:
-                    pcontact.write({'vat': vat})
-                except Exception as e:
-                    pcontact.write({'vat': False})
+                vat = get_vat_from_notes(vals.get('note_attributes',[]))
+                if not vat:
+                    vat = vals.get('metafields', {}).get('vat-id', False)
+                if vat:
+                    pcontact = contact.parent_id or contact
+                    try:
+                        pcontact.write({'vat': vat})
+                    except Exception as e:
+                        pcontact.write({'vat': False})
 
         return contact
 
