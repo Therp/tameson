@@ -549,7 +549,7 @@ class PricelistItem(models.Model):
             shipping_fee = 0
             if self.shipping_fee_factor > 0:
                 volume = (product.t_height * product.t_length * product.t_width) / 5000000
-                shipping_fee = self.shipping_fee_factor * max(product.weight, volume),
+                shipping_fee = self.shipping_fee_factor * max(product.weight, volume)
             extra_usd = 1.0 if not self.is_usd_extra else product.usd_extra_price_factor
             price = (product.list_price + shipping_fee) * self.currency_factor * extra_usd
         else:
