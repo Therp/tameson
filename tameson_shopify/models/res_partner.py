@@ -218,12 +218,12 @@ class ResPartner(models.Model):
                 vat = get_vat_from_notes(vals.get('note_attributes',[]))
                 if not vat:
                     vat = vals.get('metafields', {}).get('vat-id', False)
-            if not type:
                 if vat:
                     try:
                         contact.write({'vat': vat})
                     except Exception as e:
                         contact.write({'vat': False})
+            if not type:
                 try:
                     wizard = self.env['portal.wizard'].with_context(active_ids=contact.ids).create({})
                     line = wizard.user_ids.filtered(lambda u: u.partner_id == contact)
