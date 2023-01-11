@@ -223,7 +223,7 @@ class ResPartner(models.Model):
                     try:
                         contact.write({'vat': vat})
                     except Exception as e:
-                        pass
+                        contact.write({'vat': False})
                 try:
                     wizard = self.env['portal.wizard'].with_context(active_ids=contact.ids).create({})
                     line = wizard.user_ids.filtered(lambda u: u.partner_id == contact)
