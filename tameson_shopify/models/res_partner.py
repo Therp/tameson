@@ -178,11 +178,6 @@ class ResPartner(models.Model):
                 company = address.get('company', False)
                 partner_vals = get_partner_vals(self.env, address, email)
                 matched_contact = self.env['res.partner'].search([('email','=',email), ('parent_id','=',False)], limit=1)
-                vat = get_vat_from_notes(vals.get('note_attributes',[]))
-                if not vat:
-                    vat = vals.get('metafields', {}).get('vat-id', False)
-                if vat:
-                    partner_vals['vat'] = vat
                 if company:
                     company_vals = partner_vals.copy()
                     company_vals.update(name=company, is_company=True)
@@ -229,6 +224,16 @@ class ResPartner(models.Model):
                         wizard.with_context(send_mail=False).action_apply()
                 except:
                     pass
+                vat = get_vat_from_notes(vals.get('note_attributes',[]))
+                if not vat:
+                    vat = vals.get('metafields', {}).get('vat-id', False)
+                if vat:
+                    pcontact = contact.parent_id or contact
+                    try:
+                        pcontact.write({'vat': vat})
+                    except Exception as e:
+                        pcontact.write({'vat': False})
+
         return contact
 
     def get_tax_exempt(self):
