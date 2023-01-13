@@ -602,8 +602,7 @@ class PricelistItem(models.Model):
             return
         pts = PT.search([])[start:start+size]
         factor = self.item_ids.filtered(lambda item: item.currency_factor > 0)[:1].shipping_fee_factor
-        for pt in pts:
-            product = PT.browse(pt)
+        for product in pts:
             volume = (product.t_height * product.t_length * product.t_width) / 5000000
             shipping_fee = factor * max(product.weight, volume)
             if getattr(product, fieldname) != shipping_fee:
