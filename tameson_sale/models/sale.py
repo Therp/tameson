@@ -601,7 +601,7 @@ class PricelistItem(models.Model):
         if not fieldname:
             return
         pts = PT.search([])[start:start+size]
-        factor = self.items_ids.filtered(lambda item: item.currency_factor > 0)[:1].shipping_fee_factor
+        factor = self.item_ids.filtered(lambda item: item.currency_factor > 0)[:1].shipping_fee_factor
         for pt in pts:
             product = PT.browse(pt)
             volume = (product.t_height * product.t_length * product.t_width) / 5000000
