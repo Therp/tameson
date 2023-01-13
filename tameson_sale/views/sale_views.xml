@@ -77,6 +77,7 @@
         <field name="arch" type="xml">
             <group name="pricelist_settings" position="inside">
                 <field name="pt_field_name" />
+                <field name="pt_shipping_field_name" />
             </group>
         </field>
     </record>
@@ -91,8 +92,7 @@
                 <field name="fixed_price" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','=',True)]}"/>
                 <field name="currency_factor" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
                 <field name="is_usd_extra" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
-                <field name="extra_shipping_fee" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
-                <field name="extra_shipping_fee_gbp" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
+                <field name="shipping_fee_factor" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"/>
             </field>
         </field>
     </record>

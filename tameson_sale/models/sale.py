@@ -530,8 +530,7 @@ class PricelistItem(models.Model):
     is_currency_factor = fields.Boolean(string='Currency converted?', compute='get_currency_factor', inverse='set_currency_factor')
     currency_factor = fields.Float(digits='Product Price')
     is_usd_extra = fields.Boolean(string='Use USD extra price?', default=False)
-    extra_shipping_fee = fields.Boolean(string="Extra shipping fee USD", default=False)
-    extra_shipping_fee_gbp = fields.Boolean(string="Extra shipping fee GBP", default=False)
+    shipping_fee_factor = fields.Float(digits='Shipping fee factor')
 
     @api.depends('currency_factor')
     def get_currency_factor(self):
@@ -547,10 +546,12 @@ class PricelistItem(models.Model):
 
     def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
         if self.compute_price == 'fixed' and self.currency_factor > 0:
-            extra_shipping = 0.0 if not self.extra_shipping_fee else product.extra_shipping_fee
-            extra_shipping_gbp = 0.0 if not self.extra_shipping_fee_gbp else product.extra_shipping_fee_gbp
+            shipping_fee = 0
+            if self.shipping_fee_factor > 0:
+                volume = (product.t_height * product.t_length * product.t_width) / 5000000
+                shipping_fee = self.shipping_fee_factor * max(product.weight, volume)
             extra_usd = 1.0 if not self.is_usd_extra else product.usd_extra_price_factor
-            price = (product.list_price + extra_shipping + extra_shipping_gbp) * self.currency_factor * extra_usd
+            price = (product.list_price + shipping_fee) * self.currency_factor * extra_usd
         else:
             price = super()._compute_price(price, price_uom, product, quantity, partner)
         return price
@@ -569,7 +570,8 @@ class PricelistItem(models.Model):
 class PricelistItem(models.Model):
     _inherit = "product.pricelist"
 
-    pt_field_name = fields.Char(string="Cache Field on Product")
+    pt_field_name = fields.Char(string="Product price cache")
+    pt_shipping_field_name = fields.Char(string="Product shipping cache")
     
     def set_prices_for_export(self, size=20000):
         pts = self.env['product.template'].search([])
@@ -577,15 +579,32 @@ class PricelistItem(models.Model):
         for pl in self.search([('pt_field_name','!=',False)]):
             for pos in range(0, pt_count, size):
                 pl.with_delay().set_prices_for_export_job(pos, size)
-
+                pl.with_delay().set_shipping_prices_for_export_job(pos, size)
 
     def set_prices_for_export_job(self, start, size):
         PT = self.env['product.template']
         fieldname = self.pt_field_name
+        if not fieldname:
+            return
         pts = PT.search([])[start:start+size]
         partners = [self.env.user.partner_id] * size
         qtys = [0] * size
         prices = self.get_products_price(pts, qtys, partners)
         for pt, price in prices.items():
-            PT.browse(pt).write({fieldname: price})
+            product = PT.browse(pt)
+            if getattr(product, fieldname) != price:
+                product.write({fieldname: price})
+
+    def set_shipping_prices_for_export_job(self, start, size):
+        PT = self.env['product.template']
+        fieldname = self.pt_shipping_field_name
+        if not fieldname:
+            return
+        pts = PT.search([])[start:start+size]
+        factor = self.item_ids.filtered(lambda item: item.currency_factor > 0)[:1].shipping_fee_factor
+        for product in pts:
+            volume = (product.t_height * product.t_length * product.t_width) / 5000000
+            shipping_fee = factor * max(product.weight, volume)
+            if getattr(product, fieldname) != shipping_fee:
+                product.write({fieldname: shipping_fee})
 

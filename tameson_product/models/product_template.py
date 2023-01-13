@@ -80,7 +80,7 @@ class ProductTemplateInherit(models.Model):
     supplier_shipping_type = fields.Char()
     additional_cost = fields.Char()
     ## End
-    extra_shipping_fee = fields.Float(string="Extra shipping fee USD", default=0.0)
+    extra_shipping_fee_usd = fields.Float(string="Extra shipping fee USD", default=0.0)
     extra_shipping_fee_gbp = fields.Float(string="Extra shipping fee GBP", default=0.0)
     margin_eur_group = fields.Float()
     sale_price_usd = fields.Float(string="Sale Price USD")
