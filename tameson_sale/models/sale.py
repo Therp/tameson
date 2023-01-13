@@ -570,7 +570,8 @@ class PricelistItem(models.Model):
 class PricelistItem(models.Model):
     _inherit = "product.pricelist"
 
-    pt_field_name = fields.Char(string="Cache Field on Product")
+    pt_field_name = fields.Char(string="Product price cache")
+    pt_shipping_field_name = fields.Char(string="Product shipping cache")
     
     def set_prices_for_export(self, size=20000):
         pts = self.env['product.template'].search([])
@@ -578,15 +579,33 @@ class PricelistItem(models.Model):
         for pl in self.search([('pt_field_name','!=',False)]):
             for pos in range(0, pt_count, size):
                 pl.with_delay().set_prices_for_export_job(pos, size)
-
+                pl.with_delay().set_shipping_prices_for_export_job(pos, size)
 
     def set_prices_for_export_job(self, start, size):
         PT = self.env['product.template']
         fieldname = self.pt_field_name
+        if not fieldname:
+            return
         pts = PT.search([])[start:start+size]
         partners = [self.env.user.partner_id] * size
         qtys = [0] * size
         prices = self.get_products_price(pts, qtys, partners)
         for pt, price in prices.items():
-            PT.browse(pt).write({fieldname: price})
+            product = PT.browse(pt)
+            if getattr(product, fieldname) != price:
+                product.write({fieldname: price})
+
+    def set_shipping_prices_for_export_job(self, start, size):
+        PT = self.env['product.template']
+        fieldname = self.pt_shipping_field_name
+        if not fieldname:
+            return
+        pts = PT.search([])[start:start+size]
+        factor = self.items_ids.filtered(lambda item: item.currency_factor > 0)[:1].shipping_fee_factor
+        for pt in pts:
+            product = PT.browse(pt)
+            volume = (product.t_height * product.t_length * product.t_width) / 5000000
+            shipping_fee = factor * max(product.weight, volume)
+            if getattr(product, fieldname) != shipping_fee:
+                product.write({fieldname: shipping_fee})
 
