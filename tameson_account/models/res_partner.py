@@ -18,7 +18,8 @@ class ResPartner(models.Model):
     def get_average_payment_days(self):
         for partner in self:
             all_child = self.with_context(active_test=False).search([('id', 'child_of', partner.ids)])
-            payments = self.env['account.payment'].search([('partner_id', 'in', all_child.ids),('payment_type','=','inbound')])
+            payments = self.env['account.payment'].sudo().search(
+                [('partner_id', 'in', all_child.ids),('payment_type','=','inbound')])
             days = []
             for payment in payments:
                 for invoice in payment.invoice_ids:
