@@ -105,7 +105,7 @@ create_seed:
       TESTING_FOLDER=$HOME/$TESTING_FOLDER_NAME
       mkdir -p $TESTING_FOLDER
       cd $TESTING_FOLDER
-      echo executing create_seed_before_script
+      echo executing $SCRIPTS_DIR/create_seed_before_script
       source $SCRIPTS_DIR/create_seed_before_script 
   script:
       echo executing create_seed_script
