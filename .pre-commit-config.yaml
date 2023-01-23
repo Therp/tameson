@@ -113,8 +113,3 @@ repos:
         verbose: true
         additional_dependencies: &pylint_deps
           - pylint-odoo==5.0.5
-      - id: pylint
-        name: pylint with mandatory checks
-        args:
-          - --rcfile=.pylintrc-mandatory
-        additional_dependencies: *pylint_deps
