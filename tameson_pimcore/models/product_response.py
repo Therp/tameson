@@ -182,7 +182,7 @@ FROM pimcore_product_response_line rl
 
     def job_archive_unarchive(self):
         unpublished_products = self.env["product.template"].search(
-            [("published", "=", False)]
+            [("published", "=", False), ('pimcore_id','!=',False)]
         )
         unpublished_product_variants = unpublished_products.mapped('product_variant_ids')
         active_products = self.env['stock.move'].search([('product_id','in',unpublished_product_variants.ids),('state','not in',('done','cancel'))]).mapped('product_id')
@@ -200,12 +200,14 @@ FROM pimcore_product_response_line rl
                 )
             ]
         ).action_archive()
-        unpublished_products.action_archive()
+        for pt in unpublished_products:
+            pt.action_archive()
         _logger.info("%s archived from pimcore response" % unpublished_products.mapped('default_code'))
         published_products = self.env["product.template"].search(
-            [("published", "=", True), ("active", "=", False)]
+            [("published", "=", True), ("active", "=", False), ('pimcore_id','!=',False)]
         )
-        published_products.action_unarchive()
+        for pt in published_products:
+            pt.action_unarchive()
         self.env["stock.warehouse.orderpoint"].search(
             [
                 ("active", "=", False),
@@ -216,6 +218,10 @@ FROM pimcore_product_response_line rl
                 ),
             ]
         ).action_unarchive()
+        return "Archived: %s\nUnarchived: %s" % (
+            unpublished_products.mapped('default_code'),
+            published_products.mapped('default_code'),
+        )
 
 
 class PimcoreProductResponseLine(models.Model):

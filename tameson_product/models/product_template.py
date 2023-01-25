@@ -67,7 +67,7 @@ class ProductTemplateInherit(models.Model):
     manufacturer_pn = fields.Char("Manufacturer Part Number ")
     oversized = fields.Boolean(string=_("Oversized"))
     imperial = fields.Boolean(string=_("Imperial"))
-    published = fields.Boolean(string=_("Published"), default=True)
+    published = fields.Boolean(string=_("Pimcore Published"), default=True)
     non_returnable = fields.Boolean(string=_("Non Returnable"))
     pack_model = fields.Char()
     pack_factor = fields.Float()
