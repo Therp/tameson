@@ -182,7 +182,7 @@ FROM pimcore_product_response_line rl
 
     def job_archive_unarchive(self):
         unpublished_products = self.env["product.template"].search(
-            [("published", "=", False)]
+            [("published", "=", False), ('pimcore_id','!=',False)]
         )
         unpublished_product_variants = unpublished_products.mapped('product_variant_ids')
         active_products = self.env['stock.move'].search([('product_id','in',unpublished_product_variants.ids),('state','not in',('done','cancel'))]).mapped('product_id')
