@@ -204,7 +204,7 @@ FROM pimcore_product_response_line rl
             pt.action_archive()
         _logger.info("%s archived from pimcore response" % unpublished_products.mapped('default_code'))
         published_products = self.env["product.template"].search(
-            [("published", "=", True), ("active", "=", False)]
+            [("published", "=", True), ("active", "=", False), ('pimcore_id','!=',False)]
         )
         for pt in published_products:
             pt.action_unarchive()
