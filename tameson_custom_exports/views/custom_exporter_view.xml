@@ -125,6 +125,7 @@
                                         domain="[('resource', '=', export_model_name)]" 
                                         attrs="{'invisible': [('export_model_name', '=', False)]}"
                                         options="{'no_create': True}"/>
+                                <field name="retention_days"/>
                             </group>
                             <group name="export_scheduling" string="Scheduling">
                                 <field name="ir_cron_id" invisible="1"/>

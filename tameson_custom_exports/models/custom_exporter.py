@@ -10,6 +10,8 @@ import logging
 import time
 import itertools
 import ftplib
+import datetime
+from dateutil import relativedelta
 
 try:
     import paramiko
@@ -86,6 +88,11 @@ class CustomExporter(models.Model):
         ondelete="restrict",
         required=True,
         help="SFTP server to send the exports to.",
+    )
+    
+    retention_days = fields.Integer(
+        string='Retention days for exports', 
+        default=0
     )
 
     def _list_all_models(self):
@@ -192,6 +199,11 @@ class CustomExporter(models.Model):
             _logger.warning(msg)
         file_obj = custom_exporter.generate_custom_export(new_custom_export_file, recordset)
         new_custom_export_file.attach_and_export_file(file_obj, records_exported)
+        if custom_exporter.retention_days > 0:
+            date = datetime.date.today() - relativedelta.relativedelta(days=custom_exporter.retention_days)
+            old_files = self.env['custom.export.file'].search(
+                [('custom_exporter_id','=',custom_exporter.id), ('create_date','<=', date)])
+            old_files.unlink()
 
     def get_custom_format_namelist(self, model, export_id):
         def fields_info(self_obj, model, export_fields):
