@@ -56,7 +56,7 @@ class ResPartner(models.Model):
         if self.parent_id:
             self = self.parent_id
         invoices  = self.child_ids.filtered(lambda child: child.type == 'invoice' and self.email != child.email)
-        return invoices[:1].email
+        return invoices[:1].email or ''
 
     def _get_shopify_partner_data(self):
         self.ensure_one()
@@ -89,7 +89,7 @@ class ResPartner(models.Model):
                 'country': child.with_context(lang='en_US').country_id.name,
                 'first_name': child.name.split(' ')[0] if child.name else '',
                 'last_name': ' '.join(child.name.split(' ')[1:]) if child.name else '',
-                'company': child.parent_id.name or '',
+                'company': child.parent_id.name or child.company_name or '',
                 'phone': child.phone,
                 'province': child.state_id.name or '',
                 'zip': child.zip,
