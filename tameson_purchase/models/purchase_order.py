@@ -7,6 +7,7 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     t_aa_mutation_ids = fields.One2many(comodel_name='aa.mutation', inverse_name='purchase_id',)
+    t_aa_purchase_id = fields.Integer(string="AA Purchase ID")
 
     def find_and_refresh_picking_in_out_associations(self):
         for this in self:
