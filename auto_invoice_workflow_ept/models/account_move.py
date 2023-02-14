@@ -1,5 +1,7 @@
 from odoo import models,api
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class AccountMove(models.Model):
     _inherit = "account.move"
@@ -17,6 +19,9 @@ class AccountMove(models.Model):
         This method will prepare payment dictionary.
         :param work_flow_process_record: It is work flow object.
         """
+        _logger.info('*'*50)
+        _logger.info(self.currency_id.name)
+        _logger.info('*'*50)
         return {
             'journal_id': work_flow_process_record.journal_id.id,
             'invoice_ids': [(6, 0, [self.id])],
