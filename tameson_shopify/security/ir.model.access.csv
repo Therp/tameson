@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_shopify_stock_level_user,access_shopify_stock_level_user,model_shopify_stock_level,base.group_user,1,1,1,1
+access_currency_journal_mapping_user,access_currency_journal_mapping_user,model_currency_journal_mapping,base.group_user,1,1,1,1

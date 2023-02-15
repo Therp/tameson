@@ -108,3 +108,16 @@ class SaleOrder(models.Model):
                 'orders': draft_orders.mapped(lambda o: (o.id, o.name))
             })
         return vals
+
+
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    def prepare_payment_dict(self, work_flow_process_record):
+        vals = super().prepare_payment_dict(work_flow_process_record)
+        if work_flow_process_record.currency_journal:
+            journal = work_flow_process_record.mapping_ids.\
+                filtered(lambda m: m.currency_id.id == self.currency_id.id)
+            if journal:
+                vals['journal_id'] = journal.id
+        return vals

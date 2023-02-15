@@ -291,3 +291,28 @@ class ShopifyOrderDataQueueLineEpt(models.Model):
             nested_set_presentment(data)
         vals['order_data'] = json.dumps(data)
         return super(ShopifyOrderDataQueueLineEpt, self).create(vals)
+
+
+class SaleWorkflowProcess(models.Model):
+    _inherit = "sale.workflow.process.ept"
+
+    currency_journal = fields.Boolean()
+    
+    mapping_ids = fields.One2many(
+        comodel_name='currency.journal.mapping',
+        inverse_name='workflow_id',
+    )
+    
+
+
+class CurrencyJournal(models.Model):
+    _name = 'currency.journal.mapping'
+    _description = 'CurrencyJournal'
+
+    _rec_name = 'currency_id'
+    _order = 'currency_id ASC'
+
+    workflow_id = fields.Many2one(comodel_name='sale.workflow.process.ept',ondelete='restrict',)
+    currency_id = fields.Many2one(comodel_name='res.currency',ondelete='restrict',)
+    journal_id = fields.Many2one(comodel_name='account.journal',ondelete='restrict',)
+    
