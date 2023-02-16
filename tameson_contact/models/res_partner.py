@@ -40,7 +40,9 @@ class ResPartner(models.Model):
             if record.is_company and not any(record.child_ids.mapped('name')):
                 raise ValidationError('At least one child contact with name needed for company contact.')
 
-    
+    def action_reset_password(self):
+        return self.user_ids.sudo().action_reset_password()
+
     # @api.onchange('company_type')
     # def _onchange_company_type(self):
     #     if self.company_type == 'company':
