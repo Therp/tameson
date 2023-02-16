@@ -120,4 +120,10 @@ class AccountMove(models.Model):
                 filtered(lambda m: m.currency_id.id == self.currency_id.id)
             if journal:
                 vals['journal_id'] = journal.id
+        
+        import logging
+        _logger = logging.getLogger(__name__)
+        _logger.info('*' * 50)
+        _logger.info(vals)
+        _logger.info('*' * 50)
         return vals
