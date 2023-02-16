@@ -116,14 +116,8 @@ class AccountMove(models.Model):
     def prepare_payment_dict(self, work_flow_process_record):
         vals = super().prepare_payment_dict(work_flow_process_record)
         if work_flow_process_record.currency_journal:
-            journal = work_flow_process_record.mapping_ids.\
+            mapping = work_flow_process_record.mapping_ids.\
                 filtered(lambda m: m.currency_id.id == self.currency_id.id)
-            if journal:
-                vals['journal_id'] = journal.id
-        
-        import logging
-        _logger = logging.getLogger(__name__)
-        _logger.info('*' * 50)
-        _logger.info(vals)
-        _logger.info('*' * 50)
+            if mapping:
+                vals['journal_id'] = mapping.journal_id.id
         return vals
