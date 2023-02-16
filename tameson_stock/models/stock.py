@@ -96,7 +96,9 @@ class StockPicking(models.Model):
                 wiz.process()
             else:
                 raise UserError('Backorder condition not met.')
-        return True
+        return {
+            "result": True
+        }
 
     def action_create_batch(self):
         pickings = self.move_ids_without_package.mapped('origin_so_picking_ids').filtered(lambda sp: sp.t_delivery_allowed and sp.state == 'assigned')
