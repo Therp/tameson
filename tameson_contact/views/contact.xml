@@ -19,6 +19,19 @@
                 <field name="country_id" position="attributes">
                     <attribute name="required">1</attribute>
                 </field>
+                <xpath expr="//notebook" position="before">
+                    <field name="user_ids" invisible="0"/>                    
+                    <button string="Send Reset Password Instructions" type="object" name="action_reset_password" attrs="{'invisible': [('user_ids', '=', [])]}"/>
+                </xpath>
+                <xpath expr="//sheet" position="before">
+                    <div class="alert alert-success text-center o_form_header" attrs="{'invisible': [('user_ids', '=', [])]}" role="status">
+                        <a class="close" data-dismiss="alert" href="#" aria-label="Close">x</a>
+                        <div>
+                            <strong>Link:</strong>
+                        </div>
+                        <div><field name="signup_url" widget="url"/></div>
+                     </div>
+                 </xpath>
             </field>
         </record>
         
