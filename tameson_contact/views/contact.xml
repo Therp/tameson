@@ -20,7 +20,7 @@
                     <attribute name="required">1</attribute>
                 </field>
                 <xpath expr="//notebook" position="before">
-                    <field name="user_ids" invisible="0"/>                    
+                    <field name="user_ids" invisible="1"/>                    
                     <button string="Send Reset Password Instructions" type="object" name="action_reset_password" attrs="{'invisible': [('user_ids', '=', [])]}"/>
                 </xpath>
                 <xpath expr="//sheet" position="before">
