@@ -41,7 +41,7 @@ class ResPartner(models.Model):
                 raise ValidationError('At least one child contact with name needed for company contact.')
 
     def action_reset_password(self):
-        return self.user_ids.action_reset_password()
+        return self.user_ids.sudo().action_reset_password()
 
     # @api.onchange('company_type')
     # def _onchange_company_type(self):
