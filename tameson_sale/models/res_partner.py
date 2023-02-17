@@ -27,4 +27,4 @@ class ResPartnet(models.Model):
             if partner.parent_id:
                 continue
             partner.property_product_pricelist = partner.country_id.select_pricelist_id
-        return partner
+        return partners
