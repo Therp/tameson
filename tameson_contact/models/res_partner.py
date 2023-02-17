@@ -63,7 +63,7 @@ class ResPartner(models.Model):
         unit_pattern = 'unit\W*\d+'
         for partner in self:
             split_success = False
-            street = partner.street
+            street = partner.street or ''
             unit_part = re.findall(unit_pattern, street, flags=re.IGNORECASE)
             if unit_part:
                 street_number = False
