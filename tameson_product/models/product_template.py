@@ -1,5 +1,5 @@
 from odoo import api, fields, models, tools, _
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_is_zero, float_compare
 from odoo.tools.profiler import profile
 
 
@@ -161,4 +161,6 @@ SELECT id from mrp_bom
     
     def set_margin_eur_group(self):
         for product in self:
-            product.write({'margin_eur_group': (product.list_price - product.standard_price)/10})
+            margin = (product.list_price - product.standard_price)/10
+            if float_compare(product.margin_eur_group, margin, precision_digits=2) != 0:
+                product.write({'margin_eur_group': margin})
