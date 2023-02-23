@@ -73,7 +73,7 @@ class PurchaseOrder(models.Model):
 
     def _compute_clipboard_text_handle(self):
         for po in self:
-            text_val_to_clipboard = "/"
+            text = ""
             for po_line in po.order_line:
                 supplier_rec = po_line.product_id.seller_ids.filtered(
                     lambda v: v.name == po.partner_id
@@ -82,17 +82,19 @@ class PurchaseOrder(models.Model):
                     product_code = supplier_rec[0].product_code
                 else:
                     product_code = po_line.product_id.default_code
-                if not po_line.product_id.default_code.startswith("LDS"):
-                    qty = str(po_line.product_qty)
-                    text_val_to_clipboard = (
-                        text_val_to_clipboard + "{prod_qty}\t{prod_code}\n".format(
-                            prod_qty=qty, prod_code=product_code
-                        )
-                    )
-            po.t_clipboard_text_handle = text_val_to_clipboard
-
-    def tameson_po_copy_clipboard(self):
-        pass
+                if po_line.product_id.default_code.startswith("LDS-"):
+                    continue
+                if po_line.move_dest_ids:
+                    total = 0
+                    for line in po_line.move_dest_ids:
+                        total += line.product_uom_qty
+                        text += "%s\t%s\n" % (str(line.product_uom_qty), product_code)
+                    difference = po_line.product_qty - total
+                    if not float_is_zero(difference, precision_digits=2):
+                        text += "%s\t%s\n" % (str(difference), product_code)
+                else:
+                    text += "%s\t%s\n" % (str(po_line.product_qty), product_code)
+            po.t_clipboard_text_handle = text
 
     @api.onchange('partner_id')
     def _onchange_partner_id_change_t_purchase_method(self):

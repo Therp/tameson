@@ -10,12 +10,8 @@
                 <field name="t_purchase_method"
                        attrs="{'readonly': [('t_done_pickings', '!=', [])]}" />
             </xpath>
-            <xpath expr="//field[@name='currency_id']" position="after">
-                <field name="t_clipboard_text_handle" invisible="1"/>
-            </xpath>
-            <xpath expr="//header" position="inside">
-                <button name="tameson_po_copy_clipboard" type="object" string="Copy Lines To Clipboard"
-                    attrs="{'invisible': [('t_clipboard_text_handle', '=', '/')]}"/>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field string="Landefeld data" name="t_clipboard_text_handle" widget="CopyClipboardChar" attrs="{'invisible': [('partner_id','!=',12)]}" />
             </xpath>
             <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
                 <page string="Help" >
