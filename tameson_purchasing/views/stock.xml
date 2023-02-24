@@ -9,26 +9,26 @@
                 <field name="origin" position="after">
                     <field name="source_po_id" attrs="{'invisible': [('source_po_id','=',False)]}" />
                 </field>
+                <xpath
+                    expr="//field[@name='move_ids_without_package']/tree//field[last()]"
+                    position="after">
+                    <field name="origin_so_picking_ids" widget="many2many_tags"
+                        attrs="{'invisible': [('picking_code', '!=', 'incoming')]}" />
+                </xpath>
+                <xpath
+                    expr="//field[@name='move_ids_without_package']/form//group[last()]//field[last()]"
+                    position="after">
+                    <field name="origin_so_picking_ids" />
+                </xpath>
+                <xpath expr="//button[@name='do_print_picking']" position="after">
+                    <button
+                        name="do_print_picking_origin_so"
+                        type="object"
+                        string="Print Origin Deliveries"
+                        groups="stock.group_stock_user"
+                        attrs="{'invisible': [('picking_type_id', '!=', %(stock.picking_type_in)d)]}"/>
+                </xpath>
             </field>
-            <xpath
-                expr="//field[@name='move_ids_without_package']/tree//field[last()]"
-                position="after">
-                <field name="origin_so_picking_ids" widget="many2many_tags"
-                    attrs="{'invisible': [('picking_code', '!=', 'incoming')]}" />
-            </xpath>
-            <xpath
-                expr="//field[@name='move_ids_without_package']/form//group[last()]//field[last()]"
-                position="after">
-                <field name="origin_so_picking_ids" />
-            </xpath>
-            <xpath expr="//button[@name='do_print_picking']" position="after">
-                <button
-                    name="do_print_picking_origin_so"
-                    type="object"
-                    string="Print Origin Deliveries"
-                    groups="stock.group_stock_user"
-                    attrs="{'invisible': [('picking_type_id', '!=', %(stock.picking_type_in)d)]}"/>
-            </xpath>
         </record>
     </data>
 </odoo>
