@@ -34,6 +34,7 @@
                         
                 <button name="action_mail_send" string="Send" type="object" class="oe_highlight"/>
                 <button name="action_create_batch" string="Batch for ready shipments" type="object" attrs="{'invisible': ['|', ('state','not in',('done')), ('picking_type_code','!=','incoming')]}" />
+                <button name="action_reserve_force" string="Force" type="object" attrs="{'invisible': ['|', ('state','not in',('waiting')), ('picking_type_code','!=','outgoing')]}" />
             </xpath>
             <field name="scheduled_date" position="before">
                 <field name="picking_type_code" invisible="1" />
@@ -62,16 +63,6 @@
             </xpath>
             <xpath expr="//page[3]" position="attributes">
                 <attribute name="autofocus">autofocus</attribute>
-            </xpath>
-            <xpath expr="//field[@name='move_ids_without_package']/form/group" position="after">
-                <group string="Origin, press button to remove relation and allow reserve from stock" attrs="{'invisible': [('move_orig_ids','=',[])]}">
-                    <button name="action_remove_orig" string="Remove Relation" type="object" class="oe_highlight"/>
-                    <field name="move_orig_ids" nolabel="1" />
-                </group>
-                <group string="Destination, press button to remove relation" attrs="{'invisible': [('move_dest_ids','=',[])]}">
-                    <button name="action_remove_dest" string="Remove Relation" type="object" class="oe_highlight"/>    
-                    <field name="move_dest_ids" nolabel="1" />
-                </group>
             </xpath>
             <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create': True, 'no_open': True, 'no_create_edit': True}</attribute>
