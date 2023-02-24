@@ -25,6 +25,22 @@
                     Warning:  This contact is not set as a 'product supplier' , please update the contact settings if it is. 
                 </h2>
             </xpath>
+            <xpath 
+                expr="//field[@name='order_line']/tree//field[last()]" 
+                position="after">
+                    <field name="ungrouped_origin"/>
+                    <field name="minimal_qty_available" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
+                    <field name="max_reorder" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
+                    <field name="max_reorder_percentage" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
+            </xpath>
+            <xpath 
+                expr="//field[@name='order_line']//form[last()]//field[@name='product_id']" 
+                position="after">
+                <field name="ungrouped_origin"/>
+                <field name="minimal_qty_available" />
+                <field name="max_reorder" />
+                <field name="max_reorder_percentage" />
+            </xpath>
         </field>
     </record>
     

@@ -19,3 +19,17 @@ class StockPicking(models.Model):
     def _get_source_po(self):
         for record in self:
             record.source_po_id = self.env['purchase.order'].search([('name','=',record.origin)], limit=1)
+
+    def do_print_picking_origin_so(self):
+        pickings = self.mapped("move_lines.origin_so_picking_ids")
+        return self.env.ref("stock.action_report_delivery").\
+            report_action()
+
+class StockMove(models.Model):
+    _inherit = "stock.move"
+
+    origin_so_picking_ids = fields.Many2many("stock.picking", compute='_get_so_pickings')
+
+    def _get_so_pickings(self):
+        for move in self:
+            move.origin_so_picking_ids = move.move_dest_ids.mapped('picking_id')

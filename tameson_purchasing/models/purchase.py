@@ -28,6 +28,8 @@ class PurchaseOrder(models.Model):
         compute="_compute_clipboard_text_handle",
     )
 
+    t_aa_mutation_ids = fields.One2many(comodel_name='aa.mutation', inverse_name='purchase_id',)
+    t_aa_purchase_id = fields.Integer(string="AA Purchase ID", copy=False, default=0)
 
     def get_is_product_supplier(self):
         for po in self:
@@ -35,6 +37,12 @@ class PurchaseOrder(models.Model):
                 po.is_product_supplier = False
             else:
                 po.is_product_supplier = True
+
+    def action_rfq_send(self):
+        res = super(PurchaseOrder, self).action_rfq_send()
+        template = self.env.ref("tameson_purchasing.tameson_template_po_supplier").id
+        res['context']['default_template_id'] = template
+        return res
 
     ## compute invoice_status based on t_purchase_method instead of each product purchase_method
     @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty', 't_purchase_method')
@@ -181,7 +189,7 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
-
+    
     t_purchase_method = fields.Selection(
         [
             ('purchase', 'Ordered quantities'),
@@ -190,6 +198,23 @@ class PurchaseOrderLine(models.Model):
         string=_('Control Policy (overrides product control policies)'),
         compute='_get_t_purchase_method'
     )
+    minimal_qty_available = fields.Float(
+        related="product_id.minimal_qty_available",
+        string=_("Min qty"),
+        readonly=True,
+    )
+    max_reorder = fields.Float(compute='_get_max_reorder', digits=(4,2))
+    max_reorder_percentage = fields.Float(string=_("Percentage"), compute='_get_max_reorder', digits=(4,2))
+
+    def _get_max_reorder(self):
+        for line in self:
+            reorder = line.product_id.orderpoint_ids[:1]
+            if not reorder or not reorder.product_max_qty:
+                line.max_reorder = 0
+                line.max_reorder_percentage = 0
+            else:
+                line.max_reorder = reorder.product_max_qty
+                line.max_reorder_percentage = reorder.product_min_qty / reorder.product_max_qty * 100
 
     @api.depends('order_id.t_purchase_method', 'product_id.purchase_method', 'product_id.type')
     def _get_t_purchase_method(self):
@@ -231,3 +256,13 @@ class PurchaseOrderLine(models.Model):
             'tax_ids': [(6, 0, self.taxes_id.ids)],
             'display_type': self.display_type,
         }
+
+
+class AAMutation(models.Model):
+    _name = 'aa.mutation'
+    _description = 'AA Mutation'
+    _rec_name = 'name'
+    _order = 'name ASC'
+
+    purchase_id = fields.Many2one(comodel_name='purchase.order', ondelete='cascade', required=True)
+    name = fields.Char(required=True,copy=False)
