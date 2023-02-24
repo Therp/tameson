@@ -25,7 +25,7 @@
         'wizard/purchase_order_line_csv_import_views.xml',
         "data/mail_data.xml",
         'views/stock.xml',
-        'views/report.xml',
+        'views/reports.xml',
     ],
     'application': False,
     'license': u'OPL-1',
