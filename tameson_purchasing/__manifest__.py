@@ -16,7 +16,6 @@
         'purchase_stock',
         'tameson_account',
         'tameson_base',
-        'tameson_purchase'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -25,7 +24,7 @@
         'wizard/purchase_order_line_csv_import_views.xml',
         "data/mail_data.xml",
         'views/stock.xml',
-        # 'views/reports.xml',
+        'views/reports.xml',
     ],
     'application': False,
     'license': u'OPL-1',
