@@ -89,8 +89,8 @@ class PurchaseOrder(models.Model):
                 if supplier_rec and supplier_rec[0].product_code:
                     product_code = supplier_rec[0].product_code
                 else:
-                    product_code = po_line.product_id.default_code
-                if po_line.product_id.default_code.startswith("LDS-"):
+                    product_code = po_line.product_id.default_code or ''
+                if product_code.startswith("LDS-"):
                     continue
                 if po_line.move_dest_ids:
                     total = 0
