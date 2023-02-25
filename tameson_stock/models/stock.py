@@ -51,6 +51,7 @@ class StockPicking(models.Model):
         waiting.write({
             'procure_method': 'make_to_stock'
         })
+        self.action_assign()
 
     def _create_backorder(self):
         backorders = super(StockPicking, self)._create_backorder()
