@@ -23,7 +23,7 @@ class StockPicking(models.Model):
     def do_print_picking_origin_so(self):
         pickings = self.mapped("move_lines.origin_so_picking_ids")
         return self.env.ref("stock.action_report_delivery").\
-            report_action()
+            report_action(self.mapped('move_lines.origin_so_picking_ids'))
 
 class StockMove(models.Model):
     _inherit = "stock.move"
