@@ -211,10 +211,7 @@ class ResPartner(models.Model):
                         contact = self.create(partner_vals)
                 contact.extract_house_from_street()
                 if contact.parent_id:
-                    contact.parent_id.onchange_country_lang()
                     contact.parent_id.extract_house_from_street()
-                else:
-                    contact.onchange_country_lang()
             if not type:
                 try:
                     wizard = self.env['portal.wizard'].with_context(active_ids=contact.ids).create({})
