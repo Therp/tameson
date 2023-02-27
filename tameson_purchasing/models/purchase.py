@@ -205,6 +205,11 @@ class PurchaseOrderLine(models.Model):
     )
     max_reorder = fields.Float(compute='_get_max_reorder', digits=(4,2))
     max_reorder_percentage = fields.Float(string=_("Percentage"), compute='_get_max_reorder', digits=(4,2))
+    origin_so_ids = fields.Many2many("sale.order", compute='_get_so_origins')
+
+    def _get_so_origins(self):
+        for line in self:
+            line.origin_so_ids = line.move_dest_ids.mapped('picking_id').mapped('sale_id')
 
     def _get_max_reorder(self):
         for line in self:
