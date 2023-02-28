@@ -34,7 +34,7 @@ class ResPartner(models.Model):
 
     @api.constrains('child_ids', 'is_company')
     def check_company_childs(self):
-        if self.env.context.get('skip_child_check', False):
+        if self.env.context.get('skip_child_check', True):
             return
         for record in self:
             if record.is_company and not any(record.child_ids.mapped('name')):
@@ -84,3 +84,16 @@ class ResPartner(models.Model):
                         'street_name': street_name,
                     })
                 partner.message_post(body='House number extracted from address:\n%s' % street)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for val in vals_list:
+            if val.get('vat', False):
+                val['is_company'] = True
+        partners = super().create(vals_list)
+        return partners
+
+    def write(self, val):
+        if val.get('vat', False):
+            val['is_company'] = True
+        return super().write(val)
