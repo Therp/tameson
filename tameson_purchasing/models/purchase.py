@@ -1,4 +1,12 @@
-from odoo import api, fields, models, _
+
+# -*- coding: utf-8 -*-
+###############################################################################
+#    License, author and contributors information in:                         #
+#    __manifest__.py file at the root folder of this module.                  #
+###############################################################################
+
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -30,6 +38,20 @@ class PurchaseOrder(models.Model):
 
     t_aa_mutation_ids = fields.One2many(comodel_name='aa.mutation', inverse_name='purchase_id',)
     t_aa_purchase_id = fields.Integer(string="AA Purchase ID", copy=False, default=0)
+
+    def button_confirm(self):
+        for order in self:
+            if not order.picking_type_id.warehouse_id.code == 'AA-NL':
+                continue
+            products = []
+            for line in order.order_line:
+                if line.product_id.id not in products:
+                    products.append(line.product_id.id)
+                else:
+                    raise ValidationError(
+                        _("SKU appears multiple time in this PO: \"%s\"" % line.product_id.default_code)
+                    )
+        return super().button_confirm()
 
     def get_is_product_supplier(self):
         for po in self:
