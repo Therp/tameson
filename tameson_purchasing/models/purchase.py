@@ -49,8 +49,9 @@ class PurchaseOrder(models.Model):
                     products.append(line.product_id.id)
                 else:
                     raise ValidationError(
-                        _("SKU appears multiple time in this PO: \"%s\"" % line.product_id.default_code)
-                    )
+                        _("Following SKU appears on multipel lines: : \"%s\"\n\
+                           This is not allowed for ActiveAnts, please review the \
+                          PO and combine the lines" % line.product_id.default_code))
         return super().button_confirm()
 
     def get_is_product_supplier(self):
