@@ -10,12 +10,8 @@
                 <field name="t_purchase_method"
                        attrs="{'readonly': [('t_done_pickings', '!=', [])]}" />
             </xpath>
-            <xpath expr="//field[@name='currency_id']" position="after">
-                <field name="t_clipboard_text_handle" invisible="1"/>
-            </xpath>
-            <xpath expr="//header" position="inside">
-                <button name="tameson_po_copy_clipboard" type="object" string="Copy Lines To Clipboard"
-                    attrs="{'invisible': [('t_clipboard_text_handle', '=', '/')]}"/>
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field string="Landefeld data" name="t_clipboard_text_handle" widget="CopyClipboardChar" attrs="{'invisible': [('partner_id','!=',12)]}" />
             </xpath>
             <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
                 <page string="Help" >
@@ -28,6 +24,23 @@
                 <h2 class="text-danger" attrs="{'invisible': [('is_product_supplier','=',True)]}" >
                     Warning:  This contact is not set as a 'product supplier' , please update the contact settings if it is. 
                 </h2>
+            </xpath>
+            <xpath 
+                expr="//field[@name='order_line']/tree//field[last()]" 
+                position="after">
+                    <field name="minimal_qty_available" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
+                    <field name="max_reorder" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
+                    <field name="max_reorder_percentage" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
+                    <field name="origin_so_ids" widget="many2many_tags" optional="hide"
+                        attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
+            </xpath>
+            <xpath 
+                expr="//field[@name='order_line']//form[last()]//field[@name='product_id']" 
+                position="after">
+                <field name="minimal_qty_available" />
+                <field name="max_reorder" />
+                <field name="max_reorder_percentage" />
+                <field name="origin_so_ids" />
             </xpath>
         </field>
     </record>

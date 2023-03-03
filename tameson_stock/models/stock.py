@@ -38,6 +38,21 @@ class StockPicking(models.Model):
     unknown_date = fields.Boolean()
     ignore_invoice_creation = fields.Boolean()
 
+    def action_reserve_force(self):
+        waiting = self.move_lines.filtered(lambda l: l.state == 'waiting')
+        for move in waiting:
+            if move.move_orig_ids:
+                move.write({
+                    'move_orig_ids': [(6, 0, [])],
+                })
+            else:
+                if move.created_purchase_line_id.state in ('draft', 'sent'):
+                    move.created_purchase_line_id = False
+        waiting.write({
+            'procure_method': 'make_to_stock'
+        })
+        self.action_assign()
+
     def _create_backorder(self):
         backorders = super(StockPicking, self)._create_backorder()
         backorders.write({

@@ -1,4 +1,12 @@
-from odoo import api, fields, models, _
+
+# -*- coding: utf-8 -*-
+###############################################################################
+#    License, author and contributors information in:                         #
+#    __manifest__.py file at the root folder of this module.                  #
+###############################################################################
+
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -28,6 +36,22 @@ class PurchaseOrder(models.Model):
         compute="_compute_clipboard_text_handle",
     )
 
+    t_aa_mutation_ids = fields.One2many(comodel_name='aa.mutation', inverse_name='purchase_id',)
+    t_aa_purchase_id = fields.Integer(string="AA Purchase ID", copy=False, default=0)
+
+    def button_confirm(self):
+        for order in self:
+            if not order.picking_type_id.warehouse_id.code == 'AA-NL':
+                continue
+            products = []
+            for line in order.order_line:
+                if line.product_id.id not in products:
+                    products.append(line.product_id.id)
+                else:
+                    raise ValidationError(
+                        _("Following SKU appears on multipel lines: \"%s\"\n\
+This is not allowed for ActiveAnts, please review the PO and combine the lines" % line.product_id.default_code))
+        return super().button_confirm()
 
     def get_is_product_supplier(self):
         for po in self:
@@ -35,6 +59,12 @@ class PurchaseOrder(models.Model):
                 po.is_product_supplier = False
             else:
                 po.is_product_supplier = True
+
+    def action_rfq_send(self):
+        res = super(PurchaseOrder, self).action_rfq_send()
+        template = self.env.ref("tameson_purchasing.tameson_template_po_supplier").id
+        res['context']['default_template_id'] = template
+        return res
 
     ## compute invoice_status based on t_purchase_method instead of each product purchase_method
     @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty', 't_purchase_method')
@@ -73,7 +103,7 @@ class PurchaseOrder(models.Model):
 
     def _compute_clipboard_text_handle(self):
         for po in self:
-            text_val_to_clipboard = "/"
+            text = ""
             for po_line in po.order_line:
                 supplier_rec = po_line.product_id.seller_ids.filtered(
                     lambda v: v.name == po.partner_id
@@ -81,18 +111,20 @@ class PurchaseOrder(models.Model):
                 if supplier_rec and supplier_rec[0].product_code:
                     product_code = supplier_rec[0].product_code
                 else:
-                    product_code = po_line.product_id.default_code
-                if not po_line.product_id.default_code.startswith("LDS"):
-                    qty = str(po_line.product_qty)
-                    text_val_to_clipboard = (
-                        text_val_to_clipboard + "{prod_qty}\t{prod_code}\n".format(
-                            prod_qty=qty, prod_code=product_code
-                        )
-                    )
-            po.t_clipboard_text_handle = text_val_to_clipboard
-
-    def tameson_po_copy_clipboard(self):
-        pass
+                    product_code = po_line.product_id.default_code or ''
+                if product_code.startswith("LDS-"):
+                    continue
+                if po_line.move_dest_ids:
+                    total = 0
+                    for line in po_line.move_dest_ids:
+                        total += line.product_uom_qty
+                        text += "%s\t%s\n" % (str(line.product_uom_qty), product_code)
+                    difference = po_line.product_qty - total
+                    if not float_is_zero(difference, precision_digits=2):
+                        text += "%s\t%s\n" % (str(difference), product_code)
+                else:
+                    text += "%s\t%s\n" % (str(po_line.product_qty), product_code)
+            po.t_clipboard_text_handle = text
 
     @api.onchange('partner_id')
     def _onchange_partner_id_change_t_purchase_method(self):
@@ -179,7 +211,7 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
-
+    
     t_purchase_method = fields.Selection(
         [
             ('purchase', 'Ordered quantities'),
@@ -188,6 +220,28 @@ class PurchaseOrderLine(models.Model):
         string=_('Control Policy (overrides product control policies)'),
         compute='_get_t_purchase_method'
     )
+    minimal_qty_available = fields.Float(
+        related="product_id.minimal_qty_available",
+        string=_("Min qty"),
+        readonly=True,
+    )
+    max_reorder = fields.Float(compute='_get_max_reorder', digits=(4,2))
+    max_reorder_percentage = fields.Float(string=_("Percentage"), compute='_get_max_reorder', digits=(4,2))
+    origin_so_ids = fields.Many2many("sale.order", compute='_get_so_origins')
+
+    def _get_so_origins(self):
+        for line in self:
+            line.origin_so_ids = line.move_dest_ids.mapped('picking_id').mapped('sale_id')
+
+    def _get_max_reorder(self):
+        for line in self:
+            reorder = line.product_id.orderpoint_ids[:1]
+            if not reorder or not reorder.product_max_qty:
+                line.max_reorder = 0
+                line.max_reorder_percentage = 0
+            else:
+                line.max_reorder = reorder.product_max_qty
+                line.max_reorder_percentage = reorder.product_min_qty / reorder.product_max_qty * 100
 
     @api.depends('order_id.t_purchase_method', 'product_id.purchase_method', 'product_id.type')
     def _get_t_purchase_method(self):
@@ -229,3 +283,13 @@ class PurchaseOrderLine(models.Model):
             'tax_ids': [(6, 0, self.taxes_id.ids)],
             'display_type': self.display_type,
         }
+
+
+class AAMutation(models.Model):
+    _name = 'aa.mutation'
+    _description = 'AA Mutation'
+    _rec_name = 'name'
+    _order = 'name ASC'
+
+    purchase_id = fields.Many2one(comodel_name='purchase.order', ondelete='cascade', required=True)
+    name = fields.Char(required=True,copy=False)
