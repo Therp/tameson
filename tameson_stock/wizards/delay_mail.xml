@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
         <record id="delay_mail_send_view" model="ir.ui.view">
@@ -6,17 +6,28 @@
             <field name="model">picking.delay.mail</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="delay_mail_send_view" create="true" delete="true" edit="true">
+                <form
+          string="delay_mail_send_view"
+          create="true"
+          delete="true"
+          edit="true"
+        >
                     <sheet>
                         <group>
                             <field name="template_id" />
                             <field name="composer_id" invisible="True" />
                         </group>
                         <field name="picking_ids">
-                            <tree string="Selected pickings" create="true" delete="true" edit="false" editable="bottom">
+                            <tree
+                string="Selected pickings"
+                create="true"
+                delete="true"
+                edit="false"
+                editable="bottom"
+              >
                                 <field name="name" />
                                 <field name="partner_id" />
-                                <field name="company_id" invisible="True"/>
+                                <field name="company_id" invisible="True" />
                                 <field name="source_so_id" />
                                 <field name="old_date_expected" />
                                 <field name="scheduled_date" />
@@ -27,8 +38,18 @@
                         </field>
                     </sheet>
                     <footer>
-                        <button name="send" string="Send" type="object" class="oe_highlight"/>
-                        <button name="cancel" string="Cancel" special="cancel" class="oe_highlight"/>
+                        <button
+              name="send"
+              string="Send"
+              type="object"
+              class="oe_highlight"
+            />
+                        <button
+              name="cancel"
+              string="Cancel"
+              special="cancel"
+              class="oe_highlight"
+            />
                     </footer>
                 </form>
             </field>
@@ -42,7 +63,7 @@
             <field name="binding_view_types">list</field>
             <field name="target">new</field>
             <field name="domain">[]</field>
-            <field name="context"></field>
+            <field name="context" />
         </record>
     </data>
 </odoo>

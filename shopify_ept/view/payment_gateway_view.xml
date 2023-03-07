@@ -3,17 +3,17 @@
   <data>
 		<record id="shopify_payment_gateway_form" model="ir.ui.view">
 			<field name="name">Shopify Payment Gateway Form</field>
-			<field name="model">shopify.payment.gateway.ept</field>			
+			<field name="model">shopify.payment.gateway.ept</field>
 			<field name="arch" type="xml">
 			<form string="Payment Gateway">
 				<sheet>
-				<group name = "Payment Gateway">
+				<group name="Payment Gateway">
 					<group>
-						<field name="name"/>
-						<field name="code"/>							
+						<field name="name" />
+						<field name="code" />
 					</group>
 					<group>
-						<field name="shopify_instance_id" options="{'no_create':True,'no_create_edit': True}"/>						
+						<field name="shopify_instance_id" options="{'no_create':True,'no_create_edit': True}" />
 					</group>
 				</group>
 				</sheet>
@@ -26,11 +26,15 @@
 				<field name="type">search</field>
 	            <field name="arch" type="xml">
 	                <search string="Payment Gateway">
-						<field name="name"/>
-						<field name="code"/>
-						<field name="shopify_instance_id"/>
+						<field name="name" />
+						<field name="code" />
+						<field name="shopify_instance_id" />
 						<group expand="1" string="Group By">
-		                    <filter string="Instance" name="Instance" context="{'group_by':'shopify_instance_id'}" />		                    
+		                    <filter
+              string="Instance"
+              name="Instance"
+              context="{'group_by':'shopify_instance_id'}"
+            />
 		                </group>
 					</search>
 				</field>
@@ -42,9 +46,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Payment Gateway">
-					<field name="shopify_instance_id"/>						
-	                <field name="name"/>
-					<field name="code"/>
+					<field name="shopify_instance_id" />
+	                <field name="name" />
+					<field name="code" />
                 </tree>
             </field>
         </record>
@@ -55,12 +59,20 @@
          <field name="res_model">shopify.payment.gateway.ept</field>
          <field name="view_mode">tree,form</field>
      </record>
-     
-     <menuitem id="menu_item_shopify_payment_gateway" name="Payment"
-      parent="shopify_ept.shopify_instance_menu_item" sequence="19"/>
 
-     <menuitem id="shopify_payment_gateway_menu_item" name="Payment Gateway"
+     <menuitem
+      id="menu_item_shopify_payment_gateway"
+      name="Payment"
+      parent="shopify_ept.shopify_instance_menu_item"
+      sequence="19"
+    />
+
+     <menuitem
+      id="shopify_payment_gateway_menu_item"
+      name="Payment Gateway"
       parent="shopify_ept.menu_item_shopify_payment_gateway"
-      action="action_shopify_payment_gateway" sequence="1"/>
+      action="action_shopify_payment_gateway"
+      sequence="1"
+    />
 	</data>
 </odoo>

@@ -11,11 +11,11 @@
             <form string="Invoice Import Configuration">
                 <sheet>
                     <widget
-                        name="web_ribbon"
-                        title="Archived"
-                        bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
-                    />
+            name="web_ribbon"
+            title="Archived"
+            bg_color="bg-danger"
+            attrs="{'invisible': [('active', '=', True)]}"
+          />
                     <div class="oe_button_box" name="button_box">
                     </div>
                     <group name="main">
@@ -27,26 +27,26 @@
                     <group string="Accounting Parameters" name="accounting">
                         <field name="invoice_line_method" />
                         <field
-                            name="account_id"
-                            attrs="{'invisible': [('invoice_line_method', 'not in', ('1line_no_product', 'nline_no_product'))], 'required': [('invoice_line_method', 'in', ('1line_no_product', 'nline_no_product'))]}"
-                        />
+              name="account_id"
+              attrs="{'invisible': [('invoice_line_method', 'not in', ('1line_no_product', 'nline_no_product'))], 'required': [('invoice_line_method', 'in', ('1line_no_product', 'nline_no_product'))]}"
+            />
                         <field
-                            name="tax_ids"
-                            widget="many2many_tags"
-                            attrs="{'invisible': [('invoice_line_method', '!=', '1line_no_product')]}"
-                        />
+              name="tax_ids"
+              widget="many2many_tags"
+              attrs="{'invisible': [('invoice_line_method', '!=', '1line_no_product')]}"
+            />
                         <field
-                            name="static_product_id"
-                            attrs="{'invisible': [('invoice_line_method', 'not in', ('1line_static_product', 'nline_static_product'))], 'required': [('invoice_line_method', 'in', ('1line_static_product', 'nline_static_product'))]}"
-                        />
+              name="static_product_id"
+              attrs="{'invisible': [('invoice_line_method', 'not in', ('1line_static_product', 'nline_static_product'))], 'required': [('invoice_line_method', 'in', ('1line_static_product', 'nline_static_product'))]}"
+            />
                         <field
-                            name="account_analytic_id"
-                            groups="analytic.group_analytic_accounting"
-                        />
+              name="account_analytic_id"
+              groups="analytic.group_analytic_accounting"
+            />
                         <field
-                            name="label"
-                            attrs="{'invisible': [('invoice_line_method', 'not in', ('1line_no_product', '1line_static_product'))]}"
-                        />
+              name="label"
+              attrs="{'invisible': [('invoice_line_method', 'not in', ('1line_no_product', '1line_static_product'))]}"
+            />
                     </group>
                 </sheet>
             </form>
@@ -72,21 +72,21 @@
                 <field name="partner_id" />
                 <separator />
                 <filter
-                    string="Archived"
-                    name="inactive"
-                    domain="[('active','=',False)]"
-                />
+          string="Archived"
+          name="inactive"
+          domain="[('active','=',False)]"
+        />
                 <group string="Group By" name="groupby">
                     <filter
-                        name="partner_groupby"
-                        string="Partner"
-                        context="{'group_by': 'partner_id'}"
-                    />
+            name="partner_groupby"
+            string="Partner"
+            context="{'group_by': 'partner_id'}"
+          />
                     <filter
-                        name="invoice_line_method_groupby"
-                        string="Method for Invoice Line"
-                        context="{'group_by': 'invoice_line_method'}"
-                    />
+            name="invoice_line_method_groupby"
+            string="Method for Invoice Line"
+            context="{'group_by': 'invoice_line_method'}"
+          />
                 </group>
             </search>
         </field>
@@ -98,15 +98,15 @@
         <field name="context">{'invoice_import_config_main_view': True}</field>
     </record>
     <menuitem
-        id="account_invoice_import_config_root"
-        name="Import Vendor Bills"
-        parent="account.menu_finance_configuration"
-        sequence="90"
-    />
+    id="account_invoice_import_config_root"
+    name="Import Vendor Bills"
+    parent="account.menu_finance_configuration"
+    sequence="90"
+  />
     <menuitem
-        id="account_invoice_import_config_menu"
-        parent="account_invoice_import_config_root"
-        action="account_invoice_import_config_action"
-        sequence="10"
-    />
+    id="account_invoice_import_config_menu"
+    parent="account_invoice_import_config_root"
+    action="account_invoice_import_config_action"
+    sequence="10"
+  />
 </odoo>

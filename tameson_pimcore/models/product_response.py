@@ -1,21 +1,27 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
-import requests, codecs
+import codecs
+import logging
 from datetime import datetime
-from odoo.tools.float_utils import float_is_zero, float_compare
+
+import requests
 from dateutil.relativedelta import relativedelta
 
-import logging
+from odoo import api, fields, models
+from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_compare
+
 _logger = logging.getLogger(__name__)
 
-CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150} ## currency ids in Odoo DB
-PRICELIST_DICT = {"USD": 3, "GBP": 2, } ## pricelists ids in Odoo DB
+CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}  ## currency ids in Odoo DB
+PRICELIST_DICT = {
+    "USD": 3,
+    "GBP": 2,
+}  ## pricelists ids in Odoo DB
+
 
 def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
     child_categ = env[model]
@@ -129,7 +135,8 @@ class PimcoreProductResponse(models.Model):
         return super(PimcoreProductResponse, self).create(vals)
 
     def import_product_data(self, chunk_size=10):
-        self.env.cr.execute("""DELETE FROM pimcore_product_response_line
+        self.env.cr.execute(
+            """DELETE FROM pimcore_product_response_line
 WHERE id NOT IN
 (
     SELECT MAX(id) AS id
@@ -140,7 +147,8 @@ WHERE id NOT IN
 SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0), rl.bom, rl.bom_import_done, rl.sku
 FROM pimcore_product_response_line rl
     LEFT JOIN product_template pt on lower(rl.sku) = lower(pt.default_code)
-    WHERE rl.state = 'draft';""")
+    WHERE rl.state = 'draft';"""
+        )
         data = self.env.cr.fetchall()
         skipped = [row[0] for row in data if row[2] <= row[3]]
         updated = [row for row in data if row[2] > row[3]]
@@ -148,11 +156,11 @@ FROM pimcore_product_response_line rl
         self.env["pimcore.product.response.line"].browse(skipped).unlink()
         ## jobs for import/update products
         for pos in range(0, len(updated), chunk_size):
-            self.with_delay().job_import_product_data(updated[pos:pos+chunk_size])
+            self.with_delay().job_import_product_data(updated[pos : pos + chunk_size])
         ## job for import bom for lines with bom data not already imported
         bom_lines = [row[0] for row in updated if row[4] and not row[5]]
         for pos in range(0, len(bom_lines), chunk_size):
-            self.with_delay().job_import_bom(bom_lines[pos:pos+chunk_size])
+            self.with_delay().job_import_bom(bom_lines[pos : pos + chunk_size])
         ## delete older than 14 days data
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
@@ -182,14 +190,46 @@ FROM pimcore_product_response_line rl
 
     def job_archive_unarchive(self):
         unpublished_products = self.env["product.template"].search(
-            [("published", "=", False), ('pimcore_id','!=',False)]
+            [("published", "=", False), ("pimcore_id", "!=", False)]
         )
-        unpublished_product_variants = unpublished_products.mapped('product_variant_ids')
-        active_products = self.env['stock.move'].search([('product_id','in',unpublished_product_variants.ids),('state','not in',('done','cancel'))]).mapped('product_id')
-        active_products += self.env['purchase.order.line'].search([('product_id','in',unpublished_product_variants.ids),('state','=','draft')]).mapped('product_id')
-        active_products += self.env['sale.order.line'].search([('product_id','in',unpublished_product_variants.ids),('state','=','draft')]).mapped('product_id')
-        active_pts = active_products.mapped('product_tmpl_id')
-        _logger.info("%s not archived from pimcore response due to active pos/so/move" % active_pts.mapped('default_code'))
+        unpublished_product_variants = unpublished_products.mapped(
+            "product_variant_ids"
+        )
+        active_products = (
+            self.env["stock.move"]
+            .search(
+                [
+                    ("product_id", "in", unpublished_product_variants.ids),
+                    ("state", "not in", ("done", "cancel")),
+                ]
+            )
+            .mapped("product_id")
+        )
+        active_products += (
+            self.env["purchase.order.line"]
+            .search(
+                [
+                    ("product_id", "in", unpublished_product_variants.ids),
+                    ("state", "=", "draft"),
+                ]
+            )
+            .mapped("product_id")
+        )
+        active_products += (
+            self.env["sale.order.line"]
+            .search(
+                [
+                    ("product_id", "in", unpublished_product_variants.ids),
+                    ("state", "=", "draft"),
+                ]
+            )
+            .mapped("product_id")
+        )
+        active_pts = active_products.mapped("product_tmpl_id")
+        _logger.info(
+            "%s not archived from pimcore response due to active pos/so/move"
+            % active_pts.mapped("default_code")
+        )
         unpublished_products = unpublished_products - active_pts
         self.env["stock.warehouse.orderpoint"].search(
             [
@@ -202,9 +242,16 @@ FROM pimcore_product_response_line rl
         ).action_archive()
         for pt in unpublished_products:
             pt.action_archive()
-        _logger.info("%s archived from pimcore response" % unpublished_products.mapped('default_code'))
+        _logger.info(
+            "%s archived from pimcore response"
+            % unpublished_products.mapped("default_code")
+        )
         published_products = self.env["product.template"].search(
-            [("published", "=", True), ("active", "=", False), ('pimcore_id','!=',False)]
+            [
+                ("published", "=", True),
+                ("active", "=", False),
+                ("pimcore_id", "!=", False),
+            ]
         )
         for pt in published_products:
             pt.action_unarchive()
@@ -219,8 +266,8 @@ FROM pimcore_product_response_line rl
             ]
         ).action_unarchive()
         return "Archived: %s\nUnarchived: %s" % (
-            unpublished_products.mapped('default_code'),
-            published_products.mapped('default_code'),
+            unpublished_products.mapped("default_code"),
+            published_products.mapped("default_code"),
         )
 
 
@@ -301,7 +348,7 @@ class PimcoreProductResponseLine(models.Model):
         return super(PimcoreProductResponseLine, self).create(vals)
 
     def create_product(self):
-        Category = self.env["product.category"]
+        self.env["product.category"]
         image_data = False
         if self.image:
             image_response = requests.get(self.image, timeout=60)
@@ -447,11 +494,13 @@ class PimcoreProductResponseLine(models.Model):
             "additional_cost": self.additional_cost,
         }
         if not self.bom:
-            data.update({
-                "max_qty_order": self.max_qty_order,
-                "min_qty_order": self.min_qty_order,
-                "supplier_shipping_type": self.supplier_shipping_type,
-            })
+            data.update(
+                {
+                    "max_qty_order": self.max_qty_order,
+                    "min_qty_order": self.min_qty_order,
+                    "supplier_shipping_type": self.supplier_shipping_type,
+                }
+            )
         return data
 
     def create_bom(self, bom_type="phantom"):
@@ -490,7 +539,7 @@ class PimcoreProductResponseLine(models.Model):
                 "bom_signature": self.bom,
             }
         )
-        self.write({'bom_import_done': True})
+        self.write({"bom_import_done": True})
 
     def get_supplier_info(self):
         vendor = self.env["res.partner"]
@@ -508,5 +557,3 @@ class PimcoreProductResponseLine(models.Model):
             "price": self.supplier_price,
             "currency_id": CURRENCY_DICT[self.supplier_price_currency],
         }
-    
-    

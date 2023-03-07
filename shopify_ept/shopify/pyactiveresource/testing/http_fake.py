@@ -2,10 +2,11 @@
 
 """Fake urllib HTTP connection objects."""
 
-__author__ = 'Mark Roach (mrroach@google.com)'
+__author__ = "Mark Roach (mrroach@google.com)"
 
 
 from pprint import pformat
+
 import six
 from six import BytesIO
 from six.moves import urllib
@@ -34,11 +35,15 @@ def create_response_key(method, url, request_headers):
     parsed = urllib.parse.urlsplit(url)
     qs = urllib.parse.parse_qs(parsed.query)
     query = urllib.parse.urlencode([(k, qs[k]) for k in sorted(qs.keys())])
-    return str((
-        method,
-        urllib.parse.urlunsplit((
-            parsed.scheme, parsed.netloc, parsed.path, query, parsed.fragment)),
-        dictionary_to_canonical_str(request_headers)))
+    return str(
+        (
+            method,
+            urllib.parse.urlunsplit(
+                (parsed.scheme, parsed.netloc, parsed.path, query, parsed.fragment)
+            ),
+            dictionary_to_canonical_str(request_headers),
+        )
+    )
 
 
 def dictionary_to_canonical_str(dictionary):
@@ -49,8 +54,7 @@ def dictionary_to_canonical_str(dictionary):
     Returns:
         A string of the dictionary in canonical form.
     """
-    return str([(k.capitalize(), dictionary[k]) for k in sorted(
-        dictionary.keys())])
+    return str([(k.capitalize(), dictionary[k]) for k in sorted(dictionary.keys())])
 
 
 class TestHandler(urllib.request.HTTPHandler, urllib.request.HTTPSHandler):
@@ -59,12 +63,12 @@ class TestHandler(urllib.request.HTTPHandler, urllib.request.HTTPSHandler):
     _response = None
     _response_map = {}
     request = None
-    site = ''
+    site = ""
 
     def __init__(self, debuglevel=0, **kwargs):
         self._debuglevel = debuglevel
-        self._context = kwargs.get('context')
-        self._check_hostname = kwargs.get('check_hostname')
+        self._context = kwargs.get("context")
+        self._check_hostname = kwargs.get("check_hostname")
 
     @classmethod
     def set_response(cls, response):
@@ -77,8 +81,9 @@ class TestHandler(urllib.request.HTTPHandler, urllib.request.HTTPSHandler):
         cls._response = response
 
     @classmethod
-    def respond_to(cls, method, path,
-                   request_headers, body, code=200, response_headers=None):
+    def respond_to(
+        cls, method, path, request_headers, body, code=200, response_headers=None
+    ):
         """Build a response object to be used for a specific request.
 
         Args:
@@ -91,8 +96,9 @@ class TestHandler(urllib.request.HTTPHandler, urllib.request.HTTPSHandler):
         Returns:
             None
         """
-        key = create_response_key(method, urllib.parse.urljoin(cls.site, path),
-                                  request_headers)
+        key = create_response_key(
+            method, urllib.parse.urljoin(cls.site, path), request_headers
+        )
         value = (code, body, response_headers)
         cls._response_map[str(key)] = value
 
@@ -111,17 +117,24 @@ class TestHandler(urllib.request.HTTPHandler, urllib.request.HTTPSHandler):
         self.__class__.request = request  # Store the most recent request object
         if self._response_map:
             key = create_response_key(
-                request.get_method(), request.get_full_url(), request.headers)
+                request.get_method(), request.get_full_url(), request.headers
+            )
             if str(key) in self._response_map:
                 (code, body, response_headers) = self._response_map[str(key)]
                 return FakeResponse(code, body, response_headers)
             else:
-                raise Error('Unknown request %s %s'
-                            '\nrequest:%s\nresponse_map:%s' % (
-                            request.get_method(), request.get_full_url(),
-                            str(key), pformat(list(self._response_map.keys()))))
+                raise Error(
+                    "Unknown request %s %s"
+                    "\nrequest:%s\nresponse_map:%s"
+                    % (
+                        request.get_method(),
+                        request.get_full_url(),
+                        str(key),
+                        pformat(list(self._response_map.keys())),
+                    )
+                )
         elif isinstance(self._response, Exception):
-            raise(self._response)
+            raise (self._response)
         else:
             return self._response
 
@@ -137,7 +150,7 @@ class FakeResponse(object):
         self.headers = headers
         self.info = lambda: self.headers
         if isinstance(body, six.text_type):
-            body = body.encode('utf-8')
+            body = body.encode("utf-8")
         self.body_file = BytesIO(body)
 
     def read(self):
@@ -150,4 +163,3 @@ class FakeResponse(object):
 
     def close(self):
         """Close the connection."""
-        pass

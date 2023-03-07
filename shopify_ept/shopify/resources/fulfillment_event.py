@@ -10,7 +10,7 @@ class FulfillmentEvent(ShopifyResource):
     def _prefix(cls, options={}):
         order_id = options.get("order_id")
         fulfillment_id = options.get("fulfillment_id")
-        event_id = options.get("event_id")
+        options.get("event_id")
 
         return "%s/orders/%s/fulfillments/%s" % (cls.site, order_id, fulfillment_id)
 

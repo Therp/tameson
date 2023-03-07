@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
         <record id="view_supplier_price_history_tree" model="ir.ui.view">
@@ -9,7 +9,12 @@
             <field name="priority" eval="16" />
             <field name="active" eval="True" />
             <field name="arch" type="xml">
-                <tree string="view_supplier_price_history_tree" create="true" delete="true" edit="true">
+                <tree
+          string="view_supplier_price_history_tree"
+          create="true"
+          delete="true"
+          edit="true"
+        >
                     <field name="product_tmpl_id" />
                     <field name="supplier_price" />
                     <field name="date" />
@@ -47,7 +52,10 @@
             <field name="target">current</field>
             <field name="search_view_id" ref="view_supplier_price_history_search" />
         </record>
-        <record id="action_supplier_price_history_product" model="ir.actions.act_window">
+        <record
+      id="action_supplier_price_history_product"
+      model="ir.actions.act_window"
+    >
             <field name="type">ir.actions.act_window</field>
             <field name="name">supplier price history list</field>
             <field name="res_model">supplier.price.history</field>
@@ -61,7 +69,11 @@
             <field name="name">view_supplier_price_history_graph</field>
             <field name="model">supplier.price.history</field>
             <field name="arch" type="xml">
-                <graph string="view_supplier_price_history_graph" type="bar" stacked="False">
+                <graph
+          string="view_supplier_price_history_graph"
+          type="bar"
+          stacked="False"
+        >
                     <field name="date" interval="day" />
                     <field name="product_tmpl_id" type="row" />
                     <field name="supplier_price" type="measure" />
@@ -76,7 +88,7 @@
             <field name="action" ref="action_supplier_price_history" />
             <field name="parent_id" ref="stock.menu_warehouse_report" />
         </record>
-        
+
         <record id="product_supplierinfo_tree_view" model="ir.ui.view">
             <field name="name">product_supplierinfo_tree_view</field>
             <field name="model">product.supplierinfo</field>
@@ -97,6 +109,6 @@
                 </xpath>
             </field>
         </record>
-        
+
     </data>
 </odoo>

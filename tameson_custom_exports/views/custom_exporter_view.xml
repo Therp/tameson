@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
 
@@ -6,13 +6,18 @@
             <field name="name">custom.export.file.tree</field>
             <field name="model">custom.export.file</field>
             <field name="arch" type="xml">
-                <tree string="Exported Files" create="false" decoration-info="state == 'draft'" decoration-danger="state == 'failed'">
-                    <field name="name"/>
-                    <field name="filename"/>
-                    <field name="custom_exporter_id"/>
-                    <field name="create_date"/>
-                    <field name="records_exported"/>
-                    <field name="state"/>
+                <tree
+          string="Exported Files"
+          create="false"
+          decoration-info="state == 'draft'"
+          decoration-danger="state == 'failed'"
+        >
+                    <field name="name" />
+                    <field name="filename" />
+                    <field name="custom_exporter_id" />
+                    <field name="create_date" />
+                    <field name="records_exported" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -22,10 +27,10 @@
             <field name="model">custom.export.file</field>
             <field name="arch" type="xml">
                 <search string="Exported Files">
-                    <field name="name"/>
-                    <field name="filename"/>
-                    <field name="custom_exporter_id"/>
-                    <field name="state"/>
+                    <field name="name" />
+                    <field name="filename" />
+                    <field name="custom_exporter_id" />
+                    <field name="state" />
                 </search>
             </field>
         </record>
@@ -36,27 +41,39 @@
             <field name="arch" type="xml">
                 <form string="Exported File" create="false">
                     <header>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,failed"/>
+                        <field
+              name="state"
+              widget="statusbar"
+              statusbar_visible="draft,sent,failed"
+            />
                     </header>
                     <sheet>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" readonly="1"/></h1>
-                            <label for="filename" class="oe_edit_only"/>
-                            <h3><field name="filename" readonly="1"/></h3>
+                            <label for="name" class="oe_edit_only" />
+                            <h1><field name="name" readonly="1" /></h1>
+                            <label for="filename" class="oe_edit_only" />
+                            <h3><field name="filename" readonly="1" /></h3>
                         </div>
                         <group name="export_filter">
-                            <field name="records_exported" readonly="1"/>
-                            <field name="create_date" string="Exported On" readonly="1"/>
+                            <field name="records_exported" readonly="1" />
+                            <field
+                name="create_date"
+                string="Exported On"
+                readonly="1"
+              />
                         </group>
                         <group name="export_filter">
-                            <field name="custom_exporter_id" readonly="1" colspan="4"/>
+                            <field name="custom_exporter_id" readonly="1" colspan="4" />
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field
+              name="message_follower_ids"
+              widget="mail_followers"
+              groups="base.group_user"
+            />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" />
                     </div>
                 </form>
             </field>
@@ -66,8 +83,8 @@
             <field name="name">Exported Files</field>
             <field name="res_model">custom.export.file</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_custom_export_file_tree"/>
-            <field name="search_view_id" ref="view_custom_export_file_search"/>
+            <field name="view_id" ref="view_custom_export_file_tree" />
+            <field name="search_view_id" ref="view_custom_export_file_search" />
         </record>
 
 
@@ -76,12 +93,12 @@
             <field name="model">custom.exporter</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>
-                    <field name="export_format"/>
-                    <field name="cron_interval_number"/>
-                    <field name="cron_interval_type"/>
-                    <field name="cron_nextcall"/>
-                    <field name="sftp_server_id"/>
+                    <field name="name" />
+                    <field name="export_format" />
+                    <field name="cron_interval_number" />
+                    <field name="cron_interval_type" />
+                    <field name="cron_nextcall" />
+                    <field name="sftp_server_id" />
                 </tree>
             </field>
         </record>
@@ -91,7 +108,7 @@
             <field name="model">custom.exporter</field>
             <field name="arch" type="xml">
                 <search string="Export Settings">
-                    <field name="name"/>
+                    <field name="name" />
                 </search>
             </field>
         </record>
@@ -102,72 +119,127 @@
             <field name="arch" type="xml">
                 <form string="Customer Exporters">
                     <header>
-                        <button name="run_now" string="Run Now"
-                            confirm='Are you sure you want to run the export now?'
-                            type="object" class="btn btn-primary"/>
-                        <button name="%(tameson_custom_exports.action_custom_exported_files)d"
-                            context="{'search_default_custom_exporter_id': active_id, 'default_custom_exporter_id': active_id}"
-                            string="Show Past Exports"
-                            type="action"/>
+                        <button
+              name="run_now"
+              string="Run Now"
+              confirm='Are you sure you want to run the export now?'
+              type="object"
+              class="btn btn-primary"
+            />
+                        <button
+              name="%(tameson_custom_exports.action_custom_exported_files)d"
+              context="{'search_default_custom_exporter_id': active_id, 'default_custom_exporter_id': active_id}"
+              string="Show Past Exports"
+              type="action"
+            />
                     </header>
                     <sheet>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" class="oe_inline"/></h1>
+                            <label for="name" class="oe_edit_only" />
+                            <h1><field name="name" class="oe_inline" /></h1>
                         </div>
                         <group>
                             <group name="export_format" string="Format">
-                                <field name="export_format"/>
-                                <field name="export_model_name"/>
-                                <field name="fixed_filename"/>
-                                <field name="export_filename_prefix"/>
-                                <field name="custom_export_format_id" 
-                                        domain="[('resource', '=', export_model_name)]" 
-                                        attrs="{'invisible': [('export_model_name', '=', False)]}"
-                                        options="{'no_create': True}"/>
-                                <field name="retention_days"/>
+                                <field name="export_format" />
+                                <field name="export_model_name" />
+                                <field name="fixed_filename" />
+                                <field name="export_filename_prefix" />
+                                <field
+                  name="custom_export_format_id"
+                  domain="[('resource', '=', export_model_name)]"
+                  attrs="{'invisible': [('export_model_name', '=', False)]}"
+                  options="{'no_create': True}"
+                />
+                                <field name="retention_days" />
                             </group>
                             <group name="export_scheduling" string="Scheduling">
-                                <field name="ir_cron_id" invisible="1"/>
-                                <group attrs="{'invisible': [('ir_cron_id', '!=', False)]}">
-                                    <label for="interval_number" string="Execute Every"/>
+                                <field name="ir_cron_id" invisible="1" />
+                                <group
+                  attrs="{'invisible': [('ir_cron_id', '!=', False)]}"
+                >
+                                    <label
+                    for="interval_number"
+                    string="Execute Every"
+                  />
                                     <div>
-                                        <field name="interval_number" class="oe_inline" attrs="{'required': [('ir_cron_id', '=', False)]}"/>
-                                        <field name="interval_type" class="oe_inline" attrs="{'required': [('ir_cron_id', '=', False)]}"/>
+                                        <field
+                      name="interval_number"
+                      class="oe_inline"
+                      attrs="{'required': [('ir_cron_id', '=', False)]}"
+                    />
+                                        <field
+                      name="interval_type"
+                      class="oe_inline"
+                      attrs="{'required': [('ir_cron_id', '=', False)]}"
+                    />
                                     </div>
-                                    <label for="nextcall" string="Next run:"/>
+                                    <label for="nextcall" string="Next run:" />
                                     <div>
-                                        <field name="nextcall" class="oe_inline" attrs="{'required': [('ir_cron_id', '=', False)]}"/>
+                                        <field
+                      name="nextcall"
+                      class="oe_inline"
+                      attrs="{'required': [('ir_cron_id', '=', False)]}"
+                    />
                                     </div>
                                 </group>
-                                <group attrs="{'invisible': [('ir_cron_id', '=', False)]}">
-                                    <label for="cron_interval_number" string="Execute Every"/>
+                                <group
+                  attrs="{'invisible': [('ir_cron_id', '=', False)]}"
+                >
+                                    <label
+                    for="cron_interval_number"
+                    string="Execute Every"
+                  />
                                     <div>
-                                        <field name="cron_interval_number" class="oe_inline" attrs="{'required': [('ir_cron_id', '!=', False)]}"/>
-                                        <field name="cron_interval_type" class="oe_inline" attrs="{'required': [('ir_cron_id', '!=', False)]}"/>
+                                        <field
+                      name="cron_interval_number"
+                      class="oe_inline"
+                      attrs="{'required': [('ir_cron_id', '!=', False)]}"
+                    />
+                                        <field
+                      name="cron_interval_type"
+                      class="oe_inline"
+                      attrs="{'required': [('ir_cron_id', '!=', False)]}"
+                    />
                                     </div>
-                                    <label for="cron_nextcall" string="Next run:"/>
+                                    <label for="cron_nextcall" string="Next run:" />
                                     <div>
-                                        <field name="cron_nextcall" class="oe_inline" attrs="{'required': [('ir_cron_id', '!=', False)]}"/>
+                                        <field
+                      name="cron_nextcall"
+                      class="oe_inline"
+                      attrs="{'required': [('ir_cron_id', '!=', False)]}"
+                    />
                                     </div>
                                 </group>
                             </group>
                             <group name="header_column_names" colspan="4">
-                                <field name="custom_export_format_header" attrs="{'invisible': [('export_model_name', '=', False)]}"/>
+                                <field
+                  name="custom_export_format_header"
+                  attrs="{'invisible': [('export_model_name', '=', False)]}"
+                />
                             </group>
                             <group name="sftp" string="SFTP" colspan="4">
-                                <field name="sftp_server_id"/>
+                                <field name="sftp_server_id" />
                             </group>
                             <group string="Domain" colspan="4">
-                                <field name="export_domain" nolabel="1" widget="domain" options="{'model': 'export_model_name'}" colspan="4"/>
-                                <field name="active"/>
+                                <field
+                  name="export_domain"
+                  nolabel="1"
+                  widget="domain"
+                  options="{'model': 'export_model_name'}"
+                  colspan="4"
+                />
+                                <field name="active" />
                             </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field
+              name="message_follower_ids"
+              widget="mail_followers"
+              groups="base.group_user"
+            />
+                        <field name="activity_ids" widget="mail_activity" />
+                        <field name="message_ids" widget="mail_thread" />
                     </div>
                 </form>
             </field>
@@ -177,18 +249,32 @@
             <field name="name">Exporters</field>
             <field name="res_model">custom.exporter</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_custom_exporter_tree"/>
-            <field name="search_view_id" ref="view_custom_exporter_search"/>
+            <field name="view_id" ref="view_custom_exporter_tree" />
+            <field name="search_view_id" ref="view_custom_exporter_search" />
         </record>
 
         <!-- Top menu item -->
-        <menuitem name="Custom Exporters"
-            id="menu_custom_exporters"
-            parent="base.menu_custom"
-            sequence="12"/>
+        <menuitem
+      name="Custom Exporters"
+      id="menu_custom_exporters"
+      parent="base.menu_custom"
+      sequence="12"
+    />
 
-        <menuitem name="Exporters" id="menu_custom_exporter_settings" action="action_custom_exporter" parent="menu_custom_exporters" sequence="121"/>
-        <menuitem name="Exported Files" id="menu_custom_exported_files" action="action_custom_exported_files" parent="menu_custom_exporters" sequence="122"/>
+        <menuitem
+      name="Exporters"
+      id="menu_custom_exporter_settings"
+      action="action_custom_exporter"
+      parent="menu_custom_exporters"
+      sequence="121"
+    />
+        <menuitem
+      name="Exported Files"
+      id="menu_custom_exported_files"
+      action="action_custom_exported_files"
+      parent="menu_custom_exporters"
+      sequence="122"
+    />
 
 
     </data>

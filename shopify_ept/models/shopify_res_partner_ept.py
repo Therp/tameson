@@ -1,13 +1,13 @@
-from odoo import models, fields, api, _
-from .. import shopify
 import logging
+
+from odoo import fields, models
 
 _logger = logging.getLogger(__name__)
 
 
 class ShopifyResPartnerEpt(models.Model):
     _name = "shopify.res.partner.ept"
-    _description = 'Shopify Res Partner Ept'
+    _description = "Shopify Res Partner Ept"
 
     partner_id = fields.Many2one("res.partner", "partner ID")
     shopify_instance_id = fields.Many2one("shopify.instance.ept", "Instances")
@@ -19,12 +19,21 @@ class ShopifyResPartnerEpt(models.Model):
         :param customer: Response of the customer
         :return: It will return the odoo and Shopify customer object
         """
-        shopify_partner = self.search([('shopify_customer_id', '=', customer.get('id')),
-                                       ('shopify_instance_id', '=', instance.id)]) if customer.get(
-            'id') else False
+        shopify_partner = (
+            self.search(
+                [
+                    ("shopify_customer_id", "=", customer.get("id")),
+                    ("shopify_instance_id", "=", instance.id),
+                ]
+            )
+            if customer.get("id")
+            else False
+        )
         if not shopify_partner:
-            odoo_partner = self.env['res.partner'].search(
-                [('email', '=', customer.get('email')), ('parent_id', '=', False)], limit=1)
+            odoo_partner = self.env["res.partner"].search(
+                [("email", "=", customer.get("email")), ("parent_id", "=", False)],
+                limit=1,
+            )
         else:
             odoo_partner = shopify_partner.partner_id
         return shopify_partner, odoo_partner
@@ -39,20 +48,22 @@ class ShopifyResPartnerEpt(models.Model):
         partner_obj = self.env["res.partner"]
         if not partner:
             partner_vals = {
-                'name': response.get('first_name') + ' ' + response.get('last_name'),
-                'email': response.get('email'),
-                'customer_rank': 1,
-                'is_shopify_customer': True,
-                'type': 'invoice',
-                'company_type': 'company'
+                "name": response.get("first_name") + " " + response.get("last_name"),
+                "email": response.get("email"),
+                "customer_rank": 1,
+                "is_shopify_customer": True,
+                "type": "invoice",
+                "company_type": "company",
             }
-            update_partner_vals = partner_obj.remove_special_chars_from_partner_vals(partner_vals)
-            partner = self.env['res.partner'].create(update_partner_vals)
+            update_partner_vals = partner_obj.remove_special_chars_from_partner_vals(
+                partner_vals
+            )
+            partner = self.env["res.partner"].create(update_partner_vals)
         if partner:
             shopify_partner_values = {
-                'shopify_customer_id': response.get('id', False),
-                'shopify_instance_id': instance.id,
-                'partner_id': partner.id
+                "shopify_customer_id": response.get("id", False),
+                "shopify_instance_id": instance.id,
+                "partner_id": partner.id,
             }
             self.create(shopify_partner_values)
         return True

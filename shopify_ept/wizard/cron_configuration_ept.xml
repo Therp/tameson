@@ -1,24 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
 
         <!--This is a common view for cron configuration wizard -->
-        <record id="shopify_cron_configuration_ept_form_view"
-                model="ir.ui.view">
+        <record id="shopify_cron_configuration_ept_form_view" model="ir.ui.view">
             <field name="name">shopify.cron.configuration.ept.form</field>
             <field name="model">shopify.cron.configuration.ept</field>
             <field name="priority">11</field>
             <field name="arch" type="xml">
                 <form string="Manual Queue Process">
                     <sheet>
-                        <field name="shopify_instance_id" invisible="1"/>
+                        <field name="shopify_instance_id" invisible="1" />
                         <h2 style="background-color:#806e6e21;">Order Information</h2>
                         <group>
                             <div class="o_setting_left_pane">
                                 <div class="row mt16 o_settings_container">
                                     <div class="col-12 o_setting_box">
                                         <div class="o_setting_left_pane">
-                                            <field name="shopify_order_auto_import"/>
+                                            <field name="shopify_order_auto_import" />
                                         </div>
                                         <div class="o_setting_right_pane">
                                             <span>
@@ -29,24 +28,34 @@
                                                 Odoo at
                                                 certain intervals.
                                             </div>
-                                            <br/>
+                                            <br />
 
-                                            <div attrs="{'invisible': [('shopify_order_auto_import', '=', False)]}">
+                                            <div
+                        attrs="{'invisible': [('shopify_order_auto_import', '=', False)]}"
+                      >
                                                 <div class="content-group">
-                                                    <field name="shopify_import_order_interval_number"
-                                                           attrs="{'required': [('shopify_order_auto_import', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_import_order_interval_type"
-                                                           attrs="{'required': [('shopify_order_auto_import', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_import_order_interval_number"
+                            attrs="{'required': [('shopify_order_auto_import', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_import_order_interval_type"
+                            attrs="{'required': [('shopify_order_auto_import', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                                 <div class="content-group">
-                                                    <field name="shopify_import_order_next_execution"
-                                                           attrs="{'required': [('shopify_order_auto_import', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_import_order_user_id"
-                                                           attrs="{'required': [('shopify_order_auto_import', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_import_order_next_execution"
+                            attrs="{'required': [('shopify_order_auto_import', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_import_order_user_id"
+                            attrs="{'required': [('shopify_order_auto_import', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                             </div>
                                         </div>
@@ -57,7 +66,9 @@
                                 <div class="row mt16 o_settings_container">
                                     <div class="col-12 o_setting_box">
                                         <div class="o_setting_left_pane">
-                                            <field name="shopify_order_status_auto_update"/>
+                                            <field
+                        name="shopify_order_status_auto_update"
+                      />
                                         </div>
                                         <div class="o_setting_right_pane">
                                             <span>
@@ -69,24 +80,34 @@
                                                 Shopify at
                                                 certain intervals.
                                             </div>
-                                            <br/>
+                                            <br />
 
-                                            <div attrs="{'invisible': [('shopify_order_status_auto_update', '=', False)]}">
+                                            <div
+                        attrs="{'invisible': [('shopify_order_status_auto_update', '=', False)]}"
+                      >
                                                 <div class="content-group">
-                                                    <field name="shopify_order_status_interval_number"
-                                                           attrs="{'required': [('shopify_order_status_auto_update', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_order_status_interval_type"
-                                                           attrs="{'required': [('shopify_order_status_auto_update', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_order_status_interval_number"
+                            attrs="{'required': [('shopify_order_status_auto_update', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_order_status_interval_type"
+                            attrs="{'required': [('shopify_order_status_auto_update', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                                 <div class="content-group">
-                                                    <field name="shopify_order_status_next_execution"
-                                                           attrs="{'required': [('shopify_order_status_auto_update', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_order_status_user_id"
-                                                           attrs="{'required': [('shopify_order_status_auto_update', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_order_status_next_execution"
+                            attrs="{'required': [('shopify_order_status_auto_update', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_order_status_user_id"
+                            attrs="{'required': [('shopify_order_status_auto_update', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                             </div>
                                         </div>
@@ -96,11 +117,13 @@
                         </group>
                         <group>
                             <div class="o_setting_left_pane">
-                                <h2 style="background-color:#806e6e21;">Stock Information</h2>
+                                <h2
+                  style="background-color:#806e6e21;"
+                >Stock Information</h2>
                                 <div class="row mt16 o_settings_container">
                                     <div class="col-12 o_setting_box">
                                         <div class="o_setting_left_pane">
-                                            <field name="shopify_stock_auto_export"/>
+                                            <field name="shopify_stock_auto_export" />
                                         </div>
                                         <div class="o_setting_right_pane">
                                             <span>
@@ -111,24 +134,34 @@
                                                 shopify at
                                                 certain intervals.
                                             </div>
-                                            <br/>
+                                            <br />
 
-                                            <div attrs="{'invisible': [('shopify_stock_auto_export', '=', False)]}">
+                                            <div
+                        attrs="{'invisible': [('shopify_stock_auto_export', '=', False)]}"
+                      >
                                                 <div class="content-group">
-                                                    <field name="shopify_inventory_export_interval_number"
-                                                           attrs="{'required': [('shopify_stock_auto_export', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_inventory_export_interval_type"
-                                                           attrs="{'required': [('shopify_stock_auto_export', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_inventory_export_interval_number"
+                            attrs="{'required': [('shopify_stock_auto_export', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_inventory_export_interval_type"
+                            attrs="{'required': [('shopify_stock_auto_export', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                                 <div class="content-group">
-                                                    <field name="shopify_inventory_export_next_execution"
-                                                           attrs="{'required': [('shopify_stock_auto_export', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_inventory_export_user_id"
-                                                           attrs="{'required': [('shopify_stock_auto_export', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_inventory_export_next_execution"
+                            attrs="{'required': [('shopify_stock_auto_export', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_inventory_export_user_id"
+                            attrs="{'required': [('shopify_stock_auto_export', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                             </div>
                                         </div>
@@ -136,13 +169,17 @@
                                 </div>
                             </div>
                         </group>
-                        <h2 style="background-color:#806e6e21;">Payout Report Information</h2>
+                        <h2
+              style="background-color:#806e6e21;"
+            >Payout Report Information</h2>
                         <group>
                             <div class="o_setting_left_pane">
                                 <div class="row mt16 o_settings_container">
                                     <div class="col-12 o_setting_box">
                                         <div class="o_setting_left_pane">
-                                            <field name="shopify_auto_import_payout_report"/>
+                                            <field
+                        name="shopify_auto_import_payout_report"
+                      />
                                         </div>
                                         <div class="o_setting_right_pane">
                                             <span>
@@ -152,23 +189,33 @@
                                                 If checked, It will create a cron job to automatically import shopify Payout records
                                                 at certain intervals.
                                             </div>
-                                            <br/>
-                                            <div attrs="{'invisible': [('shopify_auto_import_payout_report', '=', False)]}">
+                                            <br />
+                                            <div
+                        attrs="{'invisible': [('shopify_auto_import_payout_report', '=', False)]}"
+                      >
                                                 <div class="content-group">
-                                                    <field name="shopify_payout_import_interval_number"
-                                                           attrs="{'required': [('shopify_auto_import_payout_report', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_payout_import_interval_type"
-                                                           attrs="{'required': [('shopify_auto_import_payout_report', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_payout_import_interval_number"
+                            attrs="{'required': [('shopify_auto_import_payout_report', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_payout_import_interval_type"
+                            attrs="{'required': [('shopify_auto_import_payout_report', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                                 <div class="content-group">
-                                                    <field name="shopify_payout_import_next_execution"
-                                                           attrs="{'required': [('shopify_auto_import_payout_report', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_payout_import_user_id"
-                                                           attrs="{'required': [('shopify_auto_import_payout_report', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_payout_import_next_execution"
+                            attrs="{'required': [('shopify_auto_import_payout_report', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_payout_import_user_id"
+                            attrs="{'required': [('shopify_auto_import_payout_report', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                             </div>
                                         </div>
@@ -179,7 +226,9 @@
                                 <div class="row mt16 o_settings_container">
                                     <div class="col-12 o_setting_box">
                                         <div class="o_setting_left_pane">
-                                            <field name="shopify_auto_generate_bank_statement"/>
+                                            <field
+                        name="shopify_auto_generate_bank_statement"
+                      />
                                         </div>
                                         <div class="o_setting_right_pane">
                                             <span>
@@ -190,23 +239,33 @@
                                                 while process Settlement
                                                 Report
                                             </div>
-                                            <br/>
-                                            <div attrs="{'invisible': [('shopify_auto_generate_bank_statement', '=', False)]}">
+                                            <br />
+                                            <div
+                        attrs="{'invisible': [('shopify_auto_generate_bank_statement', '=', False)]}"
+                      >
                                                 <div class="content-group">
-                                                    <field name="shopify_auto_generate_bank_statement_interval_number"
-                                                           attrs="{'required': [('shopify_auto_generate_bank_statement', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_auto_generate_bank_statement_interval_type"
-                                                           attrs="{'required': [('shopify_auto_generate_bank_statement', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_auto_generate_bank_statement_interval_number"
+                            attrs="{'required': [('shopify_auto_generate_bank_statement', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_auto_generate_bank_statement_interval_type"
+                            attrs="{'required': [('shopify_auto_generate_bank_statement', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                                 <div class="content-group">
-                                                    <field name="shopify_auto_generate_bank_statement_next_execution"
-                                                           attrs="{'required': [('shopify_auto_generate_bank_statement', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_auto_generate_bank_statement_user_id"
-                                                           attrs="{'required': [('shopify_auto_generate_bank_statement', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_auto_generate_bank_statement_next_execution"
+                            attrs="{'required': [('shopify_auto_generate_bank_statement', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_auto_generate_bank_statement_user_id"
+                            attrs="{'required': [('shopify_auto_generate_bank_statement', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                             </div>
                                         </div>
@@ -217,7 +276,9 @@
                                 <div class="row mt16 o_settings_container">
                                     <div class="col-12 o_setting_box">
                                         <div class="o_setting_left_pane">
-                                            <field name="shopify_auto_process_bank_statement"/>
+                                            <field
+                        name="shopify_auto_process_bank_statement"
+                      />
                                         </div>
                                         <div class="o_setting_right_pane">
                                             <span>
@@ -228,23 +289,33 @@
                                                 automatically process shopify Payout records
                                                 at certain intervals.
                                             </div>
-                                            <br/>
-                                            <div attrs="{'invisible': [('shopify_auto_process_bank_statement', '=', False)]}">
+                                            <br />
+                                            <div
+                        attrs="{'invisible': [('shopify_auto_process_bank_statement', '=', False)]}"
+                      >
                                                 <div class="content-group">
-                                                    <field name="shopify_auto_process_bank_statement_interval_number"
-                                                           attrs="{'required': [('shopify_auto_process_bank_statement', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_auto_process_bank_statement_interval_type"
-                                                           attrs="{'required': [('shopify_auto_process_bank_statement', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_auto_process_bank_statement_interval_number"
+                            attrs="{'required': [('shopify_auto_process_bank_statement', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_auto_process_bank_statement_interval_type"
+                            attrs="{'required': [('shopify_auto_process_bank_statement', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                                 <div class="content-group">
-                                                    <field name="shopify_auto_process_bank_statement_next_execution"
-                                                           attrs="{'required': [('shopify_auto_process_bank_statement', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
-                                                    <field name="shopify_auto_process_bank_statement_user_id"
-                                                           attrs="{'required': [('shopify_auto_process_bank_statement', '=', True)]}"
-                                                           class="oe_inline mr-1"/>
+                                                    <field
+                            name="shopify_auto_process_bank_statement_next_execution"
+                            attrs="{'required': [('shopify_auto_process_bank_statement', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
+                                                    <field
+                            name="shopify_auto_process_bank_statement_user_id"
+                            attrs="{'required': [('shopify_auto_process_bank_statement', '=', True)]}"
+                            class="oe_inline mr-1"
+                          />
                                                 </div>
                                             </div>
                                         </div>
@@ -253,16 +324,23 @@
                             </div>
                         </group>
                         <footer>
-                            <button string="Save"
-                                    class="oe_highlight" type="object" name="save"/>
-                            <button string="Cancel" special="cancel"/>
+                            <button
+                string="Save"
+                class="oe_highlight"
+                type="object"
+                name="save"
+              />
+                            <button string="Cancel" special="cancel" />
                         </footer>
                     </sheet>
                 </form>
             </field>
         </record>
 
-        <record id="action_wizard_shopify_cron_configuration_ept" model="ir.actions.act_window">
+        <record
+      id="action_wizard_shopify_cron_configuration_ept"
+      model="ir.actions.act_window"
+    >
             <field name="name">Scheduled Actions Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">shopify.cron.configuration.ept</field>

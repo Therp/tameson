@@ -9,10 +9,10 @@ from odoo import fields, models
 
 
 class StockMove(models.Model):
-    _inherit = 'stock.move'
+    _inherit = "stock.move"
 
     # Added By Dimpal on 5/oct/2019
-    global_channel_id = fields.Many2one('global.channel.ept', string='Global Channel')
+    global_channel_id = fields.Many2one("global.channel.ept", string="Global Channel")
 
     """
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value,
@@ -55,7 +55,7 @@ class StockMove(models.Model):
 
     def _search_picking_for_assignation(self):
         """This function is used to set global channel in stock.picking when assign_picking
-            @author: Dimpal added on 7/oct/2019
+        @author: Dimpal added on 7/oct/2019
         """
         res = super(StockMove, self)._search_picking_for_assignation()
         if res and self.global_channel_id:
@@ -64,9 +64,9 @@ class StockMove(models.Model):
 
     def _get_new_picking_values(self):
         """This function is used to set global channel in stock.picking when assign_picking
-            @author: Dimpal added on 7/oct/2019
+        @author: Dimpal added on 7/oct/2019
         """
         res = super(StockMove, self)._get_new_picking_values()
         if self.global_channel_id:
-            res['global_channel_id'] = self.global_channel_id.id
+            res["global_channel_id"] = self.global_channel_id.id
         return res

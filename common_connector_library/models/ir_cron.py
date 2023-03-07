@@ -1,5 +1,6 @@
-from odoo import models
 from datetime import datetime
+
+from odoo import models
 
 
 class IrCron(models.Model):
@@ -11,8 +12,12 @@ class IrCron(models.Model):
         :return:
         """
         try:
-            self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
-                             [tuple(self.ids)], log_exceptions=False)
+            self._cr.execute(
+                """SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT"""
+                % self._table,
+                [tuple(self.ids)],
+                log_exceptions=False,
+            )
             difference = self.nextcall - datetime.now()
             if not difference.days < 0:
                 days = difference.days * 1440 if difference.days > 0 else 0
@@ -20,4 +25,5 @@ class IrCron(models.Model):
                 return {"result": minutes}
         except:
             return {
-                "reason": "This cron task is currently being executed, If you execute this action it may cause duplicate records"}
+                "reason": "This cron task is currently being executed, If you execute this action it may cause duplicate records"
+            }

@@ -1,7 +1,7 @@
-import jwt
-import re
-import six
 import sys
+
+import jwt
+import six
 
 from .utils import shop_url
 
@@ -42,7 +42,9 @@ def decode_from_header(authorization_header, api_key, secret):
 
 def _extract_session_token(authorization_header):
     if not authorization_header.startswith(PREFIX):
-        raise TokenAuthenticationError("The HTTP_AUTHORIZATION_HEADER provided does not contain a Bearer token")
+        raise TokenAuthenticationError(
+            "The HTTP_AUTHORIZATION_HEADER provided does not contain a Bearer token"
+        )
 
     return authorization_header[len(PREFIX) :]
 

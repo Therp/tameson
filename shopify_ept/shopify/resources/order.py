@@ -1,5 +1,5 @@
-from ..base import ShopifyResource
 from .. import mixins
+from ..base import ShopifyResource
 from .transaction import Transaction
 
 
@@ -27,4 +27,6 @@ class Order(ShopifyResource, mixins.Metafields, mixins.Events):
         return Transaction.find(order_id=self.id)
 
     def capture(self, amount=""):
-        return Transaction.create({"amount": amount, "kind": "capture", "order_id": self.id})
+        return Transaction.create(
+            {"amount": amount, "kind": "capture", "order_id": self.id}
+        )

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="product_template_search_view" model="ir.ui.view">
         <field name="name">product.template.tree.view</field>
@@ -18,14 +18,17 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="stock.product_template_kanban_stock_view" />
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_kanban_details')]/ul[//li/field[@name='qty_available']]" position="after">
+            <xpath
+        expr="//div[hasclass('oe_kanban_details')]/ul[//li/field[@name='qty_available']]"
+        position="after"
+      >
                 <ul position="inside">
                     <li>
-                        Min qty: <field name="minimal_qty_available" /> 
+                        Min qty: <field name="minimal_qty_available" />
                         <field name="uom_id" />
                     </li>
                     <li>
-                        Location: <field name="t_location" /> 
+                        Location: <field name="t_location" />
                     </li>
                 </ul>
             </xpath>
@@ -35,49 +38,66 @@
     <record id="product_template_form_view_procurement_button" model="ir.ui.view">
         <field name="name">product.template.procurement</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.product_template_form_view_procurement_button" />
+        <field
+      name="inherit_id"
+      ref="stock.product_template_form_view_procurement_button"
+    />
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']/button[@name='action_open_quants']" position="before">
-                <button attrs="{'invisible': [('type', '!=', 'product')]}"
-                        class="oe_stat_button"
-                        icon="fa-cubes">
+            <xpath
+        expr="//div[@name='button_box']/button[@name='action_open_quants']"
+        position="before"
+      >
+                <button
+          attrs="{'invisible': [('type', '!=', 'product')]}"
+          class="oe_stat_button"
+          icon="fa-cubes"
+        >
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value" widget="statinfo">
-                            <field name="minimal_qty_available"
-                                   widget="statinfo"
-                                   nolabel="1"
-                                   class="mr4" />
+                            <field
+                name="minimal_qty_available"
+                widget="statinfo"
+                nolabel="1"
+                class="mr4"
+              />
                         </span>
                         <span class="o_stat_text">Min Qty</span>
                     </div>
                 </button>
             </xpath>
             <button name="action_view_stock_move_lines" position="after">
-                <button string="Stock Moves" type="object"
-                name= "action_view_stock_moves"
-                attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                class="oe_stat_button" icon="fa-compress"
-                groups="stock.group_stock_user"/>
+                <button
+          string="Stock Moves"
+          type="object"
+          name="action_view_stock_moves"
+          attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+          class="oe_stat_button"
+          icon="fa-compress"
+          groups="stock.group_stock_user"
+        />
             </button>
         </field>
     </record>
-    <record model="ir.ui.view" id="product_form_view_procurement_button" >
+    <record model="ir.ui.view" id="product_form_view_procurement_button">
         <field name="name">product.product.procurement</field>
         <field name="model">product.product</field>
         <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]" />
         <field name="inherit_id" ref="stock.product_form_view_procurement_button" />
         <field name="arch" type="xml">
             <button name="action_view_stock_move_lines" position="after">
-                <button string="Stock Moves"
-                type="object"
-                name= "action_view_stock_moves"
-                attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                class="oe_stat_button" icon="fa-compress"
-                groups="stock.group_stock_user"/>
+                <button
+          string="Stock Moves"
+          type="object"
+          name="action_view_stock_moves"
+          attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+          class="oe_stat_button"
+          icon="fa-compress"
+          groups="stock.group_stock_user"
+        />
             </button>
         </field>
     </record>
-    
+
     <record id="view_template_property_form" model="ir.ui.view">
         <field name="name">view_template_property_form</field>
         <field name="model">product.template</field>
@@ -88,5 +108,5 @@
             </group>
         </field>
     </record>
-    
+
 </odoo>

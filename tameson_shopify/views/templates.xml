@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
         <template id="portal_my_home" inherit_id="portal.portal_my_home">
             <xpath expr="//div[hasclass('o_portal_my_home')]" position="after">
-                <br/>
+                <br />
                 <h3>Other</h3>
                 <div class="o_portal_docs list-group">
                     <t t-call="portal.portal_docs_entry">
                         <t t-set="title">Shops</t>
-                        <t t-set="url" t-value="'/shopify_hosts'"/>
+                        <t t-set="url" t-value="'/shopify_hosts'" />
                     </t>
                 </div>
             </xpath>
@@ -23,7 +23,9 @@
                     </thead>
                     <t t-foreach="instances" t-as="shopify">
                         <tr>
-                            <td><a t-att-href="'/shopify_auth/%d' % shopify.id"><t t-esc="shopify.name"/></a></td>
+                            <td><a t-att-href="'/shopify_auth/%d' % shopify.id"><t
+                    t-esc="shopify.name"
+                  /></a></td>
                         </tr>
                     </t>
                 </t>

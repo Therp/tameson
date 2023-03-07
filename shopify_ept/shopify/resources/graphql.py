@@ -1,7 +1,8 @@
-from ... import shopify
-from ..base import ShopifyResource
-from six.moves import urllib
 import json
+
+from six.moves import urllib
+
+from ... import shopify
 
 
 class GraphQL:
@@ -16,17 +17,22 @@ class GraphQL:
         return merged_headers
 
     def execute(self, query, variables=None):
-        endpoint = self.endpoint
-        default_headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        self.endpoint
+        default_headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        }
         headers = self.merge_headers(default_headers, self.headers)
         data = {"query": query, "variables": variables}
 
-        req = urllib.request.Request(self.endpoint, json.dumps(data).encode("utf-8"), headers)
+        req = urllib.request.Request(
+            self.endpoint, json.dumps(data).encode("utf-8"), headers
+        )
 
         try:
             response = urllib.request.urlopen(req)
             return response.read().decode("utf-8")
         except urllib.error.HTTPError as e:
-            print((e.read()))
+            print(e.read())
             print("")
             raise e

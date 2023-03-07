@@ -1,18 +1,19 @@
-
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api, _, SUPERUSER_ID
-from odoo.exceptions import UserError, ValidationError, AccessDenied
-import bcrypt, hashlib
+import hashlib
 
-salt = '8kSCkZeFekwd0tX4A2FMAIqq6mnBKWpRFjJH6iT0K5arcjUfHBZWTBtK'
+import bcrypt
+
+from odoo import _, api, fields, models
+
+salt = "8kSCkZeFekwd0tX4A2FMAIqq6mnBKWpRFjJH6iT0K5arcjUfHBZWTBtK"
+
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = "res.users"
 
     # @classmethod
     # def _login(cls, db, login, password):
@@ -35,33 +36,25 @@ class ResUsers(models.Model):
 
 
 class PrestaUsers(models.Model):
-    _name = 'presta.users'
-    _description = 'Presta Users'
+    _name = "presta.users"
+    _description = "Presta Users"
 
-    _rec_name = 'login'
-    _order = 'login ASC'
+    _rec_name = "login"
+    _order = "login ASC"
 
     login = fields.Char(required=True)
     hashpw = fields.Char(required=True)
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        (
-            'login_unique',
-            'unique(login)',
-            _('Login must be unique')
-        )
-    ]
+    _sql_constraints = [("login_unique", "unique(login)", _("Login must be unique"))]
 
-    
     @api.model
     def create(self, values):
-        hashpw = values['hashpw']
+        hashpw = values["hashpw"]
         if len(hashpw) == 32:
-            values['hashpw'] = bcrypt.hashpw(hashpw.encode('utf-8'), bcrypt.gensalt())
+            values["hashpw"] = bcrypt.hashpw(hashpw.encode("utf-8"), bcrypt.gensalt())
         result = super(PrestaUsers, self).create(values)
         return result
-    
 
     @api.model
     def _check_hash(self, password=None):
@@ -69,35 +62,46 @@ class PrestaUsers(models.Model):
         if not password:
             return
         match = False
-        hashpw = self.hashpw.encode('utf-8')
+        hashpw = self.hashpw.encode("utf-8")
         login = self.login
-        user = self.env['res.users'].search([('login','=',login)], limit=1)
+        user = self.env["res.users"].search([("login", "=", login)], limit=1)
         if user:
             return
-        if bcrypt.checkpw(password.encode('utf-8'), hashpw):
+        if bcrypt.checkpw(password.encode("utf-8"), hashpw):
             match = True
         else:
-            md5_hash = hashlib.md5((salt + password).encode('utf-8')).hexdigest()
-            if bcrypt.checkpw(md5_hash.encode('utf-8'), hashpw):
+            md5_hash = hashlib.md5((salt + password).encode("utf-8")).hexdigest()
+            if bcrypt.checkpw(md5_hash.encode("utf-8"), hashpw):
                 match = True
         if not match:
             return
-        ResPartner = self.env['res.partner']
-        partner = ResPartner.search([('email','=',self.login)], limit=1, order='parent_id DESC')
+        ResPartner = self.env["res.partner"]
+        partner = ResPartner.search(
+            [("email", "=", self.login)], limit=1, order="parent_id DESC"
+        )
         if not partner:
-            partner = ResPartner.create({'name': login, 'email': login})
-        wizard = self.env['portal.wizard'].with_context(active_ids=partner.ids).create({})
-        wizard.user_ids.write({'in_portal': True})
+            partner = ResPartner.create({"name": login, "email": login})
+        wizard = (
+            self.env["portal.wizard"].with_context(active_ids=partner.ids).create({})
+        )
+        wizard.user_ids.write({"in_portal": True})
         wizard.with_context(send_mail=False).action_apply()
         user = partner.user_ids[:1]
-        cp_wiz = self.env['change.password.wizard'].create({
-            'user_ids': [(0, 0, {
-                'user_id': user.id,
-                'user_login': login,
-                'new_passwd': password
-            })]
-        })
+        cp_wiz = self.env["change.password.wizard"].create(
+            {
+                "user_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "user_id": user.id,
+                            "user_login": login,
+                            "new_passwd": password,
+                        },
+                    )
+                ]
+            }
+        )
         cp_wiz.change_password_button()
-        self.write({'active': False})
+        self.write({"active": False})
         self.env.cr.commit()
-    

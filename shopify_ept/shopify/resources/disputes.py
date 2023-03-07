@@ -1,5 +1,5 @@
-from ..base import ShopifyResource
 from .. import mixins
+from ..base import ShopifyResource
 
 
 class Disputes(ShopifyResource, mixins.Metafields):

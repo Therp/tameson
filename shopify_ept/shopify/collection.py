@@ -1,6 +1,4 @@
-from . pyactiveresource.collection import Collection
-from six.moves.urllib.parse import urlparse, parse_qs
-import cgi
+from .pyactiveresource.collection import Collection
 
 
 class PaginatedCollection(Collection):
@@ -27,10 +25,14 @@ class PaginatedCollection(Collection):
                 metadata = obj.metadata
             super(PaginatedCollection, self).__init__(obj, metadata=metadata)
         else:
-            super(PaginatedCollection, self).__init__(metadata=metadata or {}, *args, **kwargs)
+            super(PaginatedCollection, self).__init__(
+                metadata=metadata or {}, *args, **kwargs
+            )
 
         if not ("resource_class" in self.metadata):
-            raise AttributeError('Cursor-based pagination requires a "resource_class" attribute in the metadata.')
+            raise AttributeError(
+                'Cursor-based pagination requires a "resource_class" attribute in the metadata.'
+            )
 
         self.metadata["pagination"] = self.__parse_pagination()
         self.next_page_url = self.metadata["pagination"].get("next", None)
@@ -45,7 +47,9 @@ class PaginatedCollection(Collection):
         if "headers" not in self.metadata:
             return {}
 
-        values = self.metadata["headers"].get("Link", self.metadata["headers"].get("link", None))
+        values = self.metadata["headers"].get(
+            "Link", self.metadata["headers"].get("link", None)
+        )
         if values is None:
             return {}
 

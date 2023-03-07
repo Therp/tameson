@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
         <template id="assets_common" inherit_id="web.assets_common">
             <xpath expr="//script[last()]" position="after">
-                <script type="text/javascript" src="/tameson_base/static/src/js/session.js"></script>                
+                <script
+          type="text/javascript"
+          src="/tameson_base/static/src/js/session.js"
+        />
             </xpath>
         </template>
     </data>

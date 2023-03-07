@@ -1,14 +1,17 @@
-# -*- encoding: utf-8 -*-
-
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+    _inherit = "product.template"
 
-    product_brand_id = fields.Many2one('common.product.brand.ept', string="Brand",
-                                       help='Select a brand for this product.')
-    ept_image_ids = fields.One2many('common.product.image.ept', 'template_id', string='Images')
+    product_brand_id = fields.Many2one(
+        "common.product.brand.ept",
+        string="Brand",
+        help="Select a brand for this product.",
+    )
+    ept_image_ids = fields.One2many(
+        "common.product.image.ept", "template_id", string="Images"
+    )
 
     @api.model
     def create(self, vals):
@@ -18,10 +21,14 @@ class ProductTemplate(models.Model):
         """
         res = super(ProductTemplate, self).create(vals)
         if vals.get("image_1920", False) and res:
-            self.env["common.product.image.ept"].create({"sequence":0,
-                                                         "image":vals.get("image_1920", False),
-                                                         "name":vals.get("name", ""),
-                                                         "template_id":res.id})
+            self.env["common.product.image.ept"].create(
+                {
+                    "sequence": 0,
+                    "image": vals.get("image_1920", False),
+                    "name": vals.get("name", ""),
+                    "template_id": res.id,
+                }
+            )
         return res
 
     def write(self, vals):
@@ -33,8 +40,12 @@ class ProductTemplate(models.Model):
         if vals.get("image_1920", False) and self:
             for record in self:
                 if vals.get("image_1920") != False:
-                    self.env["common.product.image.ept"].create({"sequence":0,
-                                                                 "image":vals.get("image_1920", False),
-                                                                 "name":record.name,
-                                                                 "template_id":record.id})
+                    self.env["common.product.image.ept"].create(
+                        {
+                            "sequence": 0,
+                            "image": vals.get("image_1920", False),
+                            "name": record.name,
+                            "template_id": record.id,
+                        }
+                    )
         return res

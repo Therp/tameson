@@ -1,1050 +1,1050 @@
 {
   "LocatorResponse": {
     "Geocode": {
-      "Latitude": "39.44325637", 
+      "Latitude": "39.44325637",
       "Longitude": "-98.9573364"
-    }, 
+    },
     "Response": {
-      "ResponseStatusCode": "1", 
+      "ResponseStatusCode": "1",
       "TransactionReference": {
         "CustomerContext": "XOLT Sample Code"
-      }, 
+      },
       "ResponseStatusDescription": "Success"
-    }, 
+    },
     "SearchResults": {
       "DropLocation": [
         {
           "Distance": {
             "UnitOfMeasurement": {
-              "Code": "KM", 
+              "Code": "KM",
               "Description": "KILOMETERS"
-            }, 
+            },
             "Value": "0"
-          }, 
+          },
           "SpecialInstructions": {
             "Segment": "DROP BOX LOCATED IN FRONT OF BASE COMMISARY BLDG 2706"
-          }, 
-          "WillCallLocationIndicator": "N", 
-          "AdditionalChargeIndicator": "", 
+          },
+          "WillCallLocationIndicator": "N",
+          "AdditionalChargeIndicator": "",
           "LocationAttribute": [
             {
               "OptionType": {
-                "Code": "01", 
+                "Code": "01",
                 "Description": "Location"
-              }, 
+              },
               "OptionCode": {
-                "Code": "003", 
+                "Code": "003",
                 "Description": "UPS Drop Box"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "02", 
+                "Code": "02",
                 "Description": "RetailLocation"
-              }, 
+              },
               "OptionCode": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "UPS Drop Box"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "AdditionalServices"
-              }, 
+              },
               "OptionCode": [
                 {
-                  "Category": "06", 
-                  "Code": "031", 
+                  "Category": "06",
+                  "Code": "031",
                   "Name": "Find a drop off location"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "001", 
+                  },
+                  "Code": "001",
                   "Name": "Ground"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1515"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "002", 
+                  },
+                  "Code": "002",
                   "Name": "Air"
                 }
               ]
             }
-          ], 
-          "LocationNewIndicator": "N", 
-          "LatestGroundDropOffTime": "Mon-Fri: 3:15pm; Sat, Sun: No Pickup", 
+          ],
+          "LocationNewIndicator": "N",
+          "LatestGroundDropOffTime": "Mon-Fri: 3:15pm; Sat, Sun: No Pickup",
           "Geocode": {
-            "Latitude": "39.44325637", 
+            "Latitude": "39.44325637",
             "Longitude": "-98.9573364"
-          }, 
-          "LocationID": "11710", 
+          },
+          "LocationID": "11710",
           "IVR": {
             "PhraseID": "37671"
-          }, 
+          },
           "AddressKeyFormat": {
-            "PoliticalDivision2": "MOUNTAIN HOME AFB", 
-            "PoliticalDivision1": "ID", 
-            "AddressLine": "615 GUNFIGHTER AVE", 
-            "CountryCode": "US", 
-            "ConsigneeName": "MOUNTAIN HOME AFB", 
+            "PoliticalDivision2": "MOUNTAIN HOME AFB",
+            "PoliticalDivision1": "ID",
+            "AddressLine": "615 GUNFIGHTER AVE",
+            "CountryCode": "US",
+            "ConsigneeName": "MOUNTAIN HOME AFB",
             "PostcodePrimaryLow": "83648"
-          }, 
+          },
           "LatestAirDropOffTime": "Mon-Fri: 3:15pm; Sat, Sun: No Pickup"
-        }, 
+        },
         {
           "Distance": {
             "UnitOfMeasurement": {
-              "Code": "KM", 
+              "Code": "KM",
               "Description": "KILOMETERS"
-            }, 
+            },
             "Value": "70.9"
-          }, 
-          "DisplayPhoneNumberIndicator": "1", 
-          "SpecialInstructions": "", 
-          "WillCallLocationIndicator": "N", 
-          "StandardHoursOfOperation": "Mon-Fri: 4:30pm-6:00pm; Sat, Sun: Closed", 
-          "AdditionalChargeIndicator": "", 
+          },
+          "DisplayPhoneNumberIndicator": "1",
+          "SpecialInstructions": "",
+          "WillCallLocationIndicator": "N",
+          "StandardHoursOfOperation": "Mon-Fri: 4:30pm-6:00pm; Sat, Sun: Closed",
+          "AdditionalChargeIndicator": "",
           "OperatingHours": {
             "StandardHours": [
               {
                 "DayOfWeek": [
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "1"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "2"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "3"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "4"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "5"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "6"
-                  }, 
+                  },
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "7"
                   }
-                ], 
+                ],
                 "HoursType": "10"
-              }, 
+              },
               {
                 "DayOfWeek": [
                   {
-                    "OpenHours": "840", 
+                    "OpenHours": "840",
                     "Day": "1"
-                  }, 
+                  },
                   {
-                    "OpenHours": "840", 
+                    "OpenHours": "840",
                     "Day": "2"
-                  }, 
+                  },
                   {
-                    "OpenHours": "840", 
+                    "OpenHours": "840",
                     "Day": "3"
-                  }, 
+                  },
                   {
-                    "OpenHours": "840", 
+                    "OpenHours": "840",
                     "Day": "4"
-                  }, 
+                  },
                   {
-                    "OpenHours": "840", 
+                    "OpenHours": "840",
                     "Day": "5"
-                  }, 
+                  },
                   {
-                    "OpenHours": "840", 
+                    "OpenHours": "840",
                     "Day": "6"
-                  }, 
+                  },
                   {
-                    "OpenHours": "840", 
+                    "OpenHours": "840",
                     "Day": "7"
                   }
-                ], 
+                ],
                 "HoursType": "13"
-              }, 
+              },
               {
                 "DayOfWeek": [
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "1"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "2"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "3"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "4"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "5"
-                  }, 
+                  },
                   {
-                    "CloseHours": "1800", 
-                    "OpenHours": "1630", 
+                    "CloseHours": "1800",
+                    "OpenHours": "1630",
                     "Day": "6"
-                  }, 
+                  },
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "7"
                   }
-                ], 
+                ],
                 "HoursType": "11"
-              }, 
+              },
               {
                 "DayOfWeek": [
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "1"
-                  }, 
+                  },
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "2"
-                  }, 
+                  },
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "3"
-                  }, 
+                  },
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "4"
-                  }, 
+                  },
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "5"
-                  }, 
+                  },
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "6"
-                  }, 
+                  },
                   {
-                    "ClosedIndicator": "", 
+                    "ClosedIndicator": "",
                     "Day": "7"
                   }
-                ], 
+                ],
                 "HoursType": "12"
               }
             ]
-          }, 
+          },
           "LocationAttribute": [
             {
               "OptionType": {
-                "Code": "01", 
+                "Code": "01",
                 "Description": "Location"
-              }, 
+              },
               "OptionCode": {
-                "Code": "001", 
+                "Code": "001",
                 "Description": "UPS Customer Center"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "02", 
+                "Code": "02",
                 "Description": "RetailLocation"
-              }, 
+              },
               "OptionCode": {
-                "Code": "01", 
+                "Code": "01",
                 "Description": "UPS Customer Center"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "AdditionalServices"
-              }, 
+              },
               "OptionCode": [
                 {
-                  "Category": "06", 
-                  "Code": "001", 
+                  "Category": "06",
+                  "Code": "001",
                   "Name": "Purchase Packaging Supplies"
-                }, 
+                },
                 {
-                  "Category": "06", 
-                  "Code": "030", 
+                  "Category": "06",
+                  "Code": "030",
                   "Name": "UPS Returns"
-                }, 
+                },
                 {
-                  "Category": "06", 
-                  "Code": "031", 
+                  "Category": "06",
+                  "Code": "031",
                   "Name": "Find a drop off location"
-                }, 
+                },
                 {
-                  "Category": "06", 
-                  "Code": "032", 
+                  "Category": "06",
+                  "Code": "032",
                   "Name": "Purchase a UPS shipping label"
-                }, 
+                },
                 {
-                  "Category": "06", 
-                  "Code": "033", 
+                  "Category": "06",
+                  "Code": "033",
                   "Name": "Staffed Locations"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "001", 
+                  },
+                  "Code": "001",
                   "Name": "Ground"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1800"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "002", 
+                  },
+                  "Code": "002",
                   "Name": "Air"
                 }
               ]
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "04", 
+                "Code": "04",
                 "Description": "ProgramType"
-              }, 
+              },
               "OptionCode": {
-                "Code": "07", 
+                "Code": "07",
                 "Name": "Bill My Account"
               }
             }
-          ], 
-          "LocationNewIndicator": "N", 
-          "LatestGroundDropOffTime": "Mon-Fri: 6:00pm; Sat, Sun: No Pickup", 
+          ],
+          "LocationNewIndicator": "N",
+          "LatestGroundDropOffTime": "Mon-Fri: 6:00pm; Sat, Sun: No Pickup",
           "Geocode": {
-            "Latitude": "38.86900329", 
+            "Latitude": "38.86900329",
             "Longitude": "-99.3134841"
-          }, 
-          "PhoneNumber": "8007425877", 
-          "Comments": "A government issued photo ID is required when shipping or picking up a package at a UPS Customer Center.", 
+          },
+          "PhoneNumber": "8007425877",
+          "Comments": "A government issued photo ID is required when shipping or picking up a package at a UPS Customer Center.",
           "IVR": {
             "PhraseID": "26422"
-          }, 
+          },
           "AddressKeyFormat": {
-            "PoliticalDivision2": "HAYS", 
-            "PoliticalDivision1": "KS", 
-            "AddressLine": "1101 GENERAL CUSTER RD", 
-            "CountryCode": "US", 
-            "PostcodeExtendedLow": "2598", 
-            "ConsigneeName": "UPS CC HAYS", 
+            "PoliticalDivision2": "HAYS",
+            "PoliticalDivision1": "KS",
+            "AddressLine": "1101 GENERAL CUSTER RD",
+            "CountryCode": "US",
+            "PostcodeExtendedLow": "2598",
+            "ConsigneeName": "UPS CC HAYS",
             "PostcodePrimaryLow": "67601"
-          }, 
-          "LocationID": "8721", 
-          "WillCallHoursOfOperation": "Mon: 1630-1800;Tues: 1630-1800;Wed: 1630-1800;Th:  1630-1800;Fri:  1630-1800;", 
+          },
+          "LocationID": "8721",
+          "WillCallHoursOfOperation": "Mon: 1630-1800;Tues: 1630-1800;Wed: 1630-1800;Th:  1630-1800;Fri:  1630-1800;",
           "LatestAirDropOffTime": "Mon-Fri: 6:00pm; Sat, Sun: No Pickup"
-        }, 
+        },
         {
           "Distance": {
             "UnitOfMeasurement": {
-              "Code": "KM", 
+              "Code": "KM",
               "Description": "KILOMETERS"
-            }, 
+            },
             "Value": "62.1"
-          }, 
+          },
           "SpecialInstructions": {
             "Segment": "The Drop Box is located on the Southeast corner of the UMB Bank Building."
-          }, 
-          "WillCallLocationIndicator": "N", 
-          "AdditionalChargeIndicator": "", 
+          },
+          "WillCallLocationIndicator": "N",
+          "AdditionalChargeIndicator": "",
           "LocationAttribute": [
             {
               "OptionType": {
-                "Code": "01", 
+                "Code": "01",
                 "Description": "Location"
-              }, 
+              },
               "OptionCode": {
-                "Code": "003", 
+                "Code": "003",
                 "Description": "UPS Drop Box"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "02", 
+                "Code": "02",
                 "Description": "RetailLocation"
-              }, 
+              },
               "OptionCode": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "UPS Drop Box"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "AdditionalServices"
-              }, 
+              },
               "OptionCode": [
                 {
-                  "Category": "06", 
-                  "Code": "031", 
+                  "Category": "06",
+                  "Code": "031",
                   "Name": "Find a drop off location"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "001", 
+                  },
+                  "Code": "001",
                   "Name": "Ground"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "002", 
+                  },
+                  "Code": "002",
                   "Name": "Air"
                 }
               ]
             }
-          ], 
-          "LocationNewIndicator": "N", 
-          "LatestGroundDropOffTime": "Mon-Fri: 4:30pm; Sat, Sun: No Pickup", 
+          ],
+          "LocationNewIndicator": "N",
+          "LatestGroundDropOffTime": "Mon-Fri: 4:30pm; Sat, Sun: No Pickup",
           "Geocode": {
-            "Latitude": "38.89023971", 
+            "Latitude": "38.89023971",
             "Longitude": "-98.8598480"
-          }, 
-          "LocationID": "43193", 
+          },
+          "LocationID": "43193",
           "IVR": {
             "PhraseID": "38295"
-          }, 
+          },
           "AddressKeyFormat": {
-            "PoliticalDivision2": "RUSSELL", 
-            "PoliticalDivision1": "KS", 
-            "AddressLine": "507 N MAIN ST", 
-            "CountryCode": "US", 
-            "ConsigneeName": "UMB BANK", 
+            "PoliticalDivision2": "RUSSELL",
+            "PoliticalDivision1": "KS",
+            "AddressLine": "507 N MAIN ST",
+            "CountryCode": "US",
+            "ConsigneeName": "UMB BANK",
             "PostcodePrimaryLow": "67665"
-          }, 
+          },
           "LatestAirDropOffTime": "Mon-Fri: 4:30pm; Sat, Sun: No Pickup"
-        }, 
+        },
         {
           "Distance": {
             "UnitOfMeasurement": {
-              "Code": "KM", 
+              "Code": "KM",
               "Description": "KILOMETERS"
-            }, 
+            },
             "Value": "69.4"
-          }, 
+          },
           "SpecialInstructions": {
             "Segment": "The Drop Box is located on the North side of the Sunflower Bank parking lot."
-          }, 
-          "WillCallLocationIndicator": "N", 
-          "AdditionalChargeIndicator": "", 
+          },
+          "WillCallLocationIndicator": "N",
+          "AdditionalChargeIndicator": "",
           "LocationAttribute": [
             {
               "OptionType": {
-                "Code": "01", 
+                "Code": "01",
                 "Description": "Location"
-              }, 
+              },
               "OptionCode": {
-                "Code": "003", 
+                "Code": "003",
                 "Description": "UPS Drop Box"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "02", 
+                "Code": "02",
                 "Description": "RetailLocation"
-              }, 
+              },
               "OptionCode": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "UPS Drop Box"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "AdditionalServices"
-              }, 
+              },
               "OptionCode": [
                 {
-                  "Category": "06", 
-                  "Code": "031", 
+                  "Category": "06",
+                  "Code": "031",
                   "Name": "Find a drop off location"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "001", 
+                  },
+                  "Code": "001",
                   "Name": "Ground"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1700"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "002", 
+                  },
+                  "Code": "002",
                   "Name": "Air"
                 }
               ]
             }
-          ], 
-          "LocationNewIndicator": "N", 
-          "LatestGroundDropOffTime": "Mon-Fri: 5:00pm; Sat, Sun: No Pickup", 
+          ],
+          "LocationNewIndicator": "N",
+          "LatestGroundDropOffTime": "Mon-Fri: 5:00pm; Sat, Sun: No Pickup",
           "Geocode": {
-            "Latitude": "38.88552856", 
+            "Latitude": "38.88552856",
             "Longitude": "-99.3174285"
-          }, 
-          "LocationID": "43194", 
+          },
+          "LocationID": "43194",
           "IVR": {
             "PhraseID": "38311"
-          }, 
+          },
           "AddressKeyFormat": {
-            "PoliticalDivision2": "HAYS", 
-            "PoliticalDivision1": "KS", 
-            "AddressLine": "1010 E 27TH ST", 
-            "CountryCode": "US", 
-            "ConsigneeName": "1ST NATIONAL BANK", 
+            "PoliticalDivision2": "HAYS",
+            "PoliticalDivision1": "KS",
+            "AddressLine": "1010 E 27TH ST",
+            "CountryCode": "US",
+            "ConsigneeName": "1ST NATIONAL BANK",
             "PostcodePrimaryLow": "67601"
-          }, 
+          },
           "LatestAirDropOffTime": "Mon-Fri: 5:00pm; Sat, Sun: No Pickup"
-        }, 
+        },
         {
           "Distance": {
             "UnitOfMeasurement": {
-              "Code": "KM", 
+              "Code": "KM",
               "Description": "KILOMETERS"
-            }, 
+            },
             "Value": "70.2"
-          }, 
+          },
           "SpecialInstructions": {
             "Segment": "The Drop Box is located in the Eagle Plaza parking lot."
-          }, 
-          "WillCallLocationIndicator": "N", 
-          "AdditionalChargeIndicator": "", 
+          },
+          "WillCallLocationIndicator": "N",
+          "AdditionalChargeIndicator": "",
           "LocationAttribute": [
             {
               "OptionType": {
-                "Code": "01", 
+                "Code": "01",
                 "Description": "Location"
-              }, 
+              },
               "OptionCode": {
-                "Code": "003", 
+                "Code": "003",
                 "Description": "UPS Drop Box"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "02", 
+                "Code": "02",
                 "Description": "RetailLocation"
-              }, 
+              },
               "OptionCode": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "UPS Drop Box"
               }
-            }, 
+            },
             {
               "OptionType": {
-                "Code": "03", 
+                "Code": "03",
                 "Description": "AdditionalServices"
-              }, 
+              },
               "OptionCode": [
                 {
-                  "Category": "06", 
-                  "Code": "031", 
+                  "Category": "06",
+                  "Code": "031",
                   "Name": "Find a drop off location"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "001", 
+                  },
+                  "Code": "001",
                   "Name": "Ground"
-                }, 
+                },
                 {
-                  "Category": "07", 
+                  "Category": "07",
                   "TransportationPickUpSchedule": {
                     "PickUp": [
                       {
-                        "DayOfWeek": "1", 
+                        "DayOfWeek": "1",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "2", 
+                        "DayOfWeek": "2",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "3", 
+                        "DayOfWeek": "3",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "4", 
+                        "DayOfWeek": "4",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "5", 
+                        "DayOfWeek": "5",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "6", 
+                        "DayOfWeek": "6",
                         "PickUpDetails": {
                           "PickUpTime": "1630"
                         }
-                      }, 
+                      },
                       {
-                        "DayOfWeek": "7", 
+                        "DayOfWeek": "7",
                         "PickUpDetails": {
                           "NoPickUpIndicator": ""
                         }
                       }
                     ]
-                  }, 
-                  "Code": "002", 
+                  },
+                  "Code": "002",
                   "Name": "Air"
                 }
               ]
             }
-          ], 
-          "LocationNewIndicator": "N", 
-          "LatestGroundDropOffTime": "Mon-Fri: 4:30pm; Sat, Sun: No Pickup", 
+          ],
+          "LocationNewIndicator": "N",
+          "LatestGroundDropOffTime": "Mon-Fri: 4:30pm; Sat, Sun: No Pickup",
           "Geocode": {
-            "Latitude": "38.88557815", 
+            "Latitude": "38.88557815",
             "Longitude": "-99.3362503"
-          }, 
-          "LocationID": "43195", 
+          },
+          "LocationID": "43195",
           "IVR": {
             "PhraseID": "38312"
-          }, 
+          },
           "AddressKeyFormat": {
-            "PoliticalDivision2": "HAYS", 
-            "PoliticalDivision1": "KS", 
-            "AddressLine": "2703 HALL ST", 
-            "CountryCode": "US", 
-            "ConsigneeName": "EAGLE BUSINESS PLAZA", 
+            "PoliticalDivision2": "HAYS",
+            "PoliticalDivision1": "KS",
+            "AddressLine": "2703 HALL ST",
+            "CountryCode": "US",
+            "ConsigneeName": "EAGLE BUSINESS PLAZA",
             "PostcodePrimaryLow": "67601"
-          }, 
+          },
           "LatestAirDropOffTime": "Mon-Fri: 4:30pm; Sat, Sun: No Pickup"
         }
       ]
-    }, 
+    },
     "AllowAllConfidenceLevels": "false"
   }
 }

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
         <record id="pimcore_user" model="res.groups">
             <field name="name">Pimcore</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="category_id" ref="base.module_category_hidden" />
         </record>
     </data>
 </odoo>

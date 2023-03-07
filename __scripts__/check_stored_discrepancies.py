@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This script expects to be run on a buildout
 """
@@ -12,16 +11,20 @@ import sys
 
 logging.basicConfig()
 logger = logging.getLogger(__file__)  # pylint: disable=invalid-name
-if 'session' not in locals():
-    logger.error('Run me with python_odoo from a buildout!')
+if "session" not in locals():
+    logger.error("Run me with python_odoo from a buildout!")
     sys.exit(1)
 
 parser = argparse.ArgumentParser(  # pylint: disable=invalid-name
-    description='Assign the correct accounting sale journal to clients')
+    description="Assign the correct accounting sale journal to clients"
+)
 parser.add_argument(  # pylint: disable=invalid-name
-    'db', help='The name of your migrated v9 database')
-args = parser.parse_args()   # pylint: disable=invalid-name
-session.open(args.db)  # noqa: F821,E501  # pylint: disable=invalid-name,undefined-variable
+    "db", help="The name of your migrated v9 database"
+)
+args = parser.parse_args()  # pylint: disable=invalid-name
+session.open(
+    args.db
+)  # noqa: F821,E501  # pylint: disable=invalid-name,undefined-variable
 cr = session.cr  # noqa: F821,E501  # pylint: disable=invalid-name,undefined-variable
 
 
@@ -30,21 +33,20 @@ cr = session.cr  # noqa: F821,E501  # pylint: disable=invalid-name,undefined-var
 
 env = session.env  # noqa: F821,E501  # pylint: disable=invalid-name,undefined-variable
 
-products = env['product.product'].search([])
+products = env["product.product"].search([])
 
 product_discrepancies = []
 for product in products:
     if product.minimal_qty_available != product.minimal_qty_available_stored:
         product_discrepancies.append((product.id, product.name))
-print('product discrepancies {0}'.format(product_discrepancies))
-print('number of product discrepancies {0}'.format(len(product_discrepancies)))
+print("product discrepancies {}".format(product_discrepancies))
+print("number of product discrepancies {}".format(len(product_discrepancies)))
 
 
-tmpls = env['product.template'].search([])
+tmpls = env["product.template"].search([])
 tmpl_discrepancies = []
 for tmpl in tmpls:
     if tmpl.minimal_qty_available != tmpl.minimal_qty_available_stored:
         tmpl_discrepancies.append((tmpl.id, tmpl.name))
-print('product discrepancies {0}'.format(tmpl_discrepancies))
-print('number of product discrepancies {0}'.format(len(tmpl_discrepancies)))
-
+print("product discrepancies {}".format(tmpl_discrepancies))
+print("number of product discrepancies {}".format(len(tmpl_discrepancies)))

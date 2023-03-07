@@ -8,7 +8,7 @@ from odoo import fields, models
 
 
 class GlobalChannel(models.Model):
-    _name = 'global.channel.ept'
-    _description = 'Global Channel'
+    _name = "global.channel.ept"
+    _description = "Global Channel"
 
-    name = fields.Char('Global Channel')
+    name = fields.Char("Global Channel")

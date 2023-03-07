@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
         <!-- Tree view for "prestashop.config" -->
@@ -17,7 +17,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <!-- Form view for "prestashop.config" -->
         <record id="view_prestashop_config_form" model="ir.ui.view">
             <field name="name">view.prestashop.config.form</field>
@@ -34,7 +34,11 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" />
                             <h1>
-                                <field name="name" class="oe_inline" placeholder="name" />
+                                <field
+                  name="name"
+                  class="oe_inline"
+                  placeholder="name"
+                />
                             </h1>
                         </div>
                         <group>
@@ -54,7 +58,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Search view for "prestashop.config" -->
         <record id="view_prestashop_config_search" model="ir.ui.view">
             <field name="name">view.prestashop.config.search</field>
@@ -70,7 +74,7 @@
                 </search>
             </field>
         </record>
-        
+
         <!-- Main window action for "prestashop.config" -->
         <record id="action_prestashop_config_act_window" model="ir.actions.act_window">
             <field name="type">ir.actions.act_window</field>
@@ -88,14 +92,14 @@
                 </p>
             </field>
         </record>
-        
+
         <!-- Main menu for "prestashop.config" -->
-        <record id="menu_prestashop_config" model="ir.ui.menu" >
+        <record id="menu_prestashop_config" model="ir.ui.menu">
             <field name="name">Prestashop Configuration</field>
             <field name="sequence" eval="10" />
             <field name="action" ref="action_prestashop_config_act_window" />
             <field name="parent_id" ref="sale.menu_sale_config" />
         </record>
-        
+
     </data>
 </odoo>

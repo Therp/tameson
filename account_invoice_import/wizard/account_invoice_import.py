@@ -210,9 +210,7 @@ class AccountInvoiceImport(models.TransientModel):
             parsed_inv.get("currency"), parsed_inv["chatter_msg"]
         )
         journal_id = (
-            amo.with_context(
-                default_type=parsed_inv["type"], company_id=company.id
-            )
+            amo.with_context(default_type=parsed_inv["type"], company_id=company.id)
             ._get_default_journal()
             .id
         )
@@ -783,8 +781,7 @@ class AccountInvoiceImport(models.TransientModel):
         if import_config is None:
             assert self.import_config_id
             import_config = self.import_config_id.convert_to_import_config()
-        invoice = self.create_invoice(parsed_inv, import_config, origin)
-        xmlid = "account.action_move_in_invoice_type"
+        self.create_invoice(parsed_inv, import_config, origin)
         # action = self.env.ref(xmlid).read()[0]
         # action.update(
         #     {
@@ -1061,7 +1058,9 @@ class AccountInvoiceImport(models.TransientModel):
                     invoice._check_balanced()
                     break
             if not has_tax_line:
-                logger.info("The total amount is different from the untaxed amount, but no tax has been configured !")
+                logger.info(
+                    "The total amount is different from the untaxed amount, but no tax has been configured !"
+                )
                 # raise UserError(
                 #     _(
                 #         "The total amount is different from the untaxed amount, "

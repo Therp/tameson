@@ -6,21 +6,18 @@
 import re
 import sys
 from string import Template
+
 import six
-from six.moves import urllib, range
-from . import connection
-from . import element_containers
-from . import formats
-from . import util
+from six.moves import range, urllib
+
 from ..pyactiveresource.collection import Collection
+from . import connection, formats, util
 
-
-VALID_NAME = re.compile(r'[a-z_]\w*')  # Valid python attribute names
+VALID_NAME = re.compile(r"[a-z_]\w*")  # Valid python attribute names
 
 
 class Error(Exception):
     """A general error derived from Exception."""
-    pass
 
 
 class Errors(object):
@@ -61,7 +58,7 @@ class Errors(object):
         Returns:
             None
         """
-        self.add('base', error)
+        self.add("base", error)
 
     def clear(self):
         """Clear any errors that have been set.
@@ -79,7 +76,7 @@ class Errors(object):
             attr_name = message.split()[0]
             key = util.underscore(attr_name)
             if key in attribute_keys:
-                self.add(key, message[len(attr_name)+1:])
+                self.add(key, message[len(attr_name) + 1 :])
             else:
                 self.add_to_base(message)
 
@@ -101,7 +98,7 @@ class Errors(object):
             None
         """
         try:
-            messages = util.xml_to_dict(xml_string)['errors']['error']
+            messages = util.xml_to_dict(xml_string)["errors"]["error"]
             if not isinstance(messages, list):
                 messages = [messages]
         except util.Error:
@@ -117,13 +114,13 @@ class Errors(object):
             None
         """
         try:
-            decoded = util.json_to_dict(json_string.decode('utf-8'))
+            decoded = util.json_to_dict(json_string.decode("utf-8"))
         except ValueError:
             decoded = {}
         if not decoded:
             decoded = {}
-        if isinstance(decoded, dict) and ('errors' in decoded or len(decoded) == 0):
-            errors = decoded.get('errors', {})
+        if isinstance(decoded, dict) and ("errors" in decoded or len(decoded) == 0):
+            errors = decoded.get("errors", {})
             if isinstance(errors, list):
                 # Deprecated in ActiveResource
                 self.from_array(errors)
@@ -158,10 +155,10 @@ class Errors(object):
         messages = []
         for key, errors in six.iteritems(self.errors):
             for error in errors:
-                if key == 'base':
+                if key == "base":
                     messages.append(error)
                 else:
-                    messages.append(' '.join((key, error)))
+                    messages.append(" ".join((key, error)))
         return messages
 
 
@@ -193,19 +190,18 @@ class ResourceMeta(type):
             bases: List of base classes from which mcs inherits.
             new_attrs: The class attribute dictionary.
         """
-        if '_singular' not in new_attrs or not new_attrs['_singular']:
-            new_attrs['_singular'] = util.underscore(name)
+        if "_singular" not in new_attrs or not new_attrs["_singular"]:
+            new_attrs["_singular"] = util.underscore(name)
 
-        if '_plural' not in new_attrs or not new_attrs['_plural']:
-            new_attrs['_plural'] = util.pluralize(new_attrs['_singular'])
-
+        if "_plural" not in new_attrs or not new_attrs["_plural"]:
+            new_attrs["_plural"] = util.pluralize(new_attrs["_singular"])
 
         klass = type.__new__(mcs, name, bases, new_attrs)
 
         # if _site is defined, use the site property to ensure that user
         # and password are properly initialized.
-        if '_site' in new_attrs:
-            klass.site = new_attrs['_site']
+        if "_site" in new_attrs:
+            klass.site = new_attrs["_site"]
 
         return klass
 
@@ -213,10 +209,11 @@ class ResourceMeta(type):
     def connection(cls):
         """A connection object which handles all HTTP requests."""
         super_class = cls.__mro__[1]
-        if super_class == object or '_connection' in cls.__dict__:
+        if super_class == object or "_connection" in cls.__dict__:
             if cls._connection is None:
                 cls._connection = connection.Connection(
-                    cls.site, cls.user, cls.password, cls.timeout, cls.format)
+                    cls.site, cls.user, cls.password, cls.timeout, cls.format
+                )
             return cls._connection
         else:
             return super_class.connection
@@ -225,11 +222,10 @@ class ResourceMeta(type):
         return cls._user
 
     def set_user(cls, value):
-      cls._connection = None
-      cls._user = value
+        cls._connection = None
+        cls._user = value
 
-    user = property(get_user, set_user, None,
-                    'A username for HTTP Basic Auth.')
+    user = property(get_user, set_user, None, "A username for HTTP Basic Auth.")
 
     def get_password(cls):
         return cls._password
@@ -238,8 +234,9 @@ class ResourceMeta(type):
         cls._connection = None
         cls._password = value
 
-    password = property(get_password, set_password, None,
-                        'A password for HTTP Basic Auth.')
+    password = property(
+        get_password, set_password, None, "A password for HTTP Basic Auth."
+    )
 
     def get_site(cls):
         return cls._site
@@ -254,17 +251,15 @@ class ResourceMeta(type):
         cls._connection = None
         cls._site = value
 
-    site = property(get_site, set_site, None,
-                    'The base REST site to connect to.')
+    site = property(get_site, set_site, None, "The base REST site to connect to.")
 
     def get_headers(cls):
         return cls._headers
 
     def set_headers(cls, value):
         cls._headers = value
-    
-    headers = property(get_headers, set_headers, None,
-                       'HTTP headers.')
+
+    headers = property(get_headers, set_headers, None, "HTTP headers.")
 
     def get_timeout(cls):
         return cls._timeout
@@ -272,9 +267,10 @@ class ResourceMeta(type):
     def set_timeout(cls, value):
         cls._connection = None
         cls._timeout = value
-    
-    timeout = property(get_timeout, set_timeout, None,
-                       'Socket timeout for HTTP operations')
+
+    timeout = property(
+        get_timeout, set_timeout, None, "Socket timeout for HTTP operations"
+    )
 
     def get_format(cls):
         return cls._format
@@ -282,31 +278,34 @@ class ResourceMeta(type):
     def set_format(cls, value):
         cls._connection = None
         cls._format = value
-    
-    format = property(get_format, set_format, None,
-                       'A format object for encoding/decoding requests')
+
+    format = property(
+        get_format, set_format, None, "A format object for encoding/decoding requests"
+    )
 
     def get_plural(cls):
         return cls._plural
 
     def set_plural(cls, value):
         cls._plural = value
-    
-    plural = property(get_plural, set_plural, None,
-                      'The plural name of this object type.')
+
+    plural = property(
+        get_plural, set_plural, None, "The plural name of this object type."
+    )
 
     def get_singular(cls):
         return cls._singular
 
     def set_singular(cls, value):
         cls._singular = value
-    
-    singular = property(get_singular, set_singular, None,
-                        'The singular name of this object type.')
+
+    singular = property(
+        get_singular, set_singular, None, "The singular name of this object type."
+    )
 
     def get_prefix_source(cls):
         """Return the prefix source, by default derived from site."""
-        if hasattr(cls, '_prefix_source'):
+        if hasattr(cls, "_prefix_source"):
             return cls._prefix_source
         else:
             return urllib.parse.urlsplit(cls.site)[2]
@@ -315,8 +314,12 @@ class ResourceMeta(type):
         """Set the prefix source, which will be rendered into the prefix."""
         cls._prefix_source = value
 
-    prefix_source = property(get_prefix_source, set_prefix_source, None,
-                             'prefix for lookups for this type of object.')
+    prefix_source = property(
+        get_prefix_source,
+        set_prefix_source,
+        None,
+        "prefix for lookups for this type of object.",
+    )
 
     def prefix(cls, options=None):
         """Return the rendered prefix for this object."""
@@ -328,8 +331,12 @@ class ResourceMeta(type):
     def set_primary_key(cls, value):
         cls._primary_key = value
 
-    primary_key = property(get_primary_key, set_primary_key, None,
-                           'Name of attribute that uniquely identies the resource')
+    primary_key = property(
+        get_primary_key,
+        set_primary_key,
+        None,
+        "Name of attribute that uniquely identies the resource",
+    )
 
 
 class ActiveResource(six.with_metaclass(ResourceMeta, object)):
@@ -353,7 +360,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
                             nested URLs.
         """
         if attributes is None:
-          attributes = {}
+            attributes = {}
         self.klass = self.__class__
         self.attributes = {}
         if prefix_options:
@@ -460,7 +467,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         Returns:
             A tuple containing (prefix_options, query_options)
         """
-        #TODO(mrroach): figure out prefix_options
+        # TODO(mrroach): figure out prefix_options
         prefix_options = {}
         query_options = {}
         for key, value in six.iteritems(options):
@@ -484,8 +491,9 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         """
         prefix_options, query_options = cls._split_options(kwargs)
         path = cls._element_path(id_, prefix_options, query_options)
-        return cls._build_object(cls.connection.get_formatted(path, cls.headers),
-                                 prefix_options)
+        return cls._build_object(
+            cls.connection.get_formatted(path, cls.headers), prefix_options
+        )
 
     @classmethod
     def _find_one(cls, from_, query_options):
@@ -499,7 +507,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         Raises:
             connection.ConnectionError: On any error condition.
         """
-        #TODO(mrroach): allow from_ to be a string-generating function
+        # TODO(mrroach): allow from_ to be a string-generating function
         path = from_ + cls._query_string(query_options)
         return cls._build_object(cls.connection.get_formatted(path, cls.headers))
 
@@ -558,17 +566,13 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             # instead?
             elements = [elements]
         else:
-            elements = (
-                cls._build_object(el, prefix_options) for el in elements
-            )
+            elements = (cls._build_object(el, prefix_options) for el in elements)
 
         # TODO(emdemir): Figure out whether passing all headers is needed.
         # I am currently assuming that the Link header is not standard
         # ActiveResource stuff so I am passing all headers up the chain to
         # python_shopify_api which will handle pagination.
-        return Collection(elements, metadata={
-            "headers": headers
-        })
+        return Collection(elements, metadata={"headers": headers})
 
     @classmethod
     def _query_string(cls, query_options):
@@ -580,9 +584,9 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             A string containing the encoded query.
         """
         if query_options:
-            return '?' + util.to_query(query_options)
+            return "?" + util.to_query(query_options)
         else:
-            return ''
+            return ""
 
     @classmethod
     def _element_path(cls, id_, prefix_options=None, query_options=None):
@@ -599,12 +603,13 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         Returns:
             The path (relative to site) to the element formatted with the query.
         """
-        return '%(prefix)s/%(plural)s/%(id)s.%(format)s%(query)s' % {
-                'prefix': cls._prefix(prefix_options),
-                'plural': cls._plural,
-                'id': id_,
-                'format': cls.format.extension,
-                'query': cls._query_string(query_options)}
+        return "%(prefix)s/%(plural)s/%(id)s.%(format)s%(query)s" % {
+            "prefix": cls._prefix(prefix_options),
+            "plural": cls._plural,
+            "id": id_,
+            "format": cls.format.extension,
+            "query": cls._query_string(query_options),
+        }
 
     @classmethod
     def _collection_path(cls, prefix_options=None, query_options=None):
@@ -624,11 +629,12 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         Returns:
             The path (relative to site) to this type of collection.
         """
-        return '%(prefix)s/%(plural)s.%(format)s%(query)s' % {
-                'prefix': cls._prefix(prefix_options),
-                'plural': cls._plural,
-                'format': cls.format.extension,
-                'query': cls._query_string(query_options)}
+        return "%(prefix)s/%(plural)s.%(format)s%(query)s" % {
+            "prefix": cls._prefix(prefix_options),
+            "plural": cls._plural,
+            "format": cls.format.extension,
+            "query": cls._query_string(query_options),
+        }
 
     @classmethod
     def _custom_method_collection_url(cls, method_name, options):
@@ -641,13 +647,13 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             The path (relative to site) to this type of collection.
         """
         prefix_options, query_options = cls._split_options(options)
-        path = (
-            '%(prefix)s/%(plural)s/%(method_name)s.%(format)s%(query)s' %
-            {'prefix': cls._prefix(prefix_options),
-             'plural': cls._plural,
-             'method_name': method_name,
-             'format': cls.format.extension,
-             'query': cls._query_string(query_options)})
+        path = "%(prefix)s/%(plural)s/%(method_name)s.%(format)s%(query)s" % {
+            "prefix": cls._prefix(prefix_options),
+            "plural": cls._plural,
+            "method_name": method_name,
+            "format": cls.format.extension,
+            "query": cls._query_string(query_options),
+        }
         return path
 
     @classmethod
@@ -664,7 +670,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         return cls.connection.get_formatted(url, cls.headers)
 
     @classmethod
-    def _class_post(cls, method_name, body=b'', **kwargs):
+    def _class_post(cls, method_name, body=b"", **kwargs):
         """Get a nested resource or resources.
 
         Args:
@@ -678,7 +684,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         return cls.connection.post(url, cls.headers, body)
 
     @classmethod
-    def _class_put(cls, method_name, body=b'', **kwargs):
+    def _class_put(cls, method_name, body=b"", **kwargs):
         """Update a nested resource or resources.
 
         Args:
@@ -733,7 +739,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         template = Template(path)
         keys = set()
         for match in template.pattern.finditer(path):
-            for match_type in 'braced', 'named':
+            for match_type in "braced", "named":
                 if match.groupdict()[match_type]:
                     keys.add(match.groupdict()[match_type])
         return keys
@@ -749,12 +755,12 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         """
         if options is None:
             options = {}
-        path = re.sub('/$', '', cls.prefix_source)
+        path = re.sub("/$", "", cls.prefix_source)
         template = Template(path)
         keys = cls._prefix_parameters()
-        options = dict([(k, options.get(k, '')) for k in keys])
+        options = {k: options.get(k, "") for k in keys}
         prefix = template.safe_substitute(options)
-        return re.sub('^/+', '', prefix)
+        return re.sub("^/+", "", prefix)
 
     # Public instance methods
     def to_dict(self):
@@ -764,10 +770,10 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             if isinstance(value, list):
                 new_value = []
                 for item in value:
-                  if isinstance(item, ActiveResource):
-                      new_value.append(item.to_dict())
-                  else:
-                      new_value.append(item)
+                    if isinstance(item, ActiveResource):
+                        new_value.append(item.to_dict())
+                    else:
+                        new_value.append(item)
                 values[key] = new_value
             elif isinstance(value, ActiveResource):
                 values[key] = value.to_dict()
@@ -791,15 +797,15 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         """
         if not root:
             root = self._singular
-        return util.to_xml(self.to_dict(), root=root,
-                           header=header, pretty=pretty,
-                           dasherize=dasherize)
+        return util.to_xml(
+            self.to_dict(), root=root, header=header, pretty=pretty, dasherize=dasherize
+        )
 
     def to_json(self, root=True):
         """Convert the object to a json string."""
         if root == True:
             root = self._singular
-        return util.to_json(self.to_dict(), root=root).encode('utf-8')
+        return util.to_json(self.to_dict(), root=root).encode("utf-8")
 
     def reload(self):
         """Connect to the server and update this resource's attributes.
@@ -810,8 +816,8 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             None
         """
         attributes = self.klass.connection.get_formatted(
-                self._element_path(self.id, self._prefix_options),
-                self.klass.headers)
+            self._element_path(self.id, self._prefix_options), self.klass.headers
+        )
         self._update(attributes)
 
     def save(self):
@@ -829,14 +835,16 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             self.errors.clear()
             if self.id:
                 response = self.klass.connection.put(
-                        self._element_path(self.id, self._prefix_options),
-                        self.klass.headers,
-                        data=self.encode())
+                    self._element_path(self.id, self._prefix_options),
+                    self.klass.headers,
+                    data=self.encode(),
+                )
             else:
                 response = self.klass.connection.post(
-                        self._collection_path(self._prefix_options),
-                        self.klass.headers,
-                        data=self.encode())
+                    self._collection_path(self._prefix_options),
+                    self.klass.headers,
+                    data=self.encode(),
+                )
                 new_id = self._id_from_response(response)
                 if new_id:
                     self.id = new_id
@@ -872,9 +880,10 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         Returns:
            An id string.
         """
-        match = re.search(r'\/([^\/]*?)(\.\w+)?$',
-                          response.get('Location',
-                                       response.get('location', '')))
+        match = re.search(
+            r"\/([^\/]*?)(\.\w+)?$",
+            response.get("Location", response.get("location", "")),
+        )
         if match:
             try:
                 return int(match.group(1))
@@ -890,8 +899,8 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             None
         """
         self.klass.connection.delete(
-                self._element_path(self.id, self._prefix_options),
-                self.klass.headers)
+            self._element_path(self.id, self._prefix_options), self.klass.headers
+        )
 
     def get_id(self):
         return self.attributes.get(self.klass.primary_key)
@@ -899,7 +908,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
     def set_id(self, value):
         self.attributes[self.klass.primary_key] = value
 
-    id = property(get_id, set_id, None, 'Value stored in the primary key')
+    id = property(get_id, set_id, None, "Value stored in the primary key")
 
     def __getattr__(self, name):
         """Retrieve the requested attribute if it exists.
@@ -911,7 +920,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         Raises:
             AttributeError: if no such attribute exists.
         """
-        if 'attributes' in self.__dict__:
+        if "attributes" in self.__dict__:
             if name in self.attributes:
                 return self.attributes[name]
         raise AttributeError(name)
@@ -925,7 +934,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         Returns:
             None
         """
-        if '_initialized' in self.__dict__:
+        if "_initialized" in self.__dict__:
             if name in self.__dict__ or getattr(self.__class__, name, None):
                 # Update a normal attribute
                 object.__setattr__(self, name, value)
@@ -936,19 +945,24 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             object.__setattr__(self, name, value)
 
     def __repr__(self):
-        return '%s(%s)' % (self._singular, self.id)
+        return "%s(%s)" % (self._singular, self.id)
 
     if six.PY2:
+
         def __cmp__(self, other):
             if isinstance(other, self.__class__):
                 return cmp(self.id, other.id)
             else:
                 return cmp(self.id, other)
+
     else:
+
         def __eq__(self, other):
-            return other.__class__ == self.__class__ \
-                   and self.id == other.id \
-                   and self._prefix_options == other._prefix_options
+            return (
+                other.__class__ == self.__class__
+                and self.id == other.id
+                and self._prefix_options == other._prefix_options
+            )
 
     def __hash__(self):
         return hash(tuple(sorted(six.iteritems(self.attributes))))
@@ -996,8 +1010,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         return cls._find_class_for(util.singularize(collection_name))
 
     @classmethod
-    def _find_class_for(cls, element_name=None,
-                        class_name=None, create_missing=True):
+    def _find_class_for(cls, element_name=None, class_name=None, create_missing=True):
         """Look in the parent modules for classes matching the element name.
 
         One or both of element/class name must be specified.
@@ -1011,17 +1024,17 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             A Resource class.
         """
         if not element_name and not class_name:
-            raise Error('One of element_name,class_name must be specified.')
+            raise Error("One of element_name,class_name must be specified.")
         elif not element_name:
             element_name = util.underscore(class_name)
         elif not class_name:
             class_name = util.camelize(element_name)
 
-        module_path = cls.__module__.split('.')
+        module_path = cls.__module__.split(".")
         for depth in range(len(module_path), 0, -1):
             try:
-                __import__('.'.join(module_path[:depth]))
-                module = sys.modules['.'.join(module_path[:depth])]
+                __import__(".".join(module_path[:depth]))
+                module = sys.modules[".".join(module_path[:depth])]
             except ImportError:
                 continue
             try:
@@ -1029,9 +1042,8 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
                 return klass
             except AttributeError:
                 try:
-                    __import__('.'.join([module.__name__, element_name]))
-                    submodule = sys.modules['.'.join([module.__name__,
-                                                      element_name])]
+                    __import__(".".join([module.__name__, element_name]))
+                    submodule = sys.modules[".".join([module.__name__, element_name])]
                 except ImportError:
                     continue
                 try:
@@ -1042,7 +1054,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
 
         # If we made it this far, no such class was found
         if create_missing:
-            return type(str(class_name), (cls,), {'__module__': cls.__module__})
+            return type(str(class_name), (cls,), {"__module__": cls.__module__})
 
     # methods corresponding to Ruby's custom_methods
     def _custom_method_element_url(self, method_name, options):
@@ -1056,14 +1068,14 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         """
         prefix_options, query_options = self._split_options(options)
         prefix_options.update(self._prefix_options)
-        path = (
-            '%(prefix)s/%(plural)s/%(id)s/%(method_name)s.%(format)s%(query)s' %
-            {'prefix': self.klass.prefix(prefix_options),
-             'plural': self._plural,
-             'id': self.id,
-             'method_name': method_name,
-             'format': self.klass.format.extension,
-             'query': self._query_string(query_options)})
+        path = "%(prefix)s/%(plural)s/%(id)s/%(method_name)s.%(format)s%(query)s" % {
+            "prefix": self.klass.prefix(prefix_options),
+            "plural": self._plural,
+            "id": self.id,
+            "method_name": method_name,
+            "format": self.klass.format.extension,
+            "query": self._query_string(query_options),
+        }
         return path
 
     def _custom_method_new_element_url(self, method_name, options):
@@ -1077,13 +1089,13 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         """
         prefix_options, query_options = self._split_options(options)
         prefix_options.update(self._prefix_options)
-        path = (
-            '%(prefix)s/%(plural)s/new/%(method_name)s.%(format)s%(query)s' %
-            {'prefix': self.klass.prefix(prefix_options),
-             'plural': self._plural,
-             'method_name': method_name,
-             'format': self.klass.format.extension,
-             'query': self._query_string(query_options)})
+        path = "%(prefix)s/%(plural)s/new/%(method_name)s.%(format)s%(query)s" % {
+            "prefix": self.klass.prefix(prefix_options),
+            "plural": self._plural,
+            "method_name": method_name,
+            "format": self.klass.format.extension,
+            "query": self._query_string(query_options),
+        }
         return path
 
     def _instance_get(self, method_name, **kwargs):
@@ -1098,7 +1110,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         url = self._custom_method_element_url(method_name, kwargs)
         return self.klass.connection.get_formatted(url, self.klass.headers)
 
-    def _instance_post(self, method_name, body=b'', **kwargs):
+    def _instance_post(self, method_name, body=b"", **kwargs):
         """Create a new resource/nested resource.
 
         Args:
@@ -1116,7 +1128,7 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
             url = self._custom_method_new_element_url(method_name, kwargs)
         return self.klass.connection.post(url, self.klass.headers, body)
 
-    def _instance_put(self, method_name, body=b'', **kwargs):
+    def _instance_put(self, method_name, body=b"", **kwargs):
         """Update a nested resource.
 
         Args:
@@ -1154,8 +1166,8 @@ class ActiveResource(six.with_metaclass(ResourceMeta, object)):
         return self.klass.connection.head(url, self.klass.headers)
 
     # Create property which returns class/instance method based on context
-    get = ClassAndInstanceMethod('_class_get', '_instance_get')
-    post = ClassAndInstanceMethod('_class_post', '_instance_post')
-    put = ClassAndInstanceMethod('_class_put', '_instance_put')
-    delete = ClassAndInstanceMethod('_class_delete', '_instance_delete')
-    head = ClassAndInstanceMethod('_class_head', '_instance_head')
+    get = ClassAndInstanceMethod("_class_get", "_instance_get")
+    post = ClassAndInstanceMethod("_class_post", "_instance_post")
+    put = ClassAndInstanceMethod("_class_put", "_instance_put")
+    delete = ClassAndInstanceMethod("_class_delete", "_instance_delete")
+    head = ClassAndInstanceMethod("_class_head", "_instance_head")

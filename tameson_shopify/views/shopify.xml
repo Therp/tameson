@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
         <record id="shopify_instance_form_view_ept" model="ir.ui.view">
@@ -11,26 +11,52 @@
                         <group>
                             <field name="shopify_multipass_host" />
                             <field name="shopify_multipass_secret" password="1" />
-                            <field name="multipass_country_ids" widget="many2many_tags"/>
+                            <field
+                name="multipass_country_ids"
+                widget="many2many_tags"
+              />
                             <field name="export_done_webhook" />
-                            <field name="customer_webhook" />        
-                            <button name="create_bulk_export_wh" string="Bulk export product" type="object" 
-                            class="oe_highlight" attrs="{'invisible': [('export_done_webhook','!=',False)]}"/>
-                            <button name="create_customer_webhook" string="Customer Webhook" type="object" 
-                                class="oe_highlight" attrs="{'invisible': [('customer_webhook','!=',False)]}"/>
-                            <button name="delete_bulk_export_wh" string="Bulk remove" type="object" 
-                                class="oe_highlight" attrs="{'invisible': [('export_done_webhook','=',False)]}"/>
-                            <button name="delete_customer_webhook" string="Customer remove" type="object" 
-                                class="oe_highlight" attrs="{'invisible': [('customer_webhook','=',False)]}"/>
+                            <field name="customer_webhook" />
+                            <button
+                name="create_bulk_export_wh"
+                string="Bulk export product"
+                type="object"
+                class="oe_highlight"
+                attrs="{'invisible': [('export_done_webhook','!=',False)]}"
+              />
+                            <button
+                name="create_customer_webhook"
+                string="Customer Webhook"
+                type="object"
+                class="oe_highlight"
+                attrs="{'invisible': [('customer_webhook','!=',False)]}"
+              />
+                            <button
+                name="delete_bulk_export_wh"
+                string="Bulk remove"
+                type="object"
+                class="oe_highlight"
+                attrs="{'invisible': [('export_done_webhook','=',False)]}"
+              />
+                            <button
+                name="delete_customer_webhook"
+                string="Customer remove"
+                type="object"
+                class="oe_highlight"
+                attrs="{'invisible': [('customer_webhook','=',False)]}"
+              />
                         </group>
                     </page>
-                </xpath>                
+                </xpath>
             </field>
-        </record>        
+        </record>
         <record id="view_shopify_process_import_export_ept" model="ir.ui.view">
             <field name="name">view_shopify_process_import_export_ept</field>
             <field name="model">shopify.process.import.export</field>
-            <field name="inherit_id" ref="shopify_ept.view_shopify_process_import_export_ept" />
+            <field
+        name="inherit_id"
+        ref="shopify_ept.view_shopify_process_import_export_ept"
+      />
             <field name="arch" type="xml">
                 <field name="shopify_operation" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -44,12 +70,18 @@
         <record id="sale_workflow_process_view_form_currency" model="ir.ui.view">
             <field name="name">sale_workflow_process_view_form_currency</field>
             <field name="model">sale.workflow.process.ept</field>
-            <field name="inherit_id" ref="auto_invoice_workflow_ept.sale_workflow_process_view_form" />
+            <field
+        name="inherit_id"
+        ref="auto_invoice_workflow_ept.sale_workflow_process_view_form"
+      />
             <field name="arch" type="xml">
                 <field name="register_payment" position="after">
-                    <field name="currency_journal" attrs="{'invisible':[('register_payment','=',False)]}" />
+                    <field
+            name="currency_journal"
+            attrs="{'invisible':[('register_payment','=',False)]}"
+          />
                 </field>
-                
+
                 <xpath expr="//sheet" position="inside">
                     <group attrs="{'invisible':[('currency_journal','=',False)]}">
                         <field name="mapping_ids" nolabel="1">

@@ -14,7 +14,9 @@ class StockPicking(models.Model):
         for this in self:
             if this.origin:
                 for origin in this.origin.split(","):
-                    purchase = self.env["purchase.order"].search([("name", "=", origin)])
+                    purchase = self.env["purchase.order"].search(
+                        [("name", "=", origin)]
+                    )
                     if purchase:
                         purchase.find_and_refresh_picking_in_out_associations()
                         break

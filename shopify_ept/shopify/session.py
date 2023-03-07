@@ -1,18 +1,21 @@
-import time
 import hmac
 import json
+import time
 from hashlib import sha256
 
 try:
     import simplejson as json
 except ImportError:
     import json
+
 import re
 from contextlib import contextmanager
-from six.moves import urllib
-from .api_access import ApiAccess
-from .api_version import ApiVersion, Release, Unstable
+
 import six
+from six.moves import urllib
+
+from .api_access import ApiAccess
+from .api_version import ApiVersion
 
 
 class ValidationException(Exception):
@@ -37,9 +40,13 @@ class Session(object):
         import shopify
 
         original_domain = shopify.ShopifyResource.url
-        original_token = shopify.ShopifyResource.get_headers().get("X-Shopify-Access-Token")
+        original_token = shopify.ShopifyResource.get_headers().get(
+            "X-Shopify-Access-Token"
+        )
         original_version = shopify.ShopifyResource.get_version() or version
-        original_session = shopify.Session(original_domain, original_version, original_token)
+        original_session = shopify.Session(
+            original_domain, original_version, original_token
+        )
 
         session = Session(domain, version, token)
         shopify.ShopifyResource.activate_session(session)
@@ -54,10 +61,15 @@ class Session(object):
         return
 
     def create_permission_url(self, scope, redirect_uri, state=None):
-        query_params = dict(client_id=self.api_key, scope=",".join(scope), redirect_uri=redirect_uri)
+        query_params = dict(
+            client_id=self.api_key, scope=",".join(scope), redirect_uri=redirect_uri
+        )
         if state:
             query_params["state"] = state
-        return "https://%s/admin/oauth/authorize?%s" % (self.url, urllib.parse.urlencode(query_params))
+        return "https://%s/admin/oauth/authorize?%s" % (
+            self.url,
+            urllib.parse.urlencode(query_params),
+        )
 
     def request_token(self, params):
         if self.token:
@@ -69,8 +81,12 @@ class Session(object):
         code = params["code"]
 
         url = "https://%s/admin/oauth/access_token?" % self.url
-        query_params = dict(client_id=self.api_key, client_secret=self.secret, code=code)
-        request = urllib.request.Request(url, urllib.parse.urlencode(query_params).encode("utf-8"))
+        query_params = dict(
+            client_id=self.api_key, client_secret=self.secret, code=code
+        )
+        request = urllib.request.Request(
+            url, urllib.parse.urlencode(query_params).encode("utf-8")
+        )
         response = urllib.request.urlopen(request)
 
         if response.code == 200:
@@ -156,7 +172,9 @@ class Session(object):
         """
         encoded_params = cls.__encoded_params_for_signature(params)
         # Generate the hex digest for the sorted parameters using the secret.
-        return hmac.new(cls.secret.encode(), encoded_params.encode(), sha256).hexdigest()
+        return hmac.new(
+            cls.secret.encode(), encoded_params.encode(), sha256
+        ).hexdigest()
 
     @classmethod
     def __encoded_params_for_signature(cls, params):
@@ -177,6 +195,6 @@ class Session(object):
                 # escape delimiters to avoid tampering
                 k = str(k).replace("%", "%25").replace("=", "%3D")
                 v = str(v).replace("%", "%25")
-                yield "{0}={1}".format(k, v).replace("&", "%26")
+                yield "{}={}".format(k, v).replace("&", "%26")
 
         return "&".join(sorted(encoded_pairs(params)))

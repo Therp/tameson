@@ -1,19 +1,17 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
-from requests.exceptions import ConnectionError
+import logging
 
 from gql import gql
-from gql.transport import requests
+from requests.exceptions import ConnectionError
 
-from .pimcore_request import PimcoreRequest, GqlQueryBuilder
+from odoo import fields, models
+from odoo.exceptions import UserError
 
-import logging
+from .pimcore_request import GqlQueryBuilder, PimcoreRequest
 
 _logger = logging.getLogger(__name__)
 
@@ -98,7 +96,10 @@ product_nodes = {
     "max_qty_order": {"field": "maximumQuantityToOrder", "getter": static_getter},
     "min_qty_order": {"field": "minimumQuantityToOrder", "getter": static_getter},
     "supplier_series": {"field": "SupplierSeries", "getter": static_getter},
-    "supplier_shipping_type": {"field": "SupplierShippingType", "getter": static_getter},
+    "supplier_shipping_type": {
+        "field": "SupplierShippingType",
+        "getter": static_getter,
+    },
     "supplier_package_qty": {"field": "SupplierPackageQty", "getter": static_getter},
     "additional_cost": {"field": "AdditionalCost", "getter": static_getter},
 }
@@ -136,11 +137,15 @@ class PimcoreConfig(models.Model):
 
         try:
             record_count = (
-                pim_request.execute(gql("{getProductListing(published: false) {totalCount}}"))
+                pim_request.execute(
+                    gql("{getProductListing(published: false) {totalCount}}")
+                )
                 .get("getProductListing", {})
                 .get("totalCount", 0)
             )
-            result = pim_request.execute_async(product_query, 0, record_count, self.limit, self.concurrent)
+            result = pim_request.execute_async(
+                product_query, 0, record_count, self.limit, self.concurrent
+            )
         except ConnectionError:
             raise UserError("Unable to connect with Pimcore server.")
 
@@ -209,36 +214,46 @@ class PimcoreConfig(models.Model):
             {"config_id": self.id, "type": "full"}
         )
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
-        query = GqlQueryBuilder("getProductListing", "edges", {"id": {"field": "id", "getter": static_getter}})
-        params = "first: %d, sortBy: \"o_id\",  sortOrder: \"%s\""
+        query = GqlQueryBuilder(
+            "getProductListing",
+            "edges",
+            {"id": {"field": "id", "getter": static_getter}},
+        )
+        params = 'first: %d, sortBy: "o_id",  sortOrder: "%s"'
         try:
-            first_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "ASC"))))[0]
-            last_id = query.parse_results(pim_request.execute(query.get_query(params % (1, "DESC"))))[0]
-            first_id = int(first_id['node']['id'])
-            last_id = int(last_id['node']['id'])
-        except Exception as e:
+            first_id = query.parse_results(
+                pim_request.execute(query.get_query(params % (1, "ASC")))
+            )[0]
+            last_id = query.parse_results(
+                pim_request.execute(query.get_query(params % (1, "DESC")))
+            )[0]
+            first_id = int(first_id["node"]["id"])
+            last_id = int(last_id["node"]["id"])
+        except Exception:
             raise UserError("No valid first, last product ID from pimcore.")
         for pos in range(first_id, last_id, self.limit):
             self.with_delay().request_products_data(pos, response_obj)
 
     def request_products_data(self, pos, res):
-        params = "sortBy: \"o_id\",  sortOrder: \"ASC\""
+        params = 'sortBy: "o_id",  sortOrder: "ASC"'
         pim_request = PimcoreRequest(self.api_host, self.api_name, self.api_key)
         product_query = GqlQueryBuilder(
-            "getProductListing", "edges", product_nodes, filters=[
-                '\\"$and\\": [{\\"o_id\\": {\\"$gte\\": \\"%d\\"}}, {\\"o_id\\": {\\"$lt\\": \\"%d\\"}}]' % (pos, pos+self.limit)
-            ]
+            "getProductListing",
+            "edges",
+            product_nodes,
+            filters=[
+                '\\"$and\\": [{\\"o_id\\": {\\"$gte\\": \\"%d\\"}}, {\\"o_id\\": {\\"$lt\\": \\"%d\\"}}]'
+                % (pos, pos + self.limit)
+            ],
         )
         result = pim_request.execute(product_query.get_query(params))
         result = product_query.parse_results(result)
         lines_ids = []
         for node in result:
             data = node.get("node")
-            val = {
-                key: product_nodes[key]["getter"](val) for key, val in data.items()
-            }
-            val['response_id'] = res.id
-            if val['full_path'] and val['full_path'].startswith('/TestFolder'):
+            val = {key: product_nodes[key]["getter"](val) for key, val in data.items()}
+            val["response_id"] = res.id
+            if val["full_path"] and val["full_path"].startswith("/TestFolder"):
                 continue
             lines_ids.append(val)
-        self.env['pimcore.product.response.line'].create(lines_ids)
+        self.env["pimcore.product.response.line"].create(lines_ids)

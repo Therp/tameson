@@ -3,13 +3,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import _, api
-from odoo.exceptions import UserError
-
 import logging
+
 _logger = logging.getLogger(__name__)
 
 from odoo.addons.component.core import Component
+
 
 class EdiInvoiceProcess(Component):
     """Process sale orders."""
@@ -19,10 +18,10 @@ class EdiInvoiceProcess(Component):
     _usage = "input.process"
 
     def process(self):
-        wiz = self.env['account.invoice.import'].sudo().create({})
+        wiz = self.env["account.invoice.import"].sudo().create({})
         wiz.invoice_file = self.exchange_record._get_file_content(binary=False)
         wiz.invoice_filename = self.exchange_record.exchange_filename
         name = self.exchange_record.backend_id.backend_type_id.name
         res = wiz.with_context(partner=name).import_invoice()
-        if wiz.state == 'update':
+        if wiz.state == "update":
             res = wiz.with_context(partner=name).create_invoice_action_button()

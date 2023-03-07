@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
-        
+
         <record id="view_country_form_selct" model="ir.ui.view">
             <field name="name">view_country_form_selct</field>
             <field name="model">res.country</field>
@@ -15,6 +15,6 @@
                 </field>
             </field>
         </record>
-        
+
     </data>
 </odoo>

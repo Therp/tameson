@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api, _, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo import api, fields, models
 
 
 class SalePriceHistory(models.Model):
@@ -19,16 +17,17 @@ class SalePriceHistory(models.Model):
         string="Product", comodel_name="product.template", ondelete="cascade"
     )
     categ_id = fields.Many2one(
-        string='Category',
-        comodel_name='product.category',
-        ondelete='restrict',
-        related='product_tmpl_id.categ_id'
+        string="Category",
+        comodel_name="product.category",
+        ondelete="restrict",
+        related="product_tmpl_id.categ_id",
     )
     sale_price = fields.Float()
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,
     )
+
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
@@ -44,17 +43,16 @@ class ProductTemplate(models.Model):
 
     supplierinfo_list_price = fields.Float(
         string="Vendor List Price",
-        compute='_compute_supplier_list_price',
+        compute="_compute_supplier_list_price",
         store=True,
     )
 
-    @api.depends('seller_ids.name', 'seller_ids.list_price_eur')
+    @api.depends("seller_ids.name", "seller_ids.list_price_eur")
     def _compute_supplier_list_price(self):
         for product in self:
             first_supplier = product.seller_ids.sorted()[:1]
             if first_supplier:
                 product.supplierinfo_list_price = first_supplier.list_price_eur
-
 
     @api.model_create_multi
     def create(self, vals_list):

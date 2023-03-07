@@ -1,4 +1,5 @@
 import json
+
 from ..base import ShopifyResource
 from .discount_code import DiscountCode
 from .discount_code_creation import DiscountCodeCreation
@@ -20,5 +21,6 @@ class PriceRule(ShopifyResource):
 
     def find_batch(self, batch_id):
         return DiscountCodeCreation.find_one(
-            "%s/price_rules/%s/batch/%s.%s" % (ShopifyResource.site, self.id, batch_id, PriceRule.format.extension)
+            "%s/price_rules/%s/batch/%s.%s"
+            % (ShopifyResource.site, self.id, batch_id, PriceRule.format.extension)
         )
