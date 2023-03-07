@@ -74,7 +74,7 @@ create_seed:
     - |
       # CONFIGURATION AREA
       # name of deploy branch (usually build-XX.0-production)
-      DEPLOY_BRANCH=build-13.0-accept
+      DEPLOY_BRANCH=build-13.0-production
       # Python version for build and virtualenv
       BUILD_PYTHON_VER=3.8.15
       MASTER_BRANCH=13.0
