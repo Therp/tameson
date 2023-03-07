@@ -422,6 +422,7 @@ class PimcoreProductResponseLine(models.Model):
             )[:1]
             if seller:
                 seller_vals.pop("price")
+                seller_vals.pop("name")
                 seller.write(seller_vals)
             else:
                 vals.update(seller_ids=[(0, 0, seller_vals)])
