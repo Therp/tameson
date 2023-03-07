@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="0">
         <record id="view_delivery_carrier_form" model="ir.ui.view">
@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="delivery.view_delivery_carrier_form" />
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
-                    <field name="prestashop_carrier_ids" widget="many2many_tags"/>
+                    <field name="prestashop_carrier_ids" widget="many2many_tags" />
                 </field>
             </field>
         </record>

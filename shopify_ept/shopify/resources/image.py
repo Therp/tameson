@@ -1,8 +1,10 @@
-from ..base import ShopifyResource
-from ..resources import Metafield
-from six.moves import urllib
 import base64
 import re
+
+from six.moves import urllib
+
+from ..base import ShopifyResource
+from ..resources import Metafield
 
 
 class Image(ShopifyResource):
@@ -17,7 +19,17 @@ class Image(ShopifyResource):
             return cls.site
 
     def __getattr__(self, name):
-        if name in ["pico", "icon", "thumb", "small", "compact", "medium", "large", "grande", "original"]:
+        if name in [
+            "pico",
+            "icon",
+            "thumb",
+            "small",
+            "compact",
+            "medium",
+            "large",
+            "grande",
+            "original",
+        ]:
             return re.sub(r"/(.*)\.(\w{2,4})", r"/\1_%s.\2" % (name), self.src)
         else:
             return super(Image, self).__getattr__(name)
@@ -30,9 +42,13 @@ class Image(ShopifyResource):
     def metafields(self):
         if self.is_new():
             return []
-        query_params = {"metafield[owner_id]": self.id, "metafield[owner_resource]": "product_image"}
+        query_params = {
+            "metafield[owner_id]": self.id,
+            "metafield[owner_resource]": "product_image",
+        }
         return Metafield.find(
-            from_="%s/metafields.json?%s" % (ShopifyResource.site, urllib.parse.urlencode(query_params))
+            from_="%s/metafields.json?%s"
+            % (ShopifyResource.site, urllib.parse.urlencode(query_params))
         )
 
     def save(self):

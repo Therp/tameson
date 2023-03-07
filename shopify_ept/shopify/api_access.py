@@ -16,8 +16,12 @@ class ApiAccessError(Exception):
 class ApiAccess:
 
     SCOPE_DELIMITER = ","
-    SCOPE_RE = re.compile(r"\A(?P<unauthenticated>unauthenticated_)?(write|read)_(?P<resource>.*)\Z")
-    IMPLIED_SCOPE_RE = re.compile(r"\A(?P<unauthenticated>unauthenticated_)?write_(?P<resource>.*)\Z")
+    SCOPE_RE = re.compile(
+        r"\A(?P<unauthenticated>unauthenticated_)?(write|read)_(?P<resource>.*)\Z"
+    )
+    IMPLIED_SCOPE_RE = re.compile(
+        r"\A(?P<unauthenticated>unauthenticated_)?write_(?P<resource>.*)\Z"
+    )
 
     def __init__(self, scopes):
         if isinstance(scopes, basestring_type()):
@@ -35,12 +39,17 @@ class ApiAccess:
         return iter(self._compressed_scopes)
 
     def __eq__(self, other):
-        return type(self) == type(other) and self._compressed_scopes == other._compressed_scopes
+        return (
+            type(self) == type(other)
+            and self._compressed_scopes == other._compressed_scopes
+        )
 
     def __store_scopes(self, scopes):
         sanitized_scopes = frozenset(filter(None, [scope.strip() for scope in scopes]))
         self.__validate_scopes(sanitized_scopes)
-        implied_scopes = frozenset(self.__implied_scope(scope) for scope in sanitized_scopes)
+        implied_scopes = frozenset(
+            self.__implied_scope(scope) for scope in sanitized_scopes
+        )
         self._compressed_scopes = sanitized_scopes - implied_scopes
         self._expanded_scopes = sanitized_scopes.union(implied_scopes)
 

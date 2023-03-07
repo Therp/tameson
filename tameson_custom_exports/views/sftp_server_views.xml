@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="view_sftp_server_tree" model="ir.ui.view">
         <field name="name">sftp.server.tree</field>
         <field name="model">sftp.server</field>
         <field name="arch" type="xml">
             <tree string="SFTP Server">
-                <field name="name"/>
-                <field name="host_address"/>
-                <field name="port"/>
+                <field name="name" />
+                <field name="host_address" />
+                <field name="port" />
             </tree>
         </field>
     </record>
@@ -18,28 +18,39 @@
         <field name="arch" type="xml">
 	        <form string="SFTP Server">
                 <header>
-                    <button name="check_connection" string="Test connection"
-                        type="object" class="btn btn-primary"/>
+                    <button
+            name="check_connection"
+            string="Test connection"
+            type="object"
+            class="btn btn-primary"
+          />
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name" class="oe_inline"/></h1>
+                        <label for="name" class="oe_edit_only" />
+                        <h1><field name="name" class="oe_inline" /></h1>
                     </div>
                     <group string="Server" colspan="4">
-                        <field name="protocol"/>
-                        <field name="host_address" placeholder="sftp.example.com"/>
-                        <field name="port"/>
-                        <field name="export_path" placeholder="/exports or similar"/>
+                        <field name="protocol" />
+                        <field name="host_address" placeholder="sftp.example.com" />
+                        <field name="port" />
+                        <field name="export_path" placeholder="/exports or similar" />
                     </group>
                     <group string="Credentials" colspan="4">
-                        <field name="auth_type"/>
-                        <field name="keyfile_type" attrs="{'invisible': [('auth_type', '!=', 'keyfile')], 'required': [('auth_type', '=', 'keyfile')]}"/>
-                        <field name="keyfile" filename="keyfilename" placeholder="Upload a key file..."
-                                attrs="{'invisible': [('auth_type', '!=', 'keyfile')], 'required': [('auth_type', '=', 'keyfile')]}"/>
-                        <field name="keyfilename" invisible="1"/>
-                        <field name="username" placeholder="user"/>
-                        <field name="password" password="1"/>
+                        <field name="auth_type" />
+                        <field
+              name="keyfile_type"
+              attrs="{'invisible': [('auth_type', '!=', 'keyfile')], 'required': [('auth_type', '=', 'keyfile')]}"
+            />
+                        <field
+              name="keyfile"
+              filename="keyfilename"
+              placeholder="Upload a key file..."
+              attrs="{'invisible': [('auth_type', '!=', 'keyfile')], 'required': [('auth_type', '=', 'keyfile')]}"
+            />
+                        <field name="keyfilename" invisible="1" />
+                        <field name="username" placeholder="user" />
+                        <field name="password" password="1" />
                     </group>
                 </sheet>
             </form>
@@ -50,8 +61,14 @@
         <field name="name">SFTP Servers</field>
         <field name="res_model">sftp.server</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_sftp_server_tree"/>
+        <field name="view_id" ref="view_sftp_server_tree" />
     </record>
 
-    <menuitem name="SFTP Servers" id="menu_custom_exporter_sftp_servers" action="action_exporter_sftp_servers" parent="menu_custom_exporters" sequence="123"/>
+    <menuitem
+    name="SFTP Servers"
+    id="menu_custom_exporter_sftp_servers"
+    action="action_exporter_sftp_servers"
+    parent="menu_custom_exporters"
+    sequence="123"
+  />
 </odoo>

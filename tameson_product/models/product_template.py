@@ -1,6 +1,5 @@
-from odoo import api, fields, models, tools, _
-from odoo.tools.float_utils import float_is_zero, float_compare
-from odoo.tools.profiler import profile
+from odoo import _, api, fields, models, tools
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class ProductTemplateInherit(models.Model):
@@ -73,7 +72,7 @@ class ProductTemplateInherit(models.Model):
     pack_factor = fields.Float()
     usd_extra_price_factor = fields.Float(default=1.0)
     sticker_barcode = fields.Char()
-    max_qty_order = fields.Integer(help="Max quantity for \"Customer lead time\"")
+    max_qty_order = fields.Integer(help='Max quantity for "Customer lead time"')
     max_qty_order_array = fields.Char()
     min_qty_order = fields.Integer()
     supplier_series = fields.Char()
@@ -114,7 +113,7 @@ class ProductTemplateInherit(models.Model):
 
     def set_updated_product_bom_price(self, split=2000):
         n_days = 2
-        BOM = self.env['mrp.bom']
+        BOM = self.env["mrp.bom"]
         updated_bom_query = """
 select distinct boms.id from (
 SELECT mb.id FROM product_product pp
@@ -126,7 +125,9 @@ SELECT mb.id FROM product_product pp
 union
 SELECT id from mrp_bom
     Where write_date >= current_date - interval '%(n_days)d' day) as boms
-""" % {'n_days': n_days}
+""" % {
+            "n_days": n_days
+        }
         self.env.cr.execute(updated_bom_query)
         boms = BOM.browse([item[0] for item in self.env.cr.fetchall()])
         boms.set_bom_price(split)
@@ -141,12 +142,15 @@ SELECT id from mrp_bom
             delay = pt.seller_ids[:1].delay
             if not float_is_zero(pt.minimal_qty_available_stored, precision_digits=2):
                 delay_array = [
-                    {'lead_time': 1, 'max_qty': pt.minimal_qty_available_stored}, 
-                    {'lead_time': delay+1, 'max_qty': pt.minimal_qty_available_stored + pt.max_qty_order}
-                    ]
+                    {"lead_time": 1, "max_qty": pt.minimal_qty_available_stored},
+                    {
+                        "lead_time": delay + 1,
+                        "max_qty": pt.minimal_qty_available_stored + pt.max_qty_order,
+                    },
+                ]
                 delay = 0
             else:
-                delay_array = [{'lead_time': delay+1, 'max_qty': pt.max_qty_order}]
+                delay_array = [{"lead_time": delay + 1, "max_qty": pt.max_qty_order}]
             pt.write(
                 {
                     "t_customer_lead_time": delay + 1,
@@ -156,11 +160,11 @@ SELECT id from mrp_bom
 
     def set_all_margin_eur_group(self, n=25000):
         products = self.search([])
-        for pos in range(0,len(products),n):
-            products[pos:pos+n].with_delay().set_margin_eur_group()
-    
+        for pos in range(0, len(products), n):
+            products[pos : pos + n].with_delay().set_margin_eur_group()
+
     def set_margin_eur_group(self):
         for product in self:
-            margin = (product.list_price - product.standard_price)/10
+            margin = (product.list_price - product.standard_price) / 10
             if float_compare(product.margin_eur_group, margin, precision_digits=2) != 0:
-                product.write({'margin_eur_group': margin})
+                product.write({"margin_eur_group": margin})

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="purchase_order_form" model="ir.ui.view">
         <field name="name">purchase.order.form</field>
@@ -7,36 +7,67 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_approve']" position="after">
                 <field name="t_done_pickings" invisible="1" />
-                <field name="t_purchase_method"
-                       attrs="{'readonly': [('t_done_pickings', '!=', [])]}" />
+                <field
+          name="t_purchase_method"
+          attrs="{'readonly': [('t_done_pickings', '!=', [])]}"
+        />
             </xpath>
             <xpath expr="//field[@name='partner_ref']" position="after">
-                <field string="Landefeld data" name="t_clipboard_text_handle" widget="CopyClipboardChar" attrs="{'invisible': [('partner_id','!=',12)]}" />
+                <field
+          string="Landefeld data"
+          name="t_clipboard_text_handle"
+          widget="CopyClipboardChar"
+          attrs="{'invisible': [('partner_id','!=',12)]}"
+        />
             </xpath>
             <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
-                <page string="Help" >
-                    <button name="action_set_help" string="Edit help" type="object" class="oe_link" groups="purchase.group_purchase_manager" />
+                <page string="Help">
+                    <button
+            name="action_set_help"
+            string="Edit help"
+            type="object"
+            class="oe_link"
+            groups="purchase.group_purchase_manager"
+          />
                     <field name="help_text" />
                 </page>
             </xpath>
             <xpath expr="//notebook[1]" position="before">
                 <field name="is_product_supplier" invisible="True" />
-                <h2 class="text-danger" attrs="{'invisible': [('is_product_supplier','=',True)]}" >
-                    Warning:  This contact is not set as a 'product supplier' , please update the contact settings if it is. 
+                <h2
+          class="text-danger"
+          attrs="{'invisible': [('is_product_supplier','=',True)]}"
+        >
+                    Warning:  This contact is not set as a 'product supplier' , please update the contact settings if it is.
                 </h2>
             </xpath>
-            <xpath 
-                expr="//field[@name='order_line']/tree//field[last()]" 
-                position="after">
-                    <field name="minimal_qty_available" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
-                    <field name="max_reorder" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
-                    <field name="max_reorder_percentage" attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
-                    <field name="origin_so_ids" widget="many2many_tags" optional="hide"
-                        attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}" />
+            <xpath
+        expr="//field[@name='order_line']/tree//field[last()]"
+        position="after"
+      >
+                    <field
+          name="minimal_qty_available"
+          attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}"
+        />
+                    <field
+          name="max_reorder"
+          attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}"
+        />
+                    <field
+          name="max_reorder_percentage"
+          attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}"
+        />
+                    <field
+          name="origin_so_ids"
+          widget="many2many_tags"
+          optional="hide"
+          attrs="{'column_invisible': [('parent.state','in',('purchase','done','cancel'))]}"
+        />
             </xpath>
-            <xpath 
-                expr="//field[@name='order_line']//form[last()]//field[@name='product_id']" 
-                position="after">
+            <xpath
+        expr="//field[@name='order_line']//form[last()]//field[@name='product_id']"
+        position="after"
+      >
                 <field name="minimal_qty_available" />
                 <field name="max_reorder" />
                 <field name="max_reorder_percentage" />
@@ -44,7 +75,7 @@
             </xpath>
         </field>
     </record>
-    
+
     <record id="product_template_form_view_vendor" model="ir.ui.view">
         <field name="name">product_template_form_view_vendor</field>
         <field name="model">product.template</field>
@@ -52,8 +83,13 @@
         <field name="arch" type="xml">
             <div name="options" position="before">
                 <field name="is_vendor_url_available" invisible="1" />
-                <button class="oe_right oe_link text-danger" name="action_open_vendor_sku" type="object" 
-                    string="Goto supplier product page" attrs="{'invisible': [('is_vendor_url_available','!=',True)]}"/>
+                <button
+          class="oe_right oe_link text-danger"
+          name="action_open_vendor_sku"
+          type="object"
+          string="Goto supplier product page"
+          attrs="{'invisible': [('is_vendor_url_available','!=',True)]}"
+        />
             </div>
         </field>
     </record>
@@ -63,7 +99,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_tree" />
         <field name="arch" type="xml">
             <field name="activity_exception_decoration" position="before">
-                <field name="picking_type_id" optional="hide"/>
+                <field name="picking_type_id" optional="hide" />
             </field>
         </field>
     </record>

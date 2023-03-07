@@ -1,44 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template id="extend_report_picking" inherit_id="stock.report_picking">
         <xpath expr="//th[@name='th_barcode']" position="after">
-            <th name="th_origin_so_picking_ids" 
-                    t-if="o.picking_type_id.code == 'incoming'" >
+            <th
+        name="th_origin_so_picking_ids"
+        t-if="o.picking_type_id.code == 'incoming'"
+      >
                 <strong>Origin SO picking</strong>
             </th>
         </xpath>
-        
+
         <xpath expr="//t[@t-as='move']" position="attributes">
-            <attribute name="t-foreach">o.move_ids_without_package.sorted(key=lambda m: m.origin_so_picking_ids[:1].id if m.picking_code == 'incoming' else m.product_id.id)</attribute>
+            <attribute
+        name="t-foreach"
+      >o.move_ids_without_package.sorted(key=lambda m: m.origin_so_picking_ids[:1].id if m.picking_code == 'incoming' else m.product_id.id)</attribute>
         </xpath>
-        
+
         <xpath expr="//td[@t-if='has_barcode']" position="after">
             <td t-if="o.picking_type_id.code == 'incoming'">
                 <t t-foreach="move.origin_so_picking_ids" t-as="origin_so_pick">
-                    <t t-esc="origin_so_pick.name"/>
+                    <t t-esc="origin_so_pick.name" />
                 </t>
             </td>
         </xpath>
     </template>
-    <template id="report_purchaseorder_document_t" inherit_id="purchase.report_purchaseorder_document">
-        <xpath expr="//th[@name='th_taxes']" position="replace"/>
-        <xpath expr="//td[@name='td_taxes']" position="replace"/>
+    <template
+    id="report_purchaseorder_document_t"
+    inherit_id="purchase.report_purchaseorder_document"
+  >
+        <xpath expr="//th[@name='th_taxes']" position="replace" />
+        <xpath expr="//td[@name='td_taxes']" position="replace" />
         <xpath expr="//th[@name='th_description']" position="after">
-            <th name="default_code"><strong>Tameson SKU</strong></th>            
+            <th name="default_code"><strong>Tameson SKU</strong></th>
         </xpath>
         <xpath expr="//td[@id='product']" position="after">
             <td name="product_default_code">
-                <span t-field="line.product_id.default_code"/>
+                <span t-field="line.product_id.default_code" />
             </td>
         </xpath>
     </template>
-    <template id="report_purchasequotation_document_t" inherit_id="purchase.report_purchasequotation_document">
+    <template
+    id="report_purchasequotation_document_t"
+    inherit_id="purchase.report_purchasequotation_document"
+  >
         <xpath expr="//th[@name='th_description']" position="after">
-            <th name="default_code"><strong>Tameson SKU</strong></th>            
+            <th name="default_code"><strong>Tameson SKU</strong></th>
         </xpath>
         <xpath expr="//td[@id='product']" position="after">
             <td name="product_default_code">
-                <span t-field="order_line.product_id.default_code"/>
+                <span t-field="order_line.product_id.default_code" />
             </td>
         </xpath>
     </template>

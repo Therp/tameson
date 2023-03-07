@@ -1,5 +1,6 @@
 import copy
 
+
 class Collection(list):
     """
     Defines a collection of objects.

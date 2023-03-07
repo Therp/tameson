@@ -16,5 +16,8 @@ def sanitize_shop_domain(shop_domain, myshopify_domain="myshopify.com"):
     name = re.sub(r"https?://", "", name)
 
     uri = urlparse("http://{hostname}".format(hostname=name))
-    if re.match(r"{h}\.{d}$".format(h=HOSTNAME_PATTERN, d=re.escape(myshopify_domain)), uri.netloc):
+    if re.match(
+        r"{h}\.{d}$".format(h=HOSTNAME_PATTERN, d=re.escape(myshopify_domain)),
+        uri.netloc,
+    ):
         return uri.netloc

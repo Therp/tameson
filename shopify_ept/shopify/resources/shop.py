@@ -1,6 +1,6 @@
 from ..base import ShopifyResource
-from .metafield import Metafield
 from .event import Event
+from .metafield import Metafield
 
 
 class Shop(ShopifyResource):
@@ -13,7 +13,9 @@ class Shop(ShopifyResource):
 
     def add_metafield(self, metafield):
         if self.is_new():
-            raise ValueError("You can only add metafields to a resource that has been saved")
+            raise ValueError(
+                "You can only add metafields to a resource that has been saved"
+            )
         metafield.save()
         return metafield
 

@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-from odoo import models, fields, api, _
+
+from odoo import fields, models
 
 
 class ShopifyPayoutReconciliationProcessLog(models.Model):
@@ -23,35 +23,50 @@ class ShopifyPayoutReconciliationProcessLog(models.Model):
         :param job_id:
         :return: True
         """
-        mail_activity_obj = self.env['mail.activity']
-        ir_model_obj = self.env['ir.model']
+        mail_activity_obj = self.env["mail.activity"]
+        ir_model_obj = self.env["ir.model"]
 
-        activity_type_id = reconciliation_log_ids[0].instance_id.shopify_activity_type_id.id
+        activity_type_id = reconciliation_log_ids[
+            0
+        ].instance_id.shopify_activity_type_id.id
         date_deadline = datetime.strftime(
-            datetime.now() + timedelta(days=int(reconciliation_log_ids[0].instance_id.shopify_date_deadline)),
-            "%Y-%m-%d")
-        model_id = ir_model_obj.search([('model', '=', 'shopify.payout.report.ept')])
-        group_account_adviser = self.env.ref('account.group_account_manager')
-        note = ''
-        if not self._context.get('is_closed'):
-            note = 'Bank statement lines are generated but will not reconcile automatically for Transaction IDs: '
-            for log_line in reconciliation_log_ids.filtered(lambda line: line.is_skipped):
-                note += str(log_line.payout_transaction_ref) + ' , '
+            datetime.now()
+            + timedelta(
+                days=int(reconciliation_log_ids[0].instance_id.shopify_date_deadline)
+            ),
+            "%Y-%m-%d",
+        )
+        model_id = ir_model_obj.search([("model", "=", "shopify.payout.report.ept")])
+        group_account_adviser = self.env.ref("account.group_account_manager")
+        note = ""
+        if not self._context.get("is_closed"):
+            note = "Bank statement lines are generated but will not reconcile automatically for Transaction IDs: "
+            for log_line in reconciliation_log_ids.filtered(
+                lambda line: line.is_skipped
+            ):
+                note += str(log_line.payout_transaction_ref) + " , "
         else:
             note = reconciliation_log_ids[0].message
         if note:
             for user_id in group_account_adviser.users:
                 mail_activity = mail_activity_obj.search(
-                    [('res_model_id', '=', model_id.id), ('user_id', '=', user_id.id), ('note', '=', note),
-                     ('activity_type_id', '=', activity_type_id)])
+                    [
+                        ("res_model_id", "=", model_id.id),
+                        ("user_id", "=", user_id.id),
+                        ("note", "=", note),
+                        ("activity_type_id", "=", activity_type_id),
+                    ]
+                )
                 if mail_activity:
                     continue
                 else:
-                    vals = {'activity_type_id': activity_type_id,
-                            'note': note,
-                            'res_id': reconciliation_log_ids[0].payout_id.id,
-                            'user_id': user_id.id or self._uid,
-                            'res_model_id': model_id.id,
-                            'date_deadline': date_deadline}
+                    vals = {
+                        "activity_type_id": activity_type_id,
+                        "note": note,
+                        "res_id": reconciliation_log_ids[0].payout_id.id,
+                        "user_id": user_id.id or self._uid,
+                        "res_model_id": model_id.id,
+                        "date_deadline": date_deadline,
+                    }
                     mail_activity_obj.create(vals)
         return True

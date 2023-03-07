@@ -1,15 +1,14 @@
-from . import pyactiveresource
-from . pyactiveresource.activeresource import ActiveResource, ResourceMeta, formats
-from . import yamlobjects
-from . import mixins as mixins
-from .. import shopify
-import threading
 import sys
-from six.moves import urllib
-import six
+import threading
 
+import six
+from six.moves import urllib
+
+from .. import shopify
+from . import mixins as mixins, pyactiveresource
 from .collection import PaginatedCollection
-from . pyactiveresource.collection import Collection
+from .pyactiveresource.activeresource import ActiveResource, ResourceMeta, formats
+from .pyactiveresource.collection import Collection
 
 # Store the response from the last request in the connection object
 
@@ -17,7 +16,9 @@ from . pyactiveresource.collection import Collection
 class ShopifyConnection(pyactiveresource.connection.Connection):
     response = None
 
-    def __init__(self, site, user=None, password=None, timeout=None, format=formats.JSONFormat):
+    def __init__(
+        self, site, user=None, password=None, timeout=None, format=formats.JSONFormat
+    ):
         super(ShopifyConnection, self).__init__(site, user, password, timeout, format)
 
     def _open(self, *args, **kwargs):
@@ -50,7 +51,9 @@ class ShopifyResourceMeta(ResourceMeta):
             local.url = cls.url
             if cls.site is None:
                 raise ValueError("No shopify session is active")
-            local.connection = ShopifyConnection(cls.site, cls.user, cls.password, cls.timeout, cls.format)
+            local.connection = ShopifyConnection(
+                cls.site, cls.user, cls.password, cls.timeout, cls.format
+            )
         return local.connection
 
     def get_user(cls):
@@ -69,7 +72,9 @@ class ShopifyResourceMeta(ResourceMeta):
         cls._threadlocal.connection = None
         ShopifyResource._password = cls._threadlocal.password = value
 
-    password = property(get_password, set_password, None, "The password for HTTP Basic Auth.")
+    password = property(
+        get_password, set_password, None, "The password for HTTP Basic Auth."
+    )
 
     def get_site(cls):
         return getattr(cls._threadlocal, "site", ShopifyResource._site)
@@ -82,7 +87,9 @@ class ShopifyResourceMeta(ResourceMeta):
             host = parts.hostname
             if parts.port:
                 host += ":" + str(parts.port)
-            new_site = urllib.parse.urlunparse((parts.scheme, host, parts.path, "", "", ""))
+            new_site = urllib.parse.urlunparse(
+                (parts.scheme, host, parts.path, "", "", "")
+            )
             ShopifyResource._site = cls._threadlocal.site = new_site
             if parts.username:
                 cls.user = urllib.parse.unquote(parts.username)
@@ -98,7 +105,9 @@ class ShopifyResourceMeta(ResourceMeta):
         cls._threadlocal.connection = None
         ShopifyResource._timeout = cls._threadlocal.timeout = value
 
-    timeout = property(get_timeout, set_timeout, None, "Socket timeout for HTTP requests")
+    timeout = property(
+        get_timeout, set_timeout, None, "Socket timeout for HTTP requests"
+    )
 
     def get_headers(cls):
         if not hasattr(cls._threadlocal, "headers"):
@@ -108,7 +117,9 @@ class ShopifyResourceMeta(ResourceMeta):
     def set_headers(cls, value):
         cls._threadlocal.headers = value
 
-    headers = property(get_headers, set_headers, None, "The headers sent with HTTP requests")
+    headers = property(
+        get_headers, set_headers, None, "The headers sent with HTTP requests"
+    )
 
     def get_format(cls):
         return getattr(cls._threadlocal, "format", ShopifyResource._format)
@@ -117,7 +128,9 @@ class ShopifyResourceMeta(ResourceMeta):
         cls._threadlocal.connection = None
         ShopifyResource._format = cls._threadlocal.format = value
 
-    format = property(get_format, set_format, None, "Encoding used for request and responses")
+    format = property(
+        get_format, set_format, None, "Encoding used for request and responses"
+    )
 
     def get_prefix_source(cls):
         """Return the prefix source, by default derived from site."""
@@ -133,7 +146,12 @@ class ShopifyResourceMeta(ResourceMeta):
         """Set the prefix source, which will be rendered into the prefix."""
         cls._prefix_source = value
 
-    prefix_source = property(get_prefix_source, set_prefix_source, None, "prefix for lookups for this type of object.")
+    prefix_source = property(
+        get_prefix_source,
+        set_prefix_source,
+        None,
+        "prefix for lookups for this type of object.",
+    )
 
     def get_version(cls):
         if hasattr(cls._threadlocal, "version") or ShopifyResource._version:
@@ -152,14 +170,19 @@ class ShopifyResourceMeta(ResourceMeta):
     def set_url(cls, value):
         ShopifyResource._url = cls._threadlocal.url = value
 
-    url = property(get_url, set_url, None, "Base URL including protocol and shopify domain")
+    url = property(
+        get_url, set_url, None, "Base URL including protocol and shopify domain"
+    )
 
 
 @six.add_metaclass(ShopifyResourceMeta)
 class ShopifyResource(ActiveResource, mixins.Countable):
     _format = formats.JSONFormat
     _threadlocal = threading.local()
-    _headers = {"User-Agent": "ShopifyPythonAPI/%s Python/%s" % (shopify.VERSION, sys.version.split(" ", 1)[0])}
+    _headers = {
+        "User-Agent": "ShopifyPythonAPI/%s Python/%s"
+        % (shopify.VERSION, sys.version.split(" ", 1)[0])
+    }
     _version = None
     _url = None
 
@@ -198,5 +221,7 @@ class ShopifyResource(ActiveResource, mixins.Countable):
         """Checks the resulting collection for pagination metadata."""
         collection = super(ShopifyResource, cls).find(id_=id_, from_=from_, **kwargs)
         if isinstance(collection, Collection) and "headers" in collection.metadata:
-            return PaginatedCollection(collection, metadata={"resource_class": cls}, **kwargs)
+            return PaginatedCollection(
+                collection, metadata={"resource_class": cls}, **kwargs
+            )
         return collection

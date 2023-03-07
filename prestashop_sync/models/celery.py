@@ -1,18 +1,15 @@
-
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo import models
 
-STATE_FAILURE = 'FAILURE'
+STATE_FAILURE = "FAILURE"
 
 
 class CeleryTask(models.Model):
-    _inherit = 'celery.task'
+    _inherit = "celery.task"
 
     # def write(self, vals):
     #     res = super(CeleryTask, self).write(vals)
@@ -28,6 +25,6 @@ class CeleryTask(models.Model):
     #             model_description='Celery Task',
     #         )
     #     return res
-    
+
     def _states_to_cancel(self):
-        return ['PENDING', 'SCHEDULED', 'STARTED']
+        return ["PENDING", "SCHEDULED", "STARTED"]

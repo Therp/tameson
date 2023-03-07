@@ -8,6 +8,9 @@ class UsageCharge(ShopifyResource):
     def _prefix(cls, options={}):
         recurring_application_charge_id = options.get("recurring_application_charge_id")
         if recurring_application_charge_id:
-            return "%s/recurring_application_charges/%s" % (cls.site, recurring_application_charge_id)
+            return "%s/recurring_application_charges/%s" % (
+                cls.site,
+                recurring_application_charge_id,
+            )
         else:
             return cls.site

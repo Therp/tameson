@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api, _
+import logging
+
 from dateutil.relativedelta import relativedelta
 
-import logging
+from odoo import api, fields, models
+
 _logger = logging.getLogger(__name__)
 
 
@@ -35,7 +36,7 @@ class OnlineBankStatementProvider(models.Model):
                 date_since = provider.next_run - provider._get_overlapped_run_period()
                 date_until = provider.next_run
                 if relativedelta(date_since, date_until).days > 10:
-                    date_since = provider.next_run - provider._get_next_run_period()                    
+                    date_since = provider.next_run - provider._get_next_run_period()
                 provider._pull(date_since, date_until)
 
         _logger.info("Scheduled pull of online bank statements complete.")

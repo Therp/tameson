@@ -1,6 +1,5 @@
-from ..base import ShopifyResource
 from .. import mixins
-from ... import shopify
+from ..base import ShopifyResource
 
 
 class Policy(ShopifyResource, mixins.Metafields, mixins.Events):

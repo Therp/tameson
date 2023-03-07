@@ -1,5 +1,6 @@
-from ..base import ShopifyResource
 import base64
+
+from ..base import ShopifyResource
 
 
 class Asset(ShopifyResource):
@@ -40,7 +41,9 @@ class Asset(ShopifyResource):
         theme_id = params.get("theme_id")
         path_prefix = "%s/themes/%s" % (cls.site, theme_id) if theme_id else cls.site
 
-        resource = cls.find_one("%s/assets.%s" % (path_prefix, cls.format.extension), **params)
+        resource = cls.find_one(
+            "%s/assets.%s" % (path_prefix, cls.format.extension), **params
+        )
 
         if theme_id and resource:
             resource._prefix_options["theme_id"] = theme_id
@@ -66,7 +69,9 @@ class Asset(ShopifyResource):
     def destroy(self):
         options = {"asset[key]": self.key}
         options.update(self._prefix_options)
-        return self.__class__.connection.delete(self._element_path(self.key, options), self.__class__.headers)
+        return self.__class__.connection.delete(
+            self._element_path(self.key, options), self.__class__.headers
+        )
 
     def is_new(self):
         return False

@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 {
-    'name': 'Tameson Purchase customizations',
-    'version': '13.0.0.1.0.0',
-    'description': """
+    "name": "Tameson Purchase customizations",
+    "version": "13.0.0.1.0.0",
+    "description": """
     Tameson Purchase Customizations.
 
     Includes fields to enable bill control policy (ordered/delivered)
@@ -11,22 +10,22 @@
     (quantity and vendor SKU) to the clipboard.
 
     """,
-    'author': "Tameson",
-    'depends': [
-        'purchase_stock',
-        'tameson_account',
-        'tameson_base',
-        'tameson_stock',
+    "author": "Tameson",
+    "depends": [
+        "purchase_stock",
+        "tameson_account",
+        "tameson_base",
+        "tameson_stock",
     ],
-    'data': [
-        'security/ir.model.access.csv',
-        'security/security.xml',
-        'views/purchase_views.xml',
-        'wizard/purchase_order_line_csv_import_views.xml',
+    "data": [
+        "security/ir.model.access.csv",
+        "security/security.xml",
+        "views/purchase_views.xml",
+        "wizard/purchase_order_line_csv_import_views.xml",
         "data/mail_data.xml",
-        'views/stock.xml',
-        'views/reports.xml',
+        "views/stock.xml",
+        "views/reports.xml",
     ],
-    'application': False,
-    'license': u'OPL-1',
+    "application": False,
+    "license": "OPL-1",
 }

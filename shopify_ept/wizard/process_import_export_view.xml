@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
         <record id="view_shopify_process_import_export_ept" model="ir.ui.view">
@@ -10,22 +10,32 @@
                     <sheet>
                         <group name='shopify_insatnce'>
                             <group>
-                                <field name='shopify_instance_id'
-                                       options="{'no_create':True,'no_create_edit': True,'no_open': True}"
-                                       required="1"
-                                       domain="[('active','=',True)]"/>
+                                <field
+                  name='shopify_instance_id'
+                  options="{'no_create':True,'no_create_edit': True,'no_open': True}"
+                  required="1"
+                  domain="[('active','=',True)]"
+                />
                             </group>
                             <group>
-                                <field name='shopify_operation' required="1"/>
+                                <field name='shopify_operation' required="1" />
                             </group>
                         </group>
                         <group>
                             <div name="msg_opr_main">
-                                <div attrs="{'invisible':[('shopify_operation','!=','sync_product')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','sync_product')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -64,11 +74,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','sync_product_by_remote_ids')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','sync_product_by_remote_ids')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -95,11 +113,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','import_orders')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','import_orders')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -125,7 +151,8 @@
                                                     It will fetch the orders for the dates specified
                                                     in 'From Date' and 'To Date' fields below.
                                                 </li>
-                                                <li>The default value for 'From Date' will be the
+                                                <li
+                        >The default value for 'From Date' will be the
                                                     last execution date of this operation. it will
                                                     be blank if the last execution date is not
                                                     found.
@@ -138,11 +165,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','import_orders_by_remote_ids')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','import_orders_by_remote_ids')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -168,11 +203,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','is_update_order_status')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','is_update_order_status')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -191,11 +234,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','import_customers')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','import_customers')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -234,11 +285,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','export_stock')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','export_stock')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -270,11 +329,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','import_stock')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','import_stock')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -293,11 +360,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','update_order_status')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','update_order_status')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -316,11 +391,19 @@
                                         </b>
                                     </p>
                                 </div>
-                                <div attrs="{'invisible':[('shopify_operation','!=','import_payout_report')]}">
-                                    <p colspan="2" class="alert alert-warning" role="alert">
+                                <div
+                  attrs="{'invisible':[('shopify_operation','!=','import_payout_report')]}"
+                >
+                                    <p
+                    colspan="2"
+                    class="alert alert-warning"
+                    role="alert"
+                  >
                                         <b>
                                             <u>
-                                                <h3 style="font-weight:bold;color:#7d5a29">Note :
+                                                <h3
+                          style="font-weight:bold;color:#7d5a29"
+                        >Note :
                                                 </h3>
                                             </u>
                                             <ol>
@@ -345,66 +428,110 @@
                             </div>
                         </group>
                         <notebook
-                                attrs="{'invisible': [('shopify_operation', 'not in', ['import_orders','import_orders_by_remote_ids','sync_product_by_remote_ids','export_stock','import_payout_report'])]}">
+              attrs="{'invisible': [('shopify_operation', 'not in', ['import_orders','import_orders_by_remote_ids','sync_product_by_remote_ids','export_stock','import_payout_report'])]}"
+            >
                             <page string='Sync Option'>
-                                <group name='sync_order_date_wise'
-                                       attrs="{'invisible':[('shopify_operation','!=','import_orders')]}">
-                                    <field name='orders_from_date' style="width:19%"
-                                           attrs="{'required':[('shopify_operation','=','import_orders')]}"/>
-                                    <field name='orders_to_date' style="width:19%"
-                                           attrs="{'required':[('shopify_operation','=','import_orders')]}"/>
+                                <group
+                  name='sync_order_date_wise'
+                  attrs="{'invisible':[('shopify_operation','!=','import_orders')]}"
+                >
+                                    <field
+                    name='orders_from_date'
+                    style="width:19%"
+                    attrs="{'required':[('shopify_operation','=','import_orders')]}"
+                  />
+                                    <field
+                    name='orders_to_date'
+                    style="width:19%"
+                    attrs="{'required':[('shopify_operation','=','import_orders')]}"
+                  />
                                 </group>
-                                <group name='sync_order_based_on_template_ids'
-                                       attrs="{'invisible':[('shopify_operation','!=','import_orders_by_remote_ids')]}">
-                                    <field name='shopify_order_ids'
-                                           attrs="{'required':[('shopify_operation','=','import_orders_by_remote_ids')]}"/>
+                                <group
+                  name='sync_order_based_on_template_ids'
+                  attrs="{'invisible':[('shopify_operation','!=','import_orders_by_remote_ids')]}"
+                >
+                                    <field
+                    name='shopify_order_ids'
+                    attrs="{'required':[('shopify_operation','=','import_orders_by_remote_ids')]}"
+                  />
                                 </group>
-                                <group name='sync_product_based_on_template_ids'
-                                       attrs="{'invisible':[('shopify_operation','!=','sync_product_by_remote_ids')]}">
-                                    <field name='shopify_template_ids'
-                                           attrs="{'required':[('shopify_operation','=','sync_product_by_remote_ids')]}"/>
+                                <group
+                  name='sync_product_based_on_template_ids'
+                  attrs="{'invisible':[('shopify_operation','!=','sync_product_by_remote_ids')]}"
+                >
+                                    <field
+                    name='shopify_template_ids'
+                    attrs="{'required':[('shopify_operation','=','sync_product_by_remote_ids')]}"
+                  />
                                 </group>
-                                <group name="export_stock_by_date"
-                                       attrs="{'invisible':[('shopify_operation','!=','export_stock')]}">
-                                    <field name="export_stock_from"
-                                           attrs="{'required':[('shopify_operation','=','export_stock')]}"/>
+                                <group
+                  name="export_stock_by_date"
+                  attrs="{'invisible':[('shopify_operation','!=','export_stock')]}"
+                >
+                                    <field
+                    name="export_stock_from"
+                    attrs="{'required':[('shopify_operation','=','export_stock')]}"
+                  />
                                 </group>
-                                <group name='import_payout_report'
-                                       attrs="{'invisible':[('shopify_operation','!=','import_payout_report')]}">
-                                    <field name='payout_start_date' style="width:19%"
-                                           attrs="{'required':[('shopify_operation','=','import_payout_report')]}"/>
-                                    <field name='payout_end_date' style="width:19%"
-                                           attrs="{'required':[('shopify_operation','=','import_payout_report')]}"/>
+                                <group
+                  name='import_payout_report'
+                  attrs="{'invisible':[('shopify_operation','!=','import_payout_report')]}"
+                >
+                                    <field
+                    name='payout_start_date'
+                    style="width:19%"
+                    attrs="{'required':[('shopify_operation','=','import_payout_report')]}"
+                  />
+                                    <field
+                    name='payout_end_date'
+                    style="width:19%"
+                    attrs="{'required':[('shopify_operation','=','import_payout_report')]}"
+                  />
                                 </group>
                             </page>
                         </notebook>
                         <footer>
-                            <button string="Execute" class="oe_highlight" type="object"
-                                    name="shopify_execute"/>
-                            <button string="Cancel" class="oe_highlight" special="cancel"/>
+                            <button
+                string="Execute"
+                class="oe_highlight"
+                type="object"
+                name="shopify_execute"
+              />
+                            <button
+                string="Cancel"
+                class="oe_highlight"
+                special="cancel"
+              />
                         </footer>
                     </sheet>
                 </form>
             </field>
         </record>
 
-        <record id="action_wizard_shopify_import_orders_in_shopify_ept"
-                model="ir.actions.act_window">
+        <record
+      id="action_wizard_shopify_import_orders_in_shopify_ept"
+      model="ir.actions.act_window"
+    >
             <field name="name">Shopify Operations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">shopify.process.import.export</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_shopify_process_import_export_ept"/>
+            <field name="view_id" ref="view_shopify_process_import_export_ept" />
             <field name="target">new</field>
         </record>
 
-        <record id="action_wizard_shopify_instance_import_export_operations"
-                model="ir.actions.act_window">
+        <record
+      id="action_wizard_shopify_instance_import_export_operations"
+      model="ir.actions.act_window"
+    >
             <field name="name">Shopify Operations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">shopify.process.import.export</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="shopify_ept.view_shopify_process_import_export_ept"/>
+            <field
+        name="view_id"
+        ref="shopify_ept.view_shopify_process_import_export_ept"
+      />
             <field name="context">{'default_shopify_instance_id':active_id}</field>
             <field name="target">new</field>
         </record>
@@ -420,7 +547,9 @@
                             <div style="color:#000000">
                                 <p class="alert alert-warning" role="alert">
                                     <u>
-                                        <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                                        <h3
+                      style="font-weight:bold;color:#7d5a29"
+                    >Note :</h3>
                                     </u>
                                     <b>
                                         <ol>
@@ -436,10 +565,17 @@
                             </div>
                         </group>
                         <footer>
-                            <button string="Export Stock Manually" class="oe_highlight"
-                                    type="object"
-                                    name="shopify_selective_product_stock_export"/>
-                            <button string="Cancel" class="oe_highlight" special="cancel"/>
+                            <button
+                string="Export Stock Manually"
+                class="oe_highlight"
+                type="object"
+                name="shopify_selective_product_stock_export"
+              />
+                            <button
+                string="Cancel"
+                class="oe_highlight"
+                special="cancel"
+              />
                         </footer>
                     </sheet>
                 </form>
@@ -455,7 +591,9 @@
                         <p colspan="2" class="alert alert-danger" role="alert">
                             <b>
                                 <u>
-                                    <h3 style="font-weight:bold;color:#7d5a29">Important Note:</h3>
+                                    <h3
+                    style="font-weight:bold;color:#7d5a29"
+                  >Important Note:</h3>
                                 </u>
                                 <ol>
                                     <li>
@@ -482,18 +620,29 @@
                         </group>
                         <group name='Export Product'>
                             <group>
-                                <field name="shopify_is_set_basic_detail" readonly="1"/>
-                                <field name='shopify_is_set_price'/>
+                                <field
+                  name="shopify_is_set_basic_detail"
+                  readonly="1"
+                />
+                                <field name='shopify_is_set_price' />
                             </group>
                             <group>
-                                <field name='shopify_is_set_image'/>
-                                <field name='shopify_is_publish' required="1"/>
+                                <field name='shopify_is_set_image' />
+                                <field name='shopify_is_publish' required="1" />
                             </group>
                         </group>
                         <footer>
-                            <button string="Export Product" class="oe_highlight" type="object"
-                                    name="manual_export_product_to_shopify"/>
-                            <button string="Cancel" class="oe_highlight" special="cancel"/>
+                            <button
+                string="Export Product"
+                class="oe_highlight"
+                type="object"
+                name="manual_export_product_to_shopify"
+              />
+                            <button
+                string="Cancel"
+                class="oe_highlight"
+                special="cancel"
+              />
                         </footer>
                     </sheet>
                 </form>
@@ -509,7 +658,9 @@
                         <p colspan="2" class="alert alert-danger" role="alert">
                             <b>
                                 <u>
-                                    <h3 style="font-weight:bold;color:#7d5a29">Important Note:</h3>
+                                    <h3
+                    style="font-weight:bold;color:#7d5a29"
+                  >Important Note:</h3>
                                 </u>
 
                                 <ol>
@@ -529,18 +680,32 @@
                         </group>
                         <group name='Export Product'>
                             <group>
-                                <field name="shopify_is_update_basic_detail"/>
-                                <field name='shopify_is_set_price' string="Update Price ?"/>
+                                <field name="shopify_is_update_basic_detail" />
+                                <field
+                  name='shopify_is_set_price'
+                  string="Update Price ?"
+                />
                             </group>
                             <group>
-                                <field name='shopify_is_set_image' string="Update Image ?"/>
-                                <field name='shopify_is_publish'/>
+                                <field
+                  name='shopify_is_set_image'
+                  string="Update Image ?"
+                />
+                                <field name='shopify_is_publish' />
                             </group>
                         </group>
                         <footer>
-                            <button string="Update Product" class="oe_highlight" type="object"
-                                    name="manual_update_product_to_shopify"/>
-                            <button string="Cancel" class="oe_highlight" special="cancel"/>
+                            <button
+                string="Update Product"
+                class="oe_highlight"
+                type="object"
+                name="manual_update_product_to_shopify"
+              />
+                            <button
+                string="Cancel"
+                class="oe_highlight"
+                special="cancel"
+              />
                         </footer>
                     </sheet>
                 </form>
@@ -556,35 +721,50 @@
 
 
         <!--product export in shopify store-->
-        <act_window name="Export New Product in Shopify"
-                    res_model="shopify.process.import.export"
-                    binding_model="shopify.product.template.ept"
-                    view_mode="form" target="new"
-                    id="action_wizard_shopify_product_for_export"
-                    view_id="view_export_product_process_manual"
-        />
+        <act_window
+      name="Export New Product in Shopify"
+      res_model="shopify.process.import.export"
+      binding_model="shopify.product.template.ept"
+      view_mode="form"
+      target="new"
+      id="action_wizard_shopify_product_for_export"
+      view_id="view_export_product_process_manual"
+    />
         <!--update product in shopify store-->
-        <act_window name="Update Existing Product in Shopify"
-                    res_model="shopify.process.import.export"
-                    binding_model="shopify.product.template.ept"
-                    view_mode="form" target="new"
-                    id="action_wizard_shopify_product_for_update"
-                    view_id="view_update_product_process_manual"
-        />
+        <act_window
+      name="Update Existing Product in Shopify"
+      res_model="shopify.process.import.export"
+      binding_model="shopify.product.template.ept"
+      view_mode="form"
+      target="new"
+      id="action_wizard_shopify_product_for_update"
+      view_id="view_update_product_process_manual"
+    />
 
-        <menuitem id="menu_shopify_processes_ept" parent="shopify_ept.shopify_instance_menu_item"
-                  name="Processes" sequence="15"/>
+        <menuitem
+      id="menu_shopify_processes_ept"
+      parent="shopify_ept.shopify_instance_menu_item"
+      name="Processes"
+      sequence="15"
+    />
 
-        <act_window name="Export Stock Shopify" res_model="shopify.process.import.export"
-                    binding_model="shopify.product.template.ept"
-                    view_mode="form"
-                    target="new"
-                    id="action_wizard_shopify_update_stock"
-                    view_id="view_export_stock_process_manual"
-                    context="{'queue_process':'export_stock'}"/>
+        <act_window
+      name="Export Stock Shopify"
+      res_model="shopify.process.import.export"
+      binding_model="shopify.product.template.ept"
+      view_mode="form"
+      target="new"
+      id="action_wizard_shopify_update_stock"
+      view_id="view_export_stock_process_manual"
+      context="{'queue_process':'export_stock'}"
+    />
 
-        <menuitem id="menu_shopify_import_export_process_ept" parent="menu_shopify_processes_ept"
-                  action="action_wizard_shopify_import_orders_in_shopify_ept" sequence="20"/>
+        <menuitem
+      id="menu_shopify_import_export_process_ept"
+      parent="menu_shopify_processes_ept"
+      action="action_wizard_shopify_import_orders_in_shopify_ept"
+      sequence="20"
+    />
 
     </data>
 </odoo>

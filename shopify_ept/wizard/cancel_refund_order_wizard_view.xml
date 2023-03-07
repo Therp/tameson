@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
         <!--Cancel wizard view-->
@@ -9,29 +9,34 @@
                 <form string="Shopify Cancel Order">
                     <group>
                         <group>
-                            <field name="message" required="1"/>
+                            <field name="message" required="1" />
                         </group>
                         <group>
-                            <field name="notify_by_email"/>
-                            <field name="auto_create_credit_note"/>
+                            <field name="notify_by_email" />
+                            <field name="auto_create_credit_note" />
                         </group>
                     </group>
-                    <group string="Refund Info"
-                           attrs="{'invisible':[('auto_create_credit_note','=',False)]}">
+                    <group
+            string="Refund Info"
+            attrs="{'invisible':[('auto_create_credit_note','=',False)]}"
+          >
                         <group>
-                            <field name="reason"/>
-                            <field name="refund_date"/>
+                            <field name="reason" />
+                            <field name="refund_date" />
                         </group>
                         <group>
-                            <field name="journal_id"/>
+                            <field name="journal_id" />
                         </group>
                     </group>
                     <footer>
-                        <button name="cancel_in_shopify" string="Cancel Order In Shopify"
-                                type="object"
-                                class="oe_highlight"/>
+                        <button
+              name="cancel_in_shopify"
+              string="Cancel Order In Shopify"
+              type="object"
+              class="oe_highlight"
+            />
 
-                        <button string="Close" class="oe_highlight" special="cancel"/>
+                        <button string="Close" class="oe_highlight" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -45,29 +50,42 @@
                 <form string="Shopify Shopify Order">
                     <group>
                         <group>
-                            <field name="restock_type" required="1"/>
-                            <field name="note" required="1"/>
+                            <field name="restock_type" required="1" />
+                            <field name="note" required="1" />
                         </group>
                         <group>
-                            <field name="notify_by_email"/>
+                            <field name="notify_by_email" />
                         </group>
                     </group>
                     <group>
-                        <field name="payment_ids" nolabel="1" widget="one2many"
-                               invisible="context.get('display_refund_from', True)">
-                            <tree string="Refund multi payment" editable="top" create="0" delete="0">
-                                <field name="payment_gateway_id" readonly="1"/>
-                                <field name="amount" readonly="1"/>
-                                <field name="remaining_refund_amount" readonly="1"/>
-                                <field name="refund_amount"/>
-                                <field name="is_want_to_refund"/>
+                        <field
+              name="payment_ids"
+              nolabel="1"
+              widget="one2many"
+              invisible="context.get('display_refund_from', True)"
+            >
+                            <tree
+                string="Refund multi payment"
+                editable="top"
+                create="0"
+                delete="0"
+              >
+                                <field name="payment_gateway_id" readonly="1" />
+                                <field name="amount" readonly="1" />
+                                <field name="remaining_refund_amount" readonly="1" />
+                                <field name="refund_amount" />
+                                <field name="is_want_to_refund" />
                             </tree>
                         </field>
                     </group>
                     <footer>
-                        <button name="refund_in_shopify" string="Refund In Shopify"
-                                type="object" class="oe_highlight"/>
-                        <button string="Close" class="oe_highlight" special="cancel"/>
+                        <button
+              name="refund_in_shopify"
+              string="Refund In Shopify"
+              type="object"
+              class="oe_highlight"
+            />
+                        <button string="Close" class="oe_highlight" special="cancel" />
                     </footer>
                 </form>
             </field>

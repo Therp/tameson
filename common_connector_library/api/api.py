@@ -10,14 +10,12 @@ class UnicodeDictReader(csv.DictReader):
         """Allows to specify an additional keyword argument encoding which
         defaults to "utf-8"
         """
-        self.encoding = kwargs.pop('encoding', 'utf-8')
+        self.encoding = kwargs.pop("encoding", "utf-8")
         csv.DictReader.__init__(self, csvfile, *args, **kwargs)
 
     def __next__(self):
         rv = csv.DictReader.__next__()(self)
-        return dict((
-            (k, v.decode(self.encoding, 'ignore') if v else v) for k, v in rv.items()
-        ))
+        return {k: v.decode(self.encoding, "ignore") if v else v for k, v in rv.items()}
 
 
 class UnicodeDictWriter(csv.DictWriter):
@@ -25,13 +23,14 @@ class UnicodeDictWriter(csv.DictWriter):
         """Allows to specify an additional keyword argument encoding which
         defaults to "utf-8"
         """
-        self.encoding = kwargs.pop('encoding', 'utf-8')
+        self.encoding = kwargs.pop("encoding", "utf-8")
         csv.DictWriter.__init__(self, csvfile, fieldnames, *args, **kwargs)
 
     def _dict_to_list(self, rowdict):
         rv = csv.DictWriter._dict_to_list(self, rowdict)
-        return [(f.encode(self.encoding, 'ignore') if isinstance(f, str) else f) \
-                for f in rv]
+        return [
+            (f.encode(self.encoding, "ignore") if isinstance(f, str) else f) for f in rv
+        ]
 
 
 class FTPInterface(object):
@@ -45,9 +44,12 @@ class FTPInterface(object):
     :param from_TPW_dir: Name of the direcory from which files need to be imported
     :param to_TPW_dir: Name of the directory to which files need to be uploaded
     """
+
     client = None
 
-    def __init__(self, host, user, passwd, from_tpw_dir, to_tpw_dir, archive_dir='', port=21):
+    def __init__(
+        self, host, user, passwd, from_tpw_dir, to_tpw_dir, archive_dir="", port=21
+    ):
         self.host = host
         self.user = user
         self.passwd = passwd
@@ -78,7 +80,7 @@ class FTPInterface(object):
         """
         self.client.cwd(self.to_tpw_dir)
         new_file = BytesIO(file.read().encode())
-        self.client.storbinary('STOR %s' % filename, new_file)
+        self.client.storbinary("STOR %s" % filename, new_file)
 
     def pull_from_ftp(self, pattern, latest=False):
         self.client.cwd(self.from_tpw_dir)
@@ -93,7 +95,7 @@ class FTPInterface(object):
         for file_to_import in matched_files:
             file = NamedTemporaryFile(delete=False)
 
-            self.client.retrbinary('RETR %s' % file_to_import, file.write)
+            self.client.retrbinary("RETR %s" % file_to_import, file.write)
             file.close()
 
             files_to_export.append(file.name)
@@ -119,7 +121,7 @@ class FTPInterface(object):
         return
 
     def archive_file(self, filenames):
-        """ Archive the files. """
+        """Archive the files."""
         for filename in filenames:
             fromname = "%s%s" % (self.from_tpw_dir, filename)
             toname = "%s%s" % (self.archive_dir, filename)

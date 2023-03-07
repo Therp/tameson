@@ -1,4 +1,5 @@
-from odoo import models,fields,api,_
+from odoo import fields, models
+
 
 class StockInventory(models.Model):
     _inherit = "stock.inventory"

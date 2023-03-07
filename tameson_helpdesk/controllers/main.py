@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-import imp
-from odoo.http import route, request, Controller
-from odoo.exceptions import AccessDenied
-from odoo.exceptions import UserError, ValidationError
+from odoo.http import Controller, request, route
 
 
 class RMA(Controller):

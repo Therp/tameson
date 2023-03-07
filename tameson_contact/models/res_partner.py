@@ -1,20 +1,19 @@
-
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
 import re
-from datetime import datetime
 
-from odoo import models, fields, api, _, SUPERUSER_ID
+from odoo import api, models
 from odoo.exceptions import ValidationError
+
 from odoo.addons.base_address_extended.models.base_address_extended import STREET_FIELDS
 
+
 class ResPartner(models.Model):
-    _name = 'res.partner'
-    _inherit = ['res.partner', 'set.help.mixin']
+    _name = "res.partner"
+    _inherit = ["res.partner", "set.help.mixin"]
 
     @api.model
     def _address_fields(self):
@@ -22,23 +21,32 @@ class ResPartner(models.Model):
         res += STREET_FIELDS
         return res
 
-    @api.constrains('email')
+    @api.constrains("email")
     def _check_email(self):
-        if self.env.context.get('skip_email_check', False):
+        if self.env.context.get("skip_email_check", False):
             return
         for record in self:
             if not record.parent_id and record.email:
-                match = self.search([('email','=',record.email),('parent_id','=',False)]) - self
+                match = (
+                    self.search(
+                        [("email", "=", record.email), ("parent_id", "=", False)]
+                    )
+                    - self
+                )
                 if match:
-                    raise ValidationError('Duplicate email for contact: %s' % match.name)
+                    raise ValidationError(
+                        "Duplicate email for contact: %s" % match.name
+                    )
 
-    @api.constrains('child_ids', 'is_company')
+    @api.constrains("child_ids", "is_company")
     def check_company_childs(self):
-        if self.env.context.get('skip_child_check', True):
+        if self.env.context.get("skip_child_check", True):
             return
         for record in self:
-            if record.is_company and not any(record.child_ids.mapped('name')):
-                raise ValidationError('At least one child contact with name needed for company contact.')
+            if record.is_company and not any(record.child_ids.mapped("name")):
+                raise ValidationError(
+                    "At least one child contact with name needed for company contact."
+                )
 
     def action_reset_password(self):
         return self.user_ids.sudo().action_reset_password()
@@ -52,48 +60,51 @@ class ResPartner(models.Model):
     #                 'message': 'At least one child contact with name needed for company contact.'
     #             }
     #         }
-    
 
     def action_set_street(self):
         self._set_street()
         return True
 
     def extract_house_from_street(self):
-        extract_pattern = "(\d+)[\s/-]?(\w\s|\w$)?"
-        unit_pattern = 'unit\W*\d+'
+        extract_pattern = r"(\d+)[\s/-]?(\w\s|\w$)?"
+        unit_pattern = r"unit\W*\d+"
         for partner in self:
             split_success = False
-            street = partner.street or ''
+            street = partner.street or ""
             unit_part = re.findall(unit_pattern, street, flags=re.IGNORECASE)
             if unit_part:
                 street_number = False
                 street_number2 = unit_part[0]
-                street_name = re.compile(street_number2).sub('', street)
+                street_name = re.compile(street_number2).sub("", street)
                 split_success = True
             else:
                 split_parts = re.findall(extract_pattern, street)
                 if len(split_parts) == 1:
                     street_number = split_parts[0][0]
                     street_number2 = split_parts[0][1]
-                    street_name = re.compile(extract_pattern).sub('', street)
+                    street_name = re.compile(extract_pattern).sub("", street)
                     split_success = True
             if split_success:
-                partner.write({
-                        'street_number': street_number,
-                        'street_number2': street_number2,
-                        'street_name': street_name,
-                    })
-                partner.message_post(body='House number extracted from address:\n%s' % street)
+                partner.write(
+                    {
+                        "street_number": street_number,
+                        "street_number2": street_number2,
+                        "street_name": street_name,
+                    }
+                )
+                partner.message_post(
+                    body="House number extracted from address:\n%s" % street
+                )
 
     @api.model_create_multi
     def create(self, vals_list):
         for val in vals_list:
-            if val.get('vat', False):
-                val['is_company'] = True
+            if val.get("vat", False):
+                val["is_company"] = True
         partners = super().create(vals_list)
         return partners
 
     def write(self, val):
-        if val.get('vat', False):
-            val['is_company'] = True
+        if val.get("vat", False):
+            val["is_company"] = True
         return super().write(val)

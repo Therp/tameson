@@ -13,10 +13,11 @@ class ProductAttributeValue(models.Model):
         :return: attribute values
         """
         attribute_values = self.search(
-            [('name', '=ilike', name), ('attribute_id', '=', attribute_id)])
+            [("name", "=ilike", name), ("attribute_id", "=", attribute_id)]
+        )
         if not attribute_values:
             if auto_create:
-                return self.create(({'name': name, 'attribute_id': attribute_id}))
+                return self.create({"name": name, "attribute_id": attribute_id})
             else:
                 return False
         else:

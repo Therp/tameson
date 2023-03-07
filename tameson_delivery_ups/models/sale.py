@@ -1,17 +1,14 @@
-from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_is_zero
+from odoo import fields, models
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
     presta_ups_access_point_id = fields.Char(
-        required=False,
-        string='UPS Access Point ID'
+        required=False, string="UPS Access Point ID"
     )
     presta_ups_access_point_country = fields.Char(
-        required=False,
-        string='UPS Access Point Country Code'
+        required=False, string="UPS Access Point Country Code"
     )
 
     def _guess_access_point_country(self):

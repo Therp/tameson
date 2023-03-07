@@ -2,7 +2,9 @@
 For shopify_ept module.
 """
 import logging
-from odoo import models, fields
+
+from odoo import fields, models
+
 _logger = logging.getLogger("Shopify")
 
 
@@ -11,12 +13,15 @@ class ShopifyProductImageEpt(models.Model):
     For attaching images with shopify and odoo products.
     @author: Bhavesh Jadav  on Date 16-Dec-2019.
     """
+
     _name = "shopify.product.image.ept"
     _description = "Shopify Product Image"
     _order = "sequence, create_date desc, id"
 
     odoo_image_id = fields.Many2one("common.product.image.ept", ondelete="cascade")
-    shopify_image_id = fields.Char(string="Shopify Image ID",help="Id of image in Shopify.")
+    shopify_image_id = fields.Char(
+        string="Shopify Image ID", help="Id of image in Shopify."
+    )
     shopify_variant_id = fields.Many2one("shopify.product.product.ept")
     shopify_template_id = fields.Many2one("shopify.product.template.ept")
     url = fields.Char(related="odoo_image_id.url", help="External URL of image")

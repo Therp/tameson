@@ -1,4 +1,13 @@
-<envr:Envelope xmlns:auth="http://www.ups.com/schema/xpci/1.0/auth" xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/04/secext" xmlns:envr="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:upsa="http://www.ups.com/XMLSchema/XOLTWS/upssa/v1.0" xmlns:common="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsf="http://www.ups.com/schema/wsf">
+<envr:Envelope
+  xmlns:auth="http://www.ups.com/schema/xpci/1.0/auth"
+  xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/04/secext"
+  xmlns:envr="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:upsa="http://www.ups.com/XMLSchema/XOLTWS/upssa/v1.0"
+  xmlns:common="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:wsf="http://www.ups.com/schema/wsf"
+>
 	<envr:Header>
 		<wsse:Security>
 			<wsse:UsernameToken>
@@ -9,14 +18,18 @@
 				<upsa:AccessLicenseNumber>License</upsa:AccessLicenseNumber>
 			</upsa:UPSServiceAccessToken>
 		</wsse:Security>
-		
+
 	</envr:Header>
 	<envr:Body>
-		<ship:ShipmentRequest xsi:schemaLocation="http://www.ups.com/XMLSchema/XOLTWS/Ship/v1.0" xmlns:ship="http://www.ups.com/XMLSchema/XOLTWS/Ship/v1.0" xmlns:ifs="http://www.ups.com/XMLSchema/XOLTWS/IF/v1.0">
+		<ship:ShipmentRequest
+      xsi:schemaLocation="http://www.ups.com/XMLSchema/XOLTWS/Ship/v1.0"
+      xmlns:ship="http://www.ups.com/XMLSchema/XOLTWS/Ship/v1.0"
+      xmlns:ifs="http://www.ups.com/XMLSchema/XOLTWS/IF/v1.0"
+    >
 			<common:Request>
 				<common:RequestOption>validate</common:RequestOption>
 				<common:TransactionReference>
-					<common:CustomerContext></common:CustomerContext>
+					<common:CustomerContext />
 				</common:TransactionReference>
 			</common:Request>
 			<ship:Shipment>
@@ -29,15 +42,15 @@
 						<ship:Number>021311548916</ship:Number>
 						<ship:Extension>1</ship:Extension>
 					</ship:Phone>
-					
+
 					<ship:ShipperNumber>UPS account</ship:ShipperNumber>
-					<ship:FaxNumber></ship:FaxNumber>
+					<ship:FaxNumber />
 					<ship:Address>
 						<ship:AddressLine>str.1</ship:AddressLine>
 						<ship:AddressLine>address lin2</ship:AddressLine>
 						<ship:AddressLine>address lin3</ship:AddressLine>
 						<ship:City>Neuss</ship:City>
-						<ship:StateProvinceCode></ship:StateProvinceCode>
+						<ship:StateProvinceCode />
 						<ship:PostalCode>zipcode</ship:PostalCode>
 						<ship:CountryCode>De</ship:CountryCode>
 					</ship:Address>
@@ -51,7 +64,7 @@
 					<ship:Address>
 						<ship:AddressLine>Via de los poblados 1</ship:AddressLine>
 						<ship:City>Via de los poblados 1</ship:City>
-						<ship:StateProvinceCode></ship:StateProvinceCode>
+						<ship:StateProvinceCode />
 						<ship:PostalCode>28031</ship:PostalCode>
 						<ship:CountryCode>ES</ship:CountryCode>
 					</ship:Address>
@@ -59,17 +72,17 @@
 				<ship:AlternateDeliveryAddress>
 					<ship:Name>Papeleria Margo</ship:Name>
 					<ship:AttentionName>Papelaria Margo</ship:AttentionName>
-					<ship:UPSAccessPointID></ship:UPSAccessPointID>
+					<ship:UPSAccessPointID />
 					<ship:Address>
 						<ship:AddressLine>C/ PENARANDA DE BRACAMONTE, 22 </ship:AddressLine>
-						<ship:AddressLine></ship:AddressLine>
+						<ship:AddressLine />
 						<ship:City>Madrid</ship:City>
-						<ship:StateProvinceCode></ship:StateProvinceCode>
+						<ship:StateProvinceCode />
 						<ship:PostalCode>28051</ship:PostalCode>
 						<ship:CountryCode>ES</ship:CountryCode>
 					</ship:Address>
 				</ship:AlternateDeliveryAddress>
-			
+
 				<ship:PaymentInformation>
 					<ship:ShipmentCharge>
 						<ship:Type>01</ship:Type>
@@ -79,7 +92,7 @@
 					</ship:ShipmentCharge>
 				</ship:PaymentInformation>
 				<ship:ReferenceNumber>
-					<ship:Code></ship:Code>
+					<ship:Code />
 					<ship:Value>TEST ACCOUNT</ship:Value>
 				</ship:ReferenceNumber>
 				<ship:Service>
@@ -87,7 +100,7 @@
 					<ship:Description>Standard</ship:Description>
 				</ship:Service>
 				<ship:Package>
-					<ship:Description></ship:Description>
+					<ship:Description />
 					<ship:Packaging>
 						<ship:Code>02</ship:Code>
 						<ship:Description>Test</ship:Description>
@@ -108,21 +121,21 @@
 						</ship:UnitOfMeasurement>
 						<ship:Weight>1</ship:Weight>
 					</ship:PackageWeight>
-					<ship:AdditionalHandlingIndicator/>
+					<ship:AdditionalHandlingIndicator />
 				</ship:Package>
-				
+
 				<ship:ShipmentIndicationType>
 					<ship:Code>01</ship:Code>
 					<ship:Description>DirectToRetail</ship:Description>
 				</ship:ShipmentIndicationType>
 				<ship:ShipmentServiceOptions>
-				
+
 					<ship:Notification> <!-- Max 3 -->
 						<ship:NotificationCode>012</ship:NotificationCode>
 						<ship:EMail>
 							<ship:EMailAddress>email</ship:EMailAddress>
 						</ship:EMail>
-						
+
 						<ship:TextMessage>
 							<ship:PhoneNumber>619500820</ship:PhoneNumber><!--Max.15 Zeichen-->
 						</ship:TextMessage>

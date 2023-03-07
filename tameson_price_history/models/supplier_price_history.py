@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo import api, fields, models
 
 
 class SupplierPriceHistory(models.Model):
@@ -35,11 +33,12 @@ class SupplierPriceHistory(models.Model):
         default=fields.Date.context_today,
     )
     categ_id = fields.Many2one(
-        string='Category',
-        comodel_name='product.category',
-        ondelete='restrict',
-        related='product_tmpl_id.categ_id'
+        string="Category",
+        comodel_name="product.category",
+        ondelete="restrict",
+        related="product_tmpl_id.categ_id",
     )
+
     @api.model
     def create(self, vals_list):
         currency_id = vals_list.get("supplier_currency_id", False)
@@ -59,10 +58,11 @@ class SupplierPriceHistory(models.Model):
             vals_list["supplier_price"] = price
         return super(SupplierPriceHistory, self).create(vals_list)
 
+
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
 
-    list_price_eur = fields.Float(string='List price (EUR)')
+    list_price_eur = fields.Float(string="List price (EUR)")
 
     @api.model
     def create(self, vals_list):

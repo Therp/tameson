@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="1">
         <record id="notification_faulty_sale_orders" model="res.groups">
-            <field name="name">Tameson: regular checks of sales/channable/presta orders</field>
-            <field name="category_id" ref="base.module_category_administration"/>
+            <field
+        name="name"
+      >Tameson: regular checks of sales/channable/presta orders</field>
+            <field name="category_id" ref="base.module_category_administration" />
         </record>
     </data>
 </odoo>

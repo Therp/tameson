@@ -1,5 +1,5 @@
-from ..base import ShopifyResource
 from .. import mixins
+from ..base import ShopifyResource
 from .draft_order_invoice import DraftOrderInvoice
 
 
@@ -10,6 +10,8 @@ class DraftOrder(ShopifyResource, mixins.Metafields):
 
     def complete(self, params={}):
         if params.get("payment_pending", False):
-            self._load_attributes_from_response(self.put("complete", payment_pending="true"))
+            self._load_attributes_from_response(
+                self.put("complete", payment_pending="true")
+            )
         else:
             self._load_attributes_from_response(self.put("complete"))

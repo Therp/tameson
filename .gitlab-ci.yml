@@ -24,12 +24,12 @@ precommit:
         /bin/echo "INFO: $WORKDIR/.pyenv exist! Upgrading to latest..."
         cd $PYENV_ROOT && /usr/bin/git checkout master && /usr/bin/git pull origin master && cd - || { echo 'Failed to upgrade pyenv'; exit 1; }
       fi
-      echo "INSTALLING PYENV" 
+      echo "INSTALLING PYENV"
       echo 'setting paths for pyenv'
       PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
       PYENV=$PYENV_ROOT/bin/pyenv
       eval "$($PYENV init -)"
-      echo "INSTALLED PYENV VERSION" 
+      echo "INSTALLED PYENV VERSION"
       $PYENV -v
       which pyenv
       echo setting python version
@@ -39,7 +39,7 @@ precommit:
       $PYENV install -s $PYVERSION
       $PYENV local $PYVERSION
       # Install virtualenv
-      # Virtual env does not have subversion we explicitly give it here 
+      # Virtual env does not have subversion we explicitly give it here
       VIRTUALENV_VERSION=3.9
       VIRTUALENV=$PYENV_ROOT/bin/virtualenv.pyz
       if [ ! -d $WORKDIR/.venv ]; then
@@ -61,7 +61,7 @@ precommit:
   script:
     - |
       source $WORKDIR/.venv/bin/activate
-      pre-commit run --all-files 
+      pre-commit run --all-files
   only:
     - merge_requests
   allow_failure: true
@@ -71,7 +71,7 @@ create_seed:
     SCRIPTS_REPO: git@gitlab.therp.nl:therp/therp-ci-templates
     SCRIPTS_BRANCH: ci-scripts
   before_script:
-    - | 
+    - |
       # CONFIGURATION AREA
       # name of deploy branch (usually build-XX.0-production)
       DEPLOY_BRANCH=build-13.0-accept
@@ -82,14 +82,14 @@ create_seed:
       deployment_method=waft
       main_repo_alias_folder_in_yaml=therp/tameson
       main_repo_alias_remote_in_yaml=origin
-      filestore_root=/home/ubuntu/.local/share/Odoo/filestore 
+      filestore_root=/home/ubuntu/.local/share/Odoo/filestore
       echo "filestore root: $filestore_root"
       manifest_name=__manifest__.py
       declare -a MODULE_EXCLUSION_LIST=()
       echo MODULE INSTALL EXCLUSION LIST FOR THIS PROJECT;
-      for exclusion in ${MODULE_EXCLUSION_LIST[@]}; 
-          do echo $exclusion; 
-      done; 
+      for exclusion in ${MODULE_EXCLUSION_LIST[@]};
+          do echo $exclusion;
+      done;
       echo END EXLCUSION LIST
       # ========================END CONFIGURATION AREA ========================================
       alias git="/usr/bin/git"
@@ -99,30 +99,28 @@ create_seed:
       git clone -q --branch "$SCRIPTS_BRANCH" --depth 1 "$SCRIPTS_REPO" "${SCRIPTS_DIR}/scripts"
       SCRIPTS_DIR=${SCRIPTS_DIR}/scripts
       echo scripts dir is $SCRIPTS_DIR
-      LAST_PRODUCTION_HASH=$(source $SCRIPTS_DIR/check_hash) 
+      LAST_PRODUCTION_HASH=$(source $SCRIPTS_DIR/check_hash)
       echo last production hash is $LAST_PRODUCTION_HASH
       TESTING_FOLDER_NAME="TEST_${CI_PROJECT_NAME}_${LAST_PRODUCTION_HASH}"
       TESTING_FOLDER=$HOME/$TESTING_FOLDER_NAME
       mkdir -p $TESTING_FOLDER
       cd $TESTING_FOLDER
       echo executing $SCRIPTS_DIR/create_seed_before_script
-      source $SCRIPTS_DIR/create_seed_before_script 
-  script:
-      echo executing create_seed_script
-      source $SCRIPTS_DIR/create_seed_script 
+      source $SCRIPTS_DIR/create_seed_before_script
+  script: echo executing create_seed_script source $SCRIPTS_DIR/create_seed_script
   only:
     - merge_requests
-  allow_failure: true 
+  allow_failure: true
 tests:
   stage: testing
-  variables: 
+  variables:
     SCRIPTS_REPO: git@gitlab.therp.nl:therp/therp-ci-templates
     SCRIPTS_BRANCH: ci-scripts
     DEPLOY_BRANCH: build-13.0-accept-unpinned
   script:
-    - | 
+    - |
       SCRIPTS_DIR=$(mktemp -d)
-      cd $SCRIPTS_DIR 
+      cd $SCRIPTS_DIR
       git clone -q --branch "$SCRIPTS_BRANCH" --depth 1 "$SCRIPTS_REPO" "$SCRIPTS_DIR/scripts"
       SCRIPTS_DIR=${SCRIPTS_DIR}/scripts
       LAST_PRODUCTION_HASH=$(source $SCRIPTS_DIR/check_hash)
@@ -131,14 +129,9 @@ tests:
       mkdir -p $TESTING_FOLDER
       cd $TESTING_FOLDER
       source $SCRIPTS_DIR/test_script
-      rm -rf $SCRIPTS_DIR 
+      rm -rf $SCRIPTS_DIR
   only:
     - merge_requests
   timeout: 2h
   dependencies:
     - create_seed
-
-
-
-
-

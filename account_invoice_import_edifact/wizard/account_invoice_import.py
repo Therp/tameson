@@ -2,17 +2,17 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
 import base64
+import logging
 import mimetypes
 import re
+from datetime import datetime
 
 from lxml import etree
-
-from odoo import _, api, fields, models, tools
-from odoo.exceptions import UserError
 from pydifact.segmentcollection import Interchange
-from datetime import datetime
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +142,7 @@ class AccountInvoiceImport(models.TransientModel):
         pos = []
         for Lines in interchange.split_by("FTX"):
             for segment in Lines.segments:
-                if segment.tag != 'FTX':
+                if segment.tag != "FTX":
                     break
                 pon = re.findall("Webshop-order (P[0-9]{8})", segment.elements[3])
                 if pon:

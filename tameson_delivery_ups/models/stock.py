@@ -1,33 +1,39 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = "stock.picking"
 
     presta_ups_access_point_id = fields.Char(
-        required=False,
-        string='UPS Access Point ID'
+        required=False, string="UPS Access Point ID"
     )
     presta_ups_access_point_country = fields.Char(
-        required=False,
-        string='UPS Access Point Country Code'
+        required=False, string="UPS Access Point Country Code"
     )
-    presta_ups_ap_data_copied_from_so = fields.Boolean(
-        required=True,
-        default=False
-    )
+    presta_ups_ap_data_copied_from_so = fields.Boolean(required=True, default=False)
 
     @api.model
     def create(self, values):
         values = values or {}
 
-        so = self._get_so(values.get('origin', False))
-        if so and so.presta_ups_access_point_id and not values.get('presta_ups_access_point_id'):
-            values['presta_ups_access_point_id'] = so.presta_ups_access_point_id
-            values['presta_ups_ap_data_copied_from_so'] = True
-        if so and (so.presta_ups_access_point_id or values.get('presta_ups_access_point_id')) and not values.get('presta_ups_access_point_country'):
-            values['presta_ups_access_point_country'] = so._guess_access_point_country()
-            values['presta_ups_ap_data_copied_from_so'] = True
+        so = self._get_so(values.get("origin", False))
+        if (
+            so
+            and so.presta_ups_access_point_id
+            and not values.get("presta_ups_access_point_id")
+        ):
+            values["presta_ups_access_point_id"] = so.presta_ups_access_point_id
+            values["presta_ups_ap_data_copied_from_so"] = True
+        if (
+            so
+            and (
+                so.presta_ups_access_point_id
+                or values.get("presta_ups_access_point_id")
+            )
+            and not values.get("presta_ups_access_point_country")
+        ):
+            values["presta_ups_access_point_country"] = so._guess_access_point_country()
+            values["presta_ups_ap_data_copied_from_so"] = True
 
         return super(StockPicking, self).create(values)
 
@@ -40,8 +46,13 @@ class StockPicking(models.Model):
                 rec.presta_ups_ap_data_copied_from_so = True
                 if not rec.presta_ups_access_point_id:
                     rec.presta_ups_access_point_id = so.presta_ups_access_point_id
-                if not rec.presta_ups_access_point_country and rec.presta_ups_access_point_id:
-                    rec.presta_ups_access_point_country = so._guess_access_point_country()
+                if (
+                    not rec.presta_ups_access_point_country
+                    and rec.presta_ups_access_point_id
+                ):
+                    rec.presta_ups_access_point_country = (
+                        so._guess_access_point_country()
+                    )
 
         return result
 
@@ -66,8 +77,10 @@ class StockPicking(models.Model):
             name = self.origin
 
         try:
-            return self.env['sale.order'].search([
-                ['name', '=', name],
-            ])[0]
+            return self.env["sale.order"].search(
+                [
+                    ["name", "=", name],
+                ]
+            )[0]
         except IndexError:
             pass

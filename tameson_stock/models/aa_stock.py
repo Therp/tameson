@@ -1,17 +1,19 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #    License, author and contributors information in:                         #
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
-import requests, json
+import json
+
+import requests
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class AAStock(models.TransientModel):
-    _name = 'aa.stock'
-    _description = 'AA Stock'
+    _name = "aa.stock"
+    _description = "AA Stock"
 
     sku = fields.Char()
     stock = fields.Float()
@@ -24,22 +26,39 @@ class AAStock(models.TransientModel):
     def get_data(self, whs=False):
         aa_data = []
         if not whs:
-            whs = self.env['stock.warehouse'].search([('aa_api','!=', False),('aa_username','!=', False),('aa_password','!=', False)])
+            whs = self.env["stock.warehouse"].search(
+                [
+                    ("aa_api", "!=", False),
+                    ("aa_username", "!=", False),
+                    ("aa_password", "!=", False),
+                ]
+            )
         for wh in whs:
             try:
-                token_response = requests.post("%s/token" % wh.aa_api,data={
-                    "grant_type": "password",
-                    "username": wh.aa_username,
-                    "password": wh.aa_password
-                })
-                token = json.loads(token_response.text)['access_token']
-                data_response = requests.get("%s/stock/bulk/true" % wh.aa_api, headers={'Authorization': 'Bearer %s' % token})
+                token_response = requests.post(
+                    "%s/token" % wh.aa_api,
+                    data={
+                        "grant_type": "password",
+                        "username": wh.aa_username,
+                        "password": wh.aa_password,
+                    },
+                )
+                token = json.loads(token_response.text)["access_token"]
+                data_response = requests.get(
+                    "%s/stock/bulk/true" % wh.aa_api,
+                    headers={"Authorization": "Bearer %s" % token},
+                )
                 data = json.loads(data_response.text)
             except Exception as e:
                 raise UserError(str(e))
-            vals = [{'sku': result['sku'], 'stock': result['physicalStock']} for result in data['result']]
+            vals = [
+                {"sku": result["sku"], "stock": result["physicalStock"]}
+                for result in data["result"]
+            ]
             self.create(vals)
-            locations = self.env['stock.location'].search([('id','child_of',wh.lot_stock_id.id)])
+            locations = self.env["stock.location"].search(
+                [("id", "child_of", wh.lot_stock_id.id)]
+            )
             query = """
 WITH onhand_query AS (
     SELECT
@@ -68,46 +87,66 @@ FROM
 	LEFT JOIN product_template pt on pt.default_code = aas.sku
 WHERE
     coalesce(oh.quantity, 0) != aas.stock
-""" % ','.join(map(str, locations.ids))
+""" % ",".join(
+                map(str, locations.ids)
+            )
             self.env.cr.execute(query)
             aa_data += self.env.cr.fetchall()
         return aa_data
-            
+
 
 class AAStockCompare(models.Model):
-    _name = 'aa.stock.comparison'
-    _description = 'AA Stock'
-    
-    product_id = fields.Many2one(comodel_name='product.template',ondelete='set null',)
+    _name = "aa.stock.comparison"
+    _description = "AA Stock"
+
+    product_id = fields.Many2one(
+        comodel_name="product.template",
+        ondelete="set null",
+    )
     aa_stock = fields.Float()
     odoo_stock = fields.Float()
-    difference = fields.Float(compute='get_difference', store=True)
+    difference = fields.Float(compute="get_difference", store=True)
 
-    @api.depends('aa_stock','odoo_stock')
+    @api.depends("aa_stock", "odoo_stock")
     def get_difference(self):
         for record in self:
             record.difference = record.aa_stock - record.odoo_stock
-    
+
     @api.model_create_multi
     def create(self, vals_list):
         result = super(AAStockCompare, self).create(vals_list)
         return result
-    
+
     def action_open_product(self):
         return {
-            'name': _('Product'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'product.template',
-            'res_id': self.product_id.id,
-            'target': 'new',
+            "name": _("Product"),
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "product.template",
+            "res_id": self.product_id.id,
+            "target": "new",
         }
-        
+
     @api.model
-    def read_grid(self, row_fields, col_field, cell_field, domain=None, range=None, readonly_field=None, orderby=None):
+    def read_grid(
+        self,
+        row_fields,
+        col_field,
+        cell_field,
+        domain=None,
+        range=None,
+        readonly_field=None,
+        orderby=None,
+    ):
         if not orderby:
-            orderby = 'create_date'
-        read_grid = super(AAStockCompare, self).read_grid(row_fields,
-            col_field, cell_field, domain=domain, range=range,
-            readonly_field=readonly_field, orderby=orderby)
+            orderby = "create_date"
+        read_grid = super(AAStockCompare, self).read_grid(
+            row_fields,
+            col_field,
+            cell_field,
+            domain=domain,
+            range=range,
+            readonly_field=readonly_field,
+            orderby=orderby,
+        )
         return read_grid
