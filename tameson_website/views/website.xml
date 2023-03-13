@@ -186,10 +186,10 @@
         <template id="portal_my_home_addresses" inherit_id="portal.portal_my_home">
             <xpath expr="//div[hasclass('o_portal_docs')]" position="after">
                 <br />
-                <h3>Accounts</h3>
+                <h3>Account and address</h3>
                 <div class="o_portal_docs list-group">
                     <t t-call="portal.portal_docs_entry">
-                        <t t-set="title">Main Account Details</t>
+                        <t t-set="title">Main account and address</t>
                         <t t-set="url" t-value="'/my/account'" />
                     </t>
                     <t t-set="partner" t-value="user_id.partner_id" />
