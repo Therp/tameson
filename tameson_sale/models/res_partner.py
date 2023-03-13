@@ -20,3 +20,9 @@ class ResPartnet(models.Model):
                     partner.country_id.select_pricelist_id
                 )
         return partners
+
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        res['lang'] = False
+        return res
