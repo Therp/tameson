@@ -55,7 +55,7 @@
         />
                 <button
           name="action_reserve_force"
-          string="Force"
+          string="Force availability"
           type="object"
           attrs="{'invisible': ['|', ('state','not in',('waiting')), ('picking_type_code','!=','outgoing')]}"
         />
