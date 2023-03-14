@@ -522,3 +522,10 @@ class ReturnPicking(models.TransientModel):
             "type": "ir.actions.act_window",
             "context": ctx,
         }
+
+
+class StockInventoryLine(models.Model):
+    _inherit = 'stock.inventory.line'
+
+    note = fields.Text()
+    
