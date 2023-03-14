@@ -63,6 +63,11 @@ class SaleOrder(models.Model):
     fiscal_position_id = fields.Many2one(copy=False)
     supposed_fiscal_match = fields.Boolean(compute="get_supposed_fiscal")
 
+    def _send_order_confirmation_mail(self):
+        if self.env.context.get('skip_confirmation_email', False):
+            return
+        return super()._send_order_confirmation_mail()
+
     def copy(self, default=None):
         fiscal = (
             self.env["account.fiscal.position"]
@@ -831,3 +836,13 @@ class PricelistItem(models.Model):
             shipping_fee = factor * max(product.weight, volume)
             if getattr(product, fieldname) != shipping_fee:
                 product.write({fieldname: shipping_fee})
+
+
+class PaymentTransaction(models.Model):
+    _inherit = 'payment.transaction'
+
+
+    def _set_transaction_pending(self):
+        return super(PaymentTransaction, self.with_context\
+            (skip_confirmation_email=True))._set_transaction_pending()
+    
