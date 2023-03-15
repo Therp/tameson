@@ -418,7 +418,7 @@
         <template id="sale_order_portal_content_ref"  inherit_id="sale.sale_order_portal_content">
             <xpath expr="//div[@id='so_date']" position="after">
                 <div class="row" t-if="sale_order.client_order_ref">
-                    <div class="mb-3 col-6">
+                    <div class="mb-3 col-6 ml-auto">
                         <strong>Your order reference: </strong> <span t-field="sale_order.client_order_ref"/>
                     </div>
                 </div>
