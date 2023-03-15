@@ -376,8 +376,8 @@
             <xpath expr="//div[@id='oe_structure_website_sale_payment_1']" position="before">
                 <div class="card" id="div_po_reference">
                     <div class="card-body form-group">
-                        <label class="col-form-label" for="po-reference">PO Reference</label>
-                        <input type="text" id="po-reference" class="form-control" value="" placeholder="PO Reference for this order"/>
+                        <label class="col-form-label" for="po-reference">Your order reference</label>
+                        <input type="text" id="po-reference" class="form-control" value="" placeholder="Your PO number or order reference"/>
                     </div>
                 </div>
             </xpath>
