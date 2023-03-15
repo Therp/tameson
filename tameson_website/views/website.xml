@@ -373,6 +373,14 @@
             <xpath expr="//t[@t-set='submit_txt']" position="replace">
                 <t t-set="submit_txt">Checkout</t>
             </xpath>
+            <xpath expr="//div[@id='oe_structure_website_sale_payment_1']" position="before">
+                <div class="card" id="div_po_reference">
+                    <div class="card-body form-group">
+                        <label class="col-form-label" for="po-reference">Your order reference</label>
+                        <input type="text" id="po-reference" class="form-control" value="" placeholder="Your PO number or order reference"/>
+                    </div>
+                </div>
+            </xpath>
         </template>
         <template id="web_assets_frontend" inherit_id="web.assets_frontend">
             <xpath expr="//script[last()]" position="after">
@@ -405,6 +413,15 @@
             t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}"
           >Contact us via email</a>
                 </li>
+            </xpath>
+        </template>
+        <template id="sale_order_portal_content_ref"  inherit_id="sale.sale_order_portal_content">
+            <xpath expr="//div[@id='so_date']" position="after">
+                <div class="row" t-if="sale_order.client_order_ref">
+                    <div class="mb-3 col-6 ml-auto">
+                        <strong>Your order reference: </strong> <span t-field="sale_order.client_order_ref"/>
+                    </div>
+                </div>
             </xpath>
         </template>
     </data>

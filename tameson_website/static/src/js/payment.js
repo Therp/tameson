@@ -5,6 +5,22 @@ odoo.define("tameson_website.processing", function (require) {
   var core = require("web.core");
   var _t = core._t;
 
+  publicWidget.registry.PaymentForm.include({
+    payEvent: function (ev) {
+      var self = this;
+      ev.preventDefault();
+      let po_ref = $('#po-reference')[0].value;
+      if (po_ref) {
+        this._rpc({
+          route: '/set/po_reference',
+          params: {
+            'po_reference': po_ref,
+          }
+        });
+      }
+      return this._super.apply(this, arguments);
+    },
+  });
   var PaymentProcessing = publicWidget.registry.PaymentProcessing;
   return PaymentProcessing.include({
     displayLoading: function () {
