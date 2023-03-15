@@ -107,6 +107,20 @@ class CustomerPortal(CustomerPortal):
 class WebsiteSale(WebsiteSale):
     ## Inherit to include manual payment to signature and confirm by portal customer
     @route(
+        "/set/po_reference",
+        type="json",
+        auth="public",
+        website=True,
+        sitemap=False,
+    )
+    def set_po_reference(self, po_reference='',**post):
+        order = request.website.sale_get_order()
+        order.sudo().write({
+            'client_order_ref': po_reference
+        })
+        return True
+
+    @route(
         "/shop/payment/validate",
         type="http",
         auth="public",
