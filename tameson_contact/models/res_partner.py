@@ -105,6 +105,13 @@ class ResPartner(models.Model):
         return partners
 
     def write(self, val):
-        if val.get("vat", False):
+        company_name = val.get("company_name", False)
+        if val.get("vat", False) or company_name:
             val["is_company"] = True
+        child_ids = val.get("child_ids", [])
+        if company_name and not self.child_ids and not self.parent_id:
+            child_val = val.copy()
+            child_val.update(vat=False, company_name=False, is_company=False)
+            child_ids = child_ids + [(0, 0, child_val)]
+            val.update(name=company_name, child_ids=child_ids)            
         return super().write(val)
