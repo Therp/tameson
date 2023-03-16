@@ -52,7 +52,8 @@ class CustomerPortal(CustomerPortal):
     @route(["/my/address/<int:child_pos>"], type="http", auth="user", website=True)
     def address(self, child_pos, redirect=None, **post):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id.child_ids[child_pos]
+        childs = request.env.user.partner_id.child_ids.sorted('type')
+        partner = childs[child_pos]
         values.update(
             {
                 "error": {},

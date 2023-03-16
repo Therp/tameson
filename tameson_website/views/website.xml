@@ -193,15 +193,16 @@
                         <t t-set="url" t-value="'/my/account'" />
                     </t>
                     <t t-set="partner" t-value="user_id.partner_id" />
+                    <t t-set="childs" t-value="partner.child_ids.sorted('type')" />
                     <t
             t-set="type_dict"
             t-value="{'contact': 'Contact', 'invoice': 'Invoice Address', 'delivery': 'Delivery Address', 'other': 'Other Address','private': 'Private Address'}"
           />
-                    <t t-foreach="range(len(partner.child_ids))" t-as="child">
+                    <t t-foreach="range(len(childs))" t-as="child">
                         <t t-call="portal.portal_docs_entry">
                             <t
                 t-set="title"
-                t-value="'%s: %s' % (type_dict[partner.child_ids[child].type], partner.child_ids[child].name)"
+                t-value="'%s: %s, %s' % (type_dict[childs[child].type], childs[child].name, childs[child].street)"
               />
                             <t t-set="url" t-value="'/my/address/%d' % child" />
                         </t>
