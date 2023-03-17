@@ -401,7 +401,7 @@
         >payment_tx_id and payment_tx_id.state == 'pending' and 'sale' not in payment_tx_id.mapped('sale_order_ids.state')</attribute>
             </xpath>
         </template>
-        <template
+        <!-- <template
       id="sale_order_portal_template"
       inherit_id="sale.sale_order_portal_template"
     >
@@ -415,7 +415,7 @@
           >Contact us via email</a>
                 </li>
             </xpath>
-        </template>
+        </template> -->
         <template id="sale_order_portal_content_ref"  inherit_id="sale.sale_order_portal_content">
             <xpath expr="//div[@id='so_date']" position="after">
                 <div class="row" t-if="sale_order.client_order_ref">
