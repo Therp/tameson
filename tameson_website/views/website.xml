@@ -425,5 +425,10 @@
                 </div>
             </xpath>
         </template>
+        <template id="signup" inherit_id="auth_signup.signup" >
+            <xpath expr="//t[@t-esc='error']" position="replace">
+                <t t-raw="error" />
+            </xpath>
+        </template>
     </data>
 </odoo>
