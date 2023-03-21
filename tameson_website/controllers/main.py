@@ -203,9 +203,7 @@ class SignupHome(AuthSignupHome):
                 contact = request.env["res.partner"].sudo().search([("email", "=ilike", qcontext.get("login"))], limit=1)
                 users = contact.user_ids or contact.parent_id.user_ids
             if users:
-                qcontext['error'] = '''Account already exists.
+                qcontext['error'] = '''Account has other email as main account.
                 This email is associated with the main 
-                account: <strong>%s</strong>, please <a href="/web/login?%s">Login</a>
-                or <a href="/web/reset_password?%s">Reset password</a> 
-                using that email address''' % (users.login, keep_query(), keep_query())
+                account: %s, please login using that email address''' % (users.login, keep_query(), keep_query())
         return qcontext
