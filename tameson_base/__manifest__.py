@@ -9,7 +9,9 @@
     - Model specific help text field.
     """,
     "author": "Tameson",
-    "depends": ["base"],
+    "depends": [
+        "queue_job",
+    ],
     "data": [
         "views/model.xml",
         "views/set_help.xml",
