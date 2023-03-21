@@ -13,6 +13,8 @@ from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.auth_signup.controllers.main import AuthSignupHome
+from odoo.addons.base.models.ir_ui_view import keep_query
 
 _logger = logging.getLogger(__name__)
 
@@ -188,3 +190,20 @@ class WebsiteTameson(Website):
         except:
             _logger.warn("Error setting website language.")
         return response
+
+
+class SignupHome(AuthSignupHome):
+
+    def get_auth_signup_qcontext(self):
+        qcontext = super(SignupHome, self).get_auth_signup_qcontext()
+        if qcontext.get('login', False):
+            login = qcontext['login'].lower()
+            users = request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))], limit=1)
+            if not users:
+                contact = request.env["res.partner"].sudo().search([("email", "=ilike", qcontext.get("login"))], limit=1)
+                users = contact.user_ids or contact.parent_id.user_ids
+            if users:
+                qcontext['error'] = '''Account has other email as main account.
+                This email is associated with the main 
+                account: %s, please login using that email address''' % (users.login, keep_query(), keep_query())
+        return qcontext
