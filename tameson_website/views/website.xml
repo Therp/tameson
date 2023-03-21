@@ -90,6 +90,15 @@
         />
             </xpath>
         </template>
+        <template id="portal_address_company" inherit_id="portal.portal_my_details">
+            <xpath expr="//label[@for='name']" position="replace">
+                <label t-if="not partner.is_company" class="col-form-label" for="name">Name</label>
+                <label t-else="" class="col-form-label" for="name">Company Name</label>
+            </xpath>
+            <xpath expr="//p[@t-esc='partner.commercial_company_name']/parent::div" position="attributes">
+                <attribute name="t-if">not partner.is_company</attribute>
+            </xpath>
+        </template>
         <template
       id="portal_address"
       inherit_id="portal.portal_my_details"
