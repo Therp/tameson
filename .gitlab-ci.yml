@@ -61,7 +61,8 @@ precommit:
   script:
     - |
       source $WORKDIR/.venv/bin/activate
-      pre-commit run --all-files
+      git fetch origin 13.0
+      pre-commit run --from-ref FETCH_HEAD --to-ref HEAD
   only:
     - merge_requests
   allow_failure: true
