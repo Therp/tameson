@@ -118,13 +118,17 @@ class StockPicking(models.Model):
         self.ensure_one()
         res = self.button_validate()
         bo_model = "stock.backorder.confirmation"
-        if isinstance(res, dict):
-            if res.get("res_model", False) == bo_model:
-                backorder_wiz_id = res.get("res_id")
-                wiz = self.env[bo_model].browse(backorder_wiz_id)
-                wiz.process()
-            else:
-                raise UserError("Backorder condition not met.")
+        over = "stock.overprocessed.transfer"
+        if isinstance(res, dict) and res.get("res_model", False) == over:
+            wiz_id = res.get("res_id")
+            wiz = self.env[bo_model].browse(wiz_id)
+            res = wiz.action_confirm()
+        if isinstance(res, dict) and res.get("res_model", False) == bo_model:
+            backorder_wiz_id = res.get("res_id")
+            wiz = self.env[bo_model].browse(backorder_wiz_id)
+            wiz.process()
+        else:
+            raise UserError("Backorder condition not met.")
         return {"result": True}
 
     def action_create_batch(self):
