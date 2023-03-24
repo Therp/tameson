@@ -205,5 +205,5 @@ class SignupHome(AuthSignupHome):
             if users:
                 qcontext['error'] = '''Account has other email as main account.
                 This email is associated with the main 
-                account: %s, please login using that email address''' % (users.login, keep_query(), keep_query())
+                account: %s, please login using that email address''' % users.login
         return qcontext
