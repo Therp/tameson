@@ -54,7 +54,7 @@ class CustomerPortal(CustomerPortal):
     @route(["/my/address/<int:child_pos>"], type="http", auth="user", website=True)
     def address(self, child_pos, redirect=None, **post):
         values = self._prepare_portal_layout_values()
-        childs = request.env.user.partner_id.child_ids.sorted('type')
+        childs = request.env.user.partner_id.child_ids.sorted("type")
         partner = childs[child_pos]
         values.update(
             {
@@ -79,7 +79,7 @@ class CustomerPortal(CustomerPortal):
                 for field in {"country_id", "state_id"} & set(values.keys()):
                     try:
                         values[field] = int(values[field])
-                    except:
+                    except Exception as e:
                         values[field] = False
                 values.update({"zip": values.pop("zipcode", "")})
                 partner.sudo().write(values)
@@ -116,11 +116,9 @@ class WebsiteSale(WebsiteSale):
         website=True,
         sitemap=False,
     )
-    def set_po_reference(self, po_reference='',**post):
+    def set_po_reference(self, po_reference="", **post):
         order = request.website.sale_get_order()
-        order.sudo().write({
-            'client_order_ref': po_reference
-        })
+        order.sudo().write({"client_order_ref": po_reference})
         return True
 
     @route(
@@ -187,23 +185,33 @@ class WebsiteTameson(Website):
                 lang = request.env["res.users"].browse(request.uid).lang
                 lang_code = request.env["res.lang"]._lang_get_code(lang)
                 response.set_cookie("frontend_lang", lang_code)
-        except:
+        except Exception as e:
             _logger.warn("Error setting website language.")
         return response
 
 
 class SignupHome(AuthSignupHome):
-
     def get_auth_signup_qcontext(self):
         qcontext = super(SignupHome, self).get_auth_signup_qcontext()
-        if qcontext.get('login', False):
-            login = qcontext['login'].lower()
-            users = request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))], limit=1)
+        if qcontext.get("login", False):
+            login = qcontext["login"].lower()
+            users = (
+                request.env["res.users"]
+                .sudo()
+                .search([("login", "=", qcontext.get("login"))], limit=1)
+            )
             if not users:
-                contact = request.env["res.partner"].sudo().search([("email", "=ilike", qcontext.get("login"))], limit=1)
+                contact = (
+                    request.env["res.partner"]
+                    .sudo()
+                    .search([("email", "=ilike", qcontext.get("login"))], limit=1)
+                )
                 users = contact.user_ids or contact.parent_id.user_ids
             if users:
-                qcontext['error'] = '''Account has other email as main account.
+                qcontext["error"] = (
+                    """Account has other email as main account.
                 This email is associated with the main 
-                account: %s, please login using that email address''' % users.login
+                account: %s, please login using that email address"""
+                    % users.login
+                )
         return qcontext
