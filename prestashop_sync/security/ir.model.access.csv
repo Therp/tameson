@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-prestashop_config_user,prestashop_config_user,model_prestashop_config,sales_team.group_sale_salesman,1,0,0,0
-prestashop_config_manager,prestashop_config_manager,model_prestashop_config,sales_team.group_sale_manager,1,1,1,1
-prestashop_carrier_user,prestashop_carrier_user,model_delivery_carrier_prestashop_id,sales_team.group_sale_salesman,1,0,0,0
-prestashop_carrier_manager,prestashop_carrier_manager,model_delivery_carrier_prestashop_id,sales_team.group_sale_manager,1,1,1,1
