@@ -121,7 +121,7 @@ class StockPicking(models.Model):
         over = "stock.overprocessed.transfer"
         if isinstance(res, dict) and res.get("res_model", False) == over:
             wiz_id = res.get("res_id")
-            wiz = self.env[bo_model].browse(wiz_id)
+            wiz = self.env[over].browse(wiz_id)
             res = wiz.action_confirm()
         if isinstance(res, dict) and res.get("res_model", False) == bo_model:
             backorder_wiz_id = res.get("res_id")
