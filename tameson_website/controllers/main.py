@@ -108,7 +108,7 @@ class CustomerPortal(CustomerPortal):
 
 
 class WebsiteSale(WebsiteSale):
-    ## Inherit to include manual payment to signature and confirm by portal customer
+    # Inherit to include manual payment to signature and confirm by portal customer
     @route(
         "/set/po_reference",
         type="json",
