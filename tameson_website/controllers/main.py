@@ -8,13 +8,12 @@ import logging
 from odoo import _
 from odoo.http import request, route
 
+from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.auth_signup.controllers.main import AuthSignupHome
-from odoo.addons.base.models.ir_ui_view import keep_query
 
 _logger = logging.getLogger(__name__)
 
@@ -54,7 +53,7 @@ class CustomerPortal(CustomerPortal):
     @route(["/my/address/<int:child_pos>"], type="http", auth="user", website=True)
     def address(self, child_pos, redirect=None, **post):
         values = self._prepare_portal_layout_values()
-        childs = request.env.user.partner_id.child_ids.sorted('type')
+        childs = request.env.user.partner_id.child_ids.sorted("type")
         partner = childs[child_pos]
         values.update(
             {
@@ -79,7 +78,7 @@ class CustomerPortal(CustomerPortal):
                 for field in {"country_id", "state_id"} & set(values.keys()):
                     try:
                         values[field] = int(values[field])
-                    except:
+                    except Exception:
                         values[field] = False
                 values.update({"zip": values.pop("zipcode", "")})
                 partner.sudo().write(values)
@@ -108,7 +107,7 @@ class CustomerPortal(CustomerPortal):
 
 
 class WebsiteSale(WebsiteSale):
-    ## Inherit to include manual payment to signature and confirm by portal customer
+    # Inherit to include manual payment to signature and confirm by portal customer
     @route(
         "/set/po_reference",
         type="json",
@@ -116,11 +115,9 @@ class WebsiteSale(WebsiteSale):
         website=True,
         sitemap=False,
     )
-    def set_po_reference(self, po_reference='',**post):
+    def set_po_reference(self, po_reference="", **post):
         order = request.website.sale_get_order()
-        order.sudo().write({
-            'client_order_ref': po_reference
-        })
+        order.sudo().write({"client_order_ref": po_reference})
         return True
 
     @route(
@@ -187,23 +184,33 @@ class WebsiteTameson(Website):
                 lang = request.env["res.users"].browse(request.uid).lang
                 lang_code = request.env["res.lang"]._lang_get_code(lang)
                 response.set_cookie("frontend_lang", lang_code)
-        except:
+        except Exception:
             _logger.warn("Error setting website language.")
         return response
 
 
 class SignupHome(AuthSignupHome):
-
     def get_auth_signup_qcontext(self):
         qcontext = super(SignupHome, self).get_auth_signup_qcontext()
-        if qcontext.get('login', False):
-            login = qcontext['login'].lower()
-            users = request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))], limit=1)
+        if qcontext.get("login", False):
+            qcontext["login"].lower()
+            users = (
+                request.env["res.users"]
+                .sudo()
+                .search([("login", "=", qcontext.get("login"))], limit=1)
+            )
             if not users:
-                contact = request.env["res.partner"].sudo().search([("email", "=ilike", qcontext.get("login"))], limit=1)
+                contact = (
+                    request.env["res.partner"]
+                    .sudo()
+                    .search([("email", "=ilike", qcontext.get("login"))], limit=1)
+                )
                 users = contact.user_ids or contact.parent_id.user_ids
             if users:
-                qcontext['error'] = '''Account has other email as main account.
-                This email is associated with the main 
-                account: %s, please login using that email address''' % (users.login, keep_query(), keep_query())
+                qcontext["error"] = (
+                    """Account has other email as main account.
+                This email is associated with the main
+                account: %s, please login using that email address"""
+                    % users.login
+                )
         return qcontext
