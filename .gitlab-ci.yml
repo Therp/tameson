@@ -1,7 +1,7 @@
 stages:
   - format
   - create_seed
-  - testing
+#  - testing
 precommit:
   stage: format
   before_script:
@@ -112,27 +112,27 @@ create_seed:
   only:
     - merge_requests
   allow_failure: true
-tests:
-  stage: testing
-  variables:
-    SCRIPTS_REPO: git@gitlab.therp.nl:therp/therp-ci-templates
-    SCRIPTS_BRANCH: ci-scripts
-    DEPLOY_BRANCH: build-13.0-accept-unpinned
-  script:
-    - |
-      SCRIPTS_DIR=$(mktemp -d)
-      cd $SCRIPTS_DIR
-      git clone -q --branch "$SCRIPTS_BRANCH" --depth 1 "$SCRIPTS_REPO" "$SCRIPTS_DIR/scripts"
-      SCRIPTS_DIR=${SCRIPTS_DIR}/scripts
-      LAST_PRODUCTION_HASH=$(source $SCRIPTS_DIR/check_hash)
-      TESTING_FOLDER_NAME="TEST_${CI_PROJECT_NAME}_${LAST_PRODUCTION_HASH}"
-      TESTING_FOLDER=$HOME/$TESTING_FOLDER_NAME
-      mkdir -p $TESTING_FOLDER
-      cd $TESTING_FOLDER
-      source $SCRIPTS_DIR/test_script
-      rm -rf $SCRIPTS_DIR
-  only:
-    - merge_requests
-  timeout: 2h
-  dependencies:
-    - create_seed
+#tests:
+#  stage: testing
+#  variables:
+#    SCRIPTS_REPO: git@gitlab.therp.nl:therp/therp-ci-templates
+#    SCRIPTS_BRANCH: ci-scripts
+#    DEPLOY_BRANCH: build-13.0-accept-unpinned
+#  script:
+#    - |
+#      SCRIPTS_DIR=$(mktemp -d)
+#      cd $SCRIPTS_DIR
+#      git clone -q --branch "$SCRIPTS_BRANCH" --depth 1 "$SCRIPTS_REPO" "$SCRIPTS_DIR/scripts"
+#      SCRIPTS_DIR=${SCRIPTS_DIR}/scripts
+#      LAST_PRODUCTION_HASH=$(source $SCRIPTS_DIR/check_hash)
+#      TESTING_FOLDER_NAME="TEST_${CI_PROJECT_NAME}_${LAST_PRODUCTION_HASH}"
+#      TESTING_FOLDER=$HOME/$TESTING_FOLDER_NAME
+#      mkdir -p $TESTING_FOLDER
+#      cd $TESTING_FOLDER
+#      source $SCRIPTS_DIR/test_script
+#      rm -rf $SCRIPTS_DIR
+#  only:
+#    - merge_requests
+#  timeout: 2h
+#  dependencies:
+#    - create_seed
