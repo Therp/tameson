@@ -320,6 +320,33 @@
             </xpath>
         </template>
         <template id="cart" inherit_id="website_sale.cart">
+            <xpath expr="//t[@t-call='website_sale.cart_lines']" position="after">
+                <form method="post" action="/add_sku">
+                    <div class="input-group mb-3">
+                        <input
+              type="hidden"
+              name="csrf_token"
+              t-att-value="request.csrf_token()"
+            />
+                        <input
+              name="sku"
+              type="text"
+              class="form-control"
+              placeholder="Add SKU"
+            />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+                <div
+          class="alert alert-danger"
+          t-if="request.params.get('add_sku_error')"
+        >
+                SKU does not exist, please double check:
+                <t t-esc="request.params.get('add_sku_error')" />
+                </div>
+            </xpath>
             <xpath expr="//a[@href='/shop/checkout?express=1'][1]" position="replace">
                 <a
           role="button"

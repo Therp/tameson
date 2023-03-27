@@ -199,6 +199,25 @@ class WebsiteSale(WebsiteSale):
             values["acquirers"] = acquirers
         return values
 
+    @route(
+        "/add_sku",
+        type="http",
+        auth="public",
+        website=True,
+        sitemap=False,
+    )
+    def add_sku(self, sku="", **kw):
+        error = ""
+        order = request.website.sale_get_order(force_create=1)
+        product = request.env["product.product"].search(
+            [("default_code", "=ilike", sku)], limit=1
+        )
+        if product:
+            order._cart_update(product_id=product.id, add_qty=1)
+        else:
+            error = "?add_sku_error=%s" % sku
+        return request.redirect("/shop/cart%s" % error)
+
 
 class WebsiteTameson(Website):
     @route(website=True, auth="public", sitemap=False)
