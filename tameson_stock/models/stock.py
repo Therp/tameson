@@ -243,10 +243,10 @@ class StockPicking(models.Model):
                 rets = rets and ret
             except UserError as e:
                 msg = "%s: %s" % (r.name, e.name)
-                raise UserError(msg)
+                raise UserError(msg) from e
             except ValidationError as e:
                 msg = "%s: %s" % (r.name, e.name)
-                raise ValidationError(msg)
+                raise ValidationError(msg) from e
             if not r.sale_id:
                 continue
             # only create invoice for Delivery operation, not reshipment, SO
@@ -357,7 +357,7 @@ class StockPicking(models.Model):
 
     def get_sendcloud_labels(self):
         if not hasattr(self, "sendcloud_parcel_ids"):
-            return False
+            return False  # noqa
         for r in self:
             for parcel_id in r.sendcloud_parcel_ids:
                 if parcel_id.label:
@@ -529,7 +529,6 @@ class ReturnPicking(models.TransientModel):
 
 
 class StockInventoryLine(models.Model):
-    _inherit = 'stock.inventory.line'
+    _inherit = "stock.inventory.line"
 
     note = fields.Text()
-    
