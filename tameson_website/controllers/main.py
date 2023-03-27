@@ -6,6 +6,7 @@
 import logging
 
 from odoo import _
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, route
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
@@ -104,6 +105,30 @@ class CustomerPortal(CustomerPortal):
         response = request.render("tameson_website.portal_address", values)
         response.headers["X-Frame-Options"] = "DENY"
         return response
+
+    @route(
+        ["/my/orders/<int:order_id>/duplicate"],
+        type="http",
+        auth="public",
+        methods=["POST"],
+        website=True,
+    )
+    def duplicate(self, order_id, access_token=None, **post):
+        try:
+            order_sudo = self._document_check_access(
+                "sale.order", order_id, access_token=access_token
+            )
+        except (AccessError, MissingError):
+            return request.redirect("/my")
+        new_order = order_sudo.copy()
+        new_order.write({"website_id": request.website.id})
+        request.session["sale_order_id"] = new_order.id
+        for line in new_order.order_line:
+            if line.exists():
+                new_order._cart_update(
+                    product_id=line.product_id.id, line_id=line.id, add_qty=0
+                )
+        return request.redirect("/shop/cart")
 
 
 class WebsiteSale(WebsiteSale):
