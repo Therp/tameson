@@ -92,10 +92,17 @@
         </template>
         <template id="portal_address_company" inherit_id="portal.portal_my_details">
             <xpath expr="//label[@for='name']" position="replace">
-                <label t-if="not partner.is_company" class="col-form-label" for="name">Name</label>
+                <label
+          t-if="not partner.is_company"
+          class="col-form-label"
+          for="name"
+        >Name</label>
                 <label t-else="" class="col-form-label" for="name">Company Name</label>
             </xpath>
-            <xpath expr="//p[@t-esc='partner.commercial_company_name']/parent::div" position="attributes">
+            <xpath
+        expr="//p[@t-esc='partner.commercial_company_name']/parent::div"
+        position="attributes"
+      >
                 <attribute name="t-if">not partner.is_company</attribute>
             </xpath>
         </template>
@@ -313,6 +320,33 @@
             </xpath>
         </template>
         <template id="cart" inherit_id="website_sale.cart">
+            <xpath expr="//t[@t-call='website_sale.cart_lines']" position="after">
+                <form method="post" action="/add_sku">
+                    <div class="input-group mb-3">
+                        <input
+              type="hidden"
+              name="csrf_token"
+              t-att-value="request.csrf_token()"
+            />
+                        <input
+              name="sku"
+              type="text"
+              class="form-control"
+              placeholder="Add SKU"
+            />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+                <div
+          class="alert alert-danger"
+          t-if="request.params.get('add_sku_error')"
+        >
+                SKU does not exist, please double check:
+                <t t-esc="request.params.get('add_sku_error')" />
+                </div>
+            </xpath>
             <xpath expr="//a[@href='/shop/checkout?express=1'][1]" position="replace">
                 <a
           role="button"
@@ -383,11 +417,23 @@
             <xpath expr="//t[@t-set='submit_txt']" position="replace">
                 <t t-set="submit_txt">Checkout</t>
             </xpath>
-            <xpath expr="//div[@id='oe_structure_website_sale_payment_1']" position="before">
+            <xpath
+        expr="//div[@id='oe_structure_website_sale_payment_1']"
+        position="before"
+      >
                 <div class="card" id="div_po_reference">
                     <div class="card-body form-group">
-                        <label class="col-form-label" for="po-reference">Your order reference</label>
-                        <input type="text" id="po-reference" class="form-control" value="" placeholder="Your PO number or order reference"/>
+                        <label
+              class="col-form-label"
+              for="po-reference"
+            >Your order reference</label>
+                        <input
+              type="text"
+              id="po-reference"
+              class="form-control"
+              value=""
+              placeholder="Your PO number or order reference"
+            />
                     </div>
                 </div>
             </xpath>
@@ -424,17 +470,99 @@
           >Contact us via email</a>
                 </li>
             </xpath>
-        </template>
-        <template id="sale_order_portal_content_ref"  inherit_id="sale.sale_order_portal_content">
-            <xpath expr="//div[@id='so_date']" position="after">
-                <div class="row" t-if="sale_order.client_order_ref">
-                    <div class="mb-3 col-6 ml-auto">
-                        <strong>Your order reference: </strong> <span t-field="sale_order.client_order_ref"/>
+            <xpath expr="//div[@id='sale_order_communication']" position="before">
+                <div
+          class="row justify-content-center text-center d-print-none pt-1 pb-4"
+          t-if="sale_order.state in ('sale','done')"
+        >
+                    <a
+            role="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#modalDuplicate"
+            href="#"
+          > <i class="fa fa-shopping-cart" /> Order again</a>
+                </div>
+                <div
+          role="dialog"
+          class="modal fade"
+          id="modalDuplicate"
+          t-if="sale_order.state in ('sale','done')"
+        >
+                    <div class="modal-dialog">
+                        <form
+              id="Duplicate"
+              method="POST"
+              t-attf-action="/my/orders/#{sale_order.id}/duplicate?access_token=#{sale_order.access_token}"
+              class="modal-content"
+            >
+                            <input
+                type="hidden"
+                name="csrf_token"
+                t-att-value="request.csrf_token()"
+              />
+                            <header class="modal-header">
+                                <h4 class="modal-title">Order again</h4>
+                                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >&amp;times;</button>
+                            </header>
+                            <main class="modal-body">
+                                <p>
+                                    Would you like to order these items again? You can adjust the quantities in the next step.
+                                </p>
+                            </main>
+                            <footer class="modal-footer">
+                                <button
+                  type="submit"
+                  t-att-id="sale_order.id"
+                  class="btn btn-primary"
+                ><i class="fa fa-shopping-cart" /> Order again</button>
+                                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >Cancel</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_download_pdf')]" position="after">
+                <div
+          class="o_download_pdf btn-toolbar flex-sm-nowrap"
+          t-if="sale_order.state in ('sale','done')"
+        >
+                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                        <a
+              role="button"
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#modalDuplicate"
+              href="#"
+            > <i class="fa fa-shopping-cart" /> Order again</a>
                     </div>
                 </div>
             </xpath>
         </template>
-        <template id="signup" inherit_id="auth_signup.signup" >
+        <template
+      id="sale_order_portal_content_ref"
+      inherit_id="sale.sale_order_portal_content"
+    >
+            <xpath expr="//div[@id='so_date']" position="after">
+                <div class="row" t-if="sale_order.client_order_ref">
+                    <div class="mb-3 col-6 ml-auto">
+                        <strong>Your order reference: </strong> <span
+              t-field="sale_order.client_order_ref"
+            />
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="signup" inherit_id="auth_signup.signup">
             <xpath expr="//t[@t-esc='error']" position="replace">
                 <t t-raw="error" />
             </xpath>

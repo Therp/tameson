@@ -6,6 +6,7 @@
 import logging
 
 from odoo import _
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, route
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
@@ -105,6 +106,30 @@ class CustomerPortal(CustomerPortal):
         response.headers["X-Frame-Options"] = "DENY"
         return response
 
+    @route(
+        ["/my/orders/<int:order_id>/duplicate"],
+        type="http",
+        auth="public",
+        methods=["POST"],
+        website=True,
+    )
+    def duplicate(self, order_id, access_token=None, **post):
+        try:
+            order_sudo = self._document_check_access(
+                "sale.order", order_id, access_token=access_token
+            )
+        except (AccessError, MissingError):
+            return request.redirect("/my")
+        new_order = order_sudo.copy()
+        new_order.write({"website_id": request.website.id})
+        request.session["sale_order_id"] = new_order.id
+        for line in new_order.order_line:
+            if line.exists():
+                new_order._cart_update(
+                    product_id=line.product_id.id, line_id=line.id, add_qty=0
+                )
+        return request.redirect("/shop/cart")
+
 
 class WebsiteSale(WebsiteSale):
     # Inherit to include manual payment to signature and confirm by portal customer
@@ -174,6 +199,25 @@ class WebsiteSale(WebsiteSale):
             values["acquirers"] = acquirers
         return values
 
+    @route(
+        "/add_sku",
+        type="http",
+        auth="public",
+        website=True,
+        sitemap=False,
+    )
+    def add_sku(self, sku="", **kw):
+        error = ""
+        order = request.website.sale_get_order(force_create=1)
+        product = request.env["product.product"].search(
+            [("default_code", "=ilike", sku)], limit=1
+        )
+        if product:
+            order._cart_update(product_id=product.id, add_qty=1)
+        else:
+            error = "?add_sku_error=%s" % sku
+        return request.redirect("/shop/cart%s" % error)
+
 
 class WebsiteTameson(Website):
     @route(website=True, auth="public", sitemap=False)
@@ -192,25 +236,27 @@ class WebsiteTameson(Website):
 class SignupHome(AuthSignupHome):
     def get_auth_signup_qcontext(self):
         qcontext = super(SignupHome, self).get_auth_signup_qcontext()
-        if qcontext.get("login", False):
-            qcontext["login"].lower()
-            users = (
-                request.env["res.users"]
+        set(qcontext.keys())
+        if "reset_password" in request.httprequest.path:
+            return qcontext
+        login = qcontext["login"].lower()
+        users = (
+            request.env["res.users"]
+            .sudo()
+            .search([("login", "=ilike", login)], limit=1)
+        )
+        if not users:
+            contact = (
+                request.env["res.partner"]
                 .sudo()
-                .search([("login", "=", qcontext.get("login"))], limit=1)
+                .search([("email", "=ilike", login)], limit=1)
             )
-            if not users:
-                contact = (
-                    request.env["res.partner"]
-                    .sudo()
-                    .search([("email", "=ilike", qcontext.get("login"))], limit=1)
-                )
-                users = contact.user_ids or contact.parent_id.user_ids
-            if users:
-                qcontext["error"] = (
-                    """Account has other email as main account.
-                This email is associated with the main
-                account: %s, please login using that email address"""
-                    % users.login
-                )
+            users = contact.user_ids or contact.parent_id.user_ids
+        if users:
+            qcontext["error"] = (
+                """Account has other email as main account.
+            This email is associated with the main
+            account: %s, please login using that email address"""
+                % users.login
+            )
         return qcontext
