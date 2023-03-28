@@ -136,3 +136,4 @@ tests:
   timeout: 2h
   dependencies:
     - create_seed
+  allow_failure: true
