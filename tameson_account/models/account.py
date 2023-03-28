@@ -2,13 +2,38 @@ from odoo import _, api, fields, models
 from odoo.tools.misc import format_date
 
 
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    def remove_move_reconcile(self):
+        self_sudo = self.sudo()
+        return super(AccountMoveLine, self_sudo).remove_move_reconcile()
+
+
 class AccountMove(models.Model):
     _name = "account.move"
     _inherit = ["account.move", "set.help.mixin"]
 
+    invoice_outstanding_credits_debits_widget = fields.Text(
+        groups="account.group_account_invoice,sales_team.group_sale_salesman",
+        compute_sudo=True,
+    )
+    invoice_payments_widget = fields.Text(
+        groups="account.group_account_invoice,sales_team.group_sale_salesman",
+        compute_sudo=True,
+    )
+    invoice_has_outstanding = fields.Boolean(
+        groups="account.group_account_invoice,sales_team.group_sale_salesman",
+        compute_sudo=True,
+    )
+
     t_comment = fields.Text(string=_("Comment"), required=False)
     restock_fee_limit_warning = fields.Boolean(compute="_get_restock_fee_limit")
     restock_fee_limit = fields.Char(compute="_get_restock_fee_limit")
+
+    def js_assign_outstanding_line(self, line_id):
+        self_sudo = self.sudo()
+        return super(AccountMove, self_sudo).js_assign_outstanding_line(line_id)
 
     def _get_restock_fee_limit(self):
         restock_fee_limit = (
