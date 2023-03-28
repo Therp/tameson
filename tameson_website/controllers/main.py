@@ -236,25 +236,27 @@ class WebsiteTameson(Website):
 class SignupHome(AuthSignupHome):
     def get_auth_signup_qcontext(self):
         qcontext = super(SignupHome, self).get_auth_signup_qcontext()
-        if qcontext.get("login", False):
-            qcontext["login"].lower()
-            users = (
-                request.env["res.users"]
+        keys = set(qcontext.keys())
+        if not {"name", "login", "password", "confirm_password"}.issubset(keys):
+            return qcontext
+        login = qcontext["login"].lower()
+        users = (
+            request.env["res.users"]
+            .sudo()
+            .search([("login", "=ilike", login)], limit=1)
+        )
+        if not users:
+            contact = (
+                request.env["res.partner"]
                 .sudo()
-                .search([("login", "=", qcontext.get("login"))], limit=1)
+                .search([("email", "=ilike", login)], limit=1)
             )
-            if not users:
-                contact = (
-                    request.env["res.partner"]
-                    .sudo()
-                    .search([("email", "=ilike", qcontext.get("login"))], limit=1)
-                )
-                users = contact.user_ids or contact.parent_id.user_ids
-            if users:
-                qcontext["error"] = (
-                    """Account has other email as main account.
-                This email is associated with the main
-                account: %s, please login using that email address"""
-                    % users.login
-                )
+            users = contact.user_ids or contact.parent_id.user_ids
+        if users:
+            qcontext["error"] = (
+                """Account has other email as main account.
+            This email is associated with the main
+            account: %s, please login using that email address"""
+                % users.login
+            )
         return qcontext
