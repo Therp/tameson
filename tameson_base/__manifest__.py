@@ -13,6 +13,7 @@
         "queue_job",
     ],
     "data": [
+        "security/groups.xml",
         "views/model.xml",
         "views/set_help.xml",
         "views/assets.xml",
