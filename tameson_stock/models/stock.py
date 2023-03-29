@@ -127,9 +127,7 @@ class StockPicking(models.Model):
             backorder_wiz_id = res.get("res_id")
             wiz = self.env[bo_model].browse(backorder_wiz_id)
             wiz.process()
-        else:
-            raise UserError("Backorder condition not met.")
-        return {"result": True}
+        return {"result": self.state == "done"}
 
     def action_create_batch(self):
         pickings = self.move_ids_without_package.mapped(
