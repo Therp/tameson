@@ -127,7 +127,7 @@ class StockPicking(models.Model):
             backorder_wiz_id = res.get("res_id")
             wiz = self.env[bo_model].browse(backorder_wiz_id)
             wiz.process()
-        return {"result": self.state == "done"}
+        return {"id": self.id, "state": self.state}
 
     def action_create_batch(self):
         pickings = self.move_ids_without_package.mapped(
