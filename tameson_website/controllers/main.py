@@ -236,10 +236,9 @@ class WebsiteTameson(Website):
 class SignupHome(AuthSignupHome):
     def get_auth_signup_qcontext(self):
         qcontext = super(SignupHome, self).get_auth_signup_qcontext()
-        set(qcontext.keys())
-        if "reset_password" in request.httprequest.path:
+        login = qcontext.get("login", "").lower()
+        if not login or "reset_password" in request.httprequest.path:
             return qcontext
-        login = qcontext["login"].lower()
         users = (
             request.env["res.users"]
             .sudo()
