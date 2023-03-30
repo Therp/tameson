@@ -12,6 +12,15 @@ class ResPartner(models.Model):
     is_product_supplier = fields.Boolean()
     average_payment_days = fields.Float(compute="get_average_payment_days")
 
+    total_invoiced = fields.Monetary(
+        groups="account.group_account_invoice,sales_team.group_sale_salesman",
+        compute_sudo=True,
+    )
+    total_due = fields.Monetary(compute_sudo=True)
+    total_overdue = fields.Monetary(compute_sudo=True)
+    followup_status = fields.Selection(compute_sudo=True)
+    followup_level = fields.Many2one(compute_sudo=True)
+
     def get_average_payment_days(self):
         for partner in self:
             all_child = self.with_context(active_test=False).search(
