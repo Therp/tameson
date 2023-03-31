@@ -183,7 +183,12 @@ class StockPicking(models.Model):
             order = r.sale_id
 
             r.t_delivery_allowed = bool(
-                order and (order.t_is_delivery_invoice_policy or r.t_payment_status)
+                order
+                and (
+                    order.require_signature
+                    or order.t_is_delivery_invoice_policy
+                    or r.t_payment_status
+                )
             )
 
     @api.depends("origin")
