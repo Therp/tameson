@@ -137,7 +137,7 @@ class SaleOrder(models.Model):
 
     def _get_sale_order_has_issues(self):
         vals = super(SaleOrder, self)._get_sale_order_has_issues()
-        from_date = datetime.now() - relativedelta(hours=1)
+        from_date = datetime.now() - relativedelta(hours=4)
         draft_queue = self.env["shopify.order.data.queue.ept"].search(
             [("state", "!=", "completed"), ("create_date", "<=", from_date)]
         )
