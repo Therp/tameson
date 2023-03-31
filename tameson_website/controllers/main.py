@@ -5,7 +5,7 @@
 
 import logging
 
-from odoo import _
+from odoo import _, fields
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, route
 
@@ -132,6 +132,21 @@ class CustomerPortal(CustomerPortal):
 
 
 class WebsiteSale(WebsiteSale):
+    @route(["/shop/cart"], type="http", auth="public", website=True)
+    def cart(self, access_token=None, revive="", **post):
+        today = fields.Date.today()
+        order = request.website.sale_get_order()
+        if order.validity_date and order.validity_date < today:
+            order.validity_date = order._default_validity_date()
+            for line in order.order_line:
+                if line.exists():
+                    order._cart_update(
+                        product_id=line.product_id.id, line_id=line.id, add_qty=0
+                    )
+        return super(WebsiteSale, self).cart(
+            access_token=access_token, revive=revive, **post
+        )
+
     # Inherit to include manual payment to signature and confirm by portal customer
     @route(
         "/set/po_reference",
@@ -236,10 +251,9 @@ class WebsiteTameson(Website):
 class SignupHome(AuthSignupHome):
     def get_auth_signup_qcontext(self):
         qcontext = super(SignupHome, self).get_auth_signup_qcontext()
-        set(qcontext.keys())
-        if "reset_password" in request.httprequest.path:
+        login = qcontext.get("login", "").lower()
+        if not login or "reset_password" in request.httprequest.path:
             return qcontext
-        login = qcontext["login"].lower()
         users = (
             request.env["res.users"]
             .sudo()
