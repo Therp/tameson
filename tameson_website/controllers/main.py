@@ -194,7 +194,7 @@ class WebsiteSale(WebsiteSale):
         values = super(WebsiteSale, self)._get_shop_payment_values(order, **kwargs)
         acquirers = values["acquirers"]
         if order.partner_id.property_payment_term_id.t_invoice_delivered_quantities:
-            invoice_acq = (
+            invoice_acq = int(
                 request.env["ir.config_parameter"]
                 .sudo()
                 .get_param("Pay afterwards on invoice")
