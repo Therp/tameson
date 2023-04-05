@@ -7,7 +7,6 @@ odoo.define("tameson_website.processing", function (require) {
 
   publicWidget.registry.PaymentForm.include({
     payEvent: function (ev) {
-      var self = this;
       ev.preventDefault();
       if ($("#po-reference").length > 0) {
         const po_ref = $("#po-reference")[0].value;
