@@ -195,7 +195,7 @@ class WebsiteSale(WebsiteSale):
         acquirers = values["acquirers"]
         if order.partner_id.property_payment_term_id.t_invoice_delivered_quantities:
             invoice = request.env["payment.acquirer"].sudo().browse(40)
-            acquirers = acquirers.append(invoice)
+            acquirers.append(invoice)
             values["acquirers"] = acquirers
         return values
 
