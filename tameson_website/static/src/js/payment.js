@@ -7,16 +7,17 @@ odoo.define("tameson_website.processing", function (require) {
 
   publicWidget.registry.PaymentForm.include({
     payEvent: function (ev) {
-      var self = this;
       ev.preventDefault();
-      let po_ref = $('#po-reference')[0].value;
-      if (po_ref) {
-        this._rpc({
-          route: '/set/po_reference',
-          params: {
-            'po_reference': po_ref,
-          }
-        });
+      if ($("#po-reference").length > 0) {
+        const po_ref = $("#po-reference")[0].value;
+        if (po_ref) {
+          this._rpc({
+            route: "/set/po_reference",
+            params: {
+              po_reference: po_ref,
+            },
+          });
+        }
       }
       return this._super.apply(this, arguments);
     },
