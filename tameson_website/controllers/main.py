@@ -194,8 +194,13 @@ class WebsiteSale(WebsiteSale):
         values = super(WebsiteSale, self)._get_shop_payment_values(order, **kwargs)
         acquirers = values["acquirers"]
         if order.partner_id.property_payment_term_id.t_invoice_delivered_quantities:
-            invoice = request.env["payment.acquirer"].sudo().browse(40)
-            acquirers.insert(0, invoice)
+            invoice_acq = (
+                request.env["ir.config_parameter"]
+                .sudo()
+                .get_param("Pay afterwards on invoice")
+            )
+            invoice_acq = request.env["payment.acquirer"].sudo().browse(invoice_acq)
+            acquirers.insert(0, invoice_acq)
             values["acquirers"] = acquirers
         return values
 
