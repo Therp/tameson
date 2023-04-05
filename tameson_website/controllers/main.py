@@ -192,10 +192,10 @@ class WebsiteSale(WebsiteSale):
 
     def _get_shop_payment_values(self, order, **kwargs):
         values = super(WebsiteSale, self)._get_shop_payment_values(order, **kwargs)
-        if not order.partner_id.property_payment_term_id.t_invoice_delivered_quantities:
-            acquirers = [
-                acq for acq in values["acquirers"] if acq.provider != "transfer"
-            ]
+        acquirers = values["acquirers"]
+        if order.partner_id.property_payment_term_id.t_invoice_delivered_quantities:
+            invoice = request.env["payment.acquirer"].sudo().browse(40)
+            acquirers = acquirers.append(invoice)
             values["acquirers"] = acquirers
         return values
 
