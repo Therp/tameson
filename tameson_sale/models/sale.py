@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
     supposed_fiscal_match = fields.Boolean(compute="get_supposed_fiscal")
 
     def _send_order_confirmation_mail(self):
-        if self.env.context.get('skip_confirmation_email', False):
+        if self.env.context.get("skip_confirmation_email", False):
             return
         return super()._send_order_confirmation_mail()
 
@@ -308,7 +308,9 @@ class SaleOrder(models.Model):
                 body_html = self.env["mail.thread"]._replace_local_links(body_html)
                 email = self.env.user.work_email or self.env.user.email
                 if not email:
-                    raise ValidationError(_("You must configure your mail address."))
+                    raise ValidationError(
+                        _("You must configure your mail address.")
+                    ) from None
                 mail_values = {
                     "email_from": formataddr((self.env.user.name, email)),
                     "email_to": formataddr((self.env.user.name, email)),
@@ -399,7 +401,8 @@ class SaleOrder(models.Model):
                 invoices = ", ".join(open_invoices.mapped("name"))
                 orders = ", ".join(open_orders.mapped("name"))
                 msg = (
-                    "Credit limit: %.2f, Total due: %.2f, Total open order amount: %.2f, Difference: %.2f\nOpen invoices: %s\nOpen orders: %s"
+                    "Credit limit: %.2f, Total due: %.2f, Total open order amount: %.2f, \
+                        Difference: %.2f\nOpen invoices: %s\nOpen orders: %s"
                     % (
                         credit_limit,
                         credit,
@@ -410,9 +413,27 @@ class SaleOrder(models.Model):
                     )
                 )
                 raise ValidationError(msg)
+        over_amount = float(
+            self.env["ir.config_parameter"].get_param("shipping_over_amount", 0)
+        )
+        if over_amount and self.amount_total >= over_amount:
+            data = (
+                self.env["ir.config_parameter"]
+                .get_param("shipping_over_data", "")
+                .split(",")
+            )
+            data_dic = {}
+            for country, shipping in zip(data[0::2], data[1::2]):
+                data_dic[country] = shipping
+            ccode = self.partner_shipping_id.country_id.code
+            if ccode in data_dic:
+                shipping = self.env["delivery.carrier"].search(
+                    [("name", "ilike", data_dic[ccode])], limit=1
+                )
+                if shipping:
+                    self.set_delivery_line(shipping, 0)
         ret = super(SaleOrder, self).action_confirm()
-
-        ## don't auto create invoice for shopify orders
+        # don't auto create invoice for shopify orders
         if hasattr(self, "shopify_order_id") and self.shopify_order_id:
             return ret
 
@@ -546,7 +567,7 @@ where sot.aml_count = 0
                 email_values={"recipient_ids": [(6, 0, partners.ids)]},
             )
 
-    ##Add delivery method only if delivery_id is not set for new SO
+    # Add delivery method only if delivery_id is not set for new SO
     @api.model_create_multi
     def create(self, vals):
         res = super(SaleOrder, self).create(vals)
@@ -794,7 +815,7 @@ class PricelistItem(models.Model):
                 )
 
 
-class PricelistItem(models.Model):
+class Pricelist(models.Model):
     _inherit = "product.pricelist"
 
     pt_field_name = fields.Char(string="Product price cache")
@@ -839,10 +860,9 @@ class PricelistItem(models.Model):
 
 
 class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
-
+    _inherit = "payment.transaction"
 
     def _set_transaction_pending(self):
-        return super(PaymentTransaction, self.with_context\
-            (skip_confirmation_email=True))._set_transaction_pending()
-    
+        return super(
+            PaymentTransaction, self.with_context(skip_confirmation_email=True)
+        )._set_transaction_pending()
