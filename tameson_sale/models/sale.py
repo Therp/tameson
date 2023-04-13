@@ -414,11 +414,12 @@ class SaleOrder(models.Model):
                 )
                 raise ValidationError(msg)
         over_amount = float(
-            self.env["ir.config_parameter"].get_param("shipping_over_amount", 0)
+            self.env["ir.config_parameter"].sudo().get_param("shipping_over_amount", 0)
         )
         if over_amount and self.amount_total >= over_amount:
             data = (
                 self.env["ir.config_parameter"]
+                .sudo()
                 .get_param("shipping_over_data", "")
                 .split(",")
             )
