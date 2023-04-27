@@ -432,7 +432,10 @@ class SaleOrder(models.Model):
                     [("name", "ilike", data_dic[ccode])], limit=1
                 )
                 if shipping:
-                    self.set_delivery_line(shipping, 0)
+                    if self.carrier_id:
+                        self.carrier_id = shipping
+                    else:
+                        self.set_delivery_line(shipping, 0)
         ret = super(SaleOrder, self).action_confirm()
         # don't auto create invoice for shopify orders
         if hasattr(self, "shopify_order_id") and self.shopify_order_id:
