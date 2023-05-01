@@ -14,6 +14,7 @@
         "mail",
         "account",
         "tameson_sale",
+        "fetchmail",
     ],
     "data": [
         "data/mail_template_data.xml",
