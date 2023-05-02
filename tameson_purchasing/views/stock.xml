@@ -11,6 +11,12 @@
             name="source_po_id"
             attrs="{'invisible': [('source_po_id','=',False)]}"
           />
+                    <field name="purchase_id" invisible="1" />
+                    <field
+            name="purchase_confirmation"
+            widget="boolean_toggle"
+            attrs="{'invisible': [('purchase_id','=',False)]}"
+          />
                 </field>
                 <xpath
           expr="//field[@name='move_ids_without_package']/tree//field[last()]"
@@ -39,5 +45,17 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="vpicktree_purchase" model="ir.ui.view">
+            <field name="name">vpicktree_purchase</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[last()]" position="after">
+                    <field name="purchase_confirmation" optional="hide" />
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>

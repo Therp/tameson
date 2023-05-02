@@ -11,6 +11,7 @@
           name="t_purchase_method"
           attrs="{'readonly': [('t_done_pickings', '!=', [])]}"
         />
+                <field name="purchase_confirmation" widget="boolean_toggle" />
             </xpath>
             <xpath expr="//field[@name='partner_ref']" position="after">
                 <field
@@ -100,6 +101,7 @@
         <field name="arch" type="xml">
             <field name="activity_exception_decoration" position="before">
                 <field name="picking_type_id" optional="hide" />
+                <field name="purchase_confirmation" optional="hide" />
             </field>
         </field>
     </record>

@@ -13,6 +13,10 @@ class StockPicking(models.Model):
         comodel_name="purchase.order", compute="_get_source_po"
     )
 
+    purchase_confirmation = fields.Boolean(
+        related="purchase_id.purchase_confirmation", readonly=False
+    )
+
     @api.depends("origin")
     def _get_source_po(self):
         for record in self:
