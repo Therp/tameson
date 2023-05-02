@@ -42,6 +42,8 @@ class PurchaseOrder(models.Model):
     )
     t_aa_purchase_id = fields.Integer(string="AA Purchase ID", copy=False, default=0)
 
+    purchase_confirmation = fields.Boolean()
+
     def button_confirm(self):
         for order in self:
             if not order.picking_type_id.warehouse_id.code == "AA-NL":
@@ -73,7 +75,7 @@ This is not allowed for ActiveAnts, please review the PO and combine the lines'
         res["context"]["default_template_id"] = template
         return res
 
-    ## compute invoice_status based on t_purchase_method instead of each product purchase_method
+    # compute invoice_status based on t_purchase_method instead of each product purchase_method
     @api.depends(
         "state",
         "order_line.qty_invoiced",
@@ -172,7 +174,6 @@ This is not allowed for ActiveAnts, please review the PO and combine the lines'
         invoice_ids = set(self.invoice_ids.ids)
 
         view = self.with_context(create_bill=True).action_view_invoice()
-        #  {'default_type': 'in_invoice', 'default_company_id': 1, 'default_purchase_id': 41, 'default_invoice_origin': 'P00039', 'default_ref': False},
         ctx = view["context"]
         vals = {}
         for k, v in ctx.items():
