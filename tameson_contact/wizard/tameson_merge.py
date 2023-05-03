@@ -48,6 +48,7 @@ select ARRAY[parent.id] id, rp.email
         lines = [
             (0, 0, {"partner_ids": [(6, 0, ids)], "partner_email": email})
             for ids, email in pidss
+            if len(ids) > 1
         ]
         res.update({"line_ids": lines})
         return res
