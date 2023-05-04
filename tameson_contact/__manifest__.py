@@ -16,8 +16,10 @@
         "sales_team",
     ],
     "data": [
+        "security/ir.model.access.csv",
         "views/contact.xml",
         "wizard/tameson_merge.xml",
+        "views/partner_type.xml",
     ],
     "application": False,
 }

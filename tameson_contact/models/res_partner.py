@@ -5,7 +5,7 @@
 
 import re
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.base_address_extended.models.base_address_extended import STREET_FIELDS
@@ -14,6 +14,12 @@ from odoo.addons.base_address_extended.models.base_address_extended import STREE
 class ResPartner(models.Model):
     _name = "res.partner"
     _inherit = ["res.partner", "set.help.mixin"]
+
+    t_partner_type_id = fields.Many2one(
+        string="Partner type",
+        comodel_name="tameson.partner.type",
+        ondelete="restrict",
+    )
 
     @api.model
     def _address_fields(self):
@@ -113,5 +119,5 @@ class ResPartner(models.Model):
             child_val = val.copy()
             child_val.update(vat=False, company_name=False, is_company=False)
             child_ids = child_ids + [(0, 0, child_val)]
-            val.update(name=company_name, child_ids=child_ids)            
+            val.update(name=company_name, child_ids=child_ids)
         return super().write(val)

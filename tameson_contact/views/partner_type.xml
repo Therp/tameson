@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_tameson_partner_type_tree" model="ir.ui.view">
+        <field name="name">view.tameson.partner.type.tree</field>
+        <field name="model">tameson.partner.type</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="16" />
+        <field name="active" eval="True" />
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <!-- Search view for "model" -->
+    <record id="view_tameson_partner_type_search" model="ir.ui.view">
+        <field name="name">view.tameson.partner.type.search</field>
+        <field name="model">tameson.partner.type</field>
+        <field name="type">search</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="16" />
+        <field name="active" eval="True" />
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+    <!-- Main window action for "model" -->
+    <record id="action_tameson_partner_type_act_window" model="ir.actions.act_window">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">Partner type</field>
+        <field name="res_model">tameson.partner.type</field>
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+        <field name="search_view_id" ref="view_tameson_partner_type_search" />
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add new Partner type
+            </p><p>
+            </p>
+        </field>
+    </record>
+
+    <!-- Main menu for "model" -->
+    <record id="menu_partner_type" model="ir.ui.menu">
+        <field name="name">Partner type</field>
+        <field name="sequence" eval="10" />
+        <field name="action" ref="action_tameson_partner_type_act_window" />
+        <field name="parent_id" ref="contacts.res_partner_menu_config" />
+    </record>
+
+</odoo>
