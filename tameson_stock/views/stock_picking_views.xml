@@ -175,6 +175,7 @@
         <field name="arch" type="xml">
             <field name="company_id" position="after">
                 <field name="t_aa_shipper_mapping" />
+                <field name="aftership_slug" />
             </field>
         </field>
     </record>
