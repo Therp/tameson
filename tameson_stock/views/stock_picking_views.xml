@@ -84,6 +84,7 @@
                 name="ignore_invoice_creation"
                 widget="boolean_toggle"
               />
+                            <field name="aftership_url" widget="url" />
                         </group>
                     </group>
                 </page>

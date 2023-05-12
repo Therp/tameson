@@ -37,6 +37,17 @@ class StockPicking(models.Model):
     )
     unknown_date = fields.Boolean()
     ignore_invoice_creation = fields.Boolean()
+    aftership_tracking = fields.Char(string="Aftership ID")
+    aftership_url = fields.Char(
+        string="Aftership URL", compute="_compute_aftership_url"
+    )
+
+    @api.depends("aftership_tracking")
+    def _compute_aftership_url(self):
+        for record in self:
+            record.aftership_url = (
+                "https://admin.aftership.com/shipments/%s" % record.aftership_tracking
+            )
 
     def action_reserve_force(self):
         waiting = self.move_lines.filtered(lambda l: l.state == "waiting")
