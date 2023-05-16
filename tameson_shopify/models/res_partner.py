@@ -92,10 +92,12 @@ class ResPartner(models.Model):
         self.ensure_one()
         address = []
         childs = self.child_ids or self
+        count = 1
         for child in childs:
-            data = {
+            address.append(
+                {
                     "address1": child.street,
-                    "address2": child.street2 or "",
+                    "address2": (child.street2 or "") + "%d" % count,
                     "city": child.city,
                     "country": child.with_context(lang="en_US").country_id.name,
                     "first_name": child.name.split(" ")[0] if child.name else "",
@@ -110,8 +112,8 @@ class ResPartner(models.Model):
                     "country_code": child.country_id.code,
                     "default": False,
                 }
-            if data not in address:
-                address.append(data)
+            )
+            count += 1
         return address
 
     def shopify_get_contact_data(self):
