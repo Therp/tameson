@@ -97,7 +97,7 @@ class ResPartner(models.Model):
             address.append(
                 {
                     "address1": child.street,
-                    "address2": (child.street2 or "") + "%d" % count,
+                    "test": (child.street2 or "") + "%d" % count,
                     "city": child.city,
                     "country": child.with_context(lang="en_US").country_id.name,
                     "first_name": child.name.split(" ")[0] if child.name else "",
