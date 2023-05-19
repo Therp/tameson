@@ -50,15 +50,14 @@ class StockPicking(models.Model):
             )
 
     def _compute_carrier_tracking_url(self):
-        for picking in self:
+        for picking in self.filtered(lambda l: l.aftership_tracking):
             if picking.aftership_tracking:
                 picking.carrier_tracking_url = (
                     "https://track.tameson.com/%s" % picking.carrier_tracking_ref
                 )
-            else:
-                picking.carrier_tracking_url = super(
-                    StockPicking, picking
-                )._compute_carrier_tracking_url()
+        picking.carrier_tracking_url = super(
+            StockPicking, self.filtered(lambda l: not l.aftership_tracking)
+        )._compute_carrier_tracking_url()
 
     def action_reserve_force(self):
         waiting = self.move_lines.filtered(lambda l: l.state == "waiting")
