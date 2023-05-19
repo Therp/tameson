@@ -55,7 +55,7 @@ class StockPicking(models.Model):
                 picking.carrier_tracking_url = (
                     "https://track.tameson.com/%s" % picking.carrier_tracking_ref
                 )
-        picking.carrier_tracking_url = super(
+        super(
             StockPicking, self.filtered(lambda l: not l.aftership_tracking)
         )._compute_carrier_tracking_url()
 
