@@ -39,7 +39,7 @@ class StockPicking(models.Model):
     ignore_invoice_creation = fields.Boolean()
     aftership_tracking = fields.Char(string="Aftership ID")
     aftership_url = fields.Char(
-        string="Aftership URL", compute="_compute_aftership_url"
+        string="Aftership URL", compute="_compute_aftership_url", copy=False
     )
 
     @api.depends("aftership_tracking")
