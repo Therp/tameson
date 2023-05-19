@@ -39,7 +39,7 @@ class StockPicking(models.Model):
     ignore_invoice_creation = fields.Boolean()
     aftership_tracking = fields.Char(string="Aftership ID")
     aftership_url = fields.Char(
-        string="Aftership URL", compute="_compute_aftership_url"
+        string="Aftership URL", compute="_compute_aftership_url", copy=False
     )
 
     @api.depends("aftership_tracking")
@@ -48,6 +48,16 @@ class StockPicking(models.Model):
             record.aftership_url = (
                 "https://admin.aftership.com/shipments/%s" % record.aftership_tracking
             )
+
+    def _compute_carrier_tracking_url(self):
+        for picking in self.filtered(lambda l: l.aftership_tracking):
+            if picking.aftership_tracking:
+                picking.carrier_tracking_url = (
+                    "https://track.tameson.com/%s" % picking.carrier_tracking_ref
+                )
+        super(
+            StockPicking, self.filtered(lambda l: not l.aftership_tracking)
+        )._compute_carrier_tracking_url()
 
     def action_reserve_force(self):
         waiting = self.move_lines.filtered(lambda l: l.state == "waiting")

@@ -34,15 +34,11 @@ class StockPicking(models.Model):
             record.t_aa_name = "%s - %s" % (record.sale_id.name, record.name)
 
     def _compute_carrier_tracking_url(self):
-        for picking in self:
-            if picking.t_aa_track_url:
-                picking.carrier_tracking_url = picking.t_aa_track_url
-            else:
-                picking.carrier_tracking_url = (
-                    picking.carrier_id.get_tracking_link(picking)
-                    if picking.carrier_id and picking.carrier_tracking_ref
-                    else False
-                )
+        for picking in self.filtered(lambda l: l.t_aa_track_url):
+            picking.carrier_tracking_url = picking.t_aa_track_url
+        super(
+            StockPicking, self.filtered(lambda l: not l.t_aa_track_url)
+        )._compute_carrier_tracking_url()
 
     def action_cancel(self):
         message = "Please check the transfer from ActiveAnts and check the 'AA Allow Cancellation' checkbox \n\
