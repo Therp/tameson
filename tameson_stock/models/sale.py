@@ -1,5 +1,4 @@
 from odoo import _, api, fields, models
-from odoo.tools import float_compare
 
 # function to include AA stock difference report in mail 'ODOO data to check'
 # class SaleOrder(models.Model):
@@ -15,18 +14,6 @@ from odoo.tools import float_compare
 # 'orders': aa_data
 # })
 # return res
-
-
-def warehouse_data(env, warehouses, product_id):
-    quant = env["stock.quant"]
-    data = {}
-    for warehouse in warehouses:
-        if product_id:
-            qty = quant._get_available_quantity(product_id, warehouse.lot_stock_id)
-        else:
-            qty = 0
-        data["stock_%d" % warehouse.id] = qty
-    return data
 
 
 class SaleOrderLine(models.Model):
@@ -57,44 +44,15 @@ class SaleOrderLine(models.Model):
     )
 
     def _get_wh_stock(self):
-        warehouses = self.env["stock.warehouse"].search([])
+        quant = self.env["stock.quant"]
         for line in self:
-            line.update(warehouse_data(self.env, warehouses, line.product_id))
+            loc1 = self.env["stock.warehouse"].browse(1).sudo().lot_stock_id
+            loc2 = self.env["stock.warehouse"].browse(2).sudo().lot_stock_id
+            pid = line.product_id
+            line.stock_1 = quant._get_available_quantity(pid, loc1) if pid else 0
+            line.stock_2 = quant._get_available_quantity(pid, loc2) if pid else 0
 
     @api.onchange("product_id")
     def _onchange_product_warehouse(self):
         if self.product_id.wh_id:
             self.warehouse_id = self.product_id.wh_id
-
-    @api.onchange("product_uom_qty", "product_uom", "product_id")
-    def _onchange_product_id_check_min_availability(self):
-        if not self.product_id or not self.product_uom_qty or not self.product_uom:
-            return {}
-        if self.product_id.type == "product":
-            precision = self.env["decimal.precision"].precision_get(
-                "Product Unit of Measure"
-            )
-            if (
-                float_compare(
-                    self.product_id.minimal_qty_available,
-                    self.product_uom_qty,
-                    precision_digits=precision,
-                )
-                == -1
-            ):
-                warning_mess = {
-                    "title": _("Not enough inventory!"),
-                    "message": _(
-                        "You plan to sell %.2f %s but the minimum qty available is %.2f %s !\nThe current stock on hand is %.2f %s."
-                    )
-                    % (
-                        self.product_uom_qty,
-                        self.product_uom.name,
-                        self.product_id.minimal_qty_available,
-                        self.product_id.uom_id.name,
-                        self.product_id.qty_available,
-                        self.product_id.uom_id.name,
-                    ),
-                }
-                return {"warning": warning_mess}
-        return {}
