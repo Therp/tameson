@@ -140,7 +140,7 @@ ${object.partner_id.name},
         <field name="binding_model_id" ref="stock.model_stock_picking" />
         <field name="code">
 if records:
-        action = records.action_mass_mail()
+action = records.action_mass_mail()
         </field>
         <field name="state">code</field>
     </record>

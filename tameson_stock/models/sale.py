@@ -16,6 +16,18 @@ from odoo import _, api, fields, models
 # return res
 
 
+def warehouse_data(env, warehouses, product_id):
+    quant = env["stock.quant"]
+    data = {}
+    for warehouse in warehouses:
+        if product_id:
+            qty = quant._get_available_quantity(product_id, warehouse.lot_stock_id)
+        else:
+            qty = 0
+        data["stock_%d" % warehouse.id] = qty
+    return data
+
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
@@ -43,15 +55,10 @@ class SaleOrderLine(models.Model):
         compute="_get_wh_stock", string="S-AA", digits="Product Unit of Measure"
     )
 
-    @api.depends("product_id")
     def _get_wh_stock(self):
-        quant = self.env["stock.quant"]
+        warehouses = self.env["stock.warehouse"].search([])
         for line in self:
-            loc1 = self.env["stock.warehouse"].browse(1).sudo().lot_stock_id
-            loc2 = self.env["stock.warehouse"].browse(2).sudo().lot_stock_id
-            pid = line.product_id
-            line.stock_1 = quant._get_available_quantity(pid, loc1) if pid else 0
-            line.stock_2 = quant._get_available_quantity(pid, loc2) if pid else 0
+            line.update(warehouse_data(self.env, warehouses, line.product_id))
 
     @api.onchange("product_id")
     def _onchange_product_warehouse(self):
