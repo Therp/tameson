@@ -43,6 +43,7 @@ class SaleOrderLine(models.Model):
         compute="_get_wh_stock", string="S-AA", digits="Product Unit of Measure"
     )
 
+    @api.depends("product_id")
     def _get_wh_stock(self):
         quant = self.env["stock.quant"]
         for line in self:
