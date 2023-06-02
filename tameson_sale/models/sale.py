@@ -81,10 +81,11 @@ class SaleOrder(models.Model):
                 self.client_order_ref or not self.partner_id.is_company
             )
 
+    @api.depends("order_line.customer_lead")
     def get_expected_date_warning(self):
         for record in self:
             record.expected_date_warning = (
-                max(record.mapped("order_line.customer_lead")) > 4
+                max(record.mapped("order_line.customer_lead") or [0]) > 4
             )
 
     @api.depends("partner_id")
