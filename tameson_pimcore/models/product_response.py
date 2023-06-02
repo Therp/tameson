@@ -195,13 +195,17 @@ FROM pimcore_product_response_line rl
             line.create_bom()
 
     def job_archive_unarchive(self):
-        unpublished_products = self.env["product.template"].search(
+        unpublished = self.env["product.template"].search(
+            [("published", "=", False), ("pimcore_id", "!=", False)]
+        )
+        use_up = self.env["product.template"].search(
             [
                 ("t_use_up,", "!=", False),
                 ("pimcore_id", "!=", False),
                 ("minimal_qty_available_stored", "<=", 0),
             ]
         )
+        unpublished_products = unpublished + use_up
         unpublished_product_variants = unpublished_products.mapped(
             "product_variant_ids"
         )
