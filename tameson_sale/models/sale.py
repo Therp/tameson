@@ -62,6 +62,36 @@ class SaleOrder(models.Model):
     )
     fiscal_position_id = fields.Many2one(copy=False)
     supposed_fiscal_match = fields.Boolean(compute="get_supposed_fiscal")
+    customer_child_count = fields.Integer(compute="get_customer_child_count")
+    customer_ref_warning = fields.Boolean(compute="get_customer_ref_warning")
+    expected_date_warning = fields.Boolean(compute="get_expected_date_warning")
+    payment_term_warning = fields.Boolean(compute="get_payment_term_warning")
+
+    @api.depends("partner_id", "payment_term_id")
+    def get_payment_term_warning(self):
+        for record in self:
+            record.payment_term_warning = (
+                self.payment_term_id != self.partner_id.property_payment_term_id
+            )
+
+    @api.depends("partner_id.is_company", "client_order_ref")
+    def get_customer_ref_warning(self):
+        for record in self:
+            record.customer_ref_warning = not (
+                self.client_order_ref or not self.partner_id.is_company
+            )
+
+    @api.depends("order_line.customer_lead")
+    def get_expected_date_warning(self):
+        for record in self:
+            record.expected_date_warning = (
+                max(record.mapped("order_line.customer_lead") or [0]) > 4
+            )
+
+    @api.depends("partner_id")
+    def get_customer_child_count(self):
+        for record in self:
+            record.customer_child_count = len(record.partner_id.child_ids)
 
     def _send_order_confirmation_mail(self):
         if self.env.context.get("skip_confirmation_email", False):
