@@ -11,9 +11,12 @@
             name="source_so_id"
             attrs="{'invisible': [('source_so_id','=',False)]}"
           />
+
+                    <field name="t_aa_id" invisible="1" />
                     <field
-            name="t_aa_id"
+            name="t_aa_url"
             attrs="{'invisible': [('t_aa_id','=',False)]}"
+            widget="url"
           />
                     <field
             name="t_aa_allow_cancel"
@@ -23,7 +26,7 @@
                     <field
             name="t_aa_track_url"
             attrs="{'invisible': [('t_aa_track_url','=',False)]}"
-            widget="CopyClipboardChar"
+            widget="url"
           />
                 </field>
             </field>

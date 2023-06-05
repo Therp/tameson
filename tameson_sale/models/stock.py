@@ -11,7 +11,8 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     t_aa_name = fields.Char("Active Ant Name", compute="_get_t_aa_name")
-    t_aa_id = fields.Char("Active Ant ID", readonly=True, copy=False)
+    t_aa_id = fields.Char("Active Ant ID", copy=False)
+    t_aa_url = fields.Char("ActiveAnt URL", compute="get_t_aa_url")
     t_aa_allow_cancel = fields.Boolean(
         string="AA Allow Cancellation",
         default=False,
@@ -20,6 +21,13 @@ class StockPicking(models.Model):
     )
     t_aa_track_url = fields.Char("Active Ant tracktraceUrl", readonly=True, copy=False)
     source_so_id = fields.Many2one(comodel_name="sale.order", compute="_get_source_so")
+
+    @api.depends("t_aa_id")
+    def get_t_aa_url(self):
+        for record in self:
+            record.t_aa_url = (
+                "https://maya.activeants.nl/en/client/order/detail/%s" % self.t_aa_id
+            )
 
     @api.depends("origin")
     def _get_source_so(self):

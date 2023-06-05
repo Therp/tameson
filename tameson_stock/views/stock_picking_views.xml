@@ -87,7 +87,6 @@
                 name="ignore_invoice_creation"
                 widget="boolean_toggle"
               />
-                            <field name="aftership_url" widget="url" />
                         </group>
                     </group>
                 </page>
@@ -113,6 +112,14 @@
           name="options"
         >{'no_create': True, 'no_open': True, 'no_create_edit': True}</attribute>
             </xpath>
+            <field name="origin" position="after">
+                <field name="aftership_tracking" invisible="1" />
+                <field
+          name="aftership_url"
+          widget="url"
+          attrs="{'invisible': [('aftership_tracking','=',False)] }"
+        />
+            </field>
         </field>
     </record>
 
