@@ -16,11 +16,11 @@ from odoo.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
 
-CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}  ## currency ids in Odoo DB
+CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}  # currency ids in Odoo DB
 PRICELIST_DICT = {
     "USD": 3,
     "GBP": 2,
-}  ## pricelists ids in Odoo DB
+}  # pricelists ids in Odoo DB
 
 
 def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
@@ -144,7 +144,13 @@ WHERE id NOT IN
     WHERE state = 'draft'
     GROUP BY sku
 ) and state = 'draft';
-SELECT rl.id, pt.id, rl.modification_date, coalesce(pt.modification_date, 0), rl.bom, rl.bom_import_done, rl.sku
+SELECT rl.id,
+pt.id,
+rl.modification_date,
+coalesce(pt.modification_date, 0),
+rl.bom,
+rl.bom_import_done,
+rl.sku
 FROM pimcore_product_response_line rl
     LEFT JOIN product_template pt on lower(rl.sku) = lower(pt.default_code)
     WHERE rl.state = 'draft';"""
@@ -154,18 +160,18 @@ FROM pimcore_product_response_line rl
         updated = [row for row in data if row[2] > row[3]]
         _logger.info("Skipped lines: %d" % len(skipped))
         self.env["pimcore.product.response.line"].browse(skipped).unlink()
-        ## jobs for import/update products
+        # jobs for import/update products
         for pos in range(0, len(updated), chunk_size):
             self.with_delay().job_import_product_data(updated[pos : pos + chunk_size])
-        ## job for import bom for lines with bom data not already imported
+        # job for import bom for lines with bom data not already imported
         bom_lines = [row[0] for row in updated if row[4] and not row[5]]
         for pos in range(0, len(bom_lines), chunk_size):
             self.with_delay().job_import_bom(bom_lines[pos : pos + chunk_size])
-        ## delete older than 14 days data
+        # delete older than 14 days data
         self.search(
             [("create_date", "<", datetime.now() - relativedelta(days=14))]
         ).unlink()
-        ## archive/unarchive products
+        # archive/unarchive products
         do_archive = (
             self.env["ir.config_parameter"]
             .sudo()
@@ -189,9 +195,17 @@ FROM pimcore_product_response_line rl
             line.create_bom()
 
     def job_archive_unarchive(self):
-        unpublished_products = self.env["product.template"].search(
+        unpublished = self.env["product.template"].search(
             [("published", "=", False), ("pimcore_id", "!=", False)]
         )
+        use_up = self.env["product.template"].search(
+            [
+                ("t_use_up,", "!=", False),
+                ("pimcore_id", "!=", False),
+                ("minimal_qty_available_stored", "<=", 0),
+            ]
+        )
+        unpublished_products = unpublished + use_up
         unpublished_product_variants = unpublished_products.mapped(
             "product_variant_ids"
         )
@@ -438,8 +452,6 @@ class PimcoreProductResponseLine(models.Model):
                 end=0,
             )
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
-        # search_or_add_pricelist_item(PRICELIST_DICT['GBP'], product, self.gbp)
-        # search_or_add_pricelist_item(PRICELIST_DICT['USD'], product, self.usd)
         write_vals = {"state": "updated"}
         product.write(vals)
         self.write(write_vals)
