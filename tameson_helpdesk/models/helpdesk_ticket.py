@@ -15,6 +15,56 @@ class ModelName(models.Model):
     restock_fee_limit_warning = fields.Boolean(compute="_get_restock_fee_limit")
     restock_fee_limit = fields.Char(compute="_get_restock_fee_limit")
 
+    def action_mail_to_customer(self):
+        composer_form_view_id = self.env.ref(
+            "mail.email_compose_message_wizard_form"
+        ).id
+        template_id = (
+            self.env["mail.template"]
+            .search([("model_id.model", "=", self._name)], limit=1)
+            .id
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "view_id": composer_form_view_id,
+            "target": "new",
+            "context": {
+                "default_composition_mode": "comment",
+                "default_res_id": self.ids[0],
+                "default_model": "helpdesk.ticket",
+                "default_use_template": bool(template_id),
+                "default_template_id": template_id,
+                "active_ids": self.ids,
+            },
+        }
+
+    def action_mail_to_aa(self):
+        composer_form_view_id = self.env.ref(
+            "mail.email_compose_message_wizard_form"
+        ).id
+        template_id = (
+            self.env["mail.template"]
+            .search([("name", "ilike", 'ActiveAnts')], limit=1)
+            .id
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "view_id": composer_form_view_id,
+            "target": "new",
+            "context": {
+                "default_composition_mode": "mass_mail",
+                "default_res_id": self.ids[0],
+                "default_model": "helpdesk.ticket",
+                "default_use_template": bool(template_id),
+                "default_template_id": template_id,
+                "active_ids": self.ids,
+            },
+        }
+
     def _get_restock_fee_limit(self):
         restock_fee_limit = (
             self.env["ir.config_parameter"].sudo().get_param("restock_fee_limit", 0)
