@@ -505,6 +505,7 @@ class PimcoreProductResponseLine(models.Model):
             "sticker_barcode": self.sticker_barcode,
             "supplier_shipping_type": self.supplier_shipping_type,
             "additional_cost": self.additional_cost,
+            "fragile": self.fragile,
         }
         if not self.bom:
             data.update(
