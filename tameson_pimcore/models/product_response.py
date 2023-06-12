@@ -356,6 +356,7 @@ class PimcoreProductResponseLine(models.Model):
     supplier_shipping_type = fields.Char()
     supplier_package_qty = fields.Integer()
     additional_cost = fields.Char()
+    fragile = fields.Boolean()
 
     @api.model_create_multi
     def create(self, vals):
