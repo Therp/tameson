@@ -71,8 +71,9 @@ class SaleOrder(models.Model):
     def get_payment_term_warning(self):
         for record in self:
             record.payment_term_warning = (
-                self.payment_term_id != self.partner_id.property_payment_term_id or
-                self.payment_term_id.id == 52
+                self.partner_id and
+                (self.payment_term_id != self.partner_id.property_payment_term_id or
+                    self.payment_term_id.id == 52)
             )
 
     @api.depends("partner_id.is_company", "client_order_ref")
