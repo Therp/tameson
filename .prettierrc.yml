@@ -1,7 +1,13 @@
 # Defaults for all prettier-supported languages.
 # Prettier will complete this with settings from .editorconfig file.
 bracketSpacing: false
-printWidth: 88
+# customer does not want lines broken up. this length will ensure that 
+# tags with long attibutes list may remain unbroken
+printWidth: 400
+tabWidth: 4
+useTabs: false
+# put the closing > of a multiline HTML on last line, not alone on newline.
+bracketSameLine: true
 proseWrap: always
 semi: true
 trailingComma: "es5"
