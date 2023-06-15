@@ -464,7 +464,7 @@ class PimcoreProductResponseLine(models.Model):
             commodity_code = self.env["account.intrastat.code"].create(
                 {
                     "type": "commodity",
-                    "code": self.intrastat[:8],
+                    "code": (self.intrastat or "")[:8],
                     "description": "new from pimcore",
                 }
             )
