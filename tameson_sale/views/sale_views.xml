@@ -47,7 +47,7 @@
           role="alert"
           attrs="{'invisible': [('payment_term_warning','=',False)]}"
         >
-                    Notice: Payment term different than customer payment term.
+                    Notice: Payment term different than customer payment term or temporary.
                 </div>
                 <div />
                 <label for="commitment_date" string="Delivery Date" />
