@@ -11,8 +11,11 @@ class ProductTemplateInherit(models.Model):
 
         default_code_index = "product_template_default_code_unique_idx"
         if not tools.index_exists(self._cr, default_code_index):
-            self._cr.execute(
-                "CREATE UNIQUE INDEX IF NOT EXISTS {} ON {} ((lower(default_code))) WHERE active = true AND default_code != '' AND default_code IS NOT NULL".format(
+            self._cr.execute("""
+CREATE UNIQUE INDEX IF NOT EXISTS {} ON {} ((lower(default_code))) 
+WHERE active = true 
+AND default_code != '' 
+AND default_code IS NOT NULL""".format(
                     default_code_index, self._table
                 )
             )
@@ -34,7 +37,8 @@ class ProductTemplateInherit(models.Model):
         compute="_compute_supplierinfo_fields",
         store=True,
     )
-    t_aa_pack_size = fields.Float(string="Pack size", compute="_get_aa_packing_size")
+    t_aa_pack_size = fields.Float(
+        string="Pack size", compute="_get_aa_packing_size")
 
     t_location = fields.Char(string=_("Location Tameson"), required=False)
 
@@ -56,7 +60,7 @@ class ProductTemplateInherit(models.Model):
     t_length = fields.Float(string=_("Length (in mm)"), required=False)
     t_width = fields.Float(string=_("Width (in mm)"), required=False)
 
-    ## Pimcore fields
+    # Pimcore fields
     modification_date = fields.Float()
     pimcore_id = fields.Char("Pimcore ID")
     brand_name = fields.Char("Brand name")
@@ -78,16 +82,20 @@ class ProductTemplateInherit(models.Model):
     supplier_series = fields.Char()
     supplier_shipping_type = fields.Char()
     additional_cost = fields.Char()
-    ## End
-    extra_shipping_fee_usd = fields.Float(string="Extra shipping fee USD", default=0.0)
-    extra_shipping_fee_gbp = fields.Float(string="Extra shipping fee GBP", default=0.0)
+    fragile = fields.Boolean()
+    # End
+    extra_shipping_fee_usd = fields.Float(
+        string="Extra shipping fee USD", default=0.0)
+    extra_shipping_fee_gbp = fields.Float(
+        string="Extra shipping fee GBP", default=0.0)
     margin_eur_group = fields.Float()
     sale_price_usd = fields.Float(string="Sale Price USD")
     sale_price_gbp = fields.Float(string="Sale Price GBP")
 
     def cron_compute_all_bom_price(self):
         boms = (
-            self.env["mrp.bom"].search([]).filtered(lambda b: b.product_tmpl_id.active)
+            self.env["mrp.bom"].search([]).filtered(
+                lambda b: b.product_tmpl_id.active)
         )
         for bom in boms:
             product_tmpl_id = bom.product_tmpl_id
@@ -102,7 +110,11 @@ class ProductTemplateInherit(models.Model):
             else:
                 pt.t_aa_pack_size = 1
 
-    @api.depends("seller_ids.name", "seller_ids.product_code", "seller_ids.delay")
+    @api.depends(
+            "seller_ids.name", 
+            "seller_ids.product_code", 
+            "seller_ids.delay"
+            )
     def _compute_supplierinfo_fields(self):
         for product in self:
             first_supplier = product.seller_ids.sorted()[:1]
@@ -140,17 +152,23 @@ SELECT id from mrp_bom
     def set_non_bom_lead(self):
         for pt in self:
             delay = pt.seller_ids[:1].delay
-            if not float_is_zero(pt.minimal_qty_available_stored, precision_digits=2):
+            if not float_is_zero(pt.minimal_qty_available_stored,
+                                 precision_digits=2):
                 delay_array = [
-                    {"lead_time": 1, "max_qty": pt.minimal_qty_available_stored},
+                    {"lead_time": 1, 
+                     "max_qty": pt.minimal_qty_available_stored},
                     {
                         "lead_time": delay + 1,
-                        "max_qty": pt.minimal_qty_available_stored + pt.max_qty_order,
+                        "max_qty": (
+                            pt.minimal_qty_available_stored +
+                            pt.max_qty_order),
                     },
                 ]
                 delay = 0
             else:
-                delay_array = [{"lead_time": delay + 1, "max_qty": pt.max_qty_order}]
+                delay_array = [{
+                    "lead_time": delay + 1,
+                    "max_qty": pt.max_qty_order}]
             pt.write(
                 {
                     "t_customer_lead_time": delay + 1,
@@ -161,10 +179,12 @@ SELECT id from mrp_bom
     def set_all_margin_eur_group(self, n=25000):
         products = self.search([])
         for pos in range(0, len(products), n):
-            products[pos : pos + n].with_delay().set_margin_eur_group()
+            products[pos: pos + n].with_delay().set_margin_eur_group()
 
     def set_margin_eur_group(self):
         for product in self:
             margin = (product.list_price - product.standard_price) / 10
-            if float_compare(product.margin_eur_group, margin, precision_digits=2) != 0:
+            if float_compare(
+                product.margin_eur_group,
+                    margin, precision_digits=2) != 0:
                 product.write({"margin_eur_group": margin})

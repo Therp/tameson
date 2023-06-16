@@ -102,6 +102,7 @@ product_nodes = {
     },
     "supplier_package_qty": {"field": "SupplierPackageQty", "getter": static_getter},
     "additional_cost": {"field": "AdditionalCost", "getter": static_getter},
+    "fragile": {"field": "Fragile", "getter": static_getter},
 }
 
 

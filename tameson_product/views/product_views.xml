@@ -54,6 +54,7 @@
                             <field name="non_returnable" />
                             <field name="supplier_series" />
                             <field name="supplier_shipping_type" />
+                            <field name="fragile" />
                         </group>
                     </group>
                 </page>
