@@ -40,7 +40,7 @@ class ContactCreationWizard(models.TransientModel):
 
     @api.depends('country', 'is_individual')
     def get_vat_required(self):
-        country_ids = self.env.ref('base.europe').country_ids.ids
+        country_ids = self.env.ref('__export__.europe_excluding_nl').country_ids.ids
         for record in self:
             record.vat_required = not record.is_individual and\
                 record.country.id in country_ids
