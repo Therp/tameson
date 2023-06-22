@@ -8,69 +8,36 @@
         <field name="arch" type="xml">
             <xpath expr="//form[1]/*[1]" position="before">
                 <field name="supposed_fiscal_match" invisible="1" />
-                <div
-          class="alert alert-warning"
-          role="alert"
-          attrs="{'invisible': [('supposed_fiscal_match', '=', False)]}"
-        >
-                    Please double check main contact fiscal position, VAT number and SO fiscal position. <field
-            name="supposed_fiscal_id"
-          />
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('supposed_fiscal_match', '=', False)]}">
+                    Please double check main contact fiscal position, VAT number and SO fiscal position. <field name="supposed_fiscal_id" />
                 </div>
             </xpath>
             <xpath expr="//header/button[last()]" position="after">
-                <button
-          name="action_create_product"
-          string="Create Custom Product"
-          type="object"
-        />
+                <button name="action_create_product" string="Create Custom Product" type="object" />
             </xpath>
-            <xpath
-        expr="//header/button[@name='%(sale.action_view_sale_advance_payment_inv)d'][2]"
-        position="replace"
-      >
+            <xpath expr="//header/button[@name='%(sale.action_view_sale_advance_payment_inv)d'][2]" position="replace">
                 <field name="payment_term_name" invisible="1" />
-                <button
-          name="%(sale.action_view_sale_advance_payment_inv)d"
-          string="Create Invoice"
-          type="action"
-          context="{'default_advance_payment_method': 'percentage'}"
-          attrs="{'invisible': ['|',('invoice_status', '!=', 'no'),
-                               '|',('state', '!=', 'sale'),('state', '!=', 'draft'),('payment_term_name','!=','Prepayment')]}"
-        />
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice" type="action" context="{'default_advance_payment_method': 'percentage'}" attrs="{'invisible': ['|',('invoice_status', '!=', 'no'),
+                               '|',('state', '!=', 'sale'),('state', '!=', 'draft'),('payment_term_name','!=','Prepayment')]}" />
             </xpath>
 
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="payment_term_warning" invisible="True" />
-                <div
-          class="alert alert-danger"
-          role="alert"
-          attrs="{'invisible': [('payment_term_warning','=',False)]}"
-        >
-                    Notice: Payment term different than customer payment term or temporary.
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('payment_term_warning','=',False)]}">
+                    Notice: Payment term different than customer payment term.
                 </div>
                 <div />
                 <label for="commitment_date" string="Delivery Date" />
                 <div class="o_row">
-                    <field name="commitment_date" /> <span
-            class="text-muted"
-          >Expected: <field name="expected_date" widget="date" /></span>
+                    <field name="commitment_date" /> <span class="text-muted">Expected: <field name="expected_date" widget="date" /></span>
                 </div>
                 <field name="expected_date_warning" invisible="True" />
-                <div
-          class="alert alert-danger"
-          role="alert"
-          attrs="{'invisible': [('expected_date_warning','=',False)]}"
-        >
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('expected_date_warning','=',False)]}">
                     Notice: The lead time is &gt;4 days from now, review if customer is aware of this.
                 </div>
                 <field name="client_order_ref" />
                 <field name="customer_ref_warning" invisible="True" />
-                <div
-          class="alert alert-danger"
-          role="alert"
-          attrs="{'invisible': [('customer_ref_warning','=',False)]}"
-        >
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('customer_ref_warning','=',False)]}">
                     Notice: order does not have customer reference.
                 </div>
             </xpath>
@@ -79,83 +46,46 @@
             </field>
             <xpath expr="//field[@name='fiscal_position_id']" position="after">
                 <field name="t_done_pickings" invisible="1" />
-                <field
-          name="t_invoice_policy"
-          attrs="{'readonly': [('t_done_pickings', '!=', [])]}"
-        />
-                <field
-          name="bypass_credit_limit"
-          groups="sales_team.group_sale_manager,account.group_account_manager"
-        />
+                <field name="t_invoice_policy" attrs="{'readonly': [('t_done_pickings', '!=', [])]}" />
+                <field name="bypass_credit_limit" groups="sales_team.group_sale_manager,account.group_account_manager" />
             </xpath>
             <xpath expr="//page[last()]" position="after">
                 <page string="Help">
-                    <button
-            name="action_set_help"
-            string="Edit help"
-            type="object"
-            class="oe_link"
-            groups="sales_team.group_sale_manager"
-          />
+                    <button name="action_set_help" string="Edit help" type="object" class="oe_link" groups="sales_team.group_sale_manager" />
                     <field name="help_text" />
                 </page>
             </xpath>
             <xpath expr="//field[@name='order_line']" position="attributes">
-                <attribute
-          name="attrs"
-        >{'readonly': [('partner_id','=',False)]}</attribute>
+                <attribute name="attrs">{'readonly': [('partner_id','=',False)]}</attribute>
             </xpath>
-            <xpath
-        expr="//field[@name='order_line']/tree/field[@name='product_id']"
-        position="attributes"
-      >
-                <attribute
-          name="options"
-        >{'no_create': True, 'no_create_edit': True}</attribute>
+            <field name="partner_id" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True}</attribute>
+            </field>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True}</attribute>
             </xpath>
             <xpath expr="//notebook[1]" position="before">
                 <field name="any_non_returnable" invisible="True" />
                 <field name="any_use_up" invisible="True" />
                 <field name="weight_over_25" invisible="True" />
-                <h2
-          class="text-danger"
-          attrs="{'invisible': [('any_non_returnable','=',False)]}"
-        >
+                <h2 class="text-danger" attrs="{'invisible': [('any_non_returnable','=',False)]}">
                     Warning: <field name="non_returnable_skus" /> is non-returnable.
                 </h2>
-                <h2
-          class="text-danger"
-          attrs="{'invisible': [('weight_over_25','=',False)]}"
-        >
+                <h2 class="text-danger" attrs="{'invisible': [('weight_over_25','=',False)]}">
                     Warning: Order weight is over 25 KG.
                 </h2>
-                <h2
-          class="text-danger"
-          attrs="{'invisible': [('any_use_up','=',False)]}"
-        >
-                    Warning: <field name="uu_skus" /> will be discontinued. <field
-            name="uu_replacement_skus_en"
-          />
+                <h2 class="text-danger" attrs="{'invisible': [('any_use_up','=',False)]}">
+                    Warning: <field name="uu_skus" /> will be discontinued. <field name="uu_replacement_skus_en" />
                 </h2>
             </xpath>
             <xpath expr="//button[@name='action_view_invoice']" position="before">
-                <button
-          type="object"
-          name="action_open_opportunity"
-          class="oe_stat_button"
-          icon="fa-dollar"
-          attrs="{'invisible': [('opportunity_id', '=', False)]}"
-        >
+                <button type="object" name="action_open_opportunity" class="oe_stat_button" icon="fa-dollar" attrs="{'invisible': [('opportunity_id', '=', False)]}">
                     Opportunity
                 </button>
             </xpath>
             <field name="partner_shipping_id" position="after">
                 <field name="customer_child_count" invisible="True" />
-                <div
-          class="alert alert-danger"
-          role="alert"
-          attrs="{'invisible': [('customer_child_count','&lt;',4)]}"
-        >
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('customer_child_count','&lt;',4)]}">
                     More than 3 addresses on this contact, please double check.
                 </div>
             </field>
@@ -180,29 +110,18 @@
         <field name="inherit_id" ref="product.product_pricelist_item_form_view" />
         <field name="arch" type="xml">
             <field name="fixed_price" position="replace">
-                <field
-          name="is_currency_factor"
-          attrs="{'invisible':[('compute_price', '!=', 'fixed')]}"
-        />
-                <field
-          name="fixed_price"
-          attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','=',True)]}"
-        />
-                <field
-          name="currency_factor"
-          attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"
-        />
-                <field
-          name="is_usd_extra"
-          widget="boolean_toggle"
-          attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"
-        />
-                <field
-          name="shipping_fee_factor"
-          attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}"
-        />
+                <field name="is_currency_factor" attrs="{'invisible':[('compute_price', '!=', 'fixed')]}" />
+                <field name="fixed_price" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','=',True)]}" />
+                <field name="currency_factor" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}" />
+                <field name="is_usd_extra" widget="boolean_toggle" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}" />
+                <field name="shipping_fee_factor" attrs="{'invisible':['|',('compute_price', '!=', 'fixed'),('is_currency_factor','!=',True)]}" />
             </field>
         </field>
     </record>
-
+    <record id="menu_contact_creation_wizard" model="ir.ui.menu">
+        <field name="name">Create contact</field>
+        <field name="sequence" eval="10" />
+        <field name="action" ref="tameson_contact.action_contact_creation_wizard_act_window" />
+        <field name="parent_id" ref="sale.sale_menu_root" />
+    </record>
 </odoo>
