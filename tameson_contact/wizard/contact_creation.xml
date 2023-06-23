@@ -27,7 +27,7 @@
                             <field name="email" required="1" />
                             <field name="country" required="1" />
                             <field name="state" domain="[('country_id','=',country)]" />
-                            <field name="vat_bypass" />
+                            <field name="vat_bypass" attrs="{'invisible': [('vat_required','=',False)]}" />
                             <field name="vat" attrs="{'invisible': [('vat_bypass','=',True)], 'required': [('vat_bypass','=',False),('vat_required','=',True)]}" />
                         </group>
                         <group>
