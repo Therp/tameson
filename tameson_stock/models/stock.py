@@ -36,11 +36,16 @@ class StockPicking(models.Model):
         compute="_t_payment_status_get", string=_("Fully paid"), store=True
     )
     unknown_date = fields.Boolean()
+    unknown_date_incoming = fields.Boolean()
     ignore_invoice_creation = fields.Boolean()
     aftership_tracking = fields.Char(string="Aftership ID")
     aftership_url = fields.Char(
         string="Aftership URL", compute="_compute_aftership_url", copy=False
     )
+
+    @api.onchange("unknown_date_incoming")
+    def _onchange_unknown_date_incoming(self):
+        self.move_lines.update({"unknown_date_incoming": self.unknown_date_incoming})
 
     @api.depends("aftership_tracking")
     def _compute_aftership_url(self):

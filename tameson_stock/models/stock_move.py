@@ -19,6 +19,7 @@ class StockMove(models.Model):
     picking_move_type = fields.Selection(
         related="picking_id.move_type", stored=True, index=True
     )
+    unknown_date_incoming = fields.Boolean()
 
     def write(self, vals):
         propagated_date_field = False
@@ -32,9 +33,12 @@ class StockMove(models.Model):
             old_date = dates and max(dates)
             vals.update(old_date_expected=old_date)
         res = super(StockMove, self).write(vals)
-        ## Compare new date on Incoming operation with SO delivery/expected date
-        ## Dismiss exception posted on Picking if not later than SO delivery/expected date + propagate_date_minimum_delta
-        ## also dismiss manual date change exception if any
+        # Compare new date on Incoming operation with
+        # SO delivery/expected date
+        # Dismiss exception posted on Picking
+        # if not later than SO
+        # delivery/expected date + propagate_date_minimum_delta
+        # also dismiss manual date change exception if any
         if propagated_date_field:
             for move in self.mapped("move_dest_ids"):
                 auto_activity = move.picking_id.activity_ids.filtered(
@@ -48,7 +52,7 @@ class StockMove(models.Model):
                 )
                 if (
                     not so_date
-                ):  ## commitment_date, expected_date value not set for canceled sale orders
+                ):  # commitment_date, expected_date value not set for canceled sale orders
                     continue
                 order_date = so_date + relativedelta(
                     days=self[:1].propagate_date_minimum_delta
@@ -62,7 +66,25 @@ class StockMove(models.Model):
                 )
                 if manu_activity:
                     manu_activity.action_feedback(feedback="Scheduled on earlier date.")
-        ## end
+        if "unknown_date_incoming" in vals:
+            unknown_date_incoming = vals.get("unknown_date_incoming")
+            pickings = self.mapped("move_dest_ids.picking_id").filtered(
+                lambda p: p.state not in ("done", "cancel")
+            )
+            if pickings:
+                pickings.write({"unknown_date": unknown_date_incoming})
+            else:
+                product_moves = self.env["stock.move"].search(
+                    [
+                        ("product_id", "=", self.product_id.id),
+                        ("picking_code", "=", "outgoing"),
+                        ("state", "=", "confirmed"),
+                    ]
+                )
+                product_moves.mapped("picking_id").write(
+                    {"unknown_date": unknown_date_incoming}
+                )
+        # end
         return res
 
     def action_remove_orig(self):
@@ -73,13 +95,13 @@ class StockMove(models.Model):
     def action_remove_dest(self):
         self.move_dest_ids = False
 
-    ## parameters
-    ## hours: number of hours to check for last stock operation
-    ## filename: output sftp filename
-    ## host: sftp host
-    ## port: sftp port
-    ## username: sftp username
-    ## password: sftp password
+    # parameters
+    # hours: number of hours to check for last stock operation
+    # filename: output sftp filename
+    # host: sftp host
+    # port: sftp port
+    # username: sftp username
+    # password: sftp password
     def product_stock_export(self, hours=24, filename="stock-presta.csv", **kwargs):
         date_filter = fields.Datetime.now() - relativedelta(hours=hours)
         header = ["quantity", "SKU"]
