@@ -20,6 +20,7 @@
         "views/contact.xml",
         "wizard/tameson_merge.xml",
         "views/partner_type.xml",
+        "wizard/contact_creation.xml",
     ],
     "application": False,
 }
