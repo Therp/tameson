@@ -6,19 +6,11 @@
         <field name="inherit_id" ref="stock.view_picking_internal_search" />
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='done']" position="after">
-                <filter
-          name="t_partner_not_in_eu"
-          string="Partner outside EU"
-          domain="[('t_partner_outside_eu', '=', True)]"
-        />
+                <filter name="t_partner_not_in_eu" string="Partner outside EU" domain="[('t_partner_outside_eu', '=', True)]" />
             </xpath>
             <xpath expr="//separator[last()]" position="before">
                 <separator />
-                <filter
-          name="t_unknown_date"
-          string="Unknown date"
-          domain="[('unknown_date', '=', True)]"
-        />
+                <filter name="t_unknown_date" string="Unknown date" domain="[('unknown_date', '=', True)]" />
             </xpath>
         </field>
     </record>
@@ -31,50 +23,21 @@
             <field name="move_type" position="attributes">
                 <attribute name="readonly">True</attribute>
             </field>
-            <xpath
-        expr="//header/button[@name='button_validate'][last()]"
-        position="after"
-      >
-                <button
-          name="fill_done_qtys"
-          states="draft,partially_available,assigned"
-          string="Fill done QTYs"
-          groups="stock.group_stock_user"
-          type="object"
-          class="oe_highlight"
-        />
+            <xpath expr="//header/button[@name='button_validate'][last()]" position="after">
+                <button name="fill_done_qtys" states="draft,partially_available,assigned" string="Fill done QTYs" groups="stock.group_stock_user" type="object" class="oe_highlight" />
 
-                <button
-          name="action_mail_send"
-          string="Send"
-          type="object"
-          class="oe_highlight"
-        />
-                <button
-          name="action_create_batch"
-          string="Batch for ready shipments"
-          type="object"
-          attrs="{'invisible': ['|', ('state','not in',('done')), ('picking_type_code','!=','incoming')]}"
-        />
-                <button
-          name="action_reserve_force"
-          string="Force availability"
-          type="object"
-          attrs="{'invisible': ['|', ('state','not in',('waiting')), ('picking_type_code','!=','outgoing')]}"
-        />
+                <button name="action_mail_send" string="Send" type="object" class="oe_highlight" />
+                <button name="action_create_batch" string="Batch for ready shipments" type="object" attrs="{'invisible': ['|', ('state','not in',('done')), ('picking_type_code','!=','incoming')]}" />
+                <button name="action_reserve_force" string="Force availability" type="object" attrs="{'invisible': ['|', ('state','not in',('waiting')), ('picking_type_code','!=','outgoing')]}" />
             </xpath>
             <field name="scheduled_date" position="before">
                 <field name="picking_type_code" invisible="1" />
-                <field
-          name="unknown_date"
-          attrs="{'invisible': [('picking_type_code','!=','outgoing')]}"
-        />
+                <field name="unknown_date" attrs="{'invisible': [('picking_type_code','!=','outgoing')]}" />
+                <field name="unknown_date_incoming" attrs="{'invisible': [('picking_type_code','!=','incoming')]}" />
             </field>
-            <xpath
-        expr="//field[@name='move_ids_without_package']/tree//field[last()]"
-        position="after"
-      >
+            <xpath expr="//field[@name='move_ids_without_package']/tree//field[last()]" position="after">
                 <field name="state" optional="hide" />
+                <field name="unknown_date_incoming" optional="hide" attrs="{'column_invisible': [('parent.picking_type_code','!=','incoming')] }" />
             </xpath>
             <xpath expr="//page[last()]" position="after">
                 <page name="tameson" string="Tameson">
@@ -83,42 +46,24 @@
                             <field name="t_delivery_allowed" />
                             <field name="t_partner_outside_eu" />
                             <field name="t_payment_status" />
-                            <field
-                name="ignore_invoice_creation"
-                widget="boolean_toggle"
-              />
+                            <field name="ignore_invoice_creation" widget="boolean_toggle" />
                         </group>
                     </group>
                 </page>
                 <page string="Help">
-                    <button
-            name="action_set_help"
-            string="Edit help"
-            type="object"
-            class="oe_link"
-            groups="stock.group_stock_manager"
-          />
+                    <button name="action_set_help" string="Edit help" type="object" class="oe_link" groups="stock.group_stock_manager" />
                     <field name="help_text" />
                 </page>
             </xpath>
             <xpath expr="//page[3]" position="attributes">
                 <attribute name="autofocus">autofocus</attribute>
             </xpath>
-            <xpath
-        expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']"
-        position="attributes"
-      >
-                <attribute
-          name="options"
-        >{'no_create': True, 'no_open': True, 'no_create_edit': True}</attribute>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True, 'no_create_edit': True}</attribute>
             </xpath>
             <field name="origin" position="after">
                 <field name="aftership_tracking" invisible="1" />
-                <field
-          name="aftership_url"
-          widget="url"
-          attrs="{'invisible': [('aftership_tracking','=',False)] }"
-        />
+                <field name="aftership_url" widget="url" attrs="{'invisible': [('aftership_tracking','=',False)] }" />
             </field>
         </field>
     </record>
@@ -146,12 +91,7 @@
                 <field name="t_delivery_allowed" optional="show" />
             </xpath>
             <xpath expr="//header[1]//button[last()]" position="after">
-                <button
-          name="print_batch_stock_picking_invoices"
-          string="Picking invoices"
-          type="object"
-          class="oe_highlight"
-        />
+                <button name="print_batch_stock_picking_invoices" string="Picking invoices" type="object" class="oe_highlight" />
             </xpath>
             <xpath expr="//field[@name='scheduled_date']" position="before">
                 <field name="create_date" optional="show" />
