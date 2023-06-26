@@ -19,8 +19,14 @@ class ContactCreationWizard(models.TransientModel):
     house = fields.Char()
     city = fields.Char()
     zip_code = fields.Char()
-    country = fields.Many2one(comodel_name='res.country', ondelete='restrict',)
-    state = fields.Many2one(comodel_name='res.country.state', ondelete='restrict',)
+    country = fields.Many2one(
+        comodel_name="res.country",
+        ondelete="restrict",
+    )
+    state = fields.Many2one(
+        comodel_name="res.country.state",
+        ondelete="restrict",
+    )
     phone = fields.Char()
     email = fields.Char()
     vat = fields.Char("VAT")
@@ -35,15 +41,16 @@ class ContactCreationWizard(models.TransientModel):
     invoice_city = fields.Char()
     invoice_email = fields.Char()
     invoice_zip_code = fields.Char()
-    vat_required = fields.Boolean(compute='get_vat_required')
+    vat_required = fields.Boolean(compute="get_vat_required")
     vat_bypass = fields.Boolean("VAT Bypass")
 
-    @api.depends('country', 'is_individual')
+    @api.depends("country", "is_individual")
     def get_vat_required(self):
-        country_ids = self.env.ref('__export__.europe_excluding_nl').country_ids.ids
+        country_ids = self.env.ref("__export__.europe_excluding_nl").country_ids.ids
         for record in self:
-            record.vat_required = not record.is_individual and\
-                record.country.id in country_ids
+            record.vat_required = (
+                not record.is_individual and record.country.id in country_ids
+            )
 
     def action_create(self):
         partner_data = {
@@ -59,17 +66,19 @@ class ContactCreationWizard(models.TransientModel):
             "email": self.email,
             "phone": self.phone,
             "vat": self.vat,
-            "child_ids": []
+            "child_ids": [],
         }
         if not self.is_individual:
             child_contact = partner_data.copy()
             childs = partner_data.get("child_ids") + [(0, 0, child_contact)]
-            partner_data.update({
-                "name": self.company_name,
-                "is_company": True,
-                "child_ids": childs,
-                "vat": False
-            })
+            partner_data.update(
+                {
+                    "name": self.company_name,
+                    "is_company": True,
+                    "child_ids": childs,
+                    "vat": False,
+                }
+            )
         if self.shipping_street:
             shipping_contact = {
                 "name": self.name,
@@ -83,7 +92,7 @@ class ContactCreationWizard(models.TransientModel):
                 "state_id": self.state.id,
                 "email": self.email,
                 "phone": self.phone,
-                "type": "delivery"
+                "type": "delivery",
             }
             childs = partner_data.get("child_ids") + [(0, 0, shipping_contact)]
             partner_data.update({"child_ids": childs})
@@ -100,8 +109,8 @@ class ContactCreationWizard(models.TransientModel):
                 "state_id": self.state.id,
                 "email": self.invoice_email or self.email,
                 "phone": self.phone,
-                "type": "invoice"
+                "type": "invoice",
             }
             childs = partner_data.get("child_ids") + [(0, 0, invoice_contact)]
             partner_data.update({"child_ids": childs})
-        self.env['res.partner'].create(partner_data)
+        self.env["res.partner"].create(partner_data)
