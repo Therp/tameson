@@ -164,7 +164,7 @@ FROM pimcore_product_response_line rl
         for pos in range(0, len(updated), chunk_size):
             self.with_delay().job_import_product_data(updated[pos : pos + chunk_size])
         # job for import bom for lines with bom data not already imported
-        bom_lines = [row[0] for row in updated if row[4] and not row[5]]
+        bom_lines = [row[0] for row in data if row[4] and not row[5]]
         for pos in range(0, len(bom_lines), chunk_size):
             self.with_delay().job_import_bom(bom_lines[pos : pos + chunk_size])
         # delete older than 14 days data
@@ -180,7 +180,7 @@ FROM pimcore_product_response_line rl
         if do_archive:
             self.with_delay().job_archive_unarchive()
 
-    def job_import_product_data(self, lines=[]):
+    def job_import_product_data(self, lines=()):
         Line = self.env["pimcore.product.response.line"]
         for row in lines:
             line = Line.browse(row[0])
@@ -189,7 +189,7 @@ FROM pimcore_product_response_line rl
             else:
                 line.sudo().update_product(row[1])
 
-    def job_import_bom(self, lines=[]):
+    def job_import_bom(self, lines=()):
         lines = self.env["pimcore.product.response.line"].browse(lines)
         for line in lines.exists():
             line.create_bom()
