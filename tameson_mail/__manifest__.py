@@ -20,6 +20,7 @@
         "data/mail_template_data.xml",
         "data/template.xml",
         "views/account_invoice_send_views.xml",
+        "views/template.xml",
     ],
     "application": False,
     "license": "OPL-1",
