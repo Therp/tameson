@@ -156,7 +156,7 @@ FROM pimcore_product_response_line rl
     WHERE rl.state = 'draft';"""
         )
         data = self.env.cr.fetchall()
-        skipped = [row[0] for row in data if row[2] <= row[3]]
+        skipped = [row[0] for row in data if row[2] <= row[3] and not row[4]]
         updated = [row for row in data if row[2] > row[3]]
         _logger.info("Skipped lines: %d" % len(skipped))
         self.env["pimcore.product.response.line"].browse(skipped).unlink()
