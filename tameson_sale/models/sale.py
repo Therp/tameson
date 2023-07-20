@@ -700,14 +700,19 @@ where sot.aml_count = 0
             self.partner_shipping_id.property_delivery_carrier_id
             or self.partner_shipping_id.commercial_partner_id.property_delivery_carrier_id
         )
+        carriers = self.env["delivery.carrier"].search(
+            [("name", "=", "Express shipment")]
+        )
+        carriers = carriers.available_carriers(self.partner_shipping_id)
         context = {
             "default_order_id": self.id,
             "default_carrier_id": carrier.id,
         }
         wizard = self.env["choose.delivery.carrier"].with_context(context).create({})
-        wizard.carrier_id = wizard.available_carrier_ids[:1]
-        wizard.update_price()
-        wizard.button_confirm()
+        if carriers:
+            wizard.carrier_id = carriers[:1]
+            wizard.update_price()
+            wizard.button_confirm()
 
 
 class SaleOrderLine(models.Model):
