@@ -43,6 +43,11 @@ class StockPicking(models.Model):
         string="Aftership URL", compute="_compute_aftership_url", copy=False
     )
 
+    def copy(self, default=None):
+        if not self.env.user.has_group("base.group_system"):
+            raise ValidationError("Only admin can duplicate picking.")
+        return super().copy(default)
+
     @api.onchange("unknown_date_incoming")
     def _onchange_unknown_date_incoming(self):
         self.move_lines.update({"unknown_date_incoming": self.unknown_date_incoming})
