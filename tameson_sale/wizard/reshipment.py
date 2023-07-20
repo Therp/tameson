@@ -30,7 +30,9 @@ class ReshipmentWizard(models.TransientModel):
                     "warehouse_id": self.env["stock.warehouse"].search([], limit=1).id,
                 },
             )
-            for line in order.order_line
+            for line in order.order_line.filtered(
+                lambda line: line.product_id.type == "product"
+            )
         ]
         return res
 
