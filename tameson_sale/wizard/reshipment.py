@@ -34,6 +34,26 @@ class ReshipmentWizard(models.TransientModel):
         ]
         return res
 
+    def action_add(self):
+        order = self.env["sale.order"].browse(self.env.context["active_ids"])
+        order.write(
+            {
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": line.product_id.id,
+                            "discount": line.discount,
+                            "warehouse_id": line.warehouse_id.id,
+                            "product_uom_qty": line.quantity,
+                        },
+                    )
+                    for line in self.line_ids
+                ]
+            }
+        )
+
 
 class ReshipmentWizardLine(models.TransientModel):
     _name = "reshipment.wizard.line"
