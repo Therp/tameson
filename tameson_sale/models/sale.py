@@ -70,10 +70,9 @@ class SaleOrder(models.Model):
     @api.depends("partner_id", "payment_term_id")
     def get_payment_term_warning(self):
         for record in self:
-            record.payment_term_warning = (
-                self.partner_id and
-                (self.payment_term_id != self.partner_id.property_payment_term_id or
-                    self.payment_term_id.id == 52)
+            record.payment_term_warning = self.partner_id and (
+                self.payment_term_id != self.partner_id.property_payment_term_id
+                or self.payment_term_id.id == 52
             )
 
     @api.depends("partner_id.is_company", "client_order_ref")
@@ -695,6 +694,18 @@ where sot.aml_count = 0
             lambda pt: pt.type == "product"
         )
         return json.dumps(products.mapped(lambda p: [p.default_code, p.display_name]))
+
+    def action_add_express_shipping(self):
+        carriers = self.env["delivery.carrier"].search(
+            [("name", "=", "Express shipment")]
+        )
+        carriers = carriers.available_carriers(self.partner_shipping_id)
+        if carriers:
+            wizard = self.env["choose.delivery.carrier"].create(
+                {"carrier_id": carriers[:1].id, "order_id": self.id}
+            )
+            wizard.update_price()
+            wizard.button_confirm()
 
 
 class SaleOrderLine(models.Model):

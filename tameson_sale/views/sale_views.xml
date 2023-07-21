@@ -127,4 +127,15 @@
         <field name="action" ref="tameson_contact.action_contact_creation_wizard_act_window" />
         <field name="parent_id" ref="sale.sale_menu_root" />
     </record>
+
+    <record id="view_order_form_with_carrier" model="ir.ui.view">
+        <field name="name">view_order_form_with_carrier</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="delivery.view_order_form_with_carrier" />
+        <field name="arch" type="xml">
+            <button name="action_open_delivery_wizard" position="before">
+                <button string="Add Express shipping" name="action_add_express_shipping" type="object" attrs="{'invisible': ['|', ('is_all_service', '=', True), ('order_line', '=', [])]}" />
+            </button>
+        </field>
+    </record>
 </odoo>
