@@ -699,19 +699,11 @@ where sot.aml_count = 0
         carriers = self.env["delivery.carrier"].search(
             [("name", "=", "Express shipment")]
         )
-
-        import logging
-
-        _logger = logging.getLogger(__name__)
-        _logger.info(carriers)
         carriers = carriers.available_carriers(self.partner_shipping_id)
-        _logger.info(carriers)
-        context = {
-            "default_order_id": self.id,
-        }
-        wizard = self.env["choose.delivery.carrier"].with_context(context).create({})
         if carriers:
-            wizard.carrier_id = carriers[:1]
+            wizard = self.env["choose.delivery.carrier"].create(
+                {"carrier_id": carriers[:1].id, "order_id": self.id}
+            )
             wizard.update_price()
             wizard.button_confirm()
 
