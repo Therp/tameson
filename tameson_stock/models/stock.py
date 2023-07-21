@@ -45,7 +45,7 @@ class StockPicking(models.Model):
 
     def copy(self, default=None):
         if not self.env.user.has_group("base.group_system"):
-            raise ValidationError("Only admin can duplicate picking.")
+            raise ValidationError("Please create shipments via adding lines to an existing or new sales order. ")
         return super().copy(default)
 
     @api.onchange("unknown_date_incoming")
