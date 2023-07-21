@@ -12,6 +12,9 @@
                 <header>
                 </header>
                 <sheet>
+                    <h3 class="text-danger">
+                        Please set discount to 100% for items that should be reshipped for free.  Please add a comment on the SO with the reason.
+                    </h3>
                     <field name="line_ids">
                         <tree editable="bottom">
                             <field name="product_id" />

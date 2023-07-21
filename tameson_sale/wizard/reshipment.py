@@ -26,7 +26,7 @@ class ReshipmentWizard(models.TransientModel):
                 {
                     "product_id": line.product_id.id,
                     "quantity": line.product_uom_qty,
-                    "discount": 100,
+                    "discount": 0,
                     "warehouse_id": self.env["stock.warehouse"].search([], limit=1).id,
                 },
             )
