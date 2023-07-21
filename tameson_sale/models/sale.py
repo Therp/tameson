@@ -696,17 +696,18 @@ where sot.aml_count = 0
         return json.dumps(products.mapped(lambda p: [p.default_code, p.display_name]))
 
     def action_add_express_shipping(self):
-        carrier = (
-            self.partner_shipping_id.property_delivery_carrier_id
-            or self.partner_shipping_id.commercial_partner_id.property_delivery_carrier_id
-        )
         carriers = self.env["delivery.carrier"].search(
             [("name", "=", "Express shipment")]
         )
+
+        import logging
+
+        _logger = logging.getLogger(__name__)
+        _logger.info(carriers)
         carriers = carriers.available_carriers(self.partner_shipping_id)
+        _logger.info(carriers)
         context = {
             "default_order_id": self.id,
-            "default_carrier_id": carrier.id,
         }
         wizard = self.env["choose.delivery.carrier"].with_context(context).create({})
         if carriers:
