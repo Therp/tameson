@@ -15,14 +15,16 @@ from .pimcore_request import GqlQueryBuilder, PimcoreRequest
 
 _logger = logging.getLogger(__name__)
 
-static_getter = lambda v: v
-float_getter = lambda v: isinstance(v, dict) and v.get("value", 0.0)
-image_getter = lambda v: v and v[0].get("assetThumb", "")
-bom_getter = lambda v: v and ",".join(
+static_getter = lambda v: v  # noqa: E731
+float_getter = lambda v: isinstance(v, dict) and v.get("value", 0.0)  # noqa: E731
+image_getter = lambda v: v and v[0].get("assetThumb", "")  # noqa: E731
+bom_getter = lambda v: v and ",".join(  # noqa: E731
     map(lambda i: "%s,%s" % (i["element"]["SKU"], i["metadata"][0]["value"]), v)
 )
-single_field_m2one = lambda v: isinstance(v, dict) and list(v.items())[0][1]
-single_field_m2many = lambda v: v and list(v[0].items())[0][1]
+single_field_m2one = (
+    lambda v: isinstance(v, dict) and list(v.items())[0][1]
+)  # noqa: E731
+single_field_m2many = lambda v: v and list(v[0].items())[0][1]  # noqa: E731
 
 product_nodes = {
     "name": {"field": "Name", "getter": static_getter},
@@ -103,6 +105,7 @@ product_nodes = {
     "supplier_package_qty": {"field": "SupplierPackageQty", "getter": static_getter},
     "additional_cost": {"field": "AdditionalCost", "getter": static_getter},
     "fragile": {"field": "Fragile", "getter": static_getter},
+    "supplier_list_price": {"field": "ListPrice", "getter": static_getter},
 }
 
 
@@ -148,7 +151,7 @@ class PimcoreConfig(models.Model):
                 product_query, 0, record_count, self.limit, self.concurrent
             )
         except ConnectionError:
-            raise UserError("Unable to connect with Pimcore server.")
+            raise UserError("Unable to connect with Pimcore server.") from None
 
         all_result = product_query.parse_results(result)
         lines_ids = []
@@ -231,7 +234,7 @@ class PimcoreConfig(models.Model):
             first_id = int(first_id["node"]["id"])
             last_id = int(last_id["node"]["id"])
         except Exception:
-            raise UserError("No valid first, last product ID from pimcore.")
+            raise UserError("No valid first, last product ID from pimcore.") from None
         for pos in range(first_id, last_id, self.limit):
             self.with_delay().request_products_data(pos, response_obj)
 

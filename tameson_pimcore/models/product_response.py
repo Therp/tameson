@@ -357,6 +357,7 @@ class PimcoreProductResponseLine(models.Model):
     supplier_package_qty = fields.Integer()
     additional_cost = fields.Char()
     fragile = fields.Boolean()
+    supplier_list_price = fields.Float()
 
     @api.model_create_multi
     def create(self, vals):
@@ -438,6 +439,7 @@ class PimcoreProductResponseLine(models.Model):
             if seller:
                 seller_vals.pop("price")
                 seller_vals.pop("name")
+                seller_vals.pop("list_price_eur")
                 seller.write(seller_vals)
             else:
                 vals.update(seller_ids=[(0, 0, seller_vals)])
@@ -571,4 +573,5 @@ class PimcoreProductResponseLine(models.Model):
             "min_qty": self.supplier_package_qty,
             "price": self.supplier_price,
             "currency_id": CURRENCY_DICT[self.supplier_price_currency],
+            "list_price_eur": self.supplier_list_price,
         }
