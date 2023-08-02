@@ -350,3 +350,18 @@ class AAMutation(models.Model):
         comodel_name="purchase.order", ondelete="cascade", required=True
     )
     name = fields.Char(required=True, copy=False)
+
+
+class AAComm(models.Model):
+    _inherit = "aa.comm"
+
+    purchase_id = fields.Many2one(
+        comodel_name="purchase.order",
+        ondelete="restrict",
+    )
+
+    def get_search_string(self):
+        if self.purchase_id:
+            return "purchase"
+        else:
+            return super().get_search_string()

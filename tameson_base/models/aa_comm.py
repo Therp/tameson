@@ -15,14 +15,9 @@ class AAComm(models.Model):
     _order = "name ASC"
 
     name = fields.Char()
-    purchase_id = fields.Many2one(
-        comodel_name="purchase.order",
-        ondelete="restrict",
-    )
-    ticket_id = fields.Many2one(
-        comodel_name="helpdesk.ticket",
-        ondelete="restrict",
-    )
+
+    def get_search_string(self):
+        return ""
 
     def mail_to_aa(self):
         composer_form_view_id = self.env.ref(
@@ -30,7 +25,13 @@ class AAComm(models.Model):
         ).id
         template_id = (
             self.env["mail.template"]
-            .search([("model_id.name", "=", self._name)], limit=1)
+            .search(
+                [
+                    ("name", "ilike", "ActiveAnts"),
+                    ("name", "ilike", self.get_search_string()),
+                ],
+                limit=1,
+            )
             .id
         )
         return {

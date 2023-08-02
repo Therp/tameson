@@ -110,3 +110,18 @@ class ModelName(models.Model):
                 }
             )
         return res
+
+
+class AAComm(models.Model):
+    _inherit = "aa.comm"
+
+    ticket_id = fields.Many2one(
+        comodel_name="helpdesk.ticket",
+        ondelete="restrict",
+    )
+
+    def get_search_string(self):
+        if self.ticket_id:
+            return "ticket"
+        else:
+            return super().get_search_string()
