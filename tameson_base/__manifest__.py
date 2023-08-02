@@ -17,6 +17,8 @@
         "views/model.xml",
         "views/set_help.xml",
         "views/assets.xml",
+        "views/aa_comm.xml",
+        "security/ir.model.access.csv",
     ],
     "application": False,
 }

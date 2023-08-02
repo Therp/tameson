@@ -43,6 +43,22 @@ class PurchaseOrder(models.Model):
     t_aa_purchase_id = fields.Integer(string="AA Purchase ID", copy=False, default=0)
 
     purchase_confirmation = fields.Boolean()
+    aa_comm_id = fields.Many2one(
+        string="AA Communication",
+        comodel_name="aa.comm",
+        ondelete="restrict",
+    )
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        res.aa_comm_id = self.env["aa.comm"].create(
+            {
+                "name": res.name,
+                "purchase_id": res.id,
+            }
+        )
+        return res
 
     def button_confirm(self):
         for order in self:
