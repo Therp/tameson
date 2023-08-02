@@ -3,7 +3,7 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AAComm(models.Model):
@@ -49,3 +49,14 @@ class AAComm(models.Model):
                 "active_ids": self.ids,
             },
         }
+
+    @api.model
+    def create(self, vals):
+        partner = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("aa_mail_partner_id", default=0)
+        )
+        res = super().create(vals)
+        res.message_subscribe(partner_ids=[int(partner)])
+        return res
