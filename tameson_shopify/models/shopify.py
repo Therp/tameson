@@ -25,6 +25,16 @@ def process_metafields(metavals):
 class ShopifyOrderDataQueueLineEpt(models.Model):
     _inherit = "shopify.order.data.queue.line.ept"
 
+    def create(self, vals):
+        data = json.loads(vals["order_data"])
+        presentment_cur = data["order"]["presentment_currency"]
+        cur = data["order"]["currency"]
+        if presentment_cur != cur:
+            data["order"]["currency"] = presentment_cur
+            nested_set_presentment(data)
+        vals["order_data"] = json.dumps(data)
+        return super(ShopifyOrderDataQueueLineEpt, self).create(vals)
+
     def create_order_data_queue_line(
         self, order_ids, instance, created_by="import", process_immediately=False
     ):
@@ -101,7 +111,8 @@ class ShopifyOrderDataQueueLineEpt(models.Model):
                         .get("default_address")
                         .get("name")
                     )
-            except:
+            except Exception as e:
+                _logger.info(str(e))
                 customer_name = False
                 customer_email = False
 
@@ -241,7 +252,7 @@ class ShopifyInstanceEpt(models.Model):
                 shopify.Metafield(
                     {
                         "key": "vat_number",
-                        "value": contact.vat,
+                        "value": contact.vat or "",
                         "type": "single_line_text_field",
                         "namespace": "sufio",
                     }
@@ -252,13 +263,14 @@ class ShopifyInstanceEpt(models.Model):
                 shopify.Metafield(
                     {
                         "key": "invoice_email",
-                        "value": odoo_invoice_email,
+                        "value": odoo_invoice_email or "",
                         "type": "single_line_text_field",
                         "namespace": "details",
                     }
                 )
             )
         return {
+            "contact": contact.id,
             "vat_match": vat_match,
             "invoice_email_match": invoice_email_match,
             "tax_exempt_match": odoo_te == shopify_te,
@@ -317,20 +329,6 @@ def nested_set_presentment(data_dict):
             for item in v:
                 if isinstance(item, dict):
                     nested_set_presentment(item)
-
-
-class ShopifyOrderDataQueueLineEpt(models.Model):
-    _inherit = "shopify.order.data.queue.line.ept"
-
-    def create(self, vals):
-        data = json.loads(vals["order_data"])
-        presentment_cur = data["order"]["presentment_currency"]
-        cur = data["order"]["currency"]
-        if presentment_cur != cur:
-            data["order"]["currency"] = presentment_cur
-            nested_set_presentment(data)
-        vals["order_data"] = json.dumps(data)
-        return super(ShopifyOrderDataQueueLineEpt, self).create(vals)
 
 
 class SaleWorkflowProcess(models.Model):
