@@ -1,7 +1,7 @@
 import json
 
 from odoo import _, api, fields, models, tools
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.float_utils import float_compare
 
 
 class ProductTemplateInherit(models.Model):
@@ -147,7 +147,7 @@ SELECT id from mrp_bom
     def set_non_bom_lead(self):
         for pt in self:
             delay = pt.seller_ids[:1].delay
-            if not float_is_zero(pt.minimal_qty_available_stored, precision_digits=2):
+            if pt.minimal_qty_available_stored > 0:
                 delay_array = [
                     {"lead_time": 1, "max_qty": pt.minimal_qty_available_stored},
                     {
