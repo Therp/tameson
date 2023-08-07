@@ -284,9 +284,9 @@ class ProductTemplate(models.Model):
         ) + self.env["stock.move"].search(domain).mapped("product_id")
         to_update_pts = to_update_products.mapped("product_tmpl_id")
         to_update_pts._minimal_qty_available_stored()
-        ## set bom lead updated
+        # set bom lead updated
         to_update_pts.mapped("bom_ids").with_delay().set_bom_lead()
-        ## non-bom-lead
+        # non-bom-lead
         for pos in range(0, len(to_update_pts), 5000):
             to_update_pts[pos : pos + 5000].with_delay().set_non_bom_lead()
 
@@ -297,7 +297,7 @@ class ProductTemplate(models.Model):
         for pos in range(0, len(boms), split):
             boms[pos : pos + split].with_delay().set_bom_lead()
         non_boms = self.search([("bom_ids", "=", False)])
-        ## non-bom-lead
+        # non-bom-lead
         for pos in range(0, len(non_boms), split):
             non_boms[pos : pos + split].with_delay().set_non_bom_lead()
 
@@ -355,6 +355,8 @@ WHERE pp.id IN (%s)""" % ",".join(
     def store_min_qty_jobs(self):
         for pt in self:
             min_qty = pt.minimal_qty_available
+            if min_qty < 0:
+                min_qty = 0
             if float_compare(
                 min_qty, pt.minimal_qty_available_stored, precision_digits=2
             ):
