@@ -13,7 +13,7 @@
                 <filter name="t_unknown_date" string="Unknown date" domain="[('unknown_date', '=', True)]" />
             </xpath>
             <filter name="late" position="attributes">
-                <attribute name="domain">[('scheduled_date','&lt;', context_today().strftime('%Y-%m-%d 00:00:00')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]</attribute>
+                <attribute name="domain">[('scheduled_date','&lt;', time.strftime('%Y-%m-%d 00:00:00')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]</attribute>
             </filter>
         </field>
     </record>
