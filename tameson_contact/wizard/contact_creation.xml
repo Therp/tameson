@@ -49,6 +49,7 @@
                             <field name="shipping_street2" />
                             <field name="shipping_city" />
                             <field name="shipping_zip_code" />
+                            <field name="shipping_email" />
                         </group>
                         <group string="Invoice (optional)">
                             <field name="invoice_house" />
