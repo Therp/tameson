@@ -35,6 +35,7 @@ class ContactCreationWizard(models.TransientModel):
     shipping_house = fields.Char()
     shipping_city = fields.Char()
     shipping_zip_code = fields.Char()
+    shipping_email = fields.Char()
     invoice_street = fields.Char()
     invoice_street2 = fields.Char()
     invoice_house = fields.Char()
@@ -79,7 +80,7 @@ class ContactCreationWizard(models.TransientModel):
                     "vat": False,
                 }
             )
-        if self.shipping_street:
+        if self.shipping_street or self.shipping_email:
             shipping_contact = {
                 "name": self.name,
                 "is_company": False,
