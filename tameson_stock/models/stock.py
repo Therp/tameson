@@ -2,6 +2,7 @@ import base64
 import codecs
 import itertools
 import re
+import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -43,9 +44,56 @@ class StockPicking(models.Model):
         string="Aftership URL", compute="_compute_aftership_url", copy=False
     )
 
+    def _compute_picking_count(self):
+        # TDE TODO count picking can be done using previous two
+        domains = {
+            "count_picking_draft": [("state", "=", "draft")],
+            "count_picking_waiting": [("state", "in", ("confirmed", "waiting"))],
+            "count_picking_ready": [("state", "=", "assigned")],
+            "count_picking": [("state", "in", ("assigned", "waiting", "confirmed"))],
+            "count_picking_late": [
+                ("scheduled_date", "<", time.strftime("%Y-%m-%d 00:00:00")),
+                ("state", "in", ("assigned", "waiting", "confirmed")),
+            ],
+            "count_picking_backorders": [
+                ("backorder_id", "!=", False),
+                ("state", "in", ("confirmed", "assigned", "waiting")),
+            ],
+        }
+        for field in domains:
+            data = self.env["stock.picking"].read_group(
+                domains[field]
+                + [
+                    ("state", "not in", ("done", "cancel")),
+                    ("picking_type_id", "in", self.ids),
+                ],
+                ["picking_type_id"],
+                ["picking_type_id"],
+            )
+            count = {
+                x["picking_type_id"][0]: x["picking_type_id_count"]
+                for x in data
+                if x["picking_type_id"]
+            }
+            for record in self:
+                record[field] = count.get(record.id, 0)
+        for record in self:
+            record.rate_picking_late = (
+                record.count_picking
+                and record.count_picking_late * 100 / record.count_picking
+                or 0
+            )
+            record.rate_picking_backorders = (
+                record.count_picking
+                and record.count_picking_backorders * 100 / record.count_picking
+                or 0
+            )
+
     def copy(self, default=None):
         if not self.env.user.has_group("base.group_system"):
-            raise ValidationError("Please create shipments via adding lines to an existing or new sales order. ")
+            raise ValidationError(
+                "Please create shipments via adding lines to an existing or new sales order. "
+            )
         return super().copy(default)
 
     @api.onchange("unknown_date_incoming")
