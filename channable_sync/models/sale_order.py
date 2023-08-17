@@ -364,7 +364,8 @@ class SaleOrder(models.Model):
                 )
         sale_order.recompute()
         sale_order.flush()
-
+        for line in sale_order.order_line:
+            line._onchange_product_id_set_customer_lead()
         if sale_order.company_id and sale_order.company_id.channable_auto_confirm_order:
             # automatically confirm an order
             if (
