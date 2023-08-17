@@ -85,6 +85,8 @@ class SaleOrder(models.Model):
             order_data_queue_line, log_book_id
         )
         if order_id:
+            for line in order_id.order_line:
+                line._onchange_product_id_set_customer_lead()
             difference = abs(order_id.shopify_total_price - order_id.amount_total)
             if float_compare(difference, 0.05, precision_digits=2) == 1:
                 msg = "Total amount missmatch shopify: %.2f odoo: %.2f" % (
