@@ -136,7 +136,9 @@
                     <t t-set="type_dict" t-value="{'contact': 'Contact', 'invoice': 'Invoice Address', 'delivery': 'Delivery Address', 'other': 'Other Address','private': 'Private Address'}" />
                     <t t-foreach="range(len(childs))" t-as="child">
                         <t t-call="portal.portal_docs_entry">
-                            <t t-set="title" t-value="'%s: %s, %s' % (type_dict[childs[child].type], childs[child].name, childs[child].street)" />
+                            <t t-set="title">
+                                <t t-esc="childs[child].type_name" />: <t t-esc="childs[child].name" />, <t t-esc="childs[child].street" />
+                            </t>
                             <t t-set="url" t-value="'/my/address/%d' % child" />
                         </t>
                     </t>
