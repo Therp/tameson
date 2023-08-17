@@ -26,4 +26,7 @@ class ResPartner(models.Model):
     type_name = fields.Char(compute="_get_type_name")
 
     def _get_type_name(self):
-        self.type_name = get_selection_label(self, "res.partner", "type", self.type)
+        for record in self:
+            record.type_name = get_selection_label(
+                record, "res.partner", "type", record.type
+            )
