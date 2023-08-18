@@ -28,7 +28,7 @@
                     Notice: Payment term different than customer payment term.
                 </div>
                 <div />
-                <label for="commitment_date" string="Delivery Date" />
+                <label for="commitment_date" string="Expected shipping date" />
                 <div class="o_row">
                     <field name="commitment_date" /> <span class="text-muted">Expected: <field name="expected_date" widget="date" /></span>
                 </div>
