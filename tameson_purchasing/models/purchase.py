@@ -43,6 +43,22 @@ class PurchaseOrder(models.Model):
     t_aa_purchase_id = fields.Integer(string="AA Purchase ID", copy=False, default=0)
 
     purchase_confirmation = fields.Boolean()
+    aa_comm_id = fields.Many2one(
+        string="AA Communication",
+        comodel_name="aa.comm",
+        ondelete="restrict",
+    )
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        res.aa_comm_id = self.env["aa.comm"].create(
+            {
+                "name": res.name,
+                "purchase_id": res.id,
+            }
+        )
+        return res
 
     def button_confirm(self):
         for order in self:
@@ -334,3 +350,18 @@ class AAMutation(models.Model):
         comodel_name="purchase.order", ondelete="cascade", required=True
     )
     name = fields.Char(required=True, copy=False)
+
+
+class AAComm(models.Model):
+    _inherit = "aa.comm"
+
+    purchase_id = fields.Many2one(
+        comodel_name="purchase.order",
+        ondelete="restrict",
+    )
+
+    def get_search_string(self):
+        if self.purchase_id:
+            return "purchase"
+        else:
+            return super().get_search_string()
