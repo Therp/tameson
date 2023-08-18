@@ -39,7 +39,6 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
         <field name="arch" type="xml">
             <header position="inside">
-                <button name="action_mail_to_aa" string="Mail to AA" type="object" class="oe_highlight" />
                 <button name="action_mail_to_customer" string="Mail to Customer" type="object" class="oe_highlight" />
             </header>
             <field name="partner_email" position="after">
