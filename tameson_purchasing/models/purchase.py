@@ -376,7 +376,7 @@ class PurchaseOrderCSV(models.AbstractModel):
         for line in doc_ids.mapped("order_line"):
             writer.writerow(
                 {
-                    "Supplier SKU": line.product_id.default_code,
+                    "Supplier SKU": line.product_id.supplierinfo_code,
                     "QTY": int(line.product_qty),
                 }
             )
