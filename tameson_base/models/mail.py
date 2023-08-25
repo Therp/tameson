@@ -12,7 +12,8 @@ class MailTemplate(models.Model):
     @api.model
     def render_post_process(self, html):
         lang = self.env.context.get("lang")
-        signature = self.env.user.with_context(lang=lang).signature
+        signature = self.env.user.company_id.with_context(lang=lang).email_signature
+        signature = signature % self.env.user.name
         html = tools.append_content_to_html(html, signature, plaintext=False)
         html = super().render_post_process(html)
         return html

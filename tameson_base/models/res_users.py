@@ -6,7 +6,7 @@
 from odoo import fields, models
 
 
-class ResUsers(models.Model):
-    _inherit = "res.users"
+class ResCompany(models.Model):
+    _inherit = "res.company"
 
-    signature = fields.Html(translate=True)
+    email_signature = fields.Html(translate=True)
