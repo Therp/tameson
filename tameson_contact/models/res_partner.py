@@ -105,14 +105,14 @@ class ResPartner(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for val in vals_list:
-            if val.get("vat", False):
+            if val.get("vat", False) and val.get("parent_id", False):
                 val["is_company"] = True
         partners = super().create(vals_list)
         return partners
 
     def write(self, val):
         company_name = val.get("company_name", False)
-        if val.get("vat", False) or company_name:
+        if not self.parent_id and (val.get("vat", False) or company_name):
             val["is_company"] = True
         child_ids = val.get("child_ids", [])
         if company_name and not self.child_ids and not self.parent_id:
