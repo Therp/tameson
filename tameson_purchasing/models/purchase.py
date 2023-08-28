@@ -365,3 +365,26 @@ class AAComm(models.Model):
             return "purchase"
         else:
             return super().get_search_string()
+
+
+class PurchaseOrderCSV(models.AbstractModel):
+    _name = "report.tameson_purchasing.po_csv"
+    _inherit = "report.report_csv.abstract"
+
+    def generate_csv_report(self, writer, data, doc_ids):
+        writer.writeheader()
+        for line in doc_ids.mapped("order_line"):
+            writer.writerow(
+                {
+                    "Supplier SKU": line.product_id.supplierinfo_code,
+                    "QTY": int(line.product_qty),
+                }
+            )
+
+    def csv_report_options(self):
+        res = super().csv_report_options()
+        res["fieldnames"].append("Supplier SKU")
+        res["fieldnames"].append("QTY")
+        res["delimiter"] = ";"
+        res["quoting"] = 0
+        return res

@@ -16,6 +16,7 @@
         "tameson_account",
         "tameson_base",
         "tameson_stock",
+        "report_csv",
     ],
     "data": [
         "security/ir.model.access.csv",
