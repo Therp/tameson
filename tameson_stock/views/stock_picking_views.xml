@@ -42,6 +42,13 @@
                 <field name="state" optional="hide" />
                 <field name="unknown_date_incoming" optional="hide" attrs="{'column_invisible': [('parent.picking_type_code','!=','incoming')] }" />
             </xpath>
+            <xpath expr="//notebook" position="before">
+                <div class="alert alert-danger" role="alert">
+                    Do not duplicate this, please follow
+                    <a target="new" href="https://app.getguru.com/card/TA56pe7c/Updating-Sales-Orders-and-creating-new-deliveries-reshipment-of-FaultyLost-products">guide</a>
+                     for reshipment/delivery issue.
+                </div>
+            </xpath>
             <xpath expr="//page[last()]" position="after">
                 <page name="tameson" string="Tameson">
                     <group>
