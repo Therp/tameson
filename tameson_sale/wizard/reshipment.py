@@ -55,6 +55,7 @@ class ReshipmentWizard(models.TransientModel):
                 ]
             }
         )
+        order._create_invoice()
 
 
 class ReshipmentWizardLine(models.TransientModel):
