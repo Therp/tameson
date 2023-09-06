@@ -200,7 +200,7 @@ FROM pimcore_product_response_line rl
         )
         use_up = self.env["product.template"].search(
             [
-                ("t_use_up,", "!=", False),
+                ("t_use_up", "!=", False),
                 ("pimcore_id", "!=", False),
                 ("minimal_qty_available_stored", "<=", 0),
             ]
