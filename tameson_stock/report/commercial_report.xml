@@ -74,10 +74,10 @@
                                             <span t-field="line.product_uom_id" groups="uom.group_uom" />
                                         </td>
                                         <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type== 'html' else '' }}">
-                                            <span class="text-nowrap" t-field="line.t_aa_comm_price" />
+                                            <span class="text-nowrap" t-esc="line.t_aa_comm_price" />
                                         </td>
                                         <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                            <span t-esc="line.product_uom_qty * line.t_aa_comm_price" t-options="{'widget' : 'monetary'}" />
+                                            <span t-esc="line.product_uom_qty * line.t_aa_comm_price" />
                                         </td>
                                     </t>
                                 </tr>
@@ -93,7 +93,7 @@
                                             <strong>Total</strong>
                                         </td>
                                         <td class="text-right">
-                                            <span t-esc="sum(o.move_lines.mapped(lambda l: l.t_aa_comm_price * l.product_uom_qty))" t-options="{'widget' : 'monetary'}" />
+                                            <span t-esc="sum(o.move_lines.mapped(lambda l: l.t_aa_comm_price * l.product_uom_qty))" />
                                         </td>
                                     </tr>
                                 </table>
