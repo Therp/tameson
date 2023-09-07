@@ -20,11 +20,11 @@
                     <div id="informations" class="row mt32 mb32">
                         <div class="col-auto mw-100 mb-2" name="invoice_date">
                             <strong>Date:</strong>
-                            <p class="m-0" t-field="o.create_date" />
+                            <p class="m-0" t-field="o.create_date" t-options="{&quot;widget&quot;: &quot;date&quot;}" />
                         </div>
                         <div class="col-auto mw-100 mb-2" name="origin">
                             <strong>Source:</strong>
-                            <p class="m-0" t-field="o.origin" />
+                            <p class="m-0" t-field="o.sale_id.incoterm.name" />
                         </div>
                         <div class="col-auto mw-100 mb-2" name="incoterm">
                             <strong>Incoterm:</strong>
