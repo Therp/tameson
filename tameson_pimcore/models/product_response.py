@@ -253,9 +253,10 @@ FROM pimcore_product_response_line rl
                     unpublished_products.mapped("product_variant_ids").ids,
                 )
             ]
-        ).action_archive()
-        for pt in unpublished_products:
-            pt.action_archive()
+        ).with_delay().action_archive()
+        split_size = 100
+        for pos in range(0, len(unpublished_products), split_size):
+            unpublished_products[pos : pos + split_size].with_delay().action_archive()
         _logger.info(
             "%s archived from pimcore response"
             % unpublished_products.mapped("default_code")
@@ -267,8 +268,10 @@ FROM pimcore_product_response_line rl
                 ("pimcore_id", "!=", False),
             ]
         )
-        for pt in published_products:
-            pt.action_unarchive()
+        split_size = 100
+        for pos in range(0, len(published_products), split_size):
+            published_products[pos : pos + split_size].with_delay().action_unarchive()
+
         self.env["stock.warehouse.orderpoint"].search(
             [
                 ("active", "=", False),
@@ -278,7 +281,7 @@ FROM pimcore_product_response_line rl
                     published_products.mapped("product_variant_ids").ids,
                 ),
             ]
-        ).action_unarchive()
+        ).with_delay().action_unarchive()
         return "Archived: %s\nUnarchived: %s" % (
             unpublished_products.mapped("default_code"),
             published_products.mapped("default_code"),
