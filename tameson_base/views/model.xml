@@ -16,9 +16,23 @@
         <field name="model">res.company</field>
         <field name="inherit_id" ref="base.view_company_form" />
         <field name="arch" type="xml">
-            <field name="website" position="after">
-                <field name="email_signature" />
-            </field>
+            <xpath expr="//notebook" position="inside">
+                <page string="Signature">
+                    <field name="signature_ids">
+                        <form>
+                            <group>
+                                <field name="lang" />
+                                <field name="signature" />
+                            </group>
+                        </form>
+                        <tree>
+                            <field name="sequence" widget="handle" />
+                            <field name="lang" />
+                            <field name="signature" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 
