@@ -57,6 +57,7 @@
         "data/mail_data.xml",
         "wizards/delay_mail.xml",
         "views/aa_views.xml",
+        "report/commercial_report.xml",
     ],
     "qweb": [
         "static/src/xml/qweb.xml",
