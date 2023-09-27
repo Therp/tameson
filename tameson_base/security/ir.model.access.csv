@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-aa_comm_all,aa_comm_all,model_aa_comm,,1,1,1,1
-email_signature_all,email_signature_all,model_signature_lang,,1,1,1,1
