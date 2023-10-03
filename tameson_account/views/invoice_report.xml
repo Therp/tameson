@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@id='qrcode']" position="after">
+                <div class="row">
+                    <t t-set="picking" t-value="o.get_picking_ids()" />
+                    <t t-if="picking and all(picking.mapped('carrier_tracking_ref'))">
+                        <t t-set="picking" t-value="picking[0]" />
+                        <div class="col-7">
+                            <strong>Shipping method:</strong> <t t-esc="picking.carrier_id.name" /><br />
+                            <strong>Shipping date:</strong> <span t-field="picking.date_done" t-options="{'widget': 'date'}" /><br />
+                            <strong>Tracking number:</strong> <t t-esc="picking.carrier_tracking_ref" /><br />
+                        </div>
+                        <div class="col-4">
+                            <img alt="Signature" class="col-9 d-block img img-fluid" src="/tameson_account/static/src/img/signature.png" />
+                        </div>
+                    </t>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
