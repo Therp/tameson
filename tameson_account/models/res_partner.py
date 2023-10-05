@@ -30,7 +30,7 @@ class ResPartner(models.Model):
             days = []
             for payment in payments:
                 for invoice in payment.reconciled_invoice_ids:
-                    days.append((payment.payment_date - invoice.date).days)
+                    days.append((payment.date - invoice.date).days)
             if days:
                 partner.average_payment_days = sum(days) / len(days)
             else:
