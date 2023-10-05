@@ -8,7 +8,7 @@
 
     """,
     "author": "Tameson",
-    "depends": ["account"],
+    "depends": ["account_followup"],
     "data": [
         "security/account_security.xml",
         "views/account_views.xml",
