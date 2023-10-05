@@ -112,7 +112,7 @@ create_seed:
   only:
     - merge_requests
   allow_failure: true
-tests:
+testing:
   stage: testing
   variables:
     SCRIPTS_REPO: git@gitlab.therp.nl:therp/therp-ci-templates
