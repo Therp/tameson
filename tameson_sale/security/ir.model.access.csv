@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+sale.access_product_product_sale_user,product.product sale use,product.model_product_product,sales_team.group_sale_salesman,1,1,1,1
+sale.access_account_move_line_salesman,account_move_line salesman,account.model_account_move_line,sales_team.group_sale_salesman,1,0,0,1

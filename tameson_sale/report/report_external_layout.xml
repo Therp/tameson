@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="external_layout_tameson" name="Tameson External Layout">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+            <div class="o_boxed_header">
+                <div class="row mb8">
+                    <div class="col-3 mb4">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 60px; margin-top:14px;" alt="Logo" />
+                    </div>
+                    <div class="col-3 text-left" style="margin-top:10px; padding: 5px; padding-left: 30px;">
+                        <div class="row" name="company_address">
+                            <div t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: true}" />
+                        </div>
+                    </div>
+                    <div class="col-3" style="margin-top:10px; padding: 5px; padding-left: 30px;">
+                        <t t-set="partner_country_code" t-value="o and 'partner_id' in o and o.partner_id and o.partner_id.country_id.code" />
+                        <t t-if="partner_country_code == 'GB'">
+                            <p> Reg.: <span>72902531</span><br />
+                                <span>+44 (0)330 8080 502</span><br />
+                                <span>
+                                support@tameson.co.uk</span><br />
+                            </p>
+                        </t>
+                        <t t-if="partner_country_code in ['BE', 'NL']">
+                            <p> Reg.: <span>72902531</span><br />
+                                <span>+44 (0)330 8080 502</span><br />
+                                <span>
+                                support@tameson.co.uk</span><br />
+                            </p>
+                        </t>
+                        <t t-if="partner_country_code not in ['GB', 'BE', 'NL']">
+                            <p> Reg.: <span>72902531</span><br />
+                                <span>+31 (0)40 750 5795</span><br />
+                                <span>
+                                support@tameson.com</span><br />
+                            </p>
+                        </t>
+                    </div>
+                    <div class="col-3" style="margin-top:10px; padding: 5px;">
+                        <p> VAT: <span t-field="company.partner_id.vat" /><br /> IBAN: <span>
+                            NL66INGB0007718965</span><br /> BIC/SWIFT: <span>INGBNL2A</span><br />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+            t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+            t-att-data-oe-model="o and o._name"
+            t-att-data-oe-id="o and o.id"
+            t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout" />
+            </div>
+            <t t-out="0" />
+        </div>
+
+        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
+            <div class="text-center">
+                <div t-field="company.report_footer" />
+                <div t-if="report_type == 'pdf'"> Page: <span class="page" /> / <span class="topage" />
+                </div>
+                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                    <span t-field="o.name" />
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

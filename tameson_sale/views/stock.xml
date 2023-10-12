@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_picking_form_so" model="ir.ui.view">
+            <field name="name">view_picking_form_so</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="source_so_id" attrs="{'invisible': [('source_so_id','=',False)]}" />
+
+                    <field name="t_aa_id" invisible="1" />
+                    <field name="t_aa_url" attrs="{'invisible': [('t_aa_id','=',False)]}" widget="url" />
+                    <field name="t_aa_allow_cancel" widget="boolean_toggle" attrs="{'invisible': [('t_aa_id','=',False)]}" />
+                    <field name="t_aa_track_url" attrs="{'invisible': [('t_aa_track_url','=',False)]}" widget="url" />
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
