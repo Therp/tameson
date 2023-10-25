@@ -8,7 +8,6 @@
             <field name="inherit_id" ref="base.view_country_form" />
             <field name="arch" type="xml">
                 <field name="code" position="after">
-                    <field name="select_shipment_id" />
                     <field name="select_lang" />
                     <field name="select_pricelist_id" />
                     <field name="customer_note" />

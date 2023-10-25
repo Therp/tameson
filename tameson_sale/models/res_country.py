@@ -14,11 +14,6 @@ def _lang_get(self):
 class ResCountry(models.Model):
     _inherit = "res.country"
 
-    select_shipment_id = fields.Many2one(
-        string="Default Shipment",
-        comodel_name="delivery.carrier",
-        ondelete="restrict",
-    )
     select_lang = fields.Selection(
         _lang_get,
         string="Default Language",

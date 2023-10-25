@@ -10,7 +10,6 @@ from odoo.exceptions import UserError
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    t_aa_name = fields.Char("Active Ant Name", compute="_get_t_aa_name")
     t_aa_id = fields.Char("Active Ant ID", copy=False)
     t_aa_url = fields.Char("ActiveAnt URL", compute="get_t_aa_url")
     t_aa_allow_cancel = fields.Boolean(
@@ -35,11 +34,6 @@ class StockPicking(models.Model):
             record.source_so_id = self.env["sale.order"].search(
                 [("name", "=", record.origin)], limit=1
             )
-
-    @api.depends("name", "sale_id")
-    def _get_t_aa_name(self):
-        for record in self:
-            record.t_aa_name = "%s - %s" % (record.sale_id.name, record.name)
 
     def _compute_carrier_tracking_url(self):
         for picking in self.filtered(lambda l: l.t_aa_track_url):

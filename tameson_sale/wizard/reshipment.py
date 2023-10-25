@@ -55,8 +55,6 @@ class ReshipmentWizard(models.TransientModel):
                 ]
             }
         )
-        if order.invoice_status == "to invoice":
-            order._create_invoice()
 
 
 class ReshipmentWizardLine(models.TransientModel):
