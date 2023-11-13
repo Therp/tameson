@@ -61,7 +61,7 @@ precommit:
   script:
     - |
       source $WORKDIR/.venv/bin/activate
-      git fetch origin 13.0
+      git fetch origin 16.0
       pre-commit run --from-ref FETCH_HEAD --to-ref HEAD
   only:
     - merge_requests
