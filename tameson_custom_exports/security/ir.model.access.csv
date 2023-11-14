@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_custom_exporter_user,custom.exporter.user,tameson_custom_exports.model_custom_exporter,base.group_user,1,1,1,1
+access_custom_export_file_user,custom.export.file.user,tameson_custom_exports.model_custom_export_file,base.group_user,1,1,1,1
+access_sftp_server_user,sftp.server.user,tameson_custom_exports.model_sftp_server,base.group_user,1,1,1,1
