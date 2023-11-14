@@ -5,7 +5,7 @@
     Tameson Sale Customizations.
     """,
     "author": "Tameson",
-    "depends": ["sale", "tameson_product", "delivery"],
+    "depends": ["sale", "tameson_product", "delivery", "account"],
     "data": [
         # "data/group.xml",
         "security/ir.model.access.csv",
@@ -23,6 +23,7 @@
         "wizard/product_creation.xml",
         # "views/stock.xml",
         "views/pricelist.xml",
+        "views/payment_terms.xml",
     ],
     "application": False,
     "license": "OPL-1",

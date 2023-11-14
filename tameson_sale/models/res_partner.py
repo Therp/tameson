@@ -3,7 +3,7 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class ResPartnet(models.Model):
@@ -26,3 +26,11 @@ class ResPartnet(models.Model):
         res = super().default_get(fields)
         res["lang"] = False
         return res
+
+
+class AccountPaymentTerm(models.Model):
+    _inherit = "account.payment.term"
+
+    t_invoice_delivered_quantities = fields.Boolean(
+        string="Invoice delivered quantities"
+    )
