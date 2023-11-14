@@ -8,8 +8,6 @@ import re
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.base_address_extended.models.base_address_extended import STREET_FIELDS
-
 
 class ResPartner(models.Model):
     _name = "res.partner"
@@ -20,12 +18,6 @@ class ResPartner(models.Model):
         comodel_name="tameson.partner.type",
         ondelete="restrict",
     )
-
-    @api.model
-    def _address_fields(self):
-        res = super(ResPartner, self)._address_fields()
-        res += STREET_FIELDS
-        return res
 
     @api.constrains("email")
     def _check_email(self):
