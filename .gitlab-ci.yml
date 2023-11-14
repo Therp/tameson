@@ -71,6 +71,8 @@ create_seed:
   variables:
     SCRIPTS_REPO: git@gitlab.therp.nl:therp/therp-ci-templates
     SCRIPTS_BRANCH: ci-scripts
+    MASTER_BRANCH: "16.0"
+    ODOO_VERSION: "16.0"
   before_script:
     - |
       # CONFIGURATION Area
@@ -78,8 +80,6 @@ create_seed:
       DEPLOY_BRANCH=build-16.0-test
       # Python version for build and virtualenv
       BUILD_PYTHON_VER=3.8.15
-      MASTER_BRANCH=16.0
-      ODOO_VERSION=16.0
       deployment_method=waft
       main_repo_alias_folder_in_yaml=therp/tameson
       main_repo_alias_remote_in_yaml=origin
@@ -102,7 +102,7 @@ create_seed:
       echo scripts dir is $SCRIPTS_DIR
       LAST_PRODUCTION_HASH=$(source $SCRIPTS_DIR/check_hash)
       echo last production hash is $LAST_PRODUCTION_HASH
-      TESTING_FOLDER_NAME="TEST_${CI_PROJECT_NAME}_${LAST_PRODUCTION_HASH}"
+      TESTING_FOLDER_NAME="TEST_${CI_PROJECT_NAME}_${ODOO_VERSION}_${LAST_PRODUCTION_HASH}"
       TESTING_FOLDER=$HOME/$TESTING_FOLDER_NAME
       mkdir -p $TESTING_FOLDER
       cd $TESTING_FOLDER
@@ -118,6 +118,8 @@ testing:
     SCRIPTS_REPO: git@gitlab.therp.nl:therp/therp-ci-templates
     SCRIPTS_BRANCH: ci-scripts
     DEPLOY_BRANCH: build-16.0-test
+    MASTER_BRANCH: "16.0"
+    ODOO_VERSION: "16.0"
   script:
     - |
       SCRIPTS_DIR=$(mktemp -d)
@@ -125,7 +127,7 @@ testing:
       git clone -q --branch "$SCRIPTS_BRANCH" --depth 1 "$SCRIPTS_REPO" "$SCRIPTS_DIR/scripts"
       SCRIPTS_DIR=${SCRIPTS_DIR}/scripts
       LAST_PRODUCTION_HASH=$(source $SCRIPTS_DIR/check_hash)
-      TESTING_FOLDER_NAME="TEST_${CI_PROJECT_NAME}_${LAST_PRODUCTION_HASH}"
+      TESTING_FOLDER_NAME="TEST_${CI_PROJECT_NAME}_${ODOO_VERSION}_${LAST_PRODUCTION_HASH}"
       TESTING_FOLDER=$HOME/$TESTING_FOLDER_NAME
       mkdir -p $TESTING_FOLDER
       cd $TESTING_FOLDER
