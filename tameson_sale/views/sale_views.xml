@@ -12,6 +12,7 @@
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="payment_term_warning" invisible="True" />
+                <label for="payment_term_warning" attrs="{'invisible': [('payment_term_warning','=',False)]}" />
                 <div class="alert alert-danger" role="alert" attrs="{'invisible': [('payment_term_warning','=',False)]}">
                     Notice: Payment term different than customer payment term.
                 </div>

@@ -7,7 +7,10 @@
         <field name="inherit_id" ref="account.view_payment_term_form" />
         <field name="arch" type="xml">
             <field name="display_on_invoice" position="after">
-                <field name="t_invoice_delivered_quantities" />
+                <group>
+                    <field name="t_invoice_delivered_quantities" />
+                    <field name="workflow_process_id" />
+                </group>
             </field>
         </field>
     </record>

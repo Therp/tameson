@@ -31,6 +31,12 @@ class ResPartnet(models.Model):
 class AccountPaymentTerm(models.Model):
     _inherit = "account.payment.term"
 
+    workflow_process_id = fields.Many2one(
+        string="Workflow",
+        comodel_name="sale.workflow.process",
+        ondelete="restrict",
+    )
+
     t_invoice_delivered_quantities = fields.Boolean(
         string="Invoice delivered quantities"
     )

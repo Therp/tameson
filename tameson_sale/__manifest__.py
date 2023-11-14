@@ -5,7 +5,13 @@
     Tameson Sale Customizations.
     """,
     "author": "Tameson",
-    "depends": ["sale", "tameson_product", "delivery", "account"],
+    "depends": [
+        "sale",
+        "tameson_product",
+        "delivery",
+        "account",
+        "sale_automatic_workflow",
+    ],
     "data": [
         # "data/group.xml",
         "security/ir.model.access.csv",
