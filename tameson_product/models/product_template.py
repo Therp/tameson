@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, tools
 from odoo.tools.float_utils import float_compare
 
 
@@ -8,22 +8,22 @@ class ProductTemplateInherit(models.Model):
     _name = "product.template"
     _inherit = ["product.template", "set.help.mixin"]
 
-    #     def init(self):
-    #         res = super(ProductTemplateInherit, self).init()
+    def init(self):
+        res = super(ProductTemplateInherit, self).init()
 
-    #         default_code_index = "product_template_default_code_unique_idx"
-    #         if not tools.index_exists(self._cr, default_code_index):
-    #             self._cr.execute(
-    #                 """
-    # CREATE UNIQUE INDEX IF NOT EXISTS {} ON {} ((lower(default_code)))
-    # WHERE active = true
-    # AND default_code != ''
-    # AND default_code IS NOT NULL""".format(
-    #                     default_code_index, self._table
-    #                 )
-    #             )
+        default_code_index = "product_template_default_code_unique_idx"
+        if not tools.index_exists(self._cr, default_code_index):
+            self._cr.execute(
+                """
+CREATE UNIQUE INDEX IF NOT EXISTS {} ON {} ((lower(default_code)))
+WHERE active = true
+AND default_code != ''
+AND default_code IS NOT NULL""".format(
+                    default_code_index, self._table
+                )
+            )
 
-    #         return res
+        return res
 
     supplierinfo_name = fields.Char(
         string="Vendor Name",
@@ -175,3 +175,8 @@ SELECT id from mrp_bom
             margin = (product.list_price - product.standard_price) / 10
             if float_compare(product.margin_eur_group, margin, precision_digits=2) != 0:
                 product.write({"margin_eur_group": margin})
+
+
+class Product(models.Model):
+    _name = "product.product"
+    _inherit = ["product.product", "set.help.mixin"]
