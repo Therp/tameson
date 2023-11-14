@@ -20,8 +20,6 @@ More nice SVG backgrounds can be found at https://www.svgbackgrounds.com
     "external_dependencies": {
         "python": [],
     },
-    "data": [
-        "views/assets.xml",
-    ],
+    "data": [],
     "installable": True,
 }
