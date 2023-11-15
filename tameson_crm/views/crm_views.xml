@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">crm_lead_view_form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="arch" type="xml">
+            <page name="lead" position="after">
+                <page string="Help">
+                    <button
+            name="action_set_help"
+            string="Edit help"
+            type="object"
+            class="oe_link"
+          />
+                    <field name="help_text" />
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>
