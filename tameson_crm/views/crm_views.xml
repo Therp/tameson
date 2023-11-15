@@ -7,12 +7,7 @@
         <field name="arch" type="xml">
             <page name="lead" position="after">
                 <page string="Help">
-                    <button
-            name="action_set_help"
-            string="Edit help"
-            type="object"
-            class="oe_link"
-          />
+                    <button name="action_set_help" string="Edit help" type="object" class="oe_link" />
                     <field name="help_text" />
                 </page>
             </page>
