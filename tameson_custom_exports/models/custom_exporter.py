@@ -303,7 +303,7 @@ class CustomExporter(models.Model):
             for field in export_fields_list
         ]
 
-    @profile
+    #@profile
     def generate_custom_export(self, new_custom_export_file, recordset):
         export_format = self.export_format
         model_name = self.export_model_name
@@ -373,7 +373,7 @@ class CustomExporter(models.Model):
         else:
             return False
 
-    @profile
+    #@profile
     def create_custom_export_file(self):
         import pdb; pdb.set_trace()
         self.ensure_one()
