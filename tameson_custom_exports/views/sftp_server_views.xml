@@ -18,12 +18,7 @@
         <field name="arch" type="xml">
 	        <form string="SFTP Server">
                 <header>
-                    <button
-            name="check_connection"
-            string="Test connection"
-            type="object"
-            class="btn btn-primary"
-          />
+                    <button name="check_connection" string="Test connection" type="object" class="btn btn-primary" />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -38,16 +33,8 @@
                     </group>
                     <group string="Credentials" colspan="4">
                         <field name="auth_type" />
-                        <field
-              name="keyfile_type"
-              attrs="{'invisible': [('auth_type', '!=', 'keyfile')], 'required': [('auth_type', '=', 'keyfile')]}"
-            />
-                        <field
-              name="keyfile"
-              filename="keyfilename"
-              placeholder="Upload a key file..."
-              attrs="{'invisible': [('auth_type', '!=', 'keyfile')], 'required': [('auth_type', '=', 'keyfile')]}"
-            />
+                        <field name="keyfile_type" attrs="{'invisible': [('auth_type', '!=', 'keyfile')], 'required': [('auth_type', '=', 'keyfile')]}" />
+                        <field name="keyfile" filename="keyfilename" placeholder="Upload a key file..." attrs="{'invisible': [('auth_type', '!=', 'keyfile')], 'required': [('auth_type', '=', 'keyfile')]}" />
                         <field name="keyfilename" invisible="1" />
                         <field name="username" placeholder="user" />
                         <field name="password" password="1" />
@@ -64,11 +51,5 @@
         <field name="view_id" ref="view_sftp_server_tree" />
     </record>
 
-    <menuitem
-    name="SFTP Servers"
-    id="menu_custom_exporter_sftp_servers"
-    action="action_exporter_sftp_servers"
-    parent="menu_custom_exporters"
-    sequence="123"
-  />
+    <menuitem name="SFTP Servers" id="menu_custom_exporter_sftp_servers" action="action_exporter_sftp_servers" parent="menu_custom_exporters" sequence="123" />
 </odoo>
