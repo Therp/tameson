@@ -9,6 +9,7 @@ Custom Exports via SFTP.
     """,
     "category": "General",
     "author": "Tameson",
+    "license": "Other proprietary",
     "depends": ["base", "product"],
     "external_dependencies": {
         "python": ["paramiko"],

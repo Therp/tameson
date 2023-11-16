@@ -11,10 +11,10 @@ from dateutil import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import safe_eval
-from odoo.tools.misc import profile
+from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.web.controllers.main import CSVExport, ExcelExport, Export
+from odoo.addons.web.controllers.export import CSVExport
+from odoo.addons.web.controllers.main import ExcelExport, Export
 
 try:
     import paramiko
@@ -117,8 +117,8 @@ class CustomExporter(models.Model):
     retention_days = fields.Integer(string="Retention days for exports", default=0)
 
     def _list_all_models(self):
-        self._cr.execute("SELECT model, name FROM ir_model ORDER BY name")
-        return self._cr.fetchall()
+        models = self.env["ir.model"].search([], order="name")
+        return [(x.model, x.name) for x in models]
 
     @api.model_create_multi
     def create(self, vals):
@@ -208,11 +208,9 @@ class CustomExporter(models.Model):
                     "Custom export headers not defined correctly: %s!" % str(e)
                 )
 
-    #@profile
     def run_now(self):
         self._cron_run_custom_export()
 
-    #@profile
     def _cron_run_custom_export(self, custom_exporter_id=None):
         if custom_exporter_id:
             custom_exporter = self.browse(custom_exporter_id)
@@ -303,7 +301,6 @@ class CustomExporter(models.Model):
             for field in export_fields_list
         ]
 
-    #@profile
     def generate_custom_export(self, new_custom_export_file, recordset):
         export_format = self.export_format
         model_name = self.export_model_name
@@ -369,13 +366,11 @@ class CustomExporter(models.Model):
             fileobj_value = csv.from_data(columns_headers, import_data)
 
         if fileobj_value:
-            return base64.encodestring(fileobj_value)
+            return base64.encodebytes(fileobj_value)
         else:
             return False
 
-    #@profile
     def create_custom_export_file(self):
-        import pdb; pdb.set_trace()
         self.ensure_one()
         if self.fixed_filename:
             active_export = self.env["custom.export.file"].search(
@@ -432,7 +427,6 @@ class CustomExportFile(models.Model):
         selection=EXPORT_STATES,
         default="draft",
         required=True,
-        #track_visibility="onchange",
         tracking=True,
     )
     records_exported = fields.Integer(string="Records exported")
