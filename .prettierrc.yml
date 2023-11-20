@@ -1,7 +1,7 @@
 # Defaults for all prettier-supported languages.
 # Prettier will complete this with settings from .editorconfig file.
 bracketSpacing: false
-# customer does not want lines broken up. this length will ensure that 
+# customer does not want lines broken up. this length will ensure that
 # tags with long attibutes list may remain unbroken
 printWidth: 400
 tabWidth: 4
