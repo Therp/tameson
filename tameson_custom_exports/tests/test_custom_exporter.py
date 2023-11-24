@@ -43,7 +43,6 @@ class TestCustomExporter(TransactionCase):
 
     def test_call_custom_exporter_testing(self):
         # run the exporter
-        print(self.test_custom_exporter)
         self.env["custom.exporter"].with_context(
             skip_sftp_transfer_when_testing=True
         )._cron_run_custom_export(self.test_custom_exporter.id)
