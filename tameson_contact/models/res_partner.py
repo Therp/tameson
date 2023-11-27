@@ -99,6 +99,12 @@ class ResPartner(models.Model):
         for val in vals_list:
             if val.get("vat", False) and val.get("parent_id", False):
                 val["is_company"] = True
+            if val.get("country_code", False):
+                country_id = self.env["res.country"].search(
+                    [("code", "=ilike", val["country_code"])], limit=1
+                )
+                val["country_id"] = country_id.id
+                val.pop("country_code")
         partners = super().create(vals_list)
         return partners
 
