@@ -29,13 +29,13 @@ class SFTPServer(models.Model):
     _name = "sftp.server"
     _description = "SFTP Server"
 
-    name = fields.Char("Name", required=True)
-    active = fields.Boolean("Active", default=True)
-    host_address = fields.Char("Host address", required=True)
-    port = fields.Integer("Port", default=22, required=True)
+    name = fields.Char(required=True)
+    active = fields.Boolean(default=True)
+    host_address = fields.Char(required=True)
+    port = fields.Integer(default=22, required=True)
     export_path = fields.Char(string="Remote path to export files to", required=True)
-    username = fields.Char("Username")
-    password = fields.Char("Password")
+    username = fields.Char()
+    password = fields.Char()
     auth_type = fields.Selection(
         AUTH_TYPES, string="Authentification Type", required=True
     )
