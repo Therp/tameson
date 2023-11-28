@@ -136,4 +136,4 @@ class SFTPServer(models.Model):
                 }
             except Exception as e:
                 msg = str(e)
-                raise UserError("FTP Connection Error: {message}".format(message=msg))
+                raise UserError(_("FTP Connection Error: {message}").format(message=msg))
