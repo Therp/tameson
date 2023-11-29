@@ -21,7 +21,7 @@ try:
 except Exception as e:
     raise ImportError(
         'Dependency failure: "sftp" requires python library "paramiko": %s.' % str(e)
-    )
+    ) from e
 
 EXPORT_FORMATS = [
     ("csv", ".csv format"),
@@ -41,7 +41,7 @@ class CustomExporter(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Custom Export"
 
-    name = fields.Char(required=True, string="Name")
+    name = fields.Char(required=True)
     export_format = fields.Selection(
         string="File Format", selection=EXPORT_FORMATS, default="csv", required=True
     )
@@ -205,8 +205,8 @@ class CustomExporter(models.Model):
                 ast.literal_eval(self.custom_export_format_header)
             except Exception as e:
                 raise ValidationError(
-                    "Custom export headers not defined correctly: %s!" % str(e)
-                )
+                    _("Custom export headers not defined correctly: %s!") % str(e)
+                ) from e
 
     def run_now(self):
         self._cron_run_custom_export()
@@ -217,7 +217,7 @@ class CustomExporter(models.Model):
         elif self:
             custom_exporter = self
         if not custom_exporter:
-            raise ValidationError("Custom Exporter Not Specified!")
+            raise ValidationError(_("Custom Exporter Not Specified!"))
         new_custom_export_file = custom_exporter.create_custom_export_file()
         domain = safe_eval(custom_exporter.export_domain)
         try:
@@ -351,7 +351,7 @@ class CustomExporter(models.Model):
                     message_type="email",
                     partner_ids=follower_ids,
                 )
-                raise ValidationError(msg)
+                raise ValidationError(msg) from e
         else:
             if import_compat:
                 columns_headers = field_names
@@ -378,10 +378,12 @@ class CustomExporter(models.Model):
             )
             if active_export:
                 raise ValidationError(
-                    """
+                    _(
+                        """
                     There is already an export writing file %s running (ID %s)
                     wait until it's done to write file or set the
                     exporter without a fixed filename"""
+                    )
                     % (active_export.filename, active_export.id)
                 )
         name = "%s_%s.%s" % (
@@ -413,7 +415,7 @@ class CustomExportFile(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "create_date DESC"
 
-    name = fields.Char(required=True, string="Name")
+    name = fields.Char(required=True)
     filename = fields.Char(required=True, string="FileName")
     custom_exporter_id = fields.Many2one(
         string="Custom Exporter",
@@ -423,17 +425,15 @@ class CustomExportFile(models.Model):
         help="Custom Exporter linked to this export.",
     )
     state = fields.Selection(
-        string="State",
         selection=EXPORT_STATES,
         default="draft",
         required=True,
         tracking=True,
     )
-    records_exported = fields.Integer(string="Records exported")
+    records_exported = fields.Integer()
 
     @api.constrains("state", "name", "filename")
     def _check_unique_running(self):
-
         active_exports = self.search(
             [("filename", "=", self.filename), ("state", "=", "draft")]
         )

@@ -4,9 +4,6 @@
     "version": "16.0.1.0.0",
     "summary": "Custom Exports via SFTP",
     "sequence": 10,
-    "description": """
-Custom Exports via SFTP.
-    """,
     "category": "General",
     "author": "Tameson",
     "license": "Other proprietary",

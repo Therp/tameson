@@ -11,7 +11,7 @@ try:
 except Exception as e:
     raise ImportError(
         'Dependency failure: "sftp" requires python library "paramiko": %s.' % str(e)
-    )
+    ) from e
 
 
 _logger = logging.getLogger(__name__)
@@ -136,4 +136,6 @@ class SFTPServer(models.Model):
                 }
             except Exception as e:
                 msg = str(e)
-                raise UserError(_("FTP Connection Error: {message}").format(message=msg))
+                raise UserError(
+                    _("FTP Connection Error: {message}").format(message=msg)
+                ) from e
