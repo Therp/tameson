@@ -1,9 +1,6 @@
 {
     "name": "Tameson CRM Customizations",
     "version": "16.0.1.0.0",
-    "description": """
-    Tameson CRM Customizations.
-    """,
     "author": "Tameson",
     "depends": [
         "crm",
