@@ -4,7 +4,7 @@
         <field name="name">sftp.server.tree</field>
         <field name="model">sftp.server</field>
         <field name="arch" type="xml">
-            <tree string="SFTP Server">
+            <tree>
                 <field name="name" />
                 <field name="host_address" />
                 <field name="port" />
@@ -16,7 +16,7 @@
         <field name="name">sftp.server.form</field>
         <field name="model">sftp.server</field>
         <field name="arch" type="xml">
-	        <form string="SFTP Server">
+            <form string="SFTP Server">
                 <header>
                     <button name="check_connection" string="Test connection" type="object" class="btn btn-primary" />
                 </header>
