@@ -380,11 +380,11 @@ class CustomExporter(models.Model):
                 raise ValidationError(
                     _(
                         """
-                    There is already an export writing file %s running (ID %s)
+                    There is already an export writing file %(file)s running (ID %(id)s)
                     wait until it's done to write file or set the
                     exporter without a fixed filename"""
                     )
-                    % (active_export.filename, active_export.id)
+                    % {"file": active_export.filename, "id": active_export.id}
                 )
         name = "%s_%s.%s" % (
             self.export_filename_prefix,
@@ -439,11 +439,13 @@ class CustomExportFile(models.Model):
         )
         if len(active_exports) > 1:
             raise ValidationError(
-                """
-                There is already an export writing file %s
-                running (%s), wait until it's done to write file or set the
+                _(
+                    """
+                There is already an export writing file %(file)s
+                running (%(ids)s), wait until it's done to write file or set the
                 exporter without a fixed filename"""
-                % (self.filename, self.id)
+                )
+                % {"file": self.filename, "ids": self.ids}
             )
 
     def attach_and_export_file(self, file_obj, records_exported):
