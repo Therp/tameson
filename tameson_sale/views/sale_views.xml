@@ -33,6 +33,12 @@
                     Notice: order does not have customer reference.
                 </div>
             </xpath>
+            <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
+                <attribute name="context">{'validate_analytic': True, 'from_ui': True}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                <attribute name="context">{'validate_analytic': True, 'from_ui': True}</attribute>
+            </xpath>
             <field name="picking_policy" position="attributes">
                 <attribute name="readonly">1</attribute>
             </field>

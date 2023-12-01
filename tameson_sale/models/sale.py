@@ -212,6 +212,11 @@ class SaleOrder(models.Model):
                     else:
                         self.set_delivery_line(shipping, 0)
         ret = super(SaleOrder, self).action_confirm()
+        from_ui = self.env.context.get("from_ui", False)
+        if from_ui and self.workflow_process_id:
+            self.env["automatic.workflow.job"].run_with_workflow(
+                self.workflow_process_id
+            )
         return ret
 
     def get_skus_json(self):
