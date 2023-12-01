@@ -34,7 +34,9 @@ class SetHelpMixin(models.AbstractModel):
     help_text = fields.Html(compute="_get_help_text")
 
     def _get_help_text(self):
-        model = self.env["ir.model"].search([("model", "=", self._name)], limit=1)
+        model = (
+            self.env["ir.model"].sudo().search([("model", "=", self._name)], limit=1)
+        )
         for record in self:
             record.help_text = model.help_text
 
