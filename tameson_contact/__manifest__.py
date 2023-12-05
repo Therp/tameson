@@ -14,6 +14,7 @@
     "depends": [
         "base_address_extended",
         "sales_team",
+        'contact',
     ],
     "data": [
         "security/ir.model.access.csv",
