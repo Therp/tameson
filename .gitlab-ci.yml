@@ -73,6 +73,7 @@ create_seed:
         SCRIPTS_BRANCH: ci-scripts
         MASTER_BRANCH: "16.0"
         ODOO_VERSION: "16.0"
+        deployment_method: "waft"
     before_script:
         - |
             # CONFIGURATION Area
