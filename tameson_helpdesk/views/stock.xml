@@ -16,12 +16,7 @@
                 <attribute name="string">Location</attribute>
             </field>
             <button name="create_returns" position="replace">
-                <button
-          name="action_create_reship"
-          string="Reship"
-          type="object"
-          class="oe_highlight"
-        />
+                <button name="action_create_reship" string="Reship" type="object" class="oe_highlight" />
             </button>
         </field>
     </record>

@@ -46,7 +46,7 @@ class ModelName(models.Model):
         ).id
         template_id = (
             self.env["mail.template"]
-            .search([("name", "ilike", 'ActiveAnts')], limit=1)
+            .search([("name", "ilike", "ActiveAnts")], limit=1)
             .id
         )
         return {
