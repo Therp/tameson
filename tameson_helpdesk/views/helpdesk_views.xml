@@ -83,7 +83,7 @@
     </record>
 
 
-    <record id="helpdesk_ticket_view_form_inherit_helpdesk_invoicing" model="ir.ui.view">
+    <record id="helpdesk_ticket_view_form_inherit_helpdesk_invoicing2" model="ir.ui.view">
         <field name="name">helpdesk_ticket_view_form_inherit_helpdesk_invoicing</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk_account.helpdesk_ticket_view_form_inherit_helpdesk_invoicing" />

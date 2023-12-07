@@ -12,8 +12,8 @@ class ModelName(models.Model):
 
     any_non_returnable = fields.Boolean(related="sale_order_id.any_non_returnable")
     non_returnable_skus = fields.Char(related="sale_order_id.non_returnable_skus")
-    restock_fee_limit_warning = fields.Boolean(compute="_get_restock_fee_limit")
-    restock_fee_limit = fields.Char(compute="_get_restock_fee_limit")
+    restock_fee_limit_warning = fields.Boolean(compute="_compute_restock_fee_limit")
+    restock_fee_limit = fields.Char(compute="_compute_restock_fee_limit")
 
     def action_mail_to_customer(self):
         composer_form_view_id = self.env.ref(
@@ -65,7 +65,7 @@ class ModelName(models.Model):
             },
         }
 
-    def _get_restock_fee_limit(self):
+    def _compute_restock_fee_limit(self):
         restock_fee_limit = (
             self.env["ir.config_parameter"].sudo().get_param("restock_fee_limit", 0)
         )

@@ -1,9 +1,6 @@
 {
     "name": "Tameson Helpdesk Customizations",
-    "version": "16.0.0.1.0.0",
-    "description": """
-    Tameson Helpdesk Customizations.
-    """,
+    "version": "16.0.1.0.0",
     "author": "Tameson",
     "depends": [
         "helpdesk_sale",

@@ -1,232 +1,232 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<odoo>
-    <data noupdate="0">
-        <template id="rma_application" name="RMA">
-            <t t-call="website.layout">
-                <t t-set="additional_title">Product Return Form</t>
-                <div id="rma_application" class="">
-                    <div class="container">
-                        <h1 class="mt-3">Product Return Form</h1>
-                        <div class="row">
-                            <div class="col-sm-7">
-                                <form method="post" autocomplete="off">
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                    <em class="form-text text-muted mb-2">Dear customer, please fill out the following fields and we will process your return as soon as possible.</em>
-                                    <t t-if="user_id._is_public()">
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input class="form-control" id="email" name="email" placeholder="Email address" required="1" />
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-sm-6">
-                                                <label for="name">Name</label>
-                                                <input class="form-control" id="name" name="name" placeholder="Full name" required="1" />
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <label for="company">Company</label>
-                                                <input class="form-control" id="company" name="company" placeholder="Company name" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="address">Address</label>
-                                            <textarea class="form-control" id="address" name="address" placeholder="Address" rows="2" />
-                                        </div>
-                                    </t>
-                                    <div class="form-group">
-                                        <label for="return-reason">Reason for return</label>
-                                        <textarea class="form-control" id="return-reason" name="return-reason" placeholder="Reason for return" rows="3" required="1" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="order">Related Order</label>
-                                        <input class="form-control" id="rma-order" name="order" list="orders" placeholder="Order Reference" t-attf-skus="#{orders.get_skus_json()}">
-                                            <datalist id="orders">
-                                                <t t-foreach="orders" t-as="o">
-                                                    <option t-attf-value="#{o.name}" t-attf-skus="#{o.get_skus_json()}">
-                                                        <t t-esc="o.date_order.date()" />
-                                                        -
-                                                        <t t-esc="o.name" />
-                                                    </option>
-                                                </t>
-                                            </datalist>
-                                        </input>
-                                    </div>
-                                    <label for="1-product">Products</label>
-                                    <t t-foreach="range(1,6)" t-as="pos">
-                                        <div class="form-row mt-1 mb-1">
-                                            <div class="form-group col-sm-8">
-                                                <input t-attf-id="#{pos}-product" t-attf-name="#{pos}-product" class="form-control" t-attf-list="#{pos}-products" placeholder="Product reference">
-                                                    <datalist t-attf-id="#{pos}-products">
-                                                        <t t-foreach="products" t-as="p">
-                                                            <option t-attf-value="#{p.default_code}">
-                                                                <t t-esc="p.display_name" />
-                                                            </option>
-                                                        </t>
-                                                    </datalist>
-                                                </input>
-                                            </div>
-                                            <div class="form-group col-sm-4">
-                                                <input type="number" class="form-control" t-attf-id="#{pos}-qty" t-attf-name="#{pos}-qty" placeholder="Quantity" />
-                                            </div>
-                                        </div>
-                                    </t>
-                                    <div class="form-group">
-                                        <label for="substance">Application</label>
-                                        <textarea class="form-control" id="substance" name="substance" placeholder="Which substances have been in contact with the product?" rows="2" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="iban">IBAN</label>
-                                        <input class="form-control" id="iban" name="iban" placeholder="IBAN account number" />
-                                    </div>
-                                    <div class="float-right mb-5">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-sm-5">
-                                <div class="alert alert-danger mb-3" t-if="user_id._is_public()" role="alert">
-                                    <strong>
-                                        Please
-                                        <a href="/web/login" class="o_docs_btn">login</a>
-                                        to see your customer details and order history.
-                                    </strong>
-                                </div>
-                                <div class="mb-3" t-if="not user_id._is_public()">
-                                    <h5>Your Details</h5>
-                                    <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}' />
-                                </div>
-                                <div class="mb-3" t-if="not user_id._is_public()">
-                                    <h5>Order history</h5>
-                                    <t t-call="portal.portal_table">
-                                        <thead>
-                                            <tr class="active">
-                                                <th>
-                                                    <span class='d-none d-md-inline'>Sales Order #</span>
-                                                    <span class='d-block d-md-none'>Ref.</span>
-                                                </th>
-                                                <th class="text-right">Order Date</th>
-                                                <th class="text-center" />
-                                                <th class="text-right">Total</th>
-                                            </tr>
-                                        </thead>
+<odoo noupdate="0">
 
-                                        <t t-foreach="orders[:10]" t-as="order">
-                                            <tr>
-                                                <td>
-                                                    <a target="new" t-att-href="order.get_portal_url()">
-                                                        <t t-esc="order.name" />
-                                                    </a>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-field="order.date_order" t-options="{'widget': 'date'}" />
-                                                    &amp;nbsp;
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-if="order.state == 'done'" class="badge badge-pill badge-success">
-                                                        <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done" />
-                                                        Done
-                                                    </span>
-                                                </td>
-                                                <td class="text-right">
-                                                    <span t-field="order.amount_total" />
-                                                </td>
-                                            </tr>
-                                        </t>
-                                    </t>
-                                    <div class="text-right" t-if="len(orders) > 10">
-                                        <a target="new" href="/my/orders">Show more</a>
+    <template id="rma_application" name="RMA">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Product Return Form</t>
+            <div id="rma_application" class="">
+                <div class="container">
+                    <h1 class="mt-3">Product Return Form</h1>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <form method="post" autocomplete="off">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <em class="form-text text-muted mb-2">Dear customer, please fill out the following fields and we will process your return as soon as possible.</em>
+                                <t t-if="user_id._is_public()">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input class="form-control" id="email" name="email" placeholder="Email address" required="1" />
                                     </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="name">Name</label>
+                                            <input class="form-control" id="name" name="name" placeholder="Full name" required="1" />
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="company">Company</label>
+                                            <input class="form-control" id="company" name="company" placeholder="Company name" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Address</label>
+                                        <textarea class="form-control" id="address" name="address" placeholder="Address" rows="2" />
+                                    </div>
+                                </t>
+                                <div class="form-group">
+                                    <label for="return-reason">Reason for return</label>
+                                    <textarea class="form-control" id="return-reason" name="return-reason" placeholder="Reason for return" rows="3" required="1" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="order">Related Order</label>
+                                    <input class="form-control" id="rma-order" name="order" list="orders" placeholder="Order Reference" t-attf-skus="#{orders.get_skus_json()}">
+                                        <datalist id="orders">
+                                            <t t-foreach="orders" t-as="o">
+                                                <option t-attf-value="#{o.name}" t-attf-skus="#{o.get_skus_json()}">
+                                                    <t t-esc="o.date_order.date()" />
+                                                    -
+                                                    <t t-esc="o.name" />
+                                                </option>
+                                            </t>
+                                        </datalist>
+                                    </input>
+                                </div>
+                                <label for="1-product">Products</label>
+                                <t t-foreach="range(1,6)" t-as="pos">
+                                    <div class="form-row mt-1 mb-1">
+                                        <div class="form-group col-sm-8">
+                                            <input t-attf-id="#{pos}-product" t-attf-name="#{pos}-product" class="form-control" t-attf-list="#{pos}-products" placeholder="Product reference">
+                                                <datalist t-attf-id="#{pos}-products">
+                                                    <t t-foreach="products" t-as="p">
+                                                        <option t-attf-value="#{p.default_code}">
+                                                            <t t-esc="p.display_name" />
+                                                        </option>
+                                                    </t>
+                                                </datalist>
+                                            </input>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <input type="number" class="form-control" t-attf-id="#{pos}-qty" t-attf-name="#{pos}-qty" placeholder="Quantity" />
+                                        </div>
+                                    </div>
+                                </t>
+                                <div class="form-group">
+                                    <label for="substance">Application</label>
+                                    <textarea class="form-control" id="substance" name="substance" placeholder="Which substances have been in contact with the product?" rows="2" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="iban">IBAN</label>
+                                    <input class="form-control" id="iban" name="iban" placeholder="IBAN account number" />
+                                </div>
+                                <div class="float-right mb-5">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="alert alert-danger mb-3" t-if="user_id._is_public()" role="alert">
+                                <strong>
+                                    Please
+                                    <a href="/web/login" class="o_docs_btn">login</a>
+                                    to see your customer details and order history.
+                                </strong>
+                            </div>
+                            <div class="mb-3" t-if="not user_id._is_public()">
+                                <h5>Your Details</h5>
+                                <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}' />
+                            </div>
+                            <div class="mb-3" t-if="not user_id._is_public()">
+                                <h5>Order history</h5>
+                                <t t-call="portal.portal_table">
+                                    <thead>
+                                        <tr class="active">
+                                            <th>
+                                                <span class='d-none d-md-inline'>Sales Order #</span>
+                                                <span class='d-block d-md-none'>Ref.</span>
+                                            </th>
+                                            <th class="text-right">Order Date</th>
+                                            <th class="text-center" />
+                                            <th class="text-right">Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <t t-foreach="orders[:10]" t-as="order">
+                                        <tr>
+                                            <td>
+                                                <a target="new" t-att-href="order.get_portal_url()">
+                                                    <t t-esc="order.name" />
+                                                </a>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="order.date_order" t-options="{'widget': 'date'}" />
+                                                &amp;nbsp;
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-if="order.state == 'done'" class="badge badge-pill badge-success">
+                                                    <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done" />
+                                                    Done
+                                                </span>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="order.amount_total" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <div class="text-right" t-if="len(orders) > 10">
+                                    <a target="new" href="/my/orders">Show more</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </t>
-        </template>
-        <template id="rma_data_table">
-            <p>Products:</p>
-            <table style="width:100%">
-                <thead>
-                    <tr valign="top">
-                        <t t-foreach="headers" t-as="h">
-                            <th>
-                                <t t-esc="h" />
-                            </th>
+            </div>
+        </t>
+    </template>
+    <template id="rma_data_table">
+        <p>Products:</p>
+        <table style="width:100%">
+            <thead>
+                <tr valign="top">
+                    <t t-foreach="headers" t-as="h">
+                        <th>
+                            <t t-esc="h" />
+                        </th>
+                    </t>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="table" t-as="row">
+                    <tr>
+                        <t t-foreach="row" t-as="cell">
+                            <td>
+                                <t t-esc="cell" />
+                            </td>
                         </t>
                     </tr>
-                </thead>
-                <tbody>
-                    <t t-foreach="table" t-as="row">
-                        <tr>
-                            <t t-foreach="row" t-as="cell">
-                                <td>
-                                    <t t-esc="cell" />
-                                </td>
-                            </t>
-                        </tr>
-                    </t>
-                </tbody>
-            </table>
-        </template>
-        <template id="rma_application_success" name="RMA Request Received">
-            <t t-call="website.layout">
-                <div id="wrap" class="oe_structure oe_empty">
-                    <div class="container">
-                        <div class="alert alert-success mt-3" role="alert">
-                            <h4 class="alert-heading">
-                                Your Ticket Number is
-                                <a t-if="request.session.uid" t-attf-href="/helpdesk/ticket/#{ticket.id}">
-                                    <span t-esc="'RET-%d' % ticket.id" />
-                                </a>
-                                <t t-if="not request.session.get('uid')">
+                </t>
+            </tbody>
+        </table>
+    </template>
+    <template id="rma_application_success" name="RMA Request Received">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container">
+                    <div class="alert alert-success mt-3" role="alert">
+                        <h4 class="alert-heading">
+                            Your Ticket Number is
+                            <a t-if="request.session.uid" t-attf-href="/helpdesk/ticket/#{ticket.id}">
+                                <span t-esc="'RET-%d' % ticket.id" />
+                            </a>
+                            <t t-if="not request.session.get('uid')">
 
-                                    <span t-esc="'RET-%d' % ticket.id" />
-                                </t>
-                                .
-                            </h4>
-                            <p>Thank you for submitting your issue, our team will get right on it!</p>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Description</h5>
-                                <p class="card-text">
-                                    <span t-field="ticket.description" />
-                                </p>
-                            </div>
-                        </div>
-                        <div class="alert alert-secondary mt-3" role="alert">
-                            <p>
-                                <strong>
-                                    Shipping:
-                                    <br />
-                                </strong>
-                                <ul>
-                                    <li>Attach a copy of this form including the RET number with your return shipment. Shipments without RET
-                                        number will not be taken into consideration.</li>
-                                    <li>The item must be returned within 14 days after receipt of the RET number. </li>
-                                    <li>The return items should be unused, in original packaging, including documentation, and undamaged.</li>
-                                    <li>Pack the return articles in a box to prevent damage in transit.</li>
-                                    <li>Do not write on the packaging and do not stick labels or tape on it.</li>
-                                    <li>The shipment of the return items is at the risk of the customer. Therefore, registered mail is encouraged.
-                                        Always keep your posting receipt. </li>
-                                    <li>
-                                        Send (after receiving the RET number) the items to:
-                                        <br />
-                                        <strong>
-                                            TAMESON
-                                            <br />
-                                            Torenallee 20
-                                            <br />
-                                            5617BC Eindhoven
-                                            <br />
-                                            The Netherlands
-                                        </strong>
-                                    </li>
-                                </ul>
+                                <span t-esc="'RET-%d' % ticket.id" />
+                            </t>
+                            .
+                        </h4>
+                        <p>Thank you for submitting your issue, our team will get right on it!</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Description</h5>
+                            <p class="card-text">
+                                <span t-field="ticket.description" />
                             </p>
                         </div>
                     </div>
+                    <div class="alert alert-secondary mt-3" role="alert">
+                        <p>
+                            <strong>
+                                Shipping:
+                                <br />
+                            </strong>
+                            <ul>
+                                <li>Attach a copy of this form including the RET number with your return shipment. Shipments without RET
+                                    number will not be taken into consideration.</li>
+                                <li>The item must be returned within 14 days after receipt of the RET number. </li>
+                                <li>The return items should be unused, in original packaging, including documentation, and undamaged.</li>
+                                <li>Pack the return articles in a box to prevent damage in transit.</li>
+                                <li>Do not write on the packaging and do not stick labels or tape on it.</li>
+                                <li>The shipment of the return items is at the risk of the customer. Therefore, registered mail is encouraged.
+                                    Always keep your posting receipt. </li>
+                                <li>
+                                    Send (after receiving the RET number) the items to:
+                                    <br />
+                                    <strong>
+                                        TAMESON
+                                        <br />
+                                        Torenallee 20
+                                        <br />
+                                        5617BC Eindhoven
+                                        <br />
+                                        The Netherlands
+                                    </strong>
+                                </li>
+                            </ul>
+                        </p>
+                    </div>
                 </div>
-            </t>
-        </template>
-    </data>
+            </div>
+        </t>
+    </template>
+
 </odoo>
