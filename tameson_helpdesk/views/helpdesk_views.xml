@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="helpdesk_tickets_view_tree">
+        <field name="name">helpdesk.ticket.tree</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[last()]" position="after">
+                <field name="create_date" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_form_inherit_helpdesk_stock" model="ir.ui.view">
+        <field name="name">helpdesk_ticket_view_form_inherit_helpdesk_stock</field>
+        <field name="model">helpdesk.ticket</field>
+        <field
+      name="inherit_id"
+      ref="helpdesk_stock.helpdesk_ticket_view_form_inherit_helpdesk_stock"
+    />
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+                <attribute name="attrs" />
+            </field>
+        </field>
+    </record>
+    <record
+    id="helpdesk_ticket_view_form_inherit_helpdesk_invoicing"
+    model="ir.ui.view"
+  >
+        <field name="name">helpdesk_ticket_view_form_inherit_helpdesk_invoicing</field>
+        <field name="model">helpdesk.ticket</field>
+        <field
+      name="inherit_id"
+      ref="helpdesk_sale.helpdesk_ticket_view_form_inherit_helpdesk_invoicing"
+    />
+        <field name="arch" type="xml">
+            <field name="sale_order_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_form" model="ir.ui.view">
+        <field name="name">helpdesk_ticket_view_form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_mail_to_aa" string="Mail to AA" type="object" class="oe_highlight"/>
+                <button name="action_mail_to_customer" string="Mail to Customer" type="object" class="oe_highlight"/>
+            </header>
+            <field name="description" position="after">
+                <field name="any_non_returnable" invisible="True" />
+                <field name="restock_fee_limit_warning" invisible="True" />
+                <h2
+          class="text-danger"
+          attrs="{'invisible': [('any_non_returnable','=',False)]}"
+        >
+                    Warning:  the Sales order contains some products that cannot be returned: <field
+            name="non_returnable_skus"
+          />.
+                </h2>
+                <h2
+          class="text-danger"
+          attrs="{'invisible': [('restock_fee_limit_warning','=',False)]}"
+        >
+                    Warning:  for returning products for more than <field
+            name="restock_fee_limit"
+          />,  we need to calculate a restocking fee.
+                </h2>
+                <notebook>
+                    <page string="Help">
+                        <button
+              name="action_set_help"
+              string="Edit help"
+              type="object"
+              class="oe_link"
+              groups="helpdesk.group_helpdesk_manager"
+            />
+                        <field name="help_text" />
+                    </page>
+                </notebook>
+            </field>
+            <field name="priority" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="tag_ids" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="team_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <field name="user_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <field name="ticket_type_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+        </field>
+    </record>
+
+
+    <record
+    id="helpdesk_ticket_view_form_inherit_helpdesk_invoicing"
+    model="ir.ui.view"
+  >
+        <field name="name">helpdesk_ticket_view_form_inherit_helpdesk_invoicing</field>
+        <field name="model">helpdesk.ticket</field>
+        <field
+      name="inherit_id"
+      ref="helpdesk_account.helpdesk_ticket_view_form_inherit_helpdesk_invoicing"
+    />
+        <field name="arch" type="xml">
+            <button
+        name="%(helpdesk_account.helpdesk_ticket_action_refund)d"
+        position="attributes"
+      >
+                <attribute name="groups" />
+            </button>
+        </field>
+    </record>
+
+    <!--<record id="helpdesk_ticket_view_form_inherit_stock_user" model="ir.ui.view">
+        <field name="name">helpdesk_ticket_view_form_inherit_stock_user</field>
+        <field name="model">helpdesk.ticket</field>
+        <field
+      name="inherit_id"
+      ref="helpdesk_stock.helpdesk_ticket_view_form_inherit_stock_user"
+    />
+        <field name="arch" type="xml">
+            <button name="%(stock.act_stock_return_picking)d" position="attributes">
+                <attribute name="groups" />
+            </button>
+            <button name="%(stock.act_stock_return_picking)d" position="after">
+                <button
+          type="object"
+          name="action_reship"
+          groups="stock.group_stock_user"
+          string="Reship"
+          attrs="{'invisible': [('use_product_returns', '=', False)]}"
+          context="{'default_ticket_id': id, 'default_company_id': company_id}"
+        />
+            </button>
+        </field>
+    </record>-->
+
+</odoo>
