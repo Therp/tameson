@@ -18,6 +18,7 @@ class SaleOrder(models.Model):
         store=True,
     )
 
+    origin = fields.Char(index=True)
     any_non_returnable = fields.Boolean(compute="_check_any_non_returnable")
     any_use_up = fields.Boolean(compute="_check_any_non_returnable")
     non_returnable_skus = fields.Char(compute="_check_any_non_returnable")
