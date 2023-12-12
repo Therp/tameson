@@ -188,6 +188,9 @@ class SaleOrder(models.Model):
             )
             r.t_is_paid = full_invoiced and all_invoice_paid
 
+    def action_confirm_bypass_risk(self):
+        return self.with_context(bypass_risk=True).action_confirm()
+
     def action_confirm(self):
         over_amount = float(
             self.env["ir.config_parameter"].sudo().get_param("shipping_over_amount", 0)
