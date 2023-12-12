@@ -11,6 +11,7 @@
         "delivery",
         "account",
         "sale_automatic_workflow",
+        "sale_financial_risk",
     ],
     "data": [
         # "data/group.xml",

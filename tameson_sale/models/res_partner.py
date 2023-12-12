@@ -6,7 +6,7 @@
 from odoo import api, fields, models
 
 
-class ResPartnet(models.Model):
+class ResPartner(models.Model):
     _inherit = "res.partner"
 
     @api.model_create_multi
@@ -24,7 +24,16 @@ class ResPartnet(models.Model):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        res["lang"] = False
+        res.update(
+            {
+                "risk_sale_order_include": True,
+                "risk_invoice_draft_include": True,
+                "risk_invoice_open_include": True,
+                "risk_invoice_unpaid_include": True,
+                "credit_limit": 500,
+                "lang": False,
+            }
+        )
         return res
 
 
