@@ -100,34 +100,6 @@ class StockPicking(models.Model):
             wiz.process()
         return {"id": self.id, "state": self.state}
 
-    def action_mass_mail(self):
-        composer_form_view_id = self.env.ref(
-            "mail.email_compose_message_wizard_form"
-        ).id
-        template_id = (
-            self.env["mail.template"]
-            .search([("model_id.model", "=", self._name)], limit=1)
-            .id
-        )
-
-        return {
-            "type": "ir.actions.act_window",
-            "view_mode": "form",
-            "res_model": "mail.compose.message",
-            "view_id": composer_form_view_id,
-            "target": "new",
-            "context": {
-                "default_composition_mode": "mass_mail"
-                if len(self.ids) > 1
-                else "comment",
-                "default_res_id": self.ids[0],
-                "default_model": "stock.picking",
-                "default_use_template": bool(template_id),
-                "default_template_id": template_id,
-                "active_ids": self.ids,
-            },
-        }
-
     @api.depends("sale_id", "state", "sale_id.payment_term_id", "sale_id.t_is_paid")
     def _t_delivery_allowed_get(self):
         for r in self:

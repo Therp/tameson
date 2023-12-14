@@ -27,10 +27,7 @@
                 <attribute name="readonly">True</attribute>
             </field>
             <xpath expr="//header/button[@name='button_validate'][last()]" position="after">
-                <button name="fill_done_qtys" states="draft,partially_available,assigned" string="Fill done QTYs" groups="stock.group_stock_user" type="object" class="oe_highlight" />
-
                 <button name="action_mail_send" string="Send" type="object" class="oe_highlight" />
-                <button name="action_create_batch" string="Batch for ready shipments" type="object" attrs="{'invisible': ['|', ('state','not in',('done')), ('picking_type_code','!=','incoming')]}" />
                 <button name="action_reserve_force" string="Force availability" type="object" attrs="{'invisible': ['|', ('state','not in',('waiting')), ('picking_type_code','!=','outgoing')]}" />
             </xpath>
             <field name="scheduled_date" position="before">
@@ -91,35 +88,11 @@
             </xpath>
         </field>
     </record>
-
-    <record model="ir.ui.view" id="stock_picking_batch_form">
-        <field name="name">stock.picking.batch.form_t</field>
-        <field name="model">stock.picking.batch</field>
-        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='origin']" position="after">
-                <field name="t_delivery_allowed" optional="show" />
-            </xpath>
-            <xpath expr="//header[1]//button[last()]" position="after">
-                <button name="print_batch_stock_picking_invoices" string="Picking invoices" type="object" class="oe_highlight" />
-            </xpath>
-            <xpath expr="//field[@name='scheduled_date']" position="before">
-                <field name="create_date" optional="show" />
-            </xpath>
-            <xpath expr="//field[@name='scheduled_date']" position="after">
-                <field name="partner_id" optional="show" />
-                <field name="carrier_id" optional="show" string="Delivery method" />
-            </xpath>
-        </field>
-    </record>
     <record id="view_move_tree" model="ir.ui.view">
         <field name="name">view_move_tree</field>
         <field name="model">stock.move</field>
         <field name="inherit_id" ref="stock.view_move_tree" />
         <field name="arch" type="xml">
-            <xpath expr="//field[1]" position="before">
-                <field name="date_expected" />
-            </xpath>
             <xpath expr="//field[@name='product_id']" position="before">
                 <field name="partner_id" />
             </xpath>
@@ -135,8 +108,7 @@
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form" />
         <field name="arch" type="xml">
             <field name="company_id" position="after">
-                <field name="t_aa_shipper_mapping" />
-                <field name="aftership_slug" />
+                <field name="external_mapping" />
             </field>
         </field>
     </record>
@@ -153,16 +125,6 @@
             </field>
             <field name="reference" position="attributes">
                 <attribute name="invisible">True</attribute>
-            </field>
-        </field>
-    </record>
-    <record id="stock_inventory_line_tree2" model="ir.ui.view">
-        <field name="name">stock_inventory_line_tree2</field>
-        <field name="model">stock.inventory.line</field>
-        <field name="inherit_id" ref="stock.stock_inventory_line_tree2" />
-        <field name="arch" type="xml">
-            <field name="product_id" position="after">
-                <field name="note" />
             </field>
         </field>
     </record>

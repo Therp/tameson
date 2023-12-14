@@ -6,9 +6,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
-                <field name="minimal_qty_available" optional="show" />
                 <field name="minimal_qty_available_stored" optional="hide" />
-                <field name="t_location" optional="show" />
             </xpath>
         </field>
     </record>
@@ -21,11 +19,8 @@
             <xpath expr="//div[hasclass('oe_kanban_details')]/ul[//li/field[@name='qty_available']]" position="after">
                 <ul position="inside">
                     <li>
-                        Min qty: <field name="minimal_qty_available" />
+                        Min qty: <field name="minimal_qty_available_stored" />
                         <field name="uom_id" />
-                    </li>
-                    <li>
-                        Location: <field name="t_location" />
                     </li>
                 </ul>
             </xpath>
@@ -37,16 +32,6 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="stock.product_template_form_view_procurement_button" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']/button[@name='action_open_quants']" position="before">
-                <button attrs="{'invisible': [('type', '!=', 'product')]}" class="oe_stat_button" icon="fa-cubes">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value" widget="statinfo">
-                            <field name="minimal_qty_available" widget="statinfo" nolabel="1" class="mr4" />
-                        </span>
-                        <span class="o_stat_text">Min Qty</span>
-                    </div>
-                </button>
-            </xpath>
             <button name="action_view_stock_move_lines" position="after">
                 <button string="Stock Moves" type="object" name="action_view_stock_moves" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" class="oe_stat_button" icon="fa-compress" groups="stock.group_stock_user" />
             </button>
