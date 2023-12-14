@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="return_commercial_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="docs[:1].with_context(lang=lang)" />
+                <div class="row">
+                    <div class="col-6">
+                        <h3>SENDER</h3>
+                        <address t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}" />
+                    </div>
+                    <div class="col-6">
+                        <h3>Billing/Shipping address</h3>
+                        <address t-field="o.company_id.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}" />
+                        Tax ID: <span t-field="o.company_id.partner_id.vat" />
+                    </div>
+                </div>
+                <div class="page">
+                    <h4>
+                        <span>Commercial Invoice</span>
+                        <span t-field="o.name" />
+                    </h4>
+                    <h4>
+                        <span>This is a return shipment</span>
+                    </h4>
+                    <div id="informations" class="row mt32 mb32">
+                        <div class="col-auto mw-100 mb-2" name="invoice_date">
+                            <strong>Date:</strong>
+                            <p class="m-0" t-field="o.create_date" t-options="{&quot;widget&quot;: &quot;date&quot;}" />
+                        </div>
+                        <div class="col-auto mw-100 mb-2" name="origin">
+                            <strong>Source:</strong>
+                            <p class="m-0" t-field="o.sale_id.name" />
+                        </div>
+                        <div class="col-auto mw-100 mb-2" name="incoterm">
+                            <strong>Incoterm:</strong>
+                            <p class="m-0" t-field="o.sale_id.incoterm.name" />
+                        </div>
+                    </div>
+                    <table class="table table-sm o_main_table" name="invoice_line_table">
+                        <thead>
+                            <tr>
+                                <t t-set="colspan" t-value="6" />
+                                <th name="th_description" class="text-left">
+                                    <span>Description</span>
+                                </th>
+                                <th name="hs_code" class="text-left">
+                                    <span>HS code</span>
+                                </th>
+                                <th name="country" class="text-left">
+                                    <span>Country of origin</span>
+                                </th>
+                                <th name="th_quantity" class="text-right">
+                                    <span>Quantity</span>
+                                </th>
+                                <th name="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                    <span>Unit Price</span>
+                                </th>
+                                <th name="th_taxes" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                    <span>Sub-total</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="invoice_tbody">
+                            <t t-set="lines" t-value="o.move_lines" />
+                            <t t-foreach="lines" t-as="line">
+                                <tr class="o_line_section">
+                                    <t name="account_invoice_line_accountable">
+                                        <td name="account_invoice_line_name">
+                                            <span t-field="line.product_id.name" t-options="{'widget' : 'text' }" />
+                                        </td>
+                                        <td name="hs_code">
+                                            <span t-field="line.product_id.hs_code" t-options="{'widget' : 'text' }" />
+                                        </td>
+                                        <td name="country">
+                                            <span t-field="line.product_id.intrastat_origin_country_id.name" t-options="{'widget' : 'text' }" />
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.product_uom_qty" />
+                                            <span t-field="line.product_uom_id" groups="uom.group_uom" />
+                                        </td>
+                                        <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type== 'html' else '' }}">
+                                            <span class="text-nowrap" t-esc="line.t_aa_comm_price" t-options='{"widget": "monetary", "display_currency": line.currency_id}' />
+                                        </td>
+                                        <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                            <span t-esc="line.product_uom_qty * line.t_aa_comm_price" t-options='{"widget": "monetary", "display_currency": line.currency_id}' />
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="clearfix">
+                        <div id="total" class="row">
+                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
+                                <table class="table table-sm" style="page-break-inside: avoid;">
+                                    <tr class="border-black o_subtotal" style="">
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="sum(o.move_lines.mapped(lambda l: l.t_aa_comm_price * l.product_uom_qty))" t-options='{"widget": "monetary", "display_currency": o.move_lines[:1].currency_id}' />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_return_commercial_report" model="ir.actions.report">
+        <field name="name">Commercial invoice (return shipment)</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tameson_stock.return_commercial_report</field>
+        <field name="attachment_use" eval="False" />
+        <field name="attachment">('Commercial Invoice:'+object.name+'.pdf')</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking" />
+    </record>
+
+</odoo>

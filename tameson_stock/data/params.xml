@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="auto_reservation_days" model="ir.config_parameter" forcecreate="1">
+        <field name="key">tameson_stock.auto_reservation_days</field>
+        <field name="value">7</field>
+    </record>
+</odoo>

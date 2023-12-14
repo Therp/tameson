@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record forcecreate="True" id="ir_cron_scheduler_recompute_reordering_rules" model="ir.cron">
+        <field name="name">Tameson: Recompute reordering rules parameters</field>
+        <field name="active" eval="True" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="stock.model_stock_warehouse_orderpoint" />
+        <field name="state">code</field>
+        <field name="code">model.cron_recompute_rr()</field>
+    </record>
+    <record forcecreate="True" id="ir_cron_scheduler_validate_orderpoint_product_routes" model="ir.cron">
+        <field name="name">Tameson: Validate product routes wrt stock.warehouse.orderpoint</field>
+        <field name="active" eval="True" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="stock.model_stock_warehouse_orderpoint" />
+        <field name="state">code</field>
+        <field name="code">model.cron_validate_orderpoint_product_routes()</field>
+    </record>
+    <record forcecreate="True" id="product_stock_export" model="ir.cron">
+        <field name="name">Tameson: Export product stock</field>
+        <field name="active" eval="True" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="stock.model_stock_move" />
+        <field name="state">code</field>
+        <field name="code">model.product_stock_export()</field>
+    </record>
+    <record forcecreate="True" id="aa_stock_comparison" model="ir.cron">
+        <field name="name">Tameson: AA Stock comparison</field>
+        <field name="active" eval="True" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="stock.model_stock_warehouse" />
+        <field name="state">code</field>
+        <field name="code">model.compare_aa_stock()</field>
+    </record>
+    <record forcecreate="True" id="cron_minimal_qty_stored_tmpl" model="ir.cron">
+        <field name="name">Tameson: Recompute QTY_min stored (product template) </field>
+        <field name="active" eval="True" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="state">code</field>
+        <field name="code">model.cron_recompute_min_qty_avail()</field>
+    </record>
+    <record forcecreate="True" id="cron_complete_minimal_qty_stored_tmpl" model="ir.cron">
+        <field name="name">Tameson: Recompute Completely QTY min stored (template) </field>
+        <field name="active" eval="False" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="state">code</field>
+        <field name="code">model.cron_recompute_all_min_qty_avail_stored_tmpl()</field>
+    </record>
+</odoo>

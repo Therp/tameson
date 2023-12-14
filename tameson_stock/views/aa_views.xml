@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- <record id="view_warehouse_aa" model="ir.ui.view">
+        <field name="name">view_warehouse_aa</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_compare_aa_stock" string="AA Stock Compare" icon="fa-refresh" class="oe_stat_button" type="object"/>
+            </div>
+        </field>
+    </record> -->
+    <record id="view_aa_stock_comparison_search" model="ir.ui.view">
+        <field name="name">view_aa_stock_comparison_search</field>
+        <field name="model">aa.stock.comparison</field>
+        <field name="arch" type="xml">
+            <search string="view_aa_stock_comparison_search">
+                <field name="product_id" />
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="date_group" domain="[]" context="{'group_by': 'create_date:day'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_aa_stock_comparison_tree" model="ir.ui.view">
+        <field name="name">view_aa_stock_comparison_tree</field>
+        <field name="model">aa.stock.comparison</field>
+        <field name="arch" type="xml">
+            <tree string="view_aa_stock_comparison_tree" create="false" delete="false" edit="false">
+                <field name="product_id" />
+                <field name="aa_stock" />
+                <field name="odoo_stock" />
+                <field name="difference" />
+                <button name="action_open_product" string="Open Product" type="object" class="oe_highlight" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_aa_stock_comparison_grid" model="ir.ui.view">
+        <field name="name">view_aa_stock_comparison_grid</field>
+        <field name="model">aa.stock.comparison</field>
+        <field name="arch" type="xml">
+            <grid string="view_aa_stock_comparison_grid" class="o_report_aa_comparison" create="false" edit="false">
+                <field name="product_id" type="row" />
+                <field name="create_date" type="col">
+                    <range name="month" string="Month" span="month" step="day" />
+                </field>
+                <field name="difference" type="measure" />
+            </grid>
+        </field>
+    </record>
+
+    <record id="action_aa_stock_comparison" model="ir.actions.act_window">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">AA Stock Comparison Report</field>
+        <field name="res_model">aa.stock.comparison</field>
+        <field name="view_mode">grid,tree</field>
+        <field name="target">current</field>
+        <field name="domain">[]</field>
+        <field name="context">{'graph_groupbys': ['create_date:day']}</field>
+        <field name="search_view_id" ref="view_aa_stock_comparison_search" />
+    </record>
+
+    <record id="menu_aa_stock_comparison" model="ir.ui.menu">
+        <field name="name">AA Stock Comparison</field>
+        <field name="sequence" eval="180" />
+        <field name="action" ref="action_aa_stock_comparison" />
+        <field name="parent_id" ref="stock.menu_warehouse_report" />
+    </record>
+</odoo>

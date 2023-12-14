@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="tameson_a6_paperformat" model="report.paperformat">
+        <field name="name">European A6 low margin</field>
+        <field name="default" eval="True" />
+        <field name="format">A6</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <record id="tameson_a6_landscape_paperformat" model="report.paperformat">
+        <field name="name">European A6 low margin</field>
+        <field name="default" eval="True" />
+        <field name="format">A6</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <report id="t_delivery_addresses" model="stock.picking" string="Delivery Addresses" report_type="qweb-pdf" name="tameson_stock.report_t_delivery_addresses" file="tameson_stock.report_t_delivery_addresses" print_report_name="'Delivery Addresses - %s' % object.name" paperformat="tameson_a6_landscape_paperformat" />
+
+    <report id="stock_picking_invoices" string="Picking invoices" model="stock.picking" report_type="qweb-pdf" name="tameson_stock.report_picking_invoice" file="tameson_stock.report_picking_invoice" print_report_name="'Picking Invoices - %s' % object.name" />
+
+    <template id="report_t_delivery_addresses">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <t t-set="ship_to" t-value="o.partner_id" />
+                    <t t-if="ship_to">
+                        <p style="margin-bottom:100px;padding-top:20px;font-size:10px">Sent by
+                            Tameson - 5617BC-20 - Ref: <span t-esc="o.name" /></p>
+                        <table class="table-condensed" style="font-size:18px;margin: 0 auto">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <t t-if="not ship_to.parent_id.name == ship_to.name">
+                                            <span t-esc="ship_to.parent_id.name" />
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-esc="ship_to.name" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-esc="ship_to.street" />
+                                    </td>
+                                </tr>
+                                <t t-if="ship_to.street2">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="ship_to.street2" />
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td>
+                                        <span style="margin-right:10px;text-transform: uppercase;" t-esc="ship_to.zip" />
+                                        <span t-esc="ship_to.city" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-esc="ship_to.country_id.name" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-if="not ship_to">
+                        <h2>Picking <span t-esc="o.name" /> has no partner</h2>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
