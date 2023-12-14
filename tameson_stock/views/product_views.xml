@@ -11,22 +11,6 @@
         </field>
     </record>
 
-    <record id="product_template_kanban_stock_view" model="ir.ui.view">
-        <field name="name">product.template.kanban.view</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.product_template_kanban_stock_view" />
-        <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_kanban_details')]/ul[//li/field[@name='qty_available']]" position="after">
-                <ul position="inside">
-                    <li>
-                        Min qty: <field name="minimal_qty_available_stored" />
-                        <field name="uom_id" />
-                    </li>
-                </ul>
-            </xpath>
-        </field>
-    </record>
-
     <record id="product_template_form_view_procurement_button" model="ir.ui.view">
         <field name="name">product.template.procurement</field>
         <field name="model">product.template</field>
@@ -40,7 +24,6 @@
     <record model="ir.ui.view" id="product_form_view_procurement_button">
         <field name="name">product.product.procurement</field>
         <field name="model">product.product</field>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]" />
         <field name="inherit_id" ref="stock.product_form_view_procurement_button" />
         <field name="arch" type="xml">
             <button name="action_view_stock_move_lines" position="after">
@@ -48,16 +31,4 @@
             </button>
         </field>
     </record>
-
-    <record id="view_template_property_form" model="ir.ui.view">
-        <field name="name">view_template_property_form</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="stock.view_template_property_form" />
-        <field name="arch" type="xml">
-            <group name="operations" position="inside">
-                <field name="wh_id" widget="selection" />
-            </group>
-        </field>
-    </record>
-
 </odoo>

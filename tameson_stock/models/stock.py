@@ -114,7 +114,7 @@ class StockPicking(models.Model):
 
     @api.depends("partner_id")
     def _get_t_partner_outside_eu(self):
-        eu_group = self.env["ir.model.data"].get_object("base", "europe")
+        eu_group = self.env.ref("base.europe")
         eu_country_ids = eu_group.country_ids.ids
         for sp in self:
             sp.t_partner_outside_eu = sp.partner_id.country_id.id not in eu_country_ids

@@ -22,7 +22,6 @@ ${object.partner_id.name},
 </div>
         </field>
         <field name="lang">${object.partner_id.lang}</field>
-        <field name="user_signature" eval="False" />
         <field name="auto_delete" eval="True" />
     </record>
     <record id="tameson_picking_no_payment_received" model="mail.template">
@@ -47,7 +46,6 @@ ${object.partner_id.name},
 </div>
         </field>
         <field name="lang">${object.partner_id.lang}</field>
-        <field name="user_signature" eval="False" />
         <field name="auto_delete" eval="True" />
     </record>
 
@@ -72,7 +70,6 @@ ${object.partner_id.name},
 </div>
         </field>
         <field name="lang">${object.partner_id.lang}</field>
-        <field name="user_signature" eval="False" />
         <field name="auto_delete" eval="True" />
     </record>
 
@@ -97,7 +94,6 @@ ${object.partner_id.name},
 </div>
         </field>
         <field name="lang">${object.partner_id.lang}</field>
-        <field name="user_signature" eval="False" />
         <field name="auto_delete" eval="True" />
     </record>
 </odoo>
