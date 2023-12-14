@@ -249,6 +249,10 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    supplierinfo_name = fields.Char(
+        related="product_id.supplierinfo_name", string="Supplier"
+    )
+
     @api.onchange("product_id", "product_uom_qty")
     def _onchange_product_id_set_customer_lead(self):
         self.customer_lead = self.product_id.t_customer_lead_time
