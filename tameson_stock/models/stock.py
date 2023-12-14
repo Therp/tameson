@@ -1,4 +1,3 @@
-import base64
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -129,18 +128,14 @@ class StockPicking(models.Model):
             },
         }
 
-    @api.depends(
-        "sale_id", "state", "sale_id.t_is_delivery_invoice_policy", "sale_id.t_is_paid"
-    )
+    @api.depends("sale_id", "state", "sale_id.payment_term_id", "sale_id.t_is_paid")
     def _t_delivery_allowed_get(self):
         for r in self:
             order = r.sale_id
-
             r.t_delivery_allowed = bool(
                 order
                 and (
-                    order.require_signature
-                    or order.t_is_delivery_invoice_policy
+                    order.payment_term_id.t_invoice_delivered_quantities
                     or r.t_payment_status
                 )
             )
@@ -212,76 +207,12 @@ class StockPicking(models.Model):
         )[:1].invoice_date
 
 
-class MailComposer(models.TransientModel):
-    _inherit = "mail.compose.message"
-
-    def onchange_template_id(self, template_id, composition_mode, model, res_id):
-        SaleReport = self.env.ref("sale.action_report_saleorder")
-        InvoiceReport = self.env.ref("account.account_invoices")
-        PurchaseReport = self.env.ref("purchase.action_report_purchase_order")
-        Attachment = self.env["ir.attachment"]
-
-        Delay = self.env.ref("tameson_stock.tameson_picking_order_delay")
-        NoPay = self.env.ref("tameson_stock.tameson_picking_no_payment_received")
-        NoPayCancel = self.env.ref("tameson_stock.tameson_picking_no_payment_cancel")
-        PurchaseDateUpdate = self.env.ref(
-            "tameson_stock.tameson_po_delivery_date_update"
-        )
-
-        vals = super(MailComposer, self).onchange_template_id(
-            template_id, composition_mode, model, res_id
-        )
-        result = False
-        if template_id == Delay.id and composition_mode != "mass_mail":
-            order = self.env[model].browse(res_id).sale_id
-            if order:
-                result, format = SaleReport.render_qweb_pdf([order.id])
-                report_name = order.name + ".pdf"
-
-        if (
-            template_id in (NoPay.id, NoPayCancel.id)
-            and composition_mode != "mass_mail"
-        ):
-            open_invoice = (
-                self.env[model]
-                .browse(res_id)
-                .sale_id.invoice_ids.filtered(
-                    lambda i: i.invoice_payment_state != "paid"
-                )[:1]
-            )
-            if open_invoice:
-                result, format = InvoiceReport.render_qweb_pdf([open_invoice.id])
-                report_name = open_invoice.name.replace("/", "_") + ".pdf"
-
-        if template_id == PurchaseDateUpdate.id and composition_mode != "mass_mail":
-            purchase = self.env[model].browse(res_id).purchase_id
-            if purchase:
-                result, format = PurchaseReport.render_qweb_pdf([purchase.id])
-                report_name = purchase.name + ".pdf"
-
-        if result:
-            result = base64.b64encode(result)
-            attachment = Attachment.create(
-                {
-                    "name": report_name,
-                    "datas": result,
-                    "res_model": "mail.compose.message",
-                    "res_id": 0,
-                    "type": "binary",
-                }
-            )
-            vals["value"]["attachment_ids"] = [(6, 0, attachment.ids)]
-
-        return vals
-
-
 class DeliveryCarrier(models.Model):
     _inherit = "delivery.carrier"
 
-    t_aa_shipper_mapping = fields.Char(
-        string="Active Ant Shipment Mapping",
+    external_mapping = fields.Text(
+        string="External Mapping Data",
     )
-    aftership_slug = fields.Char()
 
 
 class ReturnPicking(models.TransientModel):
