@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.tools.float_utils import float_compare
 
 
@@ -42,25 +42,23 @@ AND default_code IS NOT NULL""".format(
     )
     t_aa_pack_size = fields.Float(string="Pack size", compute="_get_aa_packing_size")
 
-    t_location = fields.Char(string=_("Location Tameson"), required=False)
+    t_location = fields.Char(string="Location Tameson", required=False)
 
     t_product_description_short = fields.Text(
-        string=_("Product Description Short"), required=False, translate=True
+        string="Product Description Short", required=False, translate=True
     )
     t_customer_backorder_allowed = fields.Boolean(
-        string=_("Customer backorder allowed"), required=False
+        string="Customer backorder allowed", required=False
     )
-    t_customer_lead_time = fields.Integer(
-        string=_("Customer lead time"), required=False
-    )
-    t_web_sales = fields.Boolean(string=_("WebSales"), required=False)
-    t_use_up = fields.Boolean(string=_("useUp"), required=False)
+    t_customer_lead_time = fields.Integer(string="Customer lead time", required=False)
+    t_web_sales = fields.Boolean(string="WebSales", required=False)
+    t_use_up = fields.Boolean(string="useUp", required=False)
     t_use_up_replacement_sku = fields.Char(
-        string=_("Use up replacement SKU"), required=False
+        string="Use up replacement SKU", required=False
     )
-    t_height = fields.Float(string=_("Height (in mm)"), required=False)
-    t_length = fields.Float(string=_("Length (in mm)"), required=False)
-    t_width = fields.Float(string=_("Width (in mm)"), required=False)
+    t_height = fields.Float(string="Height (in mm)", required=False)
+    t_length = fields.Float(string="Length (in mm)", required=False)
+    t_width = fields.Float(string="Width (in mm)", required=False)
 
     # Pimcore fields
     modification_date = fields.Float()
@@ -70,10 +68,10 @@ AND default_code IS NOT NULL""".format(
     category_path = fields.Char("Category Path")
     manufacturer_name = fields.Char("Manufacturer")
     manufacturer_pn = fields.Char("Manufacturer Part Number ")
-    oversized = fields.Boolean(string=_("Oversized"))
-    imperial = fields.Boolean(string=_("Imperial"))
-    published = fields.Boolean(string=_("Pimcore Published"), default=True)
-    non_returnable = fields.Boolean(string=_("Non Returnable"))
+    oversized = fields.Boolean(string="Oversized")
+    imperial = fields.Boolean(string="Imperial")
+    published = fields.Boolean(string="Pimcore Published", default=True)
+    non_returnable = fields.Boolean(string="Non Returnable")
     pack_model = fields.Char()
     pack_factor = fields.Float()
     usd_extra_price_factor = fields.Float(default=1.0)
