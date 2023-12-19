@@ -75,7 +75,7 @@ class ProcurementGroup(models.Model):
                 [[("company_id", "=", company_id)], moves_domain]
             )
         moves_to_unreserve = self.env["stock.move"].search(
-            moves_domain, limit=None, order="priority desc, date_expected asc"
+            moves_domain, limit=None, order="priority desc, date asc"
         )
         for moves_chunk in split_every(100, moves_to_unreserve.ids):
             self.env["stock.move"].browse(moves_chunk).sudo()._do_unreserve()
