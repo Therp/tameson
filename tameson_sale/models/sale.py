@@ -167,7 +167,7 @@ class SaleOrder(models.Model):
 
     def action_create_product(self):
         action = self.env.ref("tameson_sale.action_product_creation_wizard_act_window")
-        return action.read()[0]
+        return action.sudo().read()[0]
 
     @api.depends(
         "invoice_ids",
