@@ -60,7 +60,7 @@ class ProductCreationWizard(models.TransientModel):
                     0,
                     0,
                     {
-                        "name": self.vendor_id.id,
+                        "partner_id": self.vendor_id.id,
                         "price": self.purchase_price,
                         "product_code": self.vendor_code,
                         "delay": self.vendor_lead_days,
