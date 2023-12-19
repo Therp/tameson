@@ -40,7 +40,7 @@ class ProcurementGroup(models.Model):
         new_domain = [
             "|",
             (
-                "date_expected",
+                "date",
                 "<=",
                 (datetime.now() + relativedelta(days=days)).strftime(
                     DEFAULT_SERVER_DATETIME_FORMAT
@@ -61,7 +61,7 @@ class ProcurementGroup(models.Model):
             ("state", "in", ["assigned", "partially_available"]),
             ("product_uom_qty", "!=", 0.0),
             (
-                "date_expected",
+                "date",
                 ">",
                 (datetime.now() + relativedelta(days=days)).strftime(
                     DEFAULT_SERVER_DATETIME_FORMAT
