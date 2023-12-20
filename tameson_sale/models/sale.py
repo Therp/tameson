@@ -111,26 +111,22 @@ class SaleOrder(models.Model):
                 >= 25.0
             )
 
-    @api.onchange("any_non_returnable", "any_use_up")
+    @api.onchange("any_non_returnable", "any_use_up", "uu_replacement_skus")
     def _onchange_warning(self):
         self.env.context = dict(self.env.context, lang=self.partner_id.lang or "en_US")
         note = ""
         if self.any_non_returnable:
-            warning_text = (
+            note = note + (
                 _("\nWarning: We kindly inform you that this item ")
                 + self.non_returnable_skus
                 + _(" cannot be returned. This is manufactured on demand for you.")
             )
-            note = note + warning_text
         if self.any_use_up:
-            warning_text = (
-                _("\nWarning: ")
-                + self.uu_skus
-                + _(" is being discontinued.")
-                + _("\nWarning: ")
-                + self.uu_replacement_skus
+            note = note + (
+                _("\nWarning: ") + self.uu_skus + _(" is being discontinued.")
             )
-            note = note + warning_text
+        if self.uu_replacement_skus:
+            note = note + (_("\nWarning: ") + self.uu_replacement_skus)
         self.note = note
 
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
