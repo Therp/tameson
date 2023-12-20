@@ -87,7 +87,7 @@
 
     <record id="menu_contact_creation_wizard" model="ir.ui.menu">
         <field name="name">Create contact</field>
-        <field name="sequence" eval="10" />
+        <field name="sequence" eval="1000" />
         <field name="action" ref="tameson_contact.action_contact_creation_wizard_act_window" />
         <field name="parent_id" ref="sale.sale_menu_root" />
     </record>
