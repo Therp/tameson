@@ -125,11 +125,11 @@ class SaleOrder(models.Model):
         if self.any_use_up:
             note = (
                 note
-                + (_("\nWarning: ") + self.uu_skus + _(" is being discontinued."))
+                + (_("Warning: ") + self.uu_skus + _(" is being discontinued."))
                 + "\n"
             )
         if self.uu_replacement_skus:
-            note = note + (_("\nWarning: ") + self.uu_replacement_skus) + "\n"
+            note = note + (_("Warning: ") + self.uu_replacement_skus) + "\n"
         self.note = note
 
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
