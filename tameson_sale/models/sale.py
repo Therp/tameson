@@ -117,16 +117,19 @@ class SaleOrder(models.Model):
         note = ""
         if self.any_non_returnable:
             note = note + (
-                _("\nWarning: We kindly inform you that this item ")
+                _("Warning: We kindly inform you that this item ")
                 + self.non_returnable_skus
                 + _(" cannot be returned. This is manufactured on demand for you.")
+                + "\n"
             )
         if self.any_use_up:
-            note = note + (
-                _("\nWarning: ") + self.uu_skus + _(" is being discontinued.")
+            note = (
+                note
+                + (_("\nWarning: ") + self.uu_skus + _(" is being discontinued."))
+                + "\n"
             )
         if self.uu_replacement_skus:
-            note = note + (_("\nWarning: ") + self.uu_replacement_skus)
+            note = note + (_("\nWarning: ") + self.uu_replacement_skus) + "\n"
         self.note = note
 
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
