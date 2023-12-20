@@ -8,6 +8,7 @@
     "depends": [
         "sale",
         "tameson_product",
+        "tameson_contact",
         "delivery",
         "account",
         "sale_automatic_workflow",

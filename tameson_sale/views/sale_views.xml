@@ -85,12 +85,12 @@
         </field>
     </record>
 
-    <!-- <record id="menu_contact_creation_wizard" model="ir.ui.menu">
+    <record id="menu_contact_creation_wizard" model="ir.ui.menu">
         <field name="name">Create contact</field>
         <field name="sequence" eval="10" />
         <field name="action" ref="tameson_contact.action_contact_creation_wizard_act_window" />
         <field name="parent_id" ref="sale.sale_menu_root" />
-    </record> -->
+    </record>
 
     <record id="view_order_form_with_carrier" model="ir.ui.view">
         <field name="name">view_order_form_with_carrier</field>
