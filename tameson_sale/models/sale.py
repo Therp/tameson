@@ -1,5 +1,4 @@
 import json
-import re
 
 from odoo import _, api, fields, models
 from odoo.tools import float_compare
@@ -112,40 +111,24 @@ class SaleOrder(models.Model):
                 >= 25.0
             )
 
-    @api.onchange("order_line", "any_use_up")
-    def _onchange_any_use_up(self):
+    @api.onchange("any_non_returnable", "any_use_up")
+    def _onchange_warning(self):
         self.env.context = dict(self.env.context, lang=self.partner_id.lang or "en_US")
-        note = re.sub(
-            _("\nWarning: ") + r"\S+" + _(" is being discontinued."),
-            "",
-            self.note or "",
-        )
-        note = re.sub(r" \S+%s\S+,*" % _(" will be replaced by "), "", note)
-        warning_text = ""
-        if self.any_use_up:
-            warning_text = (
-                _("\nWarning: ")
-                + self.uu_skus
-                + _(" is being discontinued.")
-                + " "
-                + self.uu_replacement_skus
-            )
-            note = note + warning_text
-        self.note = note
-
-    @api.onchange("order_line", "any_non_returnable")
-    def _onchange_non_returnable(self):
-        self.env.context = dict(self.env.context, lang=self.partner_id.lang or "en_US")
-        pattern = r"%s\S+%s" % (
-            _("\nWarning: We kindly inform you that this item "),
-            _(" cannot be returned. This is manufactured on demand for you."),
-        )
-        note = re.sub(pattern, "", self.note or "")
+        note = ""
         if self.any_non_returnable:
             warning_text = (
                 _("\nWarning: We kindly inform you that this item ")
                 + self.non_returnable_skus
                 + _(" cannot be returned. This is manufactured on demand for you.")
+            )
+            note = note + warning_text
+        if self.any_use_up:
+            warning_text = (
+                _("\nWarning: ")
+                + self.uu_skus
+                + _(" is being discontinued.")
+                + _("\nWarning: ")
+                + self.uu_replacement_skus
             )
             note = note + warning_text
         self.note = note
