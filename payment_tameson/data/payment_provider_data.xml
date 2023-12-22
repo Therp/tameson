@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="payment_provider_tameson" model="payment.provider">
+        <field name="name">Tameson</field>
+        <field name="sequence">30</field>
+        <field name="image_128" type="base64" file="payment_custom/static/description/icon.png" />
+        <field name="module_id" ref="base.module_payment_tameson" />
+        <field name="code">custom</field>
+        <field name="redirect_form_view_id" ref="payment_custom.redirect_form" />
+        <field name="pending_msg" eval="False" />
+        <field name="custom_mode">tameson</field>
+    </record>
+
+    <function model="payment.provider" name="_transfer_ensure_pending_msg_is_set" eval="[[ref('payment_tameson.payment_provider_tameson')]]" />
+
+</odoo>

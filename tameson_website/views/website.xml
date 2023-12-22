@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <template id="portal_frontend_layout_tameson" inherit_id="portal.frontend_layout">
+            <!-- <xpath expr="//ul[@id='top_menu']" position="before">
+                <ul class="ml-4 nav navbar-nav">
+                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                        <t t-call="website.submenu">
+                            <t t-set="item_class" t-value="'nav-item'" />
+                            <t t-set="link_class" t-value="'nav-link nav-tameson'" />
+                        </t>
+                    </t>
+                </ul>
+            </xpath> -->
+            <!-- <xpath expr="//ul[@id='top_menu']/li[1]" position="before">
+                <t t-call="tameson_website.language_selector" />
+            </xpath> -->
+            <xpath expr="//t[@t-call-assets='web.assets_frontend']" position="after">
+                <script id="tracking_code_gtag" t-if="website and website.gtag_key and not editable">
+                    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                        j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+                        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                        })(window,document,'script','dataLayer','<t t-esc="website.gtag_key" />');
+                </script>
+            </xpath>
+        </template>
+        <template id="layout_tameson" inherit_id="website.layout">
+            <t t-foreach="website.menu_id.child_id" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </t>
+            <meta name="generator" position="after">
+                <meta name="robots" content="noindex" />
+            </meta>
+        </template>
+        <template id="frontend_layout_tameson" inherit_id="web.frontend_layout">
+            <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//t[@t-call='web.brand_promotion']" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+        </template>
+        <template id="language_selector">
+            <li class="nav-item js_language_selector" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][2].split('/').pop()" />
+                        <span class="caret ml4" />
+                    </a>
+                    <div class="dropdown-menu" role="menu">
+                        <t t-foreach="languages" t-as="lg">
+                            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])" class="dropdown-item js_change_lang" t-att-data-url_code="lg[1]">
+                                <t t-esc="lg[2].split('/').pop()" />
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </li>
+        </template>
+        <!-- <template id="assets_frontend" inherit_id="website.assets_frontend">
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/tameson_website/static/src/scss/tameson.scss" />
+            </xpath>
+        </template> -->
+        <!-- <template id="portal_address_company" inherit_id="portal.portal_my_details">
+            <xpath expr="//label[@for='name']" position="replace">
+                <label t-if="not partner.is_company" class="col-form-label" for="name">Name</label>
+                <label t-else="" class="col-form-label" for="name">Company Name</label>
+            </xpath>
+            <xpath expr="//p[@t-esc='partner.commercial_company_name']/parent::div" position="attributes">
+                <attribute name="t-if">not partner.is_company</attribute>
+            </xpath>
+        </template> -->
+        <template id="portal_address" inherit_id="portal.portal_my_details" primary="True">
+            <xpath expr="//form[@action='/my/account']" position="attributes">
+                <attribute name="action"><t t-esc="form" /></attribute>
+            </xpath>
+        </template>
+        <!-- <template id="portal_address_zip" inherit_id="portal.portal_my_details">
+            <xpath expr="//label[@for='zipcode']/parent::div" position="replace">
+                <div t-attf-class="form-group #{error.get('zipcode') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label" for="zipcode">Zip / Postal Code</label>
+                    <input type="text" name="zipcode" t-attf-class="form-control #{error.get('zipcode') and 'is-invalid' or ''}" t-att-value="zipcode or partner.zip" />
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='street']/parent::div" position="after">
+                <div t-attf-class="form-group #{error.get('street2') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label label-optional" for="street2">Street 2</label>
+                    <input type="text" name="street2" t-attf-class="form-control #{error.get('street2') and 'is-invalid' or ''}" t-att-value="street2 or partner.street2" />
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='street']" position="replace">
+                <label class="col-form-label" for="street">Street, house and apartment number</label>
+            </xpath>
+        </template> -->
+        <template id="login" inherit_id="auth_signup.login">
+            <xpath expr="//div[hasclass('small')]" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('small')]" position="after">
+                <div class="mt-5 text-center">
+                    <div class="my-2">
+                        <strong style="font-size: 0.7rem !important;">Did you order before, but do not have an account?</strong> <br />
+                        <a class="btn btn-secondary btn-block" t-attf-href="/web/reset_password?{{ keep_query() }}">
+                            <strong>Activate account and password</strong>
+                        </a><br />
+                    </div>
+
+                    <div class="my-2">
+                        <strong style="font-size: 0.8rem !important;">Would you like to create an account?</strong><br />
+                        <a class="btn btn-secondary btn-block" t-attf-href="/web/signup?redirect=%2Fmy%2Faccount">
+                            <strong>Register a new account</strong>
+                        </a><br />
+                    </div>
+                    <div class="my-2">
+
+                        <strong style="font-size: 0.8rem !important;">Did you lose your password?</strong><br />
+                        <a class="btn btn-secondary btn-block" t-attf-href="/web/reset_password?{{ keep_query() }}">
+                            <strong>Request a new password</strong>
+                        </a><br />
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="portal_my_home_addresses" inherit_id="portal.portal_my_home">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="after">
+                <br />
+                <h3>Account and address</h3>
+                <div class="o_portal_docs list-group">
+                    <t t-call="portal.portal_docs_entry">
+                        <t t-set="title">Main account and address</t>
+                        <t t-set="url" t-value="'/my/account'" />
+                    </t>
+                    <t t-set="partner" t-value="user_id.partner_id" />
+                    <t t-set="childs" t-value="partner.child_ids.sorted('type')" />
+                    <t t-set="type_dict" t-value="{'contact': 'Contact', 'invoice': 'Invoice Address', 'delivery': 'Delivery Address', 'other': 'Other Address','private': 'Private Address'}" />
+                    <t t-foreach="range(len(childs))" t-as="child">
+                        <t t-call="portal.portal_docs_entry">
+                            <t t-set="title">
+                                <t t-esc="childs[child].type_name" />: <t t-esc="childs[child].name" />, <t t-esc="childs[child].street" />
+                            </t>
+                            <t t-set="url" t-value="'/my/address/%d' % child" />
+                        </t>
+                    </t>
+                </div>
+            </xpath>
+        </template>
+        <template id="cart_lines" inherit_id="website_sale.cart_lines">
+            <xpath expr="//table[@id='cart_products']" position="attributes">
+                <attribute name="class">mb16 table table-sm js_cart_lines</attribute>
+            </xpath>
+            <xpath expr="//strong[@t-field='line.name_short']" position="replace">
+                <strong>
+                    <t t-esc="'[%s] %s' % (line.product_id.default_code,line.name_short)" />
+                </strong>
+            </xpath>
+            <xpath expr="//th[hasclass('td-qty')]" position="attributes">
+                <attribute name="style">width:20%;</attribute>
+            </xpath>
+            <xpath expr="//th[hasclass('td-price')]" position="replace">
+                <th class="text-center td-price" style="width:25%;">Price excl.</th>
+            </xpath>
+            <xpath expr="//th[hasclass('td-img')]" position="replace">
+                <th class="td-img" />
+            </xpath>
+            <xpath expr="//th[2]" position="replace">
+                <th>Product</th>
+            </xpath>
+            <xpath expr="//div[1]" position="after">
+                <t t-set="orders" t-value="website.get_open_orders()" />
+                <div t-if="orders and not website_sale_order or not website_sale_order.website_order_line">
+                    <h3>Your open quotations</h3>
+                    <div class="table-responsive border rounded border-top-0 my-3">
+                        <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                            <t t-foreach="orders" t-as="order">
+                                <tr>
+                                    <td>
+                                        <a t-att-href="order.get_portal_url()">
+                                            <t t-esc="order.name" />
+                                        </a>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="order.date_order" t-options="{'widget': 'date'}" />
+                                        &amp;nbsp;
+                                        <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}" />
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-if="order.state == 'done'" class="badge badge-pill badge-success">
+                                            <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done" />
+                                            Done
+                                        </span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="order.amount_total" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <!-- <template id="short_cart_summary" inherit_id="website_sale.short_cart_summary">
+            <xpath expr="//a[@href='/shop/checkout?express=1'][1]" position="replace">
+                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <span>Checkout</span>
+                </a>
+           </xpath>
+           <xpath expr="//a[@href='/shop/checkout?express=1']" position="attributes">
+                <attribute name="class">btn btn-primary float-right d-none d-xl-inline-block</attribute>
+            </xpath>
+        </template> -->
+        <template id="cart" inherit_id="website_sale.cart">
+            <xpath expr="//t[@t-call='website_sale.cart_lines']" position="after">
+                <form method="post" action="/add_sku">
+                    <div class="input-group mb-3">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <input name="sku" type="text" class="form-control" placeholder="Add SKU" />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="alert alert-danger" t-if="request.params.get('add_sku_error')">
+                SKU does not exist, please double check:
+                <t t-esc="request.params.get('add_sku_error')" />
+                </div>
+            </xpath>
+            <!-- <xpath expr="//a[@href='/shop/checkout?express=1'][1]" position="replace">
+                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <span class="">Checkout</span>
+                    <span class="fa fa-chevron-right" />
+                </a>
+            </xpath> -->
+            <xpath expr="//a[@href='/shop']" position="replace">
+                <a role="button" href="/shopify_auth" class="btn btn-secondary mb32 d-none d-xl-inline-block">
+                    <span class="fa fa-chevron-left" />
+                    <span class="">Back</span>
+                </a>
+            </xpath>
+            <xpath expr="//div[@id='o_cart_summary']" position="replace">
+                <div class="col-12 col-xl-4" id="o_cart_summary">
+                    <t t-call="website_sale.short_cart_summary" />
+                    <div class="d-xl-none mt8">
+                        <a role="button" href="/shopify_auth" class="btn btn-secondary mb32">
+                            <span class="fa fa-chevron-left" />
+                            Continue<span class="d-none d-md-inline"> Shopping</span>
+                        </a>
+                        <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right" href="/shop/checkout?express=1">
+                            <span class="">Checkout</span>
+                            <span class="fa fa-chevron-right" />
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <!-- <template id="cart_delivery" inherit_id="website_sale_delivery.cart_delivery">
+            <xpath expr="//tr[@id='order_delivery']/td[1]" position="attributes">
+                <attribute name="class">text-right border-0</attribute>
+            </xpath>
+            <xpath expr="//tr[@id='order_delivery']/td[2]" position="attributes">
+                <attribute name="class">text-xl-right border-0</attribute>
+            </xpath>
+        </template> -->
+        <template id="cart_summary" inherit_id="website_sale.cart_summary">
+            <xpath expr="//table[@id='cart_products']" position="attributes">
+                <attribute name="class">table table-sm</attribute>
+            </xpath>
+            <xpath expr="//strong[@t-field='line.name_short']" position="replace">
+                <strong>
+                    <t t-esc="'[%s] %s' % (line.product_id.default_code,line.name_short)" />
+                </strong>
+            </xpath>
+        </template>
+        <template id="payment" inherit_id="website_sale.payment">
+            <!-- <xpath expr="//t[@t-set='submit_txt']" position="replace">
+                <t t-set="submit_txt">Checkout</t>
+            </xpath> -->
+            <xpath expr="//div[@id='oe_structure_website_sale_payment_1']" position="before">
+                <div class="card" id="div_po_reference">
+                    <div class="card-body form-group">
+                        <label class="col-form-label" for="po-reference"><b>Your order reference</b></label>
+                        <input type="text" id="po-reference" class="form-control" value="" placeholder="Your PO number or order reference" />
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <!-- <template id="web_assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/tameson_website/static/src/js/payment.js" />
+            </xpath>
+        </template> -->
+        <!-- <template id="payment_confirmation_status" inherit_id="payment.payment_confirmation_status">
+            <xpath expr="//div[@role='status']" position="attributes">
+                <attribute name="t-if">payment_tx_id and payment_tx_id.state == 'pending' and 'sale' not in payment_tx_id.mapped('sale_order_ids.state')</attribute>
+            </xpath>
+        </template> -->
+        <template id="sale_order_portal_template" inherit_id="sale.sale_order_portal_template">
+            <xpath expr="//div[@id='sale_order_communication']" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//a[@href='#discussion']" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//li[@t-if='sale_order.user_id']" position="after">
+                <li class="list-group-item flex-grow-1 border-bottom">
+                    <a t-attf-href="mailto:support@tameson.com?subject={{ sale_order.name }}">Contact us via email</a>
+                </li>
+            </xpath>
+            <xpath expr="//div[@id='sale_order_communication']" position="before">
+
+                <div class="row justify-content-center text-center d-print-none pt-1 pb-4" t-if="sale_order.state in ('sale','done')">
+                    <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalDuplicate" href="#"> <i class="fa fa-shopping-cart" /> Order again</a>
+                </div>
+                <div role="dialog" class="modal fade" id="modalDuplicate" t-if="sale_order.state in ('sale','done')">
+                    <div class="modal-dialog">
+                        <form id="Duplicate" method="POST" t-attf-action="/my/orders/#{sale_order.id}/duplicate?access_token=#{sale_order.access_token}" class="modal-content">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                            <header class="modal-header">
+                                <h4 class="modal-title">Order again</h4>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&amp;times;</button>
+                            </header>
+                            <main class="modal-body">
+                                <p>
+                                    Would you like to order these items again? You can adjust the quantities in the next step.
+                                </p>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="submit" t-att-id="sale_order.id" class="btn btn-primary"><i class="fa fa-shopping-cart" /> Order again</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_download_pdf')]" position="after">
+                <div class="o_download_pdf btn-toolbar flex-sm-nowrap" t-if="sale_order.state in ('sale','done')">
+                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                        <a role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDuplicate" href="#"> <i class="fa fa-shopping-cart" /> Order again</a>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="sale_order_portal_content_ref" inherit_id="sale.sale_order_portal_content">
+            <xpath expr="//div[@id='so_date']" position="after">
+                <div class="row" t-if="sale_order.client_order_ref">
+                    <div class="mb-3 col-6 ml-auto">
+                        <strong>Your order reference: </strong> <span t-field="sale_order.client_order_ref" />
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//span[@t-field='i.invoice_date']" position="attributes">
+                <attribute name="class" />
+            </xpath>
+            <xpath expr="//span[@t-field='i.invoice_date']//parent::div" position="attributes">
+                <attribute name="class">small d-lg-inline-block ms-3</attribute>
+            </xpath>
+        </template>
+        <template id="signup" inherit_id="auth_signup.signup">
+            <xpath expr="//t[@t-esc='error']" position="replace">
+                <t t-raw="error" />
+            </xpath>
+        </template>
+        <!-- <template id="sale_order_portal_content_inherit_sale_stock" inherit_id="sale_stock.sale_order_portal_content_inherit_sale_stock">
+            <xpath expr="//span[@t-field='i.date_done']" position="attributes">
+                <attribute name="class" />
+            </xpath>
+            <xpath expr="//span[@t-field='i.scheduled_date']" position="attributes">
+                <attribute name="class" />
+            </xpath>
+        </template> -->
+        <!-- <template id="sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery" inherit_id="delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery">
+            <xpath expr="//div[@t-if='i.carrier_tracking_ref']" position="attributes">
+                <attribute name="class">font-weight-bold d-lg-inline-block</attribute>
+            </xpath>
+        </template> -->
+</odoo>
