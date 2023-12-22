@@ -341,7 +341,7 @@
                 </div>
             </xpath>
         </template>
-        <template id="sale_order_portal_content_ref" inherit_id="sale.sale_order_portal_content">
+        <!-- <template id="sale_order_portal_content_ref" inherit_id="sale.sale_order_portal_content">
             <xpath expr="//div[@id='so_date']" position="after">
                 <div class="row" t-if="sale_order.client_order_ref">
                     <div class="mb-3 col-6 ml-auto">
@@ -355,7 +355,7 @@
             <xpath expr="//span[@t-field='i.invoice_date']//parent::div" position="attributes">
                 <attribute name="class">small d-lg-inline-block ms-3</attribute>
             </xpath>
-        </template>
+        </template> -->
         <template id="signup" inherit_id="auth_signup.signup">
             <xpath expr="//t[@t-esc='error']" position="replace">
                 <t t-raw="error" />

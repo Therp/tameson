@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="shopify_instance_form_view_ept" model="ir.ui.view">
+            <field name="name">shopify_instance_form_view_ept</field>
+            <field name="model">shopify.instance.ept</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="shopify_multipass_host" />
+                            <field name="shopify_multipass_secret" password="1" />
+                            <field name="multipass_country_ids" widget="many2many_tags" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="shopify_instance_tree_view_ept" model="ir.ui.view">
+            <field name="name">shopify_instance_tree_view_ept</field>
+            <field name="model">shopify.instance.ept</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="shopify_multipass_host" />
+                    <field name="shopify_multipass_secret" password="1" />
+                    <field name="multipass_country_ids" widget="many2many_tags" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="shopify_instance_search_view_ept" model="ir.ui.view">
+            <field name="name">shopify_instance_search_view_ept</field>
+            <field name="model">shopify.instance.ept</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <field name="shopify_multipass_host" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_shopify_instance" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Shopify Instances</field>
+            <field name="res_model">shopify.instance.ept</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="shopify_instance_search_view_ept" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new Shopify Shop
+                </p><p>
+                </p>
+            </field>
+        </record>
+
+<!-- Main menu for "model" -->
+        <record id="menu_shopify_instance" model="ir.ui.menu">
+            <field name="name">Shopify Instances</field>
+            <field name="sequence" eval="1000" />
+            <field name="action" ref="action_shopify_instance" />
+            <field name="parent_id" ref="sale.menu_sale_config" />
+        </record>
+
+    </data>
+</odoo>

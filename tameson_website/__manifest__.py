@@ -13,7 +13,12 @@
         "website_sale",
         "auth_signup",
     ],
-    "data": ["views/website.xml"],
+    "data": [
+        "views/website_templates.xml",
+        "views/website_views.xml",
+        "views/shopify_views.xml",
+        "views/shopify_templates.xml",
+    ],
     "qweb": [],
     "application": False,
     "license": "OPL-1",
