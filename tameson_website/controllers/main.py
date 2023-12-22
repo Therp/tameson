@@ -33,7 +33,9 @@ class CustomerPortal(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if "shopify_hosts" in counters:
-            values["shopify_hosts"] = "1"
+            Inst = request.env["shopify.instance.ept"].sudo()
+            insts = Inst.search([("shopify_multipass_secret", "!=", False)])
+            values["shopify_hosts"] = len(insts)
         return values
 
     def details_form_validate(self, data):
