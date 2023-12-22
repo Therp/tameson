@@ -24,7 +24,7 @@ class Shopify(Controller):
             .search([("shopify_multipass_secret", "!=", False)])
         )
         return request.render(
-            "tameson_shopify.portal_shopify_hosts", {"instances": instances}
+            "tameson_website.portal_shopify_hosts", {"instances": instances}
         )
 
     @route(

@@ -30,6 +30,12 @@ class CustomerPortal(CustomerPortal):
     ]
     OPTIONAL_BILLING_FIELDS = ["state_id", "vat", "company_name", "street2"]
 
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if "shopify_hosts" in counters:
+            values["shopify_hosts"] = "1"
+        return values
+
     def details_form_validate(self, data):
         error, error_message = super(CustomerPortal, self).details_form_validate(data)
         partner = request.env.user.partner_id
@@ -44,7 +50,8 @@ class CustomerPortal(CustomerPortal):
             _ref_vat_no = _ref_vat.get(vat_country_code) or _ref_vat_no
             error_message.append(
                 _(
-                    "The VAT number either failed the VIES VAT validation check or did not respect the expected format "
+                    "The VAT number either failed the VIES VAT validation \
+                        check or did not respect the expected format "
                 )
                 + _ref_vat_no
             )
