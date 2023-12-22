@@ -83,11 +83,8 @@ class Shopify(Controller):
         if not instance:
             instance = request.env.user.partner_id.country_id.shopify_instance_id
         if not instance:
-            instance_id = (
-                request.env["ir.config_parameter"]
-                .sudo()
-                .get_param("default.shopify.instance", False)
-            )
+            params = request.env["ir.config_parameter"].sudo()
+            instance_id = params.get_param("default.shopify.instance", False)
             if instance_id:
                 instance = instance.browse(int(instance_id))
         if not instance:
@@ -95,7 +92,7 @@ class Shopify(Controller):
                 [("shopify_multipass_secret", "!=", False)], limit=1
             )
         if not instance:
-            raise NotFound()
+            raise NotFound("No Shopify Instance Added.")
         partner = request.env.user.partner_id
         partner_data = partner._get_shopify_partner_data()
         partner_data["return_to"] = shopify_page or "/"
