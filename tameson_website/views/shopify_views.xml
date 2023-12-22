@@ -25,6 +25,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="sequence" widget="handle" />
                     <field name="name" />
                     <field name="shopify_multipass_host" />
                     <field name="shopify_multipass_secret" password="1" />

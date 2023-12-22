@@ -14,6 +14,8 @@ class ShopifyInstanceEpt(models.Model):
     _name = "shopify.instance.ept"
 
     name = fields.Char(required=True)
+    sequence = fields.Integer(default=10)
+    active = fields.Boolean(default=True)
     shopify_multipass_host = fields.Char("Shop Address", required=True)
     shopify_multipass_secret = fields.Char(
         "Multipass secret",
