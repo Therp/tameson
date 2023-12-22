@@ -1,6 +1,6 @@
 {
     "name": "Tameson Frontend Customizations",
-    "version": "13.0.0.0.0",
+    "version": "16.0.0.0.0",
     "description": """
     Tameson Frontend Customizations
 
@@ -14,6 +14,7 @@
         "auth_signup",
     ],
     "data": [
+        "security/ir.model.access.csv",
         "views/website_templates.xml",
         "views/website_views.xml",
         "views/shopify_views.xml",

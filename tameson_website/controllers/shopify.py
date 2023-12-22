@@ -7,6 +7,7 @@ import json
 import logging
 from urllib.parse import urlparse
 
+import werkzeug
 from multipass import Multipass
 from werkzeug.exceptions import NotFound
 
@@ -100,7 +101,7 @@ class Shopify(Controller):
         partner_data["return_to"] = shopify_page or "/"
         multipass = Multipass(instance.shopify_multipass_secret)
         url = multipass.generateURL(partner_data, instance.shopify_multipass_host)
-        return request.redirect(url)
+        return werkzeug.utils.redirect(url)
 
     @route(
         ["/shopify/email_check"],
