@@ -13,9 +13,8 @@ _logger = logging.getLogger(__name__)
 class ShopifyInstanceEpt(models.Model):
     _name = "shopify.instance.ept"
 
-    shopify_multipass_host = fields.Char(
-        "Shop Address",
-    )
+    name = fields.Char(required=True)
+    shopify_multipass_host = fields.Char("Shop Address", required=True)
     shopify_multipass_secret = fields.Char(
         "Multipass secret",
     )
