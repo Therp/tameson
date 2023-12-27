@@ -14,7 +14,7 @@
             <t t-if="childs" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
-                        <th>Addresses</th>
+                        <th>Account and addresses</th>
                     </tr>
                 </thead>
                 <t t-foreach="childs" t-as="child">
@@ -55,9 +55,9 @@
             </xpath>
         </template>
         <template id="layout_tameson" inherit_id="website.layout">
-            <t t-foreach="website.menu_id.child_id" position="attributes">
+            <!-- <t t-foreach="website.menu_id.child_id" position="attributes">
                 <attribute name="t-if">False</attribute>
-            </t>
+            </t> -->
             <meta name="generator" position="after">
                 <meta name="robots" content="noindex" />
             </meta>
