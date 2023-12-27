@@ -36,6 +36,8 @@ class CustomerPortal(CustomerPortal):
             Inst = request.env["shopify.instance.ept"].sudo()
             insts = Inst.search([("shopify_multipass_secret", "!=", False)])
             values["shopify_hosts"] = len(insts)
+        if "address_count" in counters:
+            values["address_count"] = len(request.env.user.partner_id.child_ids) + 1
         return values
 
     def details_form_validate(self, data):
@@ -58,6 +60,18 @@ class CustomerPortal(CustomerPortal):
                 + _ref_vat_no
             )
         return error, error_message
+
+    @route(["/my/addresses"], type="http", auth="user", website=True)
+    def addresses(self, **post):
+        partner = request.env.user.partner_id
+        data = [
+            ("/my/account", "Main Address: %s, %s" % (partner.name, partner.street))
+        ]
+        for pos, c in enumerate(partner.child_ids.sorted("type")):
+            data.append(
+                ("/my/address/%d" % pos, "%s: %s, %s" % (c.type_name, c.name, c.street))
+            )
+        return request.render("tameson_website.portal_all_addresses", {"childs": data})
 
     @route(["/my/address/<int:child_pos>"], type="http", auth="user", website=True)
     def address(self, child_pos, redirect=None, **post):

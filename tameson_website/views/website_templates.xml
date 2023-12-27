@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <template id="portal_my_home_address" name="Address" inherit_id="portal.portal_my_home" customize_show="True" priority="80">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Addresses</t>
+                <t t-set="url" t-value="'/my/addresses'" />
+                <t t-set="placeholder_count" t-value="'address_count'" />
+            </t>
+        </xpath>
+    </template>
+    <template id="portal_all_addresses" name="Addresses">
+        <t t-call="portal.portal_layout">
+            <t t-if="childs" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Addresses</th>
+                    </tr>
+                </thead>
+                <t t-foreach="childs" t-as="child">
+                    <tr>
+                        <td>
+                            <a t-att-href="child[0]">
+                                <t t-esc="child[1]" />
+                            </a>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
         <template id="portal_frontend_layout_tameson" inherit_id="portal.frontend_layout">
             <!-- <xpath expr="//ul[@id='top_menu']" position="before">
                 <ul class="ml-4 nav navbar-nav">
@@ -119,29 +149,6 @@
                             <strong>Request a new password</strong>
                         </a><br />
                     </div>
-                </div>
-            </xpath>
-        </template>
-        <template id="portal_my_home_addresses" inherit_id="portal.portal_my_home">
-            <xpath expr="//div[hasclass('o_portal_docs')]" position="after">
-                <br />
-                <h3>Account and address</h3>
-                <div class="o_portal_docs list-group">
-                    <t t-call="portal.portal_docs_entry">
-                        <t t-set="title">Main account and address</t>
-                        <t t-set="url" t-value="'/my/account'" />
-                    </t>
-                    <t t-set="partner" t-value="user_id.partner_id" />
-                    <t t-set="childs" t-value="partner.child_ids.sorted('type')" />
-                    <t t-set="type_dict" t-value="{'contact': 'Contact', 'invoice': 'Invoice Address', 'delivery': 'Delivery Address', 'other': 'Other Address','private': 'Private Address'}" />
-                    <t t-foreach="range(len(childs))" t-as="child">
-                        <t t-call="portal.portal_docs_entry">
-                            <t t-set="title">
-                                <t t-esc="childs[child].type_name" />: <t t-esc="childs[child].name" />, <t t-esc="childs[child].street" />
-                            </t>
-                            <t t-set="url" t-value="'/my/address/%d' % child" />
-                        </t>
-                    </t>
                 </div>
             </xpath>
         </template>

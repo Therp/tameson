@@ -12,6 +12,7 @@
         "portal",
         "website_sale",
         "auth_signup",
+        "payment_custom",
     ],
     "data": [
         "security/ir.model.access.csv",
