@@ -3,7 +3,7 @@
     <template id="portal_my_home_address" name="Address" inherit_id="portal.portal_my_home" customize_show="True" priority="80">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
-                <t t-set="title">Account and address</t>
+                <t t-set="title">Account and addresses</t>
                 <t t-set="url" t-value="'/my/addresses'" />
                 <t t-set="placeholder_count" t-value="'address_count'" />
             </t>
