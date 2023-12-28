@@ -368,6 +368,12 @@
                 <t t-raw="error" />
             </xpath>
         </template>
+        <template id="portal_record_sidebar" inherit_id="portal.portal_record_sidebar">
+            <xpath expr="//div[@id='sidebar_content']/div[last()]" position="replace">
+                <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                </div>
+            </xpath>
+        </template>
         <!-- <template id="sale_order_portal_content_inherit_sale_stock" inherit_id="sale_stock.sale_order_portal_content_inherit_sale_stock">
             <xpath expr="//span[@t-field='i.date_done']" position="attributes">
                 <attribute name="class" />
