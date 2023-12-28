@@ -35,3 +35,30 @@ class PaymentTransaction(models.Model):
                 "reference": self.reference,
             }
         return super()._get_specific_rendering_values(processing_values)
+
+    def _set_pending(self, state_message=None):
+        """Override of `payment` to send the quotations automatically.
+
+        :param str state_message: The reason for which the transaction is set in 'pending' state.
+        :return: updated transactions.
+        :rtype: `payment.transaction` recordset.
+        """
+        txs_to_process = super()._set_pending(state_message=state_message)
+
+        for (
+            tx
+        ) in txs_to_process:  # Consider only transactions that are indeed set pending.
+            sales_orders = tx.sale_order_ids.filtered(
+                lambda so: so.state in ["draft", "sent"]
+            )
+            sales_orders.filtered(lambda so: so.state == "draft").with_context(
+                tracking_disable=True
+            ).action_quotation_sent()
+
+            if tx.provider_id.code == "custom":
+                for so in tx.sale_order_ids:
+                    so.reference = tx._compute_sale_order_reference(so)
+            # send order confirmation mail.
+            # sales_orders._send_order_confirmation_mail()
+
+        return txs_to_process
