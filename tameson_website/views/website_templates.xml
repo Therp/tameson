@@ -315,9 +315,10 @@
                 </li>
             </xpath>
             <xpath expr="//div[@id='sale_order_communication']" position="before">
-
-                <div class="row justify-content-center text-center d-print-none pt-1 pb-4" t-if="sale_order.state in ('sale','done')">
-                    <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalDuplicate" href="#"> <i class="fa fa-shopping-cart" /> Order again</a>
+                <div class="row">
+                    <div class="justify-content-center text-center d-print-none pt-1 pb-4" t-if="sale_order.state in ('sale','done')">
+                        <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalDuplicate" href="#"> <i class="fa fa-shopping-cart" /> Order again</a>
+                    </div>
                 </div>
                 <div role="dialog" class="modal fade" id="modalDuplicate" t-if="sale_order.state in ('sale','done')">
                     <div class="modal-dialog">
