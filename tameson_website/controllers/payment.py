@@ -25,7 +25,7 @@ class CustomController(Controller):
         request.env["payment.transaction"].sudo()._handle_notification_data(
             "custom", post
         )
-        order.sudo.write(
+        order.sudo().write(
             {
                 "require_signature": True,
                 "require_payment": False,
