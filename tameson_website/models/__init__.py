@@ -5,3 +5,4 @@ from . import res_users
 from . import product
 from . import payment_provider
 from . import shopify
+from . import sale_order

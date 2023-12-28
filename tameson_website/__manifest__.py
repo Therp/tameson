@@ -26,6 +26,9 @@
     "application": False,
     "license": "OPL-1",
     "assets": {
-        "web.assets_frontend": ["tameson_website/static/src/js/payment.js"],
+        "web.assets_frontend": [
+            "tameson_website/static/src/js/payment.js",
+            "tameson_website/static/src/scss/tameson.scss",
+        ],
     },
 }
