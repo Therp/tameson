@@ -25,4 +25,10 @@ class CustomController(Controller):
         request.env["payment.transaction"].sudo()._handle_notification_data(
             "custom", post
         )
+        order.sudo.write(
+            {
+                "require_signature": True,
+                "require_payment": False,
+            }
+        )
         return request.redirect(order.get_portal_url())
