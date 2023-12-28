@@ -20,6 +20,7 @@
         "views/website_views.xml",
         "views/shopify_views.xml",
         "views/shopify_templates.xml",
+        "data/payment_provider_data.xml",
     ],
     "qweb": [],
     "application": False,
