@@ -13,6 +13,7 @@
         "website_sale",
         "auth_signup",
         "payment_custom",
+        "sale_stock",
     ],
     "data": [
         "security/ir.model.access.csv",
