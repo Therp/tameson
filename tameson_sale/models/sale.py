@@ -227,6 +227,10 @@ class SaleOrder(models.Model):
     def _onchange_payment_term_id(self):
         self.workflow_process_id = self.payment_term_id.workflow_process_id
 
+    @api.onchange("partner_id")
+    def onchange_partner_note(self):
+        self.note = self.partner_id.country_id.note
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

@@ -3,7 +3,7 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class Pricelist(models.Model):
@@ -15,7 +15,9 @@ class Pricelist(models.Model):
         ondelete="restrict",
         domain='[("currency_id","=",currency_id)]',
     )
-
+    shipping_fee_factor = fields.Float(
+        string="Shipping Fee Factor",
+    )
     company_rate = fields.Float(related="rate_id.company_rate")
 
 
@@ -28,7 +30,7 @@ class PricelistItem(models.Model):
     )
 
     shipping_fee_factor = fields.Float(
-        string="Shipping Fee Factor",
+        related="pricelist_id.shipping_fee_factor", readonly=False
     )
     is_usd_extra = fields.Boolean()
 
@@ -37,12 +39,11 @@ class PricelistItem(models.Model):
         rule_base = self.base or "list_price"
         if rule_base == "tameson":
             src_currency = product.currency_id
-            shipping_fee = 0
-            if self.shipping_fee_factor > 0:
-                volume = product.volume
-                shipping_fee = self.shipping_fee_factor * max(product.weight, volume)
-            extra_usd = 1.0 if not self.is_usd_extra else product.usd_extra_price_factor
-            price = (product.list_price + shipping_fee) * extra_usd
+            if self.is_usd_extra and product.usd_extra_price_factor > 0:
+                extra_usd = product.usd_extra_price_factor
+            else:
+                extra_usd = 1.0
+            price = (product.list_price + product.extra_shipping_fee_usd) * extra_usd
             if src_currency != target_currency:
                 price = src_currency._convert(
                     price, target_currency, self.env.company, date, round=False
@@ -63,15 +64,32 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     usd_extra_price_factor = fields.Float(default=1.0)
-    extra_shipping_fee_usd = fields.Float(string="Extra shipping fee USD", default=0.0)
-    extra_shipping_fee_gbp = fields.Float(string="Extra shipping fee GBP", default=0.0)
+    extra_shipping_fee_usd = fields.Float(compute="get_usd_pricelist_price", store=True)
+    extra_shipping_fee_gbp = fields.Float(compute="get_gbp_pricelist_price", store=True)
 
-    sale_price_usd = fields.Float(string="USD Price", compute="get_pricelist_price")
-    sale_price_gbp = fields.Float(string="GBP Price", compute="get_pricelist_price")
+    sale_price_usd = fields.Float(compute="get_usd_pricelist_price", store=True)
+    sale_price_gbp = fields.Float(compute="get_gbp_pricelist_price", store=True)
 
-    def get_pricelist_price(self):
-        pricelist = self.env["product.pricelist"].browse(2)
+    @api.depends(
+        "t_height", "t_length", "t_width", "usd_extra_price_factor", "list_price"
+    )
+    def get_usd_pricelist_price(self):
+        pricelist = self.env["product.pricelist"].browse(3)  # USD Pricelist
         prices = pricelist._compute_price_rule(self, 1)
-        for pt in self:
-            pt.sale_price_usd = prices[pt.id][0]
-            pt.sale_price_gbp = prices[pt.id][0]
+        for product in self:
+            volume = (product.t_height * product.t_length * product.t_width) / 5000000
+            product.extra_shipping_fee_usd = pricelist.shipping_fee_factor * max(
+                product.weight, volume
+            )
+            product.sale_price_usd = prices[product.id][0]
+
+    @api.depends("t_height", "t_length", "t_width", "list_price")
+    def get_gbp_pricelist_price(self):
+        pricelist = self.env["product.pricelist"].browse(2)  # USD Pricelist
+        prices = pricelist._compute_price_rule(self, 1)
+        for product in self:
+            volume = (product.t_height * product.t_length * product.t_width) / 5000000
+            product.extra_shipping_fee_usd = pricelist.shipping_fee_factor * max(
+                product.weight, volume
+            )
+            product.sale_price_gbp = prices[product.id][0]

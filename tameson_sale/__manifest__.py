@@ -15,7 +15,6 @@
         "sale_financial_risk",
     ],
     "data": [
-        # "data/group.xml",
         "security/ir.model.access.csv",
         # "data/cron.xml",
         # "data/mail_data.xml",
@@ -26,7 +25,7 @@
         "report/report_external_layout.xml",
         # "data/report_layout.xml",
         # "wizard/base_document_layout_views.xml",
-        # "views/res_country_view.xml",
+        "views/res_country_view.xml",
         # "views/partner.xml",
         "wizard/product_creation.xml",
         # "views/stock.xml",
