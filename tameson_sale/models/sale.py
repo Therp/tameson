@@ -229,7 +229,7 @@ class SaleOrder(models.Model):
 
     @api.onchange("partner_id")
     def onchange_partner_note(self):
-        self.note = self.partner_id.country_id.note
+        self.note = self.partner_id.country_id.customer_note
 
 
 class SaleOrderLine(models.Model):
