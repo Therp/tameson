@@ -38,6 +38,11 @@ class ReshipmentWizard(models.TransientModel):
 
     def action_add(self):
         order = self.env["sale.order"].browse(self.env.context["active_ids"])
+        if not order.workflow_process_id:
+            payment_term = (
+                order.payment_term_id or order.partner_id.property_payment_term_id
+            )
+            order.workflow_process_id = payment_term.workflow_process_id
         order.write(
             {
                 "order_line": [
@@ -54,6 +59,9 @@ class ReshipmentWizard(models.TransientModel):
                     for line in self.line_ids
                 ]
             }
+        )
+        self.env["automatic.workflow.job"].sudo().run_with_workflow(
+            order.workflow_process_id
         )
 
 
