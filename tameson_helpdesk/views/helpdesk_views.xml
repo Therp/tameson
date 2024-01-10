@@ -94,28 +94,4 @@
         </field>
     </record>
 
-    <!--<record id="helpdesk_ticket_view_form_inherit_stock_user" model="ir.ui.view">
-        <field name="name">helpdesk_ticket_view_form_inherit_stock_user</field>
-        <field name="model">helpdesk.ticket</field>
-        <field
-      name="inherit_id"
-      ref="helpdesk_stock.helpdesk_ticket_view_form_inherit_stock_user"
-    />
-        <field name="arch" type="xml">
-            <button name="%(stock.act_stock_return_picking)d" position="attributes">
-                <attribute name="groups" />
-            </button>
-            <button name="%(stock.act_stock_return_picking)d" position="after">
-                <button
-          type="object"
-          name="action_reship"
-          groups="stock.group_stock_user"
-          string="Reship"
-          attrs="{'invisible': [('use_product_returns', '=', False)]}"
-          context="{'default_ticket_id': id, 'default_company_id': company_id}"
-        />
-            </button>
-        </field>
-    </record>-->
-
 </odoo>

@@ -3,12 +3,11 @@
     "version": "16.0.1.0.0",
     "author": "Tameson",
     "depends": [
-        "helpdesk_sale",
         "helpdesk_account",
+        "helpdesk_sale",
         "helpdesk_stock",
         "tameson_base",
         "tameson_sale",
-        #"tameson_stock",
         "web",
     ],
     "assets": {
@@ -19,7 +18,6 @@
     "data": [
         "views/helpdesk_views.xml",
         "views/rma.xml",
-        #"views/stock.xml",
     ],
     "application": False,
     "license": "OPL-1",
