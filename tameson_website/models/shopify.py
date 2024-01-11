@@ -31,5 +31,5 @@ class ResCountry(models.Model):
 
     shopify_instance_id = fields.Many2one(
         comodel_name="shopify.instance.ept",
-        ondelete="restrict",
+        ondelete="set null",
     )
