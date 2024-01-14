@@ -11,6 +11,6 @@
         <field name="custom_mode">tameson</field>
     </record>
 
-    <function model="payment.provider" name="_transfer_ensure_pending_msg_is_set" eval="[[ref('payment_tameson.payment_provider_tameson')]]" />
+    <function model="payment.provider" name="_transfer_ensure_pending_msg_is_set" eval="[[ref('tameson_website.payment_provider_tameson')]]" />
 
 </odoo>
