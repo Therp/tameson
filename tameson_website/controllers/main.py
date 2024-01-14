@@ -159,7 +159,7 @@ class WebsiteSale(WebsiteSale):
         today = fields.Date.today()
         order = request.website.sale_get_order()
         if order.validity_date and order.validity_date < today:
-            order.validity_date = order._default_validity_date()
+            order.validity_date = order._compute_validity_date()
             for line in order.order_line:
                 if line.exists():
                     order._cart_update(
