@@ -81,7 +81,10 @@ class Shopify(Controller):
         if not instance:
             instance = instance.browse(instance_id)
         if not instance:
-            instance = request.env.user.partner_id.country_id.shopify_instance_id
+            country = request.env.user.partner_id.country_id.id
+            instance = instance.search(
+                [("multipass_country_ids", "=", country.id)], limit=1
+            )
         if not instance:
             params = request.env["ir.config_parameter"].sudo()
             instance_id = params.get_param("default.shopify.instance", False)
