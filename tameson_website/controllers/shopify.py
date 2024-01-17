@@ -81,7 +81,7 @@ class Shopify(Controller):
         if not instance:
             instance = instance.browse(instance_id)
         if not instance:
-            country = request.env.user.partner_id.country_id.id
+            country = request.env.user.partner_id.country_id
             instance = instance.search(
                 [("multipass_country_ids", "=", country.id)], limit=1
             )
