@@ -14,6 +14,7 @@
         "auth_signup",
         "payment_custom",
         "sale_stock",
+        "sale",
     ],
     "data": [
         "security/ir.model.access.csv",
