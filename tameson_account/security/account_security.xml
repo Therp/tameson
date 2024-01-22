@@ -4,7 +4,7 @@
         <record id="account_billing_product_supplier_only" model="ir.rule">
             <field name="name">Account Billing Product Supplier Bills only</field>
             <field name="model_id" ref="account.model_account_move" />
-            <field name="domain_force">['|',('type','in',('out_invoice', 'out_refund')),('partner_id.is_product_supplier','=',True)]</field>
+            <field name="domain_force">['|',('move_type','in',('out_invoice', 'out_refund')),('partner_id.is_product_supplier','=',True)]</field>
             <field name="groups" eval="[(4, ref('account.group_account_invoice'))]" />
             <field name="perm_create" eval="1" />
             <field name="perm_write" eval="1" />
