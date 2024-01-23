@@ -68,6 +68,7 @@ class ContactCreationWizard(models.TransientModel):
             "phone": self.phone,
             "vat": self.vat,
             "child_ids": [],
+            "lang": False,
         }
         if not self.is_individual:
             child_contact = partner_data.copy()
@@ -94,6 +95,7 @@ class ContactCreationWizard(models.TransientModel):
                 "email": self.email,
                 "phone": self.phone,
                 "type": "delivery",
+                "lang": False,
             }
             childs = partner_data.get("child_ids") + [(0, 0, shipping_contact)]
             partner_data.update({"child_ids": childs})
@@ -111,6 +113,7 @@ class ContactCreationWizard(models.TransientModel):
                 "email": self.invoice_email or self.email,
                 "phone": self.phone,
                 "type": "invoice",
+                "lang": False,
             }
             childs = partner_data.get("child_ids") + [(0, 0, invoice_contact)]
             partner_data.update({"child_ids": childs})
