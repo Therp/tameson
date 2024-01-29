@@ -62,7 +62,7 @@
                             </tr>
                         </thead>
                         <tbody class="invoice_tbody">
-                            <t t-set="lines" t-value="o.move_lines" />
+                            <t t-set="lines" t-value="o.move_ids" />
                             <t t-foreach="lines" t-as="line">
                                 <tr class="o_line_section">
                                     <t name="account_invoice_line_accountable">
