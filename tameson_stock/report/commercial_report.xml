@@ -64,7 +64,7 @@
                         <tbody class="invoice_tbody">
                             <t t-set="lines" t-value="o.move_ids" />
                             <t t-foreach="lines" t-as="line">
-                                <tr class="o_line_section">
+                                <tr>
                                     <t name="account_invoice_line_accountable">
                                         <td name="account_invoice_line_name">
                                             <span t-field="line.product_id.name" t-options="{'widget' : 'text' }" />
