@@ -17,7 +17,7 @@
     "data": [
         "security/ir.model.access.csv",
         # "data/cron.xml",
-        # "data/mail_data.xml",
+        "data/layout.xml",
         "wizard/reshipment.xml",
         "views/sale_views.xml",
         # "report/report_invoice.xml",

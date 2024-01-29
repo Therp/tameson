@@ -84,10 +84,4 @@ Dear
             <field name="auto_delete" eval="True" />
         </record>
     </data>
-    <record id="report_layout_tameson" model="report.layout">
-        <field name="name">Tameson Report</field>
-        <field name="view_id" ref="tameson_sale.external_layout_tameson" />
-        <field name="image">/web/static/img/preview_standard.png</field>
-        <field name="pdf">/web/static/pdf/preview_standard.pdf</field>
-    </record>
 </odoo>
