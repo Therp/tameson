@@ -98,7 +98,7 @@
                                         <td>
                                             <strong>Total</strong>
                                         </td>
-                                        <td class="text-end o_price_tota">
+                                        <td class="text-end o_price_total">
                                             <span t-esc="sum(o.move_ids.mapped(lambda l: l.t_aa_comm_price * l.product_uom_qty))" t-options='{"widget": "monetary", "display_currency": o.move_ids[:1].currency_id}' />
                                         </td>
                                     </tr>
