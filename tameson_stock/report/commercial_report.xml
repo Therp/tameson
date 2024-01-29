@@ -99,7 +99,7 @@
                                             <strong>Total</strong>
                                         </td>
                                         <td class="text-right">
-                                            <span t-esc="sum(o.move_lines.mapped(lambda l: l.t_aa_comm_price * l.product_uom_qty))" t-options='{"widget": "monetary", "display_currency": o.move_lines[:1].currency_id}' />
+                                            <span t-esc="sum(o.move_ids.mapped(lambda l: l.t_aa_comm_price * l.product_uom_qty))" t-options='{"widget": "monetary", "display_currency": o.move_ids[:1].currency_id}' />
                                         </td>
                                     </tr>
                                 </table>
