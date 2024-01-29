@@ -61,7 +61,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="invoice_tbody">
+                        <tbody>
                             <t t-set="lines" t-value="o.move_ids" />
                             <t t-foreach="lines" t-as="line">
                                 <tr>
@@ -79,10 +79,10 @@
                                             <span t-field="line.product_uom_qty" />
                                             <span t-field="line.product_uom_id" groups="uom.group_uom" />
                                         </td>
-                                        <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type== 'html' else '' }}">
+                                        <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type== 'html' else '' }}">
                                             <span class="text-nowrap" t-esc="line.t_aa_comm_price" t-options='{"widget": "monetary", "display_currency": line.currency_id}' />
                                         </td>
-                                        <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                        <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                             <span t-esc="line.product_uom_qty * line.t_aa_comm_price" t-options='{"widget": "monetary", "display_currency": line.currency_id}' />
                                         </td>
                                     </t>
@@ -98,7 +98,7 @@
                                         <td>
                                             <strong>Total</strong>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-end o_price_tota">
                                             <span t-esc="sum(o.move_ids.mapped(lambda l: l.t_aa_comm_price * l.product_uom_qty))" t-options='{"widget": "monetary", "display_currency": o.move_ids[:1].currency_id}' />
                                         </td>
                                     </tr>
