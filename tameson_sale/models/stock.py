@@ -72,8 +72,8 @@ class StockMove(models.Model):
                 sale_line = move.sale_line_id
                 sale_product = sale_line.product_id
                 bom_kit = self.env["mrp.bom"]._bom_find(
-                    product=sale_product, bom_type="phantom"
-                )
+                    products=sale_product, bom_type="phantom"
+                )[sale_product]
                 if bom_kit:
                     total_qty = sum(bom_kit.bom_line_ids.mapped("product_qty"))
                     commercial_price = (
