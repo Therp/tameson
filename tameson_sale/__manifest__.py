@@ -17,12 +17,12 @@
     "data": [
         "security/ir.model.access.csv",
         # "data/cron.xml",
-        "data/layout.xml",
         "wizard/reshipment.xml",
         "views/sale_views.xml",
         # "report/report_invoice.xml",
         # "report/report_sale_order.xml",
         "report/report_external_layout.xml",
+        "data/layout.xml",
         # "data/report_layout.xml",
         # "wizard/base_document_layout_views.xml",
         "views/res_country_view.xml",
