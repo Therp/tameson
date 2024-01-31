@@ -3,7 +3,7 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ModelName(models.Model):
@@ -14,6 +14,12 @@ class ModelName(models.Model):
     non_returnable_skus = fields.Char(related="sale_order_id.non_returnable_skus")
     restock_fee_limit_warning = fields.Boolean(compute="_compute_restock_fee_limit")
     restock_fee_limit = fields.Char(compute="_compute_restock_fee_limit")
+    aa_comm_id = fields.Many2one(
+        string="AA Communication",
+        comodel_name="aa.comm",
+        ondelete="restrict",
+        readonly=True,
+    )
 
     def action_mail_to_customer(self):
         composer_form_view_id = self.env.ref(
@@ -93,3 +99,30 @@ class ModelName(models.Model):
             }
         )
         return action
+
+    @api.model_create_multi
+    def create(self, list_value):
+        res = super().create(list_value)
+        for rec in res:
+            rec.aa_comm_id = self.env["aa.comm"].create(
+                {
+                    "name": rec.name,
+                    "ticket_id": rec.id,
+                }
+            )
+        return res
+
+
+class AAComm(models.Model):
+    _inherit = "aa.comm"
+
+    ticket_id = fields.Many2one(
+        comodel_name="helpdesk.ticket",
+        ondelete="restrict",
+    )
+
+    def get_search_string(self):
+        if self.ticket_id:
+            return "ticket"
+        else:
+            return super().get_search_string()
