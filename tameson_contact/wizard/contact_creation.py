@@ -92,7 +92,7 @@ class ContactCreationWizard(models.TransientModel):
                 "zip": self.shipping_zip_code or self.zip_code,
                 "country_id": self.country.id,
                 "state_id": self.state.id,
-                "email": self.email,
+                "email": self.shipping_email or self.email,
                 "phone": self.phone,
                 "type": "delivery",
                 "lang": False,
