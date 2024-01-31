@@ -33,7 +33,7 @@ class StockPicking(models.Model):
 
     @api.onchange("unknown_date_incoming")
     def _onchange_unknown_date_incoming(self):
-        self.move_lines.update({"unknown_date_incoming": self.unknown_date_incoming})
+        self.move_ids.update({"unknown_date_incoming": self.unknown_date_incoming})
 
     @api.depends("aftership_tracking")
     def _compute_aftership_url(self):
@@ -53,7 +53,7 @@ class StockPicking(models.Model):
         )._compute_carrier_tracking_url()
 
     def action_reserve_force(self):
-        waiting = self.move_lines.filtered(lambda l: l.state == "waiting")
+        waiting = self.move_ids.filtered(lambda l: l.state == "waiting")
         for move in waiting:
             if move.move_orig_ids:
                 move.write(
@@ -79,9 +79,9 @@ class StockPicking(models.Model):
 
     def latest_expected_skus(self):
         self.ensure_one()
-        latest_line = self.move_lines.sorted(lambda m: m.date_expected, True)[:1]
+        latest_line = self.move_ids.sorted(lambda m: m.date_expected, True)[:1]
         latest_date = latest_line.date_expected
-        return self.move_lines.filtered(
+        return self.move_ids.filtered(
             lambda m: m.date_expected.date() == latest_date.date()
         ).mapped("product_id.default_code")
 
