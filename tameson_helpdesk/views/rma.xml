@@ -77,7 +77,7 @@
                                     <label for="iban">IBAN</label>
                                     <input class="form-control" id="iban" name="iban" placeholder="IBAN account number" />
                                 </div>
-                                <div class="float-right mb-5">
+                                <div class="form-group text-end p-2">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </form>
