@@ -192,3 +192,11 @@ class PurchaseOrderCSV(models.AbstractModel):
         res["delimiter"] = ";"
         res["quoting"] = 0
         return res
+
+
+class ModelName(models.Model):
+    _name = "purchase.orderline.csv.import.line"
+
+
+class ModelName1(models.Model):
+    _name = "purchase.orderline.csv.import"
