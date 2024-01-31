@@ -28,7 +28,7 @@
         "views/res_country_view.xml",
         # "views/partner.xml",
         "wizard/product_creation.xml",
-        # "views/stock.xml",
+        "views/stock.xml",
         "views/pricelist.xml",
         "views/payment_terms.xml",
     ],
