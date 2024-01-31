@@ -30,11 +30,11 @@
                 <button name="action_mail_send" string="Send" type="object" class="oe_highlight" />
                 <button name="action_reserve_force" string="Force availability" type="object" attrs="{'invisible': ['|', ('state','not in',('waiting')), ('picking_type_code','!=','outgoing')]}" />
             </xpath>
-            <field name="scheduled_date" position="before">
+            <xpath expr="//label[@for='scheduled_date']" position="before">
                 <field name="picking_type_code" invisible="1" />
                 <field name="unknown_date" attrs="{'invisible': [('picking_type_code','!=','outgoing')]}" />
                 <field name="unknown_date_incoming" attrs="{'invisible': [('picking_type_code','!=','incoming')]}" />
-            </field>
+            </xpath>
             <xpath expr="//field[@name='move_ids_without_package']/tree//field[last()]" position="after">
                 <field name="state" optional="hide" />
                 <field name="unknown_date_incoming" optional="hide" attrs="{'column_invisible': [('parent.picking_type_code','!=','incoming')] }" />
