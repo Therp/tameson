@@ -110,7 +110,7 @@
 
                     <div class="my-2">
                         <strong style="font-size: 0.8rem !important;">Would you like to create an account?</strong><br />
-                        <a class="btn btn-secondary btn-block" t-attf-href="/web/signup?redirect=%2Fmy%2Faccount">
+                        <a class="btn btn-secondary btn-block" t-attf-href="/web/signup?redirect=/my/account">
                             <strong>Register a new account</strong>
                         </a><br />
                     </div>
