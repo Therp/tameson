@@ -42,6 +42,9 @@
                 <button name="action_mail_to_aa" string="Mail to AA" type="object" class="oe_highlight" />
                 <button name="action_mail_to_customer" string="Mail to Customer" type="object" class="oe_highlight" />
             </header>
+            <xpath expr="//field[@name='ticket_type_id']" position="after">
+                <field name="sale_order_id" string="Sale" />
+            </xpath>
             <field name="ticket_type_id" position="after">
                 <field name="aa_comm_id" />
             </field>
@@ -74,9 +77,6 @@
                 <attribute name="required">1</attribute>
             </field>
             <field name="ticket_type_id" position="attributes">
-                <attribute name="required">1</attribute>
-            </field>
-            <field name="partner_id" position="attributes">
                 <attribute name="required">1</attribute>
             </field>
             <field name="partner_id" position="attributes">
