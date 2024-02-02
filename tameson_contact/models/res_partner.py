@@ -3,6 +3,7 @@
 #    __manifest__.py file at the root folder of this module.                  #
 ###############################################################################
 
+import copy
 import re
 
 from odoo import api, fields, models
@@ -108,17 +109,26 @@ class ResPartner(models.Model):
         partners = super().create(vals_list)
         return partners
 
-    def write(self, val):
-        if not self.env.context.get("skip_company_create", False):
-            company_name = val.get("company_name", False)
-            if not self.parent_id and (val.get("vat", False) or company_name):
-                val["is_company"] = True
-            child_ids = val.get("child_ids", [])
-            if company_name and not self.child_ids and not self.parent_id:
-                child_val = val.copy()
-                child_val.update(vat=False, company_name=False, is_company=False)
-                child_ids = child_ids + [(0, 0, child_val)]
-                val.update(name=company_name, child_ids=child_ids)
-                self = self.sudo().with_context(skip_company_create=True)
-            return super(ResPartner, self).write(val)
-        return super().write(val)
+    def write(self, vals):
+        company_name = vals.get("company_name", False)
+        if not self.parent_id and (vals.get("vat", False) or company_name):
+            vals["is_company"] = True
+        if company_name and not self.child_ids:
+            child_vals = copy.deepcopy(vals)
+            child_vals.update(
+                {
+                    "vat": False,
+                    "company_name": False,
+                    "is_company": False,
+                    "child_ids": False,
+                    "parent_id": self.id,
+                }
+            )
+            self.sudo().create(child_vals)
+            vals.update(
+                {
+                    "name": company_name,
+                    "company_name": False,
+                }
+            )
+        return super().write(vals)
