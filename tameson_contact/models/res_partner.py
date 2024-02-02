@@ -119,5 +119,6 @@ class ResPartner(models.Model):
                 child_val.update(vat=False, company_name=False, is_company=False)
                 child_ids = child_ids + [(0, 0, child_val)]
                 val.update(name=company_name, child_ids=child_ids)
-            return super().with_context(skip_company_create=True).sudo().write(val)
+                self = self.sudo().with_context(skip_company_create=True)
+            return super(ResPartner, self).write(val)
         return super().write(val)
