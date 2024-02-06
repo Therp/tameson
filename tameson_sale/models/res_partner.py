@@ -31,17 +31,19 @@ class ResPartner(models.Model):
         )
         return res
 
-    # @api.onchange("property_payment_term_id")
-    # def onchange_payment_term(self):
-    #     limit = self.property_payment_term_id.t_invoice_delivered_quantities
-    #     self.update(
-    #         {
-    #             "risk_sale_order_include": limit,
-    #             "risk_invoice_draft_include": limit,
-    #             "risk_invoice_open_include": limit,
-    #             "risk_invoice_unpaid_include": limit,
-    #         }
-    #     )
+    @api.onchange("property_payment_term_id")
+    def onchange_payment_term(self):
+        limit = self.property_payment_term_id.t_invoice_delivered_quantities
+        self.update(
+            {
+                "risk_sale_order_include": limit,
+                "risk_invoice_draft_include": limit,
+                "risk_invoice_open_include": limit,
+                "risk_invoice_unpaid_include": limit,
+                "risk_account_amount_include": limit,
+                "risk_account_amount_unpaid_include": limit,
+            }
+        )
 
 
 class AccountPaymentTerm(models.Model):

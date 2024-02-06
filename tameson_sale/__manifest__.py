@@ -25,7 +25,7 @@
         "data/layout.xml",
         # "data/report_layout.xml",
         # "wizard/base_document_layout_views.xml",
-        "views/res_country_view.xml",
+        "views/base_view.xml",
         # "views/partner.xml",
         "wizard/product_creation.xml",
         "views/stock.xml",
