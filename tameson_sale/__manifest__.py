@@ -20,7 +20,7 @@
         "wizard/reshipment.xml",
         "views/sale_views.xml",
         # "report/report_invoice.xml",
-        # "report/report_sale_order.xml",
+        "report/report_sale_order.xml",
         "report/report_external_layout.xml",
         "data/layout.xml",
         # "data/report_layout.xml",

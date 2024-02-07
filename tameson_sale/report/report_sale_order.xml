@@ -47,31 +47,5 @@
         <xpath expr="//div[@t-if=&quot;doc.user_id.name&quot;]" position="attributes">
             <attribute name="style">display:none</attribute>
         </xpath>
-        <xpath expr="//th[@name='th_discount']" position="after">
-            <th name="th_price_unit_net" t-if="display_discount" class="text-left"><span>Net Unit Price</span></th>
-        </xpath>
-        <xpath expr="//td[@name='td_name']" position="replace">
-            <td name="td_name">
-                <span t-field="line.name" t-options="{'widget': 'text'}" />
-                <t t-if="line.product_id">
-                    <t t-foreach="line.product_id.bom_ids" t-as="bom">
-                        <div style="font-style: italic; font-size: 12px;">Contents:
-                            <t t-foreach="bom.bom_line_ids" t-as="bom_line">
-                                <t t-set="bom_product" t-value="bom_line.product_id" />
-                                <span t-raw="int(bom_line.product_qty)" />x
-                                [<span t-field="bom_product.default_code" />]
-                                <span t-if="not bom_line_last"> + </span>
-                                <!-- <span t-field="bom_product.name"/> -->
-                            </t>
-                        </div>
-                    </t>
-                </t>
-            </td>
-        </xpath>
-        <xpath expr="//td[@t-if=&quot;display_discount&quot;]" position="after">
-            <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                <span class="text-nowrap" t-esc="round(line.price_unit - (line.price_unit*(line.discount/100.00)),2)" />
-            </td>
-        </xpath>
     </template>
 </odoo>
