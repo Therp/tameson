@@ -22,10 +22,10 @@
                             </p>
                         </t>
                         <t t-if="partner_country_code in ['BE', 'NL']">
-                            <p> Reg.: <span>72902531</span><br />
-                                <span>+44 (0)330 8080 502</span><br />
+                            <p> KVK: <span>72902531</span><br />
+                                <span>+31 (0)40 750 5795</span><br />
                                 <span>
-                                support@tameson.co.uk</span><br />
+                                support@tameson.nl</span><br />
                             </p>
                         </t>
                         <t t-if="partner_country_code not in ['GB', 'BE', 'NL']">
