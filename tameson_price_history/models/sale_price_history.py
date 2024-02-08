@@ -48,7 +48,7 @@ class ProductTemplate(models.Model):
         store=True,
     )
 
-    @api.depends("seller_ids.name", "seller_ids.list_price_eur")
+    @api.depends("seller_ids.partner_id", "seller_ids.list_price_eur")
     def _compute_supplier_list_price(self):
         for product in self:
             first_supplier = product.seller_ids.sorted()[:1]
