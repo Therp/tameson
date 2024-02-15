@@ -15,7 +15,6 @@
         "payment_custom",
         "sale_stock",
         "sale",
-        "payment_mollie_official",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -32,10 +31,6 @@
         "web.assets_frontend": [
             "tameson_website/static/src/js/payment.js",
             "tameson_website/static/src/scss/tameson.scss",
-            "payment_mollie_official/static/src/js/payment_form.js",
-            "payment_mollie_official/static/src/js/qr_dialog.js",
-            "payment_mollie_official/static/src/scss/payment_form.scss",
-            "payment_mollie_official/static/src/xml/dialog.xml",
         ],
     },
 }
