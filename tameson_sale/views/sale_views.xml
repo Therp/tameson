@@ -52,7 +52,16 @@
                 <attribute name="attrs">{'readonly': [('partner_id','=',False)]}</attribute>
             </xpath>
             <field name="partner_id" position="attributes">
-                <attribute name="options">{'no_create': True, 'no_create_edit': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True, 'show_email': True}</attribute>
+                <attribute name="options">{'always_reload': True, 'no_create': True, 'no_create_edit': True}</attribute>
+            </field>
+            <field name="partner_invoice_id" position="attributes">
+                <attribute name="context">{'default_type':'invoice', 'show_email': True}</attribute>
+                <attribute name="options">{'always_reload': True, 'no_create': True, 'no_create_edit': True}</attribute>
+            </field>
+            <field name="partner_shipping_id" position="attributes">
+                <attribute name="context">{'default_type':'invoice', 'show_email': True}</attribute>
+                <attribute name="options">{'always_reload': True, 'no_create': True, 'no_create_edit': True}</attribute>
             </field>
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create': True, 'no_create_edit': True}</attribute>
