@@ -19,5 +19,13 @@
                 </div>
             </xpath>
         </template>
+        <template id="document_tax_totals_no_black_total" inherit_id="account.document_tax_totals">
+            <xpath expr="//tr[hasclass('o_total')]" position="after">
+                <tr><td /><td /></tr>
+            </xpath>
+            <xpath expr="//tr[hasclass('o_total')]" position="attributes">
+                <attribute name="class" remove="o_total" separator=" " />
+            </xpath>
+        </template>
     </data>
 </odoo>
