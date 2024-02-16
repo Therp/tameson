@@ -18,13 +18,40 @@
                     </t>
                 </div>
             </xpath>
+            <xpath expr="//t[@t-if='len(payments_vals) > 0']" position="inside">
+                <tr><td /><td /></tr>
+            </xpath>
+            <xpath expr="//div[@id='informations']/div[4]" position="after">
+                <t t-set="sale_order" t-value="o.get_sale_order()" />
+                <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_payment_term_id" name="payterms">
+                    <strong>Payment Terms:</strong>
+                    <p class="m-0" t-field="o.invoice_payment_term_id.name" />
+                </div>
+                <div class="col-auto col-3 mw-100 mb-2" t-if="sale_order" name="so_date">
+                    <strong>Order Date:</strong>
+                    <t t-if="sale_order and sale_order.date_order">
+                        <p class="m-0" t-field="sale_order.date_order" t-options='{"widget": "date"}' />
+                    </t>
+                </div>
+            </xpath>
+            <xpath expr="//th[@name='th_description']" position="after">
+                <t t-set="display_hscode" t-value="any([l.product_id and l.product_id.hs_code for l in o.invoice_line_ids])" />
+                <th name="th_hs_code" t-if="display_hscode" class="text-left"><span>HS code</span></th>
+            </xpath>
+            <xpath expr="//td[@name='account_invoice_line_name']" position="after">
+                <td class="text-left" t-if="display_hscode">
+                    <t t-if="line.product_id and line.product_id.hs_code">
+                        <span t-field="line.product_id.hs_code" />
+                    </t>
+                </td>
+            </xpath>
         </template>
         <template id="document_tax_totals_no_black_total" inherit_id="account.document_tax_totals">
             <xpath expr="//tr[hasclass('o_total')]" position="after">
-                <tr><td /><td /></tr>
+                <tr />
             </xpath>
             <xpath expr="//tr[hasclass('o_total')]" position="attributes">
-                <attribute name="class" remove="o_total" separator=" " />
+                <attribute name="class" remove="o_total" add="bg-light border-bottom border-dark" separator=" " />
             </xpath>
         </template>
     </data>
