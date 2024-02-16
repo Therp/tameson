@@ -239,6 +239,38 @@ class SaleOrderLine(models.Model):
         related="product_id.supplierinfo_name", string="Supplier"
     )
 
+    current_data = fields.Text(
+        string="Data",
+        compute="get_current_max_data",
+    )
+
+    @api.depends("product_id.max_qty_order_array")
+    def get_current_max_data(self):
+        for record in self:
+            if record.product_id.detailed_type == "product":
+                data = json.loads(record.product_id.max_qty_order_array)
+                record.current_data = "\n".join(
+                    ["D: %d, Q: %d" % (i["lead_time"], i["max_qty"]) for i in data]
+                )
+            else:
+                record.current_data = ""
+
     @api.onchange("product_id", "product_uom_qty")
     def _onchange_product_id_set_customer_lead(self):
-        self.customer_lead = self.product_id.t_customer_lead_time
+        if self.product_id.detailed_type != "product":
+            self.customer_lead = 0
+            return
+        data = json.loads(self.product_id.max_qty_order_array)
+        lead_time = 180
+        for values in data:
+            if self.product_uom_qty <= values["max_qty"]:
+                lead_time = values["lead_time"]
+                break
+        self.customer_lead = lead_time
+        if lead_time == 180:
+            return {
+                "warning": {
+                    "title": "Quantity Over Max Amount",
+                    "message": "Order amount is over the Max quantity to order amount.",
+                }
+            }
