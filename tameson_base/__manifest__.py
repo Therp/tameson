@@ -6,11 +6,11 @@
         "mail",
     ],
     "data": [
-        "security/groups.xml",
         "views/model.xml",
         "views/set_help.xml",
         "views/aa_comm.xml",
         "security/ir.model.access.csv",
+        "views/mail.xml",
     ],
     "application": False,
     "license": "OPL-1",

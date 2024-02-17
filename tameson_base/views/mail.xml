@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="email_template_form_multireport" model="ir.ui.view">
+        <field name="name">email_template_form_multireport</field>
+        <field name="model">mail.template</field>
+        <field name="inherit_id" ref="mail.email_template_form" />
+        <field name="arch" type="xml">
+            <field name="report_name" position="after">
+                <field name="report_ids">
+                    <tree editable="bottom">
+                        <field name="report_template" />
+                        <field name="report_name" />
+                    </tree>
+                </field>
+            </field>
+        </field>
+    </record>
+</odoo>
