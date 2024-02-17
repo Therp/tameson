@@ -5,7 +5,7 @@
 
 import base64
 
-from odoo import _, api, fields, models, tools
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
@@ -17,20 +17,6 @@ class MailTemplate(models.Model):
         comodel_name="mail.template.multireport",
         inverse_name="template_id",
     )
-
-    @api.model
-    def render_post_process(self, html):
-        lang = self.env.context.get("lang", "")
-        signature = self.env.user.company_id.signature_ids.filtered(
-            lambda s: s.lang == lang
-        )[:1]
-        if not signature:
-            signature = self.env.user.company_id.signature_ids[:1]
-        if signature:
-            signature_html = signature.signature % self.env.user.name
-            html = tools.append_content_to_html(html, signature_html, plaintext=False)
-        html = super().render_post_process(html)
-        return html
 
     def generate_email(self, res_ids, fields):
         res = super().generate_email(res_ids, fields)
