@@ -16,7 +16,11 @@ class ProductPublicCatregory(models.Model):
     _inherit = "product.public.category"
 
     complete_name = fields.Char(
-        "Complete Name", compute="_compute_complete_name", store=True, index=True
+        "Complete Name",
+        compute="_compute_complete_name",
+        store=True,
+        index=True,
+        recursive=True,
     )
 
     @api.depends("name", "parent_id.complete_name")
