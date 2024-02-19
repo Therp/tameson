@@ -20,6 +20,7 @@ class StockPicking(models.Model):
     )
     t_aa_track_url = fields.Char("Active Ant tracktraceUrl", readonly=True, copy=False)
     source_so_id = fields.Many2one(comodel_name="sale.order", compute="_get_source_so")
+    t_aa_create_date = fields.Datetime("AA Create date")
 
     @api.depends("t_aa_id")
     def get_t_aa_url(self):

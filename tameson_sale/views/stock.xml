@@ -14,6 +14,7 @@
                     <field name="t_aa_url" attrs="{'invisible': [('t_aa_id','=',False)]}" widget="url" />
                     <field name="t_aa_allow_cancel" widget="boolean_toggle" attrs="{'invisible': [('t_aa_id','=',False)]}" />
                     <field name="t_aa_track_url" attrs="{'invisible': [('t_aa_track_url','=',False)]}" widget="url" />
+                    <field name="t_aa_create_date" attrs="{'invisible': [('t_aa_id','=',False)]}" />
                 </field>
             </field>
         </record>
