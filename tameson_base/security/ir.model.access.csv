@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 aa_comm_all,aa_comm_all,model_aa_comm,,1,1,1,1
 access_set_help_text,Access set.help.text,model_set_help_text,base.group_user,1,1,1,1
-email_signature_all,email_signature_all,model_signature_lang,,1,1,1,1
 multireport_all,multireport_all,model_mail_template_multireport,,1,1,1,1
