@@ -33,6 +33,18 @@
         <xpath expr="//div[hasclass('page')]" position="before">
             <br />
         </xpath>
+        <xpath expr="//div[@id='informations']/div[1]" position="attributes">
+            <attribute name="class" remove="col-3" add="col-2" separator=" " />
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[2]" position="attributes">
+            <attribute name="class" remove="col-3" add="col-2" separator=" " />
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[3]" position="attributes">
+            <attribute name="class" remove="col-3" add="col-2" separator=" " />
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[4]" position="attributes">
+            <attribute name="class" remove="col-3" add="col-2" separator=" " />
+        </xpath>
         <xpath expr="//div[@id='informations']" position="inside">
             <div class="col-auto mw-100 mb-2" t-if="doc.payment_term_id" name="payterms">
                 <strong>Payment Terms:</strong>
