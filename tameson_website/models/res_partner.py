@@ -113,7 +113,7 @@ class ResPartner(models.Model):
     def get_tax_exempt(self):
         self.ensure_one()
         group = self.env.ref("__export__.europe_excluding_nl", False)
-        return self.vat and group in self.country_id.country_group_ids
+        return bool(self.vat and group in self.country_id.country_group_ids)
 
     def get_customer_metafield_data(self):
         self.ensure_one()
