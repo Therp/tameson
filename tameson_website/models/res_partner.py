@@ -114,3 +114,15 @@ class ResPartner(models.Model):
         self.ensure_one()
         group = self.env.ref("__export__.europe_excluding_nl", False)
         return self.vat and group in self.country_id.country_group_ids
+
+    def get_customer_metafield_data(self):
+        self.ensure_one()
+        odoo_te = self.get_tax_exempt()
+        odoo_invoice_email = self.get_invoice_email()
+        return [
+            {
+                "tax_exempt": odoo_te,
+                "invoice_email": odoo_invoice_email,
+                "vat": self.vat,
+            }
+        ]
