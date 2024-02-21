@@ -121,6 +121,7 @@ class ResPartner(models.Model):
         odoo_invoice_email = self.get_invoice_email()
         return [
             {
+                "id": self.id,
                 "tax_exempt": odoo_te,
                 "invoice_email": odoo_invoice_email,
                 "vat": self.vat,
