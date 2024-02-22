@@ -239,8 +239,8 @@ class SaleOrderLine(models.Model):
         related="product_id.supplierinfo_name", string="Supplier"
     )
 
-    current_data = fields.Text(
-        string="Data",
+    qty_order_data = fields.Text(
+        string="Qty to Order",
         compute="get_current_max_data",
     )
 
