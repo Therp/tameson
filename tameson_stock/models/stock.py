@@ -185,6 +185,9 @@ class DeliveryCarrier(models.Model):
     external_mapping = fields.Text(
         string="External Mapping Data",
     )
+    t_aa_shipper_mapping = fields.Char(
+        string="Active Ant Shipment Mapping",
+    )
 
 
 class ReturnPicking(models.TransientModel):

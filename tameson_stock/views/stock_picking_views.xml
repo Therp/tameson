@@ -109,6 +109,7 @@
         <field name="arch" type="xml">
             <field name="company_id" position="after">
                 <field name="external_mapping" />
+                <field name="t_aa_shipper_mapping" />
             </field>
         </field>
     </record>
