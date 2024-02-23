@@ -22,4 +22,24 @@
         <field name="state">code</field>
         <field name="code">model.set_all_product_bom_price()</field>
     </record>
+    <!-- jobs -->
+    <record id="channel_product_calculation" model="queue.job.channel">
+        <field name="name">product_calculation</field>
+        <field name="parent_id" ref="queue_job.channel_root" />
+    </record>
+    <record id="function_update_min_qty" model="queue.job.function">
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="method">update_min_qty</field>
+        <field name="channel_id" ref="channel_product_calculation" />
+    </record>
+    <record id="function_non_bom_lead_calculation" model="queue.job.function">
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="method">set_non_bom_lead</field>
+        <field name="channel_id" ref="channel_product_calculation" />
+    </record>
+    <record id="function_bom_lead_calculation" model="queue.job.function">
+        <field name="model_id" ref="mrp.model_mrp_bom" />
+        <field name="method">set_bom_lead</field>
+        <field name="channel_id" ref="channel_product_calculation" />
+    </record>
 </odoo>
