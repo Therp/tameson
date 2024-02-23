@@ -3,6 +3,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class StockPicking(models.Model):
@@ -89,15 +90,11 @@ class StockPicking(models.Model):
         self.ensure_one()
         res = self.button_validate()
         bo_model = "stock.backorder.confirmation"
-        over = "stock.overprocessed.transfer"
-        if isinstance(res, dict) and res.get("res_model", False) == over:
-            wiz_id = res.get("res_id")
-            wiz = self.env[over].browse(wiz_id)
-            res = wiz.action_confirm()
         if isinstance(res, dict) and res.get("res_model", False) == bo_model:
-            backorder_wiz_id = res.get("res_id")
-            wiz = self.env[bo_model].browse(backorder_wiz_id)
+            wiz = self.env[bo_model].browse(res)
             wiz.process()
+        else:
+            raise ValidationError(str(res))
         return {"id": self.id, "state": self.state}
 
     @api.depends("sale_id", "state", "sale_id.payment_term_id", "sale_id.t_is_paid")
@@ -177,6 +174,11 @@ class StockPicking(models.Model):
         return self.sale_id.invoice_ids.filtered(
             lambda i: i.invoice_payment_state != "paid"
         )[:1].invoice_date
+
+    def fill_done_qtys(self):
+        for r in self:
+            for ml in r.move_ids:
+                ml.quantity_done = ml.product_uom_qty
 
 
 class DeliveryCarrier(models.Model):
