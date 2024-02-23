@@ -76,7 +76,7 @@ class ProductTemplate(models.Model):
         variants = self.mapped("product_variant_id")
         bom_ids = (
             self.env["mrp.bom.line"]
-            .search([("product_id", "in", variants)])
+            .search([("product_id", "in", variants.ids)])
             .mapped("bom_id")
         )
         # Store free qty on minimal_qty_available_stored
