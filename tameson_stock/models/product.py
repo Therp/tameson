@@ -70,30 +70,29 @@ class ProductTemplate(models.Model):
         templates = move_products + new_created + supplier_info_updated
         if not templates:
             return
+        templates.store_product_data(split)
+
+    def store_product_data(self, split):
         variants = self.mapped("product_variant_id")
         bom_ids = (
             self.env["mrp.bom.line"]
             .search([("product_id", "in", variants)])
             .mapped("bom_id")
         )
-        templates.store_product_data(bom_ids, split)
-
-    def store_product_data(self, bom_ids, split):
-        min_qty = self + bom_ids.mapped("product_tmpl_id")
         # Store free qty on minimal_qty_available_stored
         min_grouped = []
-        for pos in range(0, len(min_qty), split):
-            job = min_qty[pos : pos + split].delayable().update_min_qty()
+        for pos in range(0, len(self), split):
+            job = self[pos : (pos + split)].delayable().update_min_qty()
             min_grouped.append(job)
         # set bom product leads
         bom_grouped = []
         for pos in range(0, len(bom_ids), split):
-            job = bom_ids[pos : pos + split].delayable().set_bom_lead()
+            job = bom_ids[pos : (pos + split)].delayable().set_bom_lead()
             bom_grouped.append(job)
         # non-bom-lead
         non_bom_grouped = []
         for pos in range(0, len(self), split):
-            job = self[pos : pos + split].delayable().set_non_bom_lead()
+            job = self[pos : (pos + split)].delayable().set_non_bom_lead()
             non_bom_grouped.append(job)
         chain(group(*min_grouped), group(*non_bom_grouped), group(*bom_grouped)).delay()
 
@@ -106,8 +105,7 @@ class ProductTemplate(models.Model):
 
     def cron_store_all_product_data(self, split=5000):
         pts = self.search([("bom_ids", "=", False)])
-        boms = self.env["mrp.bom"].search([])
-        pts.store_product_data(boms, split)
+        pts.store_product_data(split)
 
     def action_view_stock_moves(self):
         self.ensure_one()
