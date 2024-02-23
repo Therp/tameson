@@ -91,7 +91,7 @@ class StockPicking(models.Model):
         res = self.button_validate()
         bo_model = "stock.backorder.confirmation"
         if isinstance(res, dict) and res.get("res_model", False) == bo_model:
-            wiz = self.env[bo_model].browse(res)
+            wiz = self.env[bo_model].with_context(res["context"]).create({})
             wiz.process()
         else:
             raise ValidationError(str(res))
