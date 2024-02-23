@@ -249,11 +249,11 @@ class SaleOrderLine(models.Model):
         for record in self:
             if record.product_id.detailed_type == "product":
                 data = json.loads(record.product_id.max_qty_order_array)
-                record.current_data = "\n".join(
+                record.qty_order_data = "\n".join(
                     ["%dD: %d" % (i["lead_time"], i["max_qty"]) for i in data]
                 )
             else:
-                record.current_data = ""
+                record.qty_order_data = ""
 
     @api.onchange("product_id", "product_uom_qty")
     def _onchange_product_id_set_customer_lead(self):
