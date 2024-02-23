@@ -25,9 +25,9 @@ class MrpBom(models.Model):
 
     def set_bom_price(self, split=2000):
         for pos in range(0, len(self), split):
-            self[pos : pos + split].with_delay().set_bom_sale_price_job()
+            self[pos : (pos + split)].with_delay().set_bom_sale_price_job()
         for pos in range(0, len(self), split):
-            self[pos : pos + split].with_delay().set_bom_cost_price_job()
+            self[pos : (pos + split)].with_delay().set_bom_cost_price_job()
 
     def set_bom_sale_price_job(self):
         self.env.cr.execute(
@@ -96,13 +96,15 @@ FROM (select distinct additional_cost from product_template) as ac)"""
                 product._change_standard_price(price, account)
 
     def set_bom_lead(self):
-        for bom in self.filtered(lambda bom: bom.bom_line_ids):
+        for bom in self:
+            if not bom.bom_line_ids:
+                continue
             data = bom.bom_line_ids.mapped(
-                lambda l: {
-                    "stock": l.product_id.minimal_qty_available_stored,
-                    "delay": l.product_id.seller_ids[:1].delay,
-                    "bom_line_qty": l.product_qty,
-                    "max": l.product_id.max_qty_order,
+                lambda line: {
+                    "stock": line.product_id.minimal_qty_available_stored,
+                    "delay": line.product_id.seller_ids[:1].delay,
+                    "bom_line_qty": line.product_qty,
+                    "max": line.product_id.max_qty_order,
                 }
             )
             delay = max(
@@ -114,16 +116,21 @@ FROM (select distinct additional_cost from product_template) as ac)"""
             delay_list = list(sorted({item["delay"] for item in data}))
             delay_list.insert(0, 0)
             delay_array = []
-            max_qtys = []
+            max_qty_order = 0
+            free_qty = 0
             for lead in delay_list:
                 max_qty = get_qty(data, lead)
-                if max_qty > 0:
-                    delay_array.append({"lead_time": lead + 1, "max_qty": max_qty})
-                    max_qtys.append(max_qty)
-            max_qty_order = max(max_qtys)
+                if max_qty <= 0:
+                    continue
+                delay_array.append({"lead_time": lead, "max_qty": max_qty})
+                if max_qty > max_qty_order:
+                    max_qty_order = max_qty
+                if lead == 0:
+                    free_qty = max_qty
             bom.product_tmpl_id.write(
                 {
-                    "t_customer_lead_time": delay + 1,
+                    "minimal_qty_available_stored": free_qty,
+                    "t_customer_lead_time": delay,
                     "max_qty_order": max_qty_order,
                     "max_qty_order_array": json.dumps(delay_array),
                 }
