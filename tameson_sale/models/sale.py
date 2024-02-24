@@ -171,7 +171,8 @@ class SaleOrder(models.Model):
             r.t_is_paid = full_invoiced and all_invoice_paid
 
     def action_confirm_ecommerce(self):
-        self.order_line._onchange_product_id_set_customer_lead()
+        for line in self.order_line:
+            line._onchange_product_id_set_customer_lead()
         return self.with_context(bypass_risk=True).action_confirm()
 
     def action_confirm(self):
