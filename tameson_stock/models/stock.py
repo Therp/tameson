@@ -190,6 +190,7 @@ class DeliveryCarrier(models.Model):
     t_aa_shipper_mapping = fields.Char(
         string="Active Ant Shipment Mapping",
     )
+    aftership_slug = fields.Char()
 
 
 class ReturnPicking(models.TransientModel):
