@@ -268,7 +268,7 @@ class SaleOrderLine(models.Model):
                 record.qty_order_data = ""
 
     @api.onchange("product_id", "product_uom_qty")
-    def _onchange_product_id_set_customer_lead(self):
+    def onchange_product_id_set_customer_lead(self):
         if self.product_id.detailed_type != "product":
             self.customer_lead = 0
             return
