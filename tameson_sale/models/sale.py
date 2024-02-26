@@ -171,9 +171,19 @@ class SaleOrder(models.Model):
             r.t_is_paid = full_invoiced and all_invoice_paid
 
     def action_confirm_ecommerce(self):
-        for line in self.order_line:
-            line._onchange_product_id_set_customer_lead()
         return self.with_context(bypass_risk=True).action_confirm()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for so in res:
+            # Shopify/Channable order, set lead days
+            if (so.origin or "").startswith("shopify") or (so.origin or "").startswith(
+                "channable"
+            ):
+                for line in self.order_line:
+                    line._onchange_product_id_set_customer_lead()
+        return res
 
     def action_confirm(self):
         over_amount = float(
