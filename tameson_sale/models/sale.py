@@ -231,6 +231,11 @@ class SaleOrder(models.Model):
     def onchange_partner_note(self):
         self.note = self.partner_id.country_id.customer_note
 
+    def action_adjust_channable_tax(self):
+        for line in self.order_line:
+            ratio = 1 + (sum(line.tax_id.mapped("amount")) / 100.00)
+            line.price_unit = line.price_unit / ratio
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
