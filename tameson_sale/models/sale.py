@@ -29,6 +29,7 @@ class SaleOrder(models.Model):
     customer_ref_warning = fields.Boolean(compute="get_customer_ref_warning")
     expected_date_warning = fields.Boolean(compute="get_expected_date_warning")
     payment_term_warning = fields.Boolean(compute="get_payment_term_warning")
+    ecommerce_status_updated = fields.Boolean(default=False)
 
     @api.depends("partner_id", "payment_term_id")
     def get_payment_term_warning(self):
