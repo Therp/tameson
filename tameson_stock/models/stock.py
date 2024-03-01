@@ -31,6 +31,9 @@ class StockPicking(models.Model):
     aftership_url = fields.Char(
         string="Aftership URL", compute="_compute_aftership_url", copy=False
     )
+    ecommerce_status_updated = fields.Boolean(
+        related="sale_id.ecommerce_status_updated", readonly=False
+    )
 
     @api.onchange("unknown_date_incoming")
     def _onchange_unknown_date_incoming(self):
