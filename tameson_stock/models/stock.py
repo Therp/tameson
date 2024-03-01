@@ -94,11 +94,12 @@ class StockPicking(models.Model):
         self.ensure_one()
         res = self.button_validate()
         bo_model = "stock.backorder.confirmation"
-        if isinstance(res, dict) and res.get("res_model", False) == bo_model:
-            wiz = self.env[bo_model].with_context(res["context"]).create({})
-            wiz.process()
-        else:
-            raise ValidationError(str(res))
+        if isinstance(res, dict):
+            if res.get("res_model", False) == bo_model:
+                wiz = self.env[bo_model].with_context(res["context"]).create({})
+                wiz.process()
+            else:
+                raise ValidationError(str(res))
         return {"id": self.id, "state": self.state}
 
     @api.depends("sale_id", "state", "sale_id.payment_term_id", "sale_id.t_is_paid")
