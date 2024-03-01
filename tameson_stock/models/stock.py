@@ -34,6 +34,7 @@ class StockPicking(models.Model):
     ecommerce_status_updated = fields.Boolean(
         related="sale_id.ecommerce_status_updated", readonly=False
     )
+    origin = fields.Char(related="sale_id.origin")
 
     @api.onchange("unknown_date_incoming")
     def _onchange_unknown_date_incoming(self):
