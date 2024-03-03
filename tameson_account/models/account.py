@@ -49,24 +49,25 @@ class AccountMove(models.Model):
         )
 
     def send_invoice_mail(self):
-        mail_template = (
+        mail_template = int(
             self.env["ir.config_parameter"]
             .sudo()
             .get_param("auto_invoice_template_id", 0)
         )
         if not mail_template or not self:
             return
-        for invoice in self.filtered(lambda inv: inv.state != "sent"):
+        for invoice in self.filtered(lambda inv: not inv.is_move_sent):
             invoice.with_context(force_send=True).message_post_with_template(
-                mail_template.id,
+                mail_template,
                 composition_mode="comment",
                 email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
             )
-            invoice.write({"state": "sent"})
+            invoice.write({"is_move_sent": True})
 
     def _post(self, soft=True):
         res = super()._post(soft=soft)
         for invoice in self:
-            if invoice.sale_id and invoice.sale_id.all_delvery_done:
+            order = invoice.mapped("invoice_line_ids.sale_line_ids.order_id")[:1]
+            if order and order.all_qty_delivered:
                 invoice.send_invoice_mail()
         return res
