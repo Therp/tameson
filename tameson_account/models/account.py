@@ -47,3 +47,19 @@ class AccountMove(models.Model):
             .filtered(lambda o: o.client_order_ref)
             .mapped("client_order_ref")
         )
+
+    def send_invoice_mail(self):
+        mail_template = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("auto_invoice_template_id", 0)
+        )
+        if not mail_template or not self:
+            return
+        for invoice in self:
+            invoice.with_context(force_send=True).message_post_with_template(
+                mail_template.id,
+                composition_mode="comment",
+                email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
+            )
+        self.write({"state": "sent"})
