@@ -56,10 +56,17 @@ class AccountMove(models.Model):
         )
         if not mail_template or not self:
             return
-        for invoice in self:
+        for invoice in self.filtered(lambda inv: inv.state != "sent"):
             invoice.with_context(force_send=True).message_post_with_template(
                 mail_template.id,
                 composition_mode="comment",
                 email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
             )
-        self.write({"state": "sent"})
+            invoice.write({"state": "sent"})
+
+    def _post(self, soft=True):
+        res = super()._post(soft=soft)
+        for invoice in self:
+            if invoice.sale_id and invoice.sale_id.all_delvery_done:
+                invoice.send_invoice_mail()
+        return res
