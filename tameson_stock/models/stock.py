@@ -185,6 +185,12 @@ class StockPicking(models.Model):
             for ml in r.move_ids:
                 ml.quantity_done = ml.product_uom_qty
 
+    def _action_done(self):
+        res = super()._action_done()
+        if self.sale_id and self.sale_id.all_qty_delivered and self.sale_id.invoice_ids:
+            self.sale_id.invoice_ids.send_invoice_mail()
+        return res
+
 
 class DeliveryCarrier(models.Model):
     _inherit = "delivery.carrier"
