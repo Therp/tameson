@@ -253,8 +253,9 @@ class SaleOrderLine(models.Model):
     @api.depends("product_id.max_qty_order_array")
     def get_current_max_data(self):
         for record in self:
-            if record.product_id.detailed_type == "product":
-                data = json.loads(record.product_id.max_qty_order_array or "")
+            data = record.product_id.max_qty_order_array
+            if record.product_id.detailed_type == "product" and data:
+                data = json.loads(data)
                 record.qty_order_data = "\n".join(
                     ["%dD: %d" % (i["lead_time"], i["max_qty"]) for i in data]
                 )
