@@ -264,10 +264,11 @@ class SaleOrderLine(models.Model):
 
     @api.onchange("product_id", "product_uom_qty")
     def onchange_product_id_set_customer_lead(self):
-        if self.product_id.detailed_type != "product":
+        data = self.product_id.max_qty_order_array
+        if self.product_id.detailed_type != "product" or not data:
             self.customer_lead = 0
             return
-        data = json.loads(self.product_id.max_qty_order_array or "")
+        data = json.loads(data)
         lead_time = 180
         for values in data:
             if self.product_uom_qty <= values["max_qty"]:
