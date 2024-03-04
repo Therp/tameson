@@ -27,6 +27,7 @@ class ModelName(models.Model):
         ).id
         template_id = (
             self.env["mail.template"]
+            .sudo()
             .search([("model_id.model", "=", self._name)], limit=1)
             .id
         )
