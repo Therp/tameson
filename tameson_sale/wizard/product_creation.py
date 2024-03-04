@@ -77,6 +77,4 @@ class ProductCreationWizard(models.TransientModel):
             sale.write(
                 {"order_line": [(0, 0, {"product_id": product.product_variant_id.id})]}
             )
-            for line in sale.order_line:
-                line._onchange_product_id_set_customer_lead()
         return {"type": "ir.actions.act_window_close"}

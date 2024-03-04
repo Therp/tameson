@@ -266,7 +266,7 @@ class SaleOrderLine(models.Model):
         if self.product_id.detailed_type != "product":
             self.customer_lead = 0
             return
-        data = json.loads(self.product_id.max_qty_order_array)
+        data = json.loads(self.product_id.max_qty_order_array or "")
         lead_time = 180
         for values in data:
             if self.product_uom_qty <= values["max_qty"]:
