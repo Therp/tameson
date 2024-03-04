@@ -254,7 +254,7 @@ class SaleOrderLine(models.Model):
     def get_current_max_data(self):
         for record in self:
             if record.product_id.detailed_type == "product":
-                data = json.loads(record.product_id.max_qty_order_array)
+                data = json.loads(record.product_id.max_qty_order_array or "")
                 record.qty_order_data = "\n".join(
                     ["%dD: %d" % (i["lead_time"], i["max_qty"]) for i in data]
                 )
