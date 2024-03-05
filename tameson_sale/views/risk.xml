@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_partner_view_risk" model="ir.ui.view">
+        <field name="name">res.partner.view.risk</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account_financial_risk.res_partner_view_risk" />
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <page name="financial_risk" position="attributes">
+                <attribute name="groups" add="account_financial_risk.group_account_financial_risk_user" separator="," />
+            </page>
+        </field>
+    </record>
+</odoo>

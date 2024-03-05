@@ -31,6 +31,7 @@
         "views/stock.xml",
         "views/pricelist.xml",
         "views/payment_terms.xml",
+        "views/risk.xml",
     ],
     "application": False,
     "license": "OPL-1",
