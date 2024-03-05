@@ -15,7 +15,7 @@ class StockPicking(models.Model):
     t_aa_allow_cancel = fields.Boolean(
         string="AA Allow Cancellation",
         default=False,
-        track_visibility="onchange",
+        tracking=True,
         copy=False,
     )
     t_aa_track_url = fields.Char("Active Ant tracktraceUrl", readonly=True, copy=False)
