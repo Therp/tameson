@@ -40,7 +40,7 @@
         "data/params.xml",
         "data/cron.xml",
         "views/stock_picking_views.xml",
-        # "views/product_views.xml",
+        "views/product_views.xml",
         "data/mail_data.xml",
         "views/aa_views.xml",
         "report/commercial_report.xml",
