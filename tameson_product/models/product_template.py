@@ -147,18 +147,18 @@ SELECT id from mrp_bom
             delay = pt.seller_ids[:1].delay
             if pt.minimal_qty_available_stored > 0:
                 delay_array = [
-                    {"lead_time": 1, "max_qty": pt.minimal_qty_available_stored},
+                    {"lead_time": 0, "max_qty": pt.minimal_qty_available_stored},
                     {
-                        "lead_time": delay + 1,
+                        "lead_time": delay,
                         "max_qty": (pt.minimal_qty_available_stored + pt.max_qty_order),
                     },
                 ]
                 delay = 0
             else:
-                delay_array = [{"lead_time": delay + 1, "max_qty": pt.max_qty_order}]
+                delay_array = [{"lead_time": delay, "max_qty": pt.max_qty_order}]
             pt.write(
                 {
-                    "t_customer_lead_time": delay + 1,
+                    "t_customer_lead_time": delay,
                     "max_qty_order_array": json.dumps(delay_array),
                 }
             )
