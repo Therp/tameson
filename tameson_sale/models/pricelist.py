@@ -89,7 +89,7 @@ class ProductTemplate(models.Model):
         prices = pricelist._compute_price_rule(self, 1)
         for product in self:
             volume = (product.t_height * product.t_length * product.t_width) / 5000000
-            product.extra_shipping_fee_usd = pricelist.shipping_fee_factor * max(
+            product.extra_shipping_fee_gbp = pricelist.shipping_fee_factor * max(
                 product.weight, volume
             )
             product.sale_price_gbp = prices[product.id][0]
