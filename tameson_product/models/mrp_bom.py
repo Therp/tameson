@@ -77,19 +77,12 @@ FROM (select distinct additional_cost from product_template) as ac)"""
             add_price = 0
             additional_costs = bom.product_tmpl_id.additional_cost or ""
             for sku in additional_costs.split(","):
-                add_price += (
-                    self.env["product.template"]
-                    .browse(add_prices.get(sku, False))
-                    .standard_price
-                )
+                adt = self.env["product.template"].browse(add_prices.get(sku, False))
+                add_price += adt.standard_price
             price = product._compute_bom_price(bom) + add_price
-            if (
-                float_compare(
-                    bom.product_tmpl_id.standard_price, price, precision_digits=2
-                )
-                != 0
-            ):
-                product._change_standard_price(price)
+            old = bom.product_tmpl_id.standard_price
+            if float_compare(old, price, precision_digits=2) != 0:
+                product.write({"standard_price": price})
 
     def set_bom_lead(self):
         for bom in self:
