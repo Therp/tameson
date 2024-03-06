@@ -43,7 +43,9 @@ class PricelistItem(models.Model):
                 extra_usd = product.usd_extra_price_factor
             else:
                 extra_usd = 1.0
-            price = (product.list_price + product.extra_shipping_fee_usd) * extra_usd
+            volume = (product.t_height * product.t_length * product.t_width) / 5000000
+            shipping = self.shipping_fee_factor * max(product.weight, volume)
+            price = (product.list_price + shipping) * extra_usd
             if src_currency != target_currency:
                 price = src_currency._convert(
                     price, target_currency, self.env.company, date, round=False
