@@ -82,10 +82,6 @@ FROM (select distinct additional_cost from product_template) as ac)"""
                     .browse(add_prices.get(sku, False))
                     .standard_price
                 )
-            account = (
-                product_tmpl_id.property_account_expense_id.id
-                or product_tmpl_id.categ_id.property_account_expense_categ_id.id
-            )
             price = product._compute_bom_price(bom) + add_price
             if (
                 float_compare(
@@ -93,7 +89,7 @@ FROM (select distinct additional_cost from product_template) as ac)"""
                 )
                 != 0
             ):
-                product._change_standard_price(price, account)
+                product._change_standard_price(price)
 
     def set_bom_lead(self):
         for bom in self:
