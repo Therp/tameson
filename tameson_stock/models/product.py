@@ -104,7 +104,7 @@ class ProductTemplate(models.Model):
             self = self.with_context(warehouse=min_qty_warehouse)
         for pt in self:
             min_qty = pt.minimal_qty_available_stored
-            free_qty = pt.virtual_available
+            free_qty = pt.free_qty
             if float_compare(min_qty, free_qty, precision_digits=2) != 0:
                 pt.write({"minimal_qty_available_stored": free_qty})
 
