@@ -97,8 +97,13 @@ class ProductTemplate(models.Model):
         chain(group(*min_grouped), group(*non_bom_grouped), group(*bom_grouped)).delay()
 
     def update_min_qty(self):
+        min_qty_warehouse = int(
+            self.env["ir.config_parameter"].sudo().get_param("min_qty_warehouse", 0)
+        )
+        if min_qty_warehouse:
+            self = self.with_context(warehouse=min_qty_warehouse)
         for pt in self:
-            min_qty = pt.minimal_qty_available_stored
+            min_qty = pt.virtual_available
             free_qty = pt.product_variant_id.free_qty
             if float_compare(min_qty, free_qty, precision_digits=2) != 0:
                 pt.write({"minimal_qty_available_stored": free_qty})
