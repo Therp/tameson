@@ -34,7 +34,7 @@ class ProductTemplate(models.Model):
 
     minimal_qty_available_stored = fields.Float(
         digits="Product Unit of Measure",
-        string="Minimal QTY Available (Free Qty)",
+        string="Minimal QTY Available (Forcasted Qty)",
         help="Odoo Free Quantity field on Product variant, \
         stored on Product template for faster export",
     )
@@ -103,8 +103,8 @@ class ProductTemplate(models.Model):
         if min_qty_warehouse:
             self = self.with_context(warehouse=min_qty_warehouse)
         for pt in self:
-            min_qty = pt.virtual_available
-            free_qty = pt.product_variant_id.free_qty
+            min_qty = pt.minimal_qty_available_stored
+            free_qty = pt.virtual_available
             if float_compare(min_qty, free_qty, precision_digits=2) != 0:
                 pt.write({"minimal_qty_available_stored": free_qty})
 
