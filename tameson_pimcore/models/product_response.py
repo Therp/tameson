@@ -12,15 +12,9 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
-
 CURRENCY_DICT = {"USD": 3, "EUR": 1, "GBP": 150}  # currency ids in Odoo DB
-PRICELIST_DICT = {
-    "USD": 3,
-    "GBP": 2,
-}  # pricelists ids in Odoo DB
 
 
 def create_or_find_categ(env, path, model="product.category", start=3, end=-1):
@@ -73,42 +67,6 @@ def add_translation(env, product, lang_code, src, value):
         )
     else:
         nl_name.write({"value": value})
-
-
-def add_pricelist_item(pricelist, product, price):
-    pricelist = product.env["product.pricelist"].browse(pricelist)
-    pricelist.write(
-        {
-            "item_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "applied_on": "1_product",
-                        "product_tmpl_id": product.id,
-                        "compute_price": "fixed",
-                        "fixed_price": price,
-                    },
-                )
-            ]
-        }
-    )
-
-
-def search_or_add_pricelist_item(pricelist, product, price):
-    item = product.env["product.pricelist.item"].search(
-        [
-            ("applied_on", "=", "1_product"),
-            ("product_tmpl_id", "=", product.id),
-            ("pricelist_id", "=", pricelist),
-        ],
-        limit=1,
-    )
-    if item:
-        if not float_compare(item.fixed_price, price, precision_digits=2) == 0:
-            item.write({"fixed_price": price})
-    else:
-        add_pricelist_item(pricelist, product, price)
 
 
 class PimcoreProductResponse(models.Model):
@@ -335,8 +293,6 @@ class PimcoreProductResponseLine(models.Model):
     volume = fields.Float()
     modification_date = fields.Float()
     eur = fields.Float()
-    gbp = fields.Float()
-    usd = fields.Float()
     supplier_price = fields.Float()
     bom_import_done = fields.Boolean(default=False)
     use_up = fields.Boolean()
@@ -412,14 +368,11 @@ class PimcoreProductResponseLine(models.Model):
                     "seller_ids": [(0, 0, self.get_supplier_info())],
                 }
             )
-        product = self.env["product.template"].create(vals)
-        add_translation(self.env, product, "nl_NL", self.name, self.name_nl)
-        add_translation(self.env, product, "fr_FR", self.name, self.name_fr)
-        add_translation(self.env, product, "de_DE", self.name, self.name_de)
-        add_translation(self.env, product, "es_ES", self.name, self.name_es)
-        # add_pricelist_item(Eur, product, self.eur)
-        # add_pricelist_item(PRICELIST_DICT['GBP'], product, self.gbp)
-        # add_pricelist_item(PRICELIST_DICT['USD'], product, self.usd)
+        self.env["product.template"].create(vals)
+        # add_translation(self.env, product, "nl_NL", self.name, self.name_nl)
+        # add_translation(self.env, product, "fr_FR", self.name, self.name_fr)
+        # add_translation(self.env, product, "de_DE", self.name, self.name_de)
+        # add_translation(self.env, product, "es_ES", self.name, self.name_es)
         self.write(
             {
                 "state": "created",

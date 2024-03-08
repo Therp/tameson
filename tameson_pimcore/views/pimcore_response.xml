@@ -42,8 +42,6 @@
                     <field name="weight" optional="hide" />
                     <field name="volume" optional="hide" />
                     <field name="modification_date" optional="hide" />
-                    <field name="gbp" optional="hide" />
-                    <field name="usd" optional="hide" />
                     <field name="bom" optional="hide" />
                     <field name="published" optional="hide" />
                     <field name="response_id" optional="hide" />

@@ -43,8 +43,6 @@ product_nodes = {
     "volume": {"field": "Volume {value}", "getter": float_getter},
     "modification_date": {"field": "modificationDate", "getter": static_getter},
     "eur": {"field": "PriceEUR", "getter": static_getter},
-    "gbp": {"field": "PriceGBP", "getter": static_getter},
-    "usd": {"field": "PriceUSD", "getter": static_getter},
     "image": {
         "field": 'Images {... on asset {assetThumb: fullpath(thumbnail: "product_main")}}',
         "getter": image_getter,
