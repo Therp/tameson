@@ -72,18 +72,19 @@ class ProductSupplierinfo(models.Model):
         records.record_price_history()
         return records
 
-    def write(self, vals):
-        old_price = self.price
-        old_price_eur = self.list_price_eur
-        res = super().write(vals)
-        if "price" in vals or "partner_id" in vals or "list_price_eur" in vals:
-            if (
-                float_compare(old_price, self.price, precision_digits=2) != 0
-                or float_compare(old_price_eur, self.list_price_eur, precision_digits=2)
-                != 0
-            ):
-                self.record_price_history()
-        return res
+    def write(self, vals_list):
+        for pt, vals in zip(self, vals_list):
+            if "price" in vals or "partner_id" in vals or "list_price_eur" in vals:
+                old_price = pt.price
+                old_eur = pt.list_price_eur
+                new_price = vals["price"]
+                new_eur = vals["list_price_eur"]
+                if (
+                    float_compare(old_price, new_price, precision_digits=2) != 0
+                    or float_compare(old_eur, new_eur, precision_digits=2) != 0
+                ):
+                    pt.record_price_history()
+        return super().write(vals_list)
 
     def record_price_history(self):
         for ps in self:

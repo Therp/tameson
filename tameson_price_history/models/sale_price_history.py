@@ -67,7 +67,7 @@ class ProductTemplate(models.Model):
                 old_price = pt.list_price
                 new_price = vals["list_price"]
                 if float_compare(old_price, new_price, precision_digits=2):
-                    self.record_price_history()
+                    pt.record_price_history()
         return super(ProductTemplate, self).write(vals_list)
 
     def record_price_history(self):
