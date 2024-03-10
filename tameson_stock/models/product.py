@@ -19,7 +19,7 @@ class ProductProduct(models.Model):
 
     def action_view_stock_moves(self):
         self.ensure_one()
-        action = self.env.ref("stock.stock_move_action").read()[0]
+        action = self.env.ref("stock.stock_move_action").sudo().read()[0]
         action.update(
             {
                 "domain": [("product_id", "=", self.id)],
@@ -114,7 +114,7 @@ class ProductTemplate(models.Model):
 
     def action_view_stock_moves(self):
         self.ensure_one()
-        action = self.env.ref("stock.stock_move_action").read()[0]
+        action = self.env.ref("stock.stock_move_action").sudo().read()[0]
         action.update(
             {
                 "domain": [("product_id", "in", self.product_variant_ids.ids)],
