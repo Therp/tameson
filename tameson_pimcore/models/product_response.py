@@ -451,7 +451,7 @@ class PimcoreProductResponseLine(models.Model):
             "type": "product",
             "modification_date": self.modification_date,
             "hs_code": self.intrastat,
-            "intrastat_id": commodity_code.id,
+            "intrastat_code_id": commodity_code.id,
             "t_product_description_short": self.short_description,
             "t_use_up": self.use_up,
             "purchase_ok": not self.use_up,
