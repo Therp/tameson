@@ -368,11 +368,16 @@ class PimcoreProductResponseLine(models.Model):
                     "seller_ids": [(0, 0, self.get_supplier_info())],
                 }
             )
-        self.env["product.template"].create(vals)
-        # add_translation(self.env, product, "nl_NL", self.name, self.name_nl)
-        # add_translation(self.env, product, "fr_FR", self.name, self.name_fr)
-        # add_translation(self.env, product, "de_DE", self.name, self.name_de)
-        # add_translation(self.env, product, "es_ES", self.name, self.name_es)
+        product = self.env["product.template"].create(vals)
+        product.update_field_translations(
+            "name",
+            {
+                "nl_NL": self.name_nl,
+                "fr_FR": self.name_fr,
+                "de_DE": self.name_de,
+                "es_ES": self.name_es,
+            },
+        )
         self.write(
             {
                 "state": "created",
@@ -382,11 +387,15 @@ class PimcoreProductResponseLine(models.Model):
     def update_product(self, product_id):
         product = self.env["product.template"].browse(product_id)
         vals = self.get_product_vals()
-        add_translation(self.env, product, "nl_NL", self.name, self.name_nl)
-        add_translation(self.env, product, "fr_FR", self.name, self.name_fr)
-        add_translation(self.env, product, "de_DE", self.name, self.name_de)
-        add_translation(self.env, product, "es_ES", self.name, self.name_es)
-
+        product.update_field_translations(
+            "name",
+            {
+                "nl_NL": self.name_nl,
+                "fr_FR": self.name_fr,
+                "de_DE": self.name_de,
+                "es_ES": self.name_es,
+            },
+        )
         if product.categ_id.name != self.full_path.split("/")[-2]:
             final_categ = create_or_find_categ(self.env, self.full_path)
             vals.update(categ_id=final_categ.id)
