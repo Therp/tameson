@@ -23,5 +23,34 @@
             <field name="state">code</field>
             <field name="code">model.import_product_data()</field>
         </record>
+        <record id="channel_pimcore" model="queue.job.channel">
+            <field name="name">pimcore</field>
+            <field name="parent_id" ref="queue_job.channel_root" />
+        </record>
+        <record id="function_job_import_bom" model="queue.job.function">
+            <field name="model_id" ref="model_pimcore_product_response" />
+            <field name="method">job_import_bom</field>
+            <field name="channel_id" ref="channel_pimcore" />
+        </record>
+        <record id="function_job_import_product_data" model="queue.job.function">
+            <field name="model_id" ref="model_pimcore_product_response" />
+            <field name="method">job_import_product_data</field>
+            <field name="channel_id" ref="channel_pimcore" />
+        </record>
+        <record id="function_request_products_data" model="queue.job.function">
+            <field name="model_id" ref="model_pimcore_config" />
+            <field name="method">request_products_data</field>
+            <field name="channel_id" ref="channel_pimcore" />
+        </record>
+        <record id="function_job_archive_unarchive" model="queue.job.function">
+            <field name="model_id" ref="model_pimcore_product_response" />
+            <field name="method">job_archive_unarchive</field>
+            <field name="channel_id" ref="channel_pimcore" />
+        </record>
+        <record id="function_action_archive" model="queue.job.function">
+            <field name="model_id" ref="product.model_product_template" />
+            <field name="method">action_archive</field>
+            <field name="channel_id" ref="channel_pimcore" />
+        </record>
     </data>
 </odoo>
