@@ -58,18 +58,20 @@ class ProductTemplate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super(ProductTemplate, self).create(vals_list)
-        records.record_price_history()
+        for rec in records:
+            rec.record_price_history()
         return records
 
     def write(self, vals_list):
-        for pt, vals in zip(self, vals_list):
+        values = vals_list if isinstance(vals_list, list) else [vals_list]
+        for pt, vals in zip(self, values):
             if "list_price" in vals:
                 old_price = pt.list_price
                 new_price = vals["list_price"]
                 if float_compare(old_price, new_price, precision_digits=2):
-                    pt.record_price_history()
+                    pt.record_price_history(new_price)
         return super(ProductTemplate, self).write(vals_list)
 
-    def record_price_history(self):
-        for pt in self:
-            pt.write({"sale_price_ids": [(0, 0, {"sale_price": self.list_price})]})
+    def record_price_history(self, new_price=None):
+        price = new_price or self.list_price
+        self.write({"sale_price_ids": [(0, 0, {"sale_price": price})]})

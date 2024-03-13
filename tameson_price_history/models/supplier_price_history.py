@@ -69,39 +69,45 @@ class ProductSupplierinfo(models.Model):
     @api.model
     def create(self, vals_list):
         records = super().create(vals_list)
-        records.record_price_history()
+        for rec in records:
+            rec.record_price_history()
         return records
 
     def write(self, vals_list):
-        for pt, vals in zip(self, vals_list):
-            if "price" in vals or "partner_id" in vals or "list_price_eur" in vals:
+        values = vals_list if isinstance(vals_list, list) else [vals_list]
+        for pt, vals in zip(self, values):
+            data = []
+            if "price" in vals:
                 old_price = pt.price
-                old_eur = pt.list_price_eur
                 new_price = vals["price"]
+                if float_compare(old_price, new_price, precision_digits=2) != 0:
+                    data.append(new_price)
+            if "list_price_eur" in vals:
+                old_eur = pt.list_price_eur
                 new_eur = vals["list_price_eur"]
-                if (
-                    float_compare(old_price, new_price, precision_digits=2) != 0
-                    or float_compare(old_eur, new_eur, precision_digits=2) != 0
-                ):
-                    pt.record_price_history()
+                if float_compare(old_eur, new_eur, precision_digits=2) != 0:
+                    data.append(new_eur)
+            if data:
+                pt.record_price_history(*data)
         return super().write(vals_list)
 
-    def record_price_history(self):
-        for ps in self:
-            ps.product_tmpl_id.write(
-                {
-                    "supplier_price_ids": [
-                        (
-                            0,
-                            0,
-                            {
-                                "supplier_id": ps.partner_id.id,
-                                "supplier_price_orig": ps.price,
-                                "supplier_currency_id": ps.currency_id.id,
-                                "supplier_code": ps.product_code,
-                                "list_price_eur": ps.list_price_eur,
-                            },
-                        )
-                    ]
-                }
-            )
+    def record_price_history(self, price=None, eur=None):
+        price = price or self.price
+        eur = eur or self.list_price_eur
+        self.product_tmpl_id.write(
+            {
+                "supplier_price_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "supplier_id": self.partner_id.id,
+                            "supplier_price_orig": price,
+                            "supplier_currency_id": self.currency_id.id,
+                            "supplier_code": self.product_code,
+                            "list_price_eur": eur,
+                        },
+                    )
+                ]
+            }
+        )
