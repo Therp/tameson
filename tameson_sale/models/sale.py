@@ -30,6 +30,13 @@ class SaleOrder(models.Model):
     expected_date_warning = fields.Boolean(compute="get_expected_date_warning")
     payment_term_warning = fields.Boolean(compute="get_payment_term_warning")
     ecommerce_status_updated = fields.Boolean(default=False)
+    origin = fields.Char(copy=False)
+    workflow_process_id = fields.Many2one(copy=False)
+
+    def copy(self):
+        res = super().copy()
+        res._onchange_payment_term_id()
+        return res
 
     @api.depends("partner_id", "payment_term_id")
     def get_payment_term_warning(self):
