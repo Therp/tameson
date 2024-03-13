@@ -244,6 +244,22 @@ class SaleOrder(models.Model):
             ratio = 1 + (sum(line.tax_id.mapped("amount")) / 100.00)
             line.price_unit = line.price_unit / ratio
 
+    # run onchange functions that would normally run on a UI based order
+    def action_ecommerce_import(self):
+        self.ensure_one()
+        for line in self.order_line:
+            vals = line.play_onchanges({}, ["product_id", "product_uom_qty"])
+            line.write(vals)
+        fields = [
+            "partner_id",
+            "partner_shipping_id",
+            "partner_invoice_id",
+            "payment_term_id",
+            "order_line",
+        ]
+        vals = self.play_onchanges({}, fields)
+        self.write(vals)
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

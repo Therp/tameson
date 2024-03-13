@@ -154,6 +154,13 @@ class CustomerPortal(CustomerPortal):
 
 
 class WebsiteSale(WebsiteSale):
+    @route(type="http", auth="public", website=True, sitemap=False)
+    def confirm_order(self, **post):
+        response = super(WebsiteSale, self).confirm_order(**post)
+        order = request.website.sale_get_order()
+        order.sudo().action_ecommerce_import()
+        return response
+
     @route(["/shop/cart"], type="http", auth="public", website=True)
     def cart(self, access_token=None, revive="", **post):
         today = fields.Date.today()
