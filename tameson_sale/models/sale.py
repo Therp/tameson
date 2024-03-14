@@ -138,7 +138,8 @@ class SaleOrder(models.Model):
             )
         if self.uu_replacement_skus:
             note = note + (_("Warning: ") + self.uu_replacement_skus) + "<br />"
-        self.note = note
+        if note:
+            self.note = self.note + note
 
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
     def _compute_all_qty_delivered(self):
@@ -237,7 +238,7 @@ class SaleOrder(models.Model):
 
     @api.onchange("partner_id")
     def onchange_partner_note(self):
-        self.note = self.partner_id.country_id.customer_note
+        self.note = self.note + self.partner_id.country_id.customer_note
 
     def action_adjust_channable_tax(self):
         for line in self.order_line:
