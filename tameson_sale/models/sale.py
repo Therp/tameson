@@ -251,6 +251,17 @@ class SaleOrder(models.Model):
         self.onchange_partner_note()
         self._onchange_warning()
 
+    def _find_mail_template(self):
+        Tmpl = self.env["mail.template"]
+        if self.state in ("draft", "sent"):
+            name = "Tameson - Quotation"
+        else:
+            if self.payment_term_id.t_invoice_delivered_quantities:
+                name = "Tameson - Sales order confirmation (payment term)"
+            else:
+                name = "Tameson - Sales order confirmation (pre pay)"
+        return Tmpl.search([("name", "ilike", name)], limit=1)
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
