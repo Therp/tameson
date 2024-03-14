@@ -2,6 +2,15 @@
 <odoo>
     <data noupdate="0">
         <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@name='address_not_same_as_shipping']//address" position="before">
+                <strong>Invoice Address:</strong>
+            </xpath>
+            <xpath expr="//div[@name='address_same_as_shipping']//address" position="before">
+                <strong>Invoice Address:</strong>
+            </xpath>
+            <xpath expr="//div[@name='no_shipping']//address" position="before">
+                <strong>Invoice Address:</strong>
+            </xpath>
             <xpath expr="//div[@id='qrcode']" position="after">
                 <div class="row">
                     <t t-set="picking" t-value="o.get_picking_ids()" />
