@@ -254,7 +254,6 @@ class SaleOrder(models.Model):
             "partner_id",
             "partner_shipping_id",
             "partner_invoice_id",
-            "payment_term_id",
             "order_line",
         ]
         vals = self.play_onchanges({}, fields)
