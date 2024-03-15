@@ -144,7 +144,7 @@ SELECT id from mrp_bom
 
     def set_non_bom_lead(self):
         for pt in self:
-            delay = pt.seller_ids[:1].delay
+            delay = pt.seller_ids[:1].delay + 1
             if pt.minimal_qty_available_stored > 0:
                 delay_array = [
                     {"lead_time": 0, "max_qty": pt.minimal_qty_available_stored},

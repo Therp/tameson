@@ -111,11 +111,13 @@ FROM (select distinct additional_cost from product_template) as ac)"""
                 max_qty = get_qty(data, lead)
                 if max_qty <= 0:
                     continue
+                if lead == 0:
+                    free_qty = max_qty
+                else:
+                    lead = lead + 1
                 delay_array.append({"lead_time": lead, "max_qty": max_qty})
                 if max_qty > max_qty_order:
                     max_qty_order = max_qty
-                if lead == 0:
-                    free_qty = max_qty
             bom.product_tmpl_id.write(
                 {
                     "minimal_qty_available_stored": free_qty,
