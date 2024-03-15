@@ -10,9 +10,8 @@ class AccountMoveLine(models.Model):
 
 
 class AccountMove(models.Model):
-    _inherit = "account.move"
-    # _name = "account.move"
-    # _inherit = ["account.move", "set.help.mixin"]
+    _name = "account.move"
+    _inherit = ["account.move", "set.help.mixin"]
 
     restock_fee_limit_warning = fields.Boolean(compute="_get_restock_fee_limit")
     restock_fee_limit = fields.Char(compute="_get_restock_fee_limit")
