@@ -16,7 +16,8 @@ def get_qty(data, delay):
             stock = item["stock"] + item["max"]
         else:
             stock = item["stock"]
-        delays.append(stock / item["bom_line_qty"])
+        qty = int(stock / item["bom_line_qty"])
+        delays.append(qty)
     return min(delays or [0])
 
 
