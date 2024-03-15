@@ -304,7 +304,7 @@ class SaleOrderLine(models.Model):
             if self.product_uom_qty <= values["max_qty"]:
                 lead_time = values["lead_time"]
                 break
-        self.customer_lead = lead_time + 1
+        self.customer_lead = lead_time
         if lead_time == 180:
             return {
                 "warning": {
