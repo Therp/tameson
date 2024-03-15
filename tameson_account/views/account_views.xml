@@ -20,6 +20,9 @@
             <xpath expr="//page[@id='invoice_tab']//tree/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create': True, 'no_open': True, 'no_create_edit': True}</attribute>
             </xpath>
+            <group name="sale_info_group" position="inside">
+                <field name="workflow_process_id" />
+            </group>
         </field>
     </record>
     <record id="view_invoice_tree" model="ir.ui.view">
