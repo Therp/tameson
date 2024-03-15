@@ -25,10 +25,12 @@ class CustomController(Controller):
         request.env["payment.transaction"].sudo()._handle_notification_data(
             "custom", post
         )
+        wp_id = order.payment_term_id.workflow_process_id
         order.sudo().write(
             {
                 "require_signature": True,
                 "require_payment": False,
+                "workflow_process_id": wp_id.id,
             }
         )
         return request.redirect(order.get_portal_url())
