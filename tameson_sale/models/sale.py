@@ -268,6 +268,15 @@ class SaleOrder(models.Model):
         return Tmpl.search([("name", "ilike", name)], limit=1)
 
 
+class WorkflowJob(models.Model):
+    _inherit = "automatic.workflow.job"
+
+    def _do_create_invoice(self, sale, domain_filter):
+        res = super()._do_create_invoice(sale, domain_filter)
+        sale.write({"workflow_process_id": False})
+        return res
+
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
