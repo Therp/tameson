@@ -100,7 +100,7 @@ FROM (select distinct additional_cost from product_template) as ac)"""
             delay = max(
                 0
                 if not float_is_zero(item["stock"], precision_digits=1)
-                else item["delay"]
+                else item["delay"] + 1
                 for item in data
             )
             delay_list = list(sorted({item["delay"] for item in data}))
