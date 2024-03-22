@@ -457,7 +457,7 @@ class PimcoreProductResponseLine(models.Model):
             [("code", "=", self.origin_country)], limit=1
         )
         data = {
-            "name": self.name,
+            "name": self.name or "No Name",
             "pimcore_id": self.pimcore_id,
             "default_code": self.sku,
             "barcode": self.ean,
