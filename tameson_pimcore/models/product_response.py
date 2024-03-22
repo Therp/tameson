@@ -9,6 +9,7 @@ from datetime import datetime
 
 import requests
 from dateutil.relativedelta import relativedelta
+from psycopg2.errors import UniqueViolation
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -368,7 +369,19 @@ class PimcoreProductResponseLine(models.Model):
                     "seller_ids": [(0, 0, self.get_supplier_info())],
                 }
             )
-        product = self.env["product.template"].create(vals)
+        try:
+            product = self.env["product.template"].create(vals)
+        except UniqueViolation as e:
+            _logger.info(e)
+            barcode = self.ean
+            bproduct = self.env["product.product"].search([("barcode", "=", barcode)])
+            bproduct.write(
+                {
+                    "barcode": False,
+                    "modification_date": 0,
+                }
+            )
+            product = self.env["product.template"].create(vals)
         product.update_field_translations(
             "name",
             {
@@ -421,7 +434,19 @@ class PimcoreProductResponseLine(models.Model):
             )
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
         write_vals = {"state": "updated"}
-        product.write(vals)
+        try:
+            product.write(vals)
+        except UniqueViolation as e:
+            _logger.info(e)
+            barcode = self.ean
+            bproduct = self.env["product.product"].search([("barcode", "=", barcode)])
+            bproduct.write(
+                {
+                    "barcode": False,
+                    "modification_date": 0,
+                }
+            )
+            product.write(vals)
         self.write(write_vals)
 
     def get_product_vals(self):
