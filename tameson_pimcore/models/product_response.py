@@ -441,8 +441,9 @@ class PimcoreProductResponseLine(models.Model):
         self.write(write_vals)
 
     def get_product_vals(self):
+        intrastat = self.intrastat[:8] if self.intrastat else ""
         commodity_code = self.env["account.intrastat.code"].search(
-            [("code", "=", self.intrastat[:8]), ("type", "=", "commodity")], limit=1
+            [("code", "=", intrastat), ("type", "=", "commodity")], limit=1
         )
         if not commodity_code:
             commodity_code = self.env["account.intrastat.code"].create(
