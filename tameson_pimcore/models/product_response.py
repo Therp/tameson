@@ -369,7 +369,9 @@ class PimcoreProductResponseLine(models.Model):
                 }
             )
         barcode = self.ean
-        bproduct = self.env["product.product"].search([("barcode", "=", barcode)])
+        bproduct = self.env["product.product"].search(
+            [("barcode", "=", barcode), ("active", "in", (True, False))]
+        )
         bproduct.write(
             {
                 "barcode": False,
@@ -430,7 +432,9 @@ class PimcoreProductResponseLine(models.Model):
             vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
         write_vals = {"state": "updated"}
         barcode = self.ean
-        bproduct = self.env["product.product"].search([("barcode", "=", barcode)])
+        bproduct = self.env["product.product"].search(
+            [("barcode", "=", barcode), ("active", "in", (True, False))]
+        )
         bproduct.write(
             {
                 "barcode": False,
