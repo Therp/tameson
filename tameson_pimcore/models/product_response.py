@@ -344,7 +344,7 @@ class PimcoreProductResponseLine(models.Model):
         )
         price = (
             self.env["res.currency"]
-            .browse(CURRENCY_DICT[self.supplier_price_currency] or "EUR")
+            .browse(CURRENCY_DICT[self.supplier_price_currency or "EUR"])
             ._convert(
                 self.supplier_price,
                 self.env.user.company_id.currency_id,
