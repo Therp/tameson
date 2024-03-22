@@ -344,7 +344,7 @@ class PimcoreProductResponseLine(models.Model):
         )
         price = (
             self.env["res.currency"]
-            .browse(CURRENCY_DICT[self.supplier_price_currency])
+            .browse(CURRENCY_DICT[self.supplier_price_currency] or "EUR")
             ._convert(
                 self.supplier_price,
                 self.env.user.company_id.currency_id,
@@ -565,6 +565,6 @@ class PimcoreProductResponseLine(models.Model):
             "delay": self.supplier_lead_time,
             "min_qty": self.supplier_package_qty,
             "price": self.supplier_price,
-            "currency_id": CURRENCY_DICT[self.supplier_price_currency],
+            "currency_id": CURRENCY_DICT[self.supplier_price_currency or "EUR"],
             "list_price_eur": self.supplier_list_price,
         }
