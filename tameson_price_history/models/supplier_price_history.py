@@ -76,19 +76,19 @@ class ProductSupplierinfo(models.Model):
     def write(self, vals_list):
         values = vals_list if isinstance(vals_list, list) else [vals_list]
         for pt, vals in zip(self, values):
-            data = []
+            data = {}
             if "price" in vals:
                 old_price = pt.price
                 new_price = vals["price"]
                 if float_compare(old_price, new_price, precision_digits=2) != 0:
-                    data.append(new_price)
+                    data["price"] = new_price
             if "list_price_eur" in vals:
                 old_eur = pt.list_price_eur
                 new_eur = vals["list_price_eur"]
                 if float_compare(old_eur, new_eur, precision_digits=2) != 0:
-                    data.append(new_eur)
+                    data["eur"] = new_eur
             if data:
-                pt.record_price_history(*data)
+                pt.record_price_history(**data)
         return super().write(vals_list)
 
     def record_price_history(self, price=None, eur=None):
