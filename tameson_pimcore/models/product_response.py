@@ -494,11 +494,18 @@ class PimcoreProductResponseLine(models.Model):
             lambda b: b.bom_signature == self.bom
         )[:1]
         if matched_bom:
-            (main_product.bom_ids - matched_bom).action_archive()
+            try:
+                (main_product.bom_ids - matched_bom).action_archive()
+            except Exception as e:
+                _logger.warn(e)
             matched_bom.action_unarchive()
             return
         if main_product.bom_ids:
-            main_product.bom_ids.action_archive()
+            main_product.bom_ids.write({"sequence": 1000})
+            try:
+                main_product.bom_ids.action_archive()
+            except Exception as e:
+                _logger.warn(e)
         bom_elements = self.bom.split(",")
         bom_lines = []
         for i in range(0, len(bom_elements), 2):
@@ -522,6 +529,7 @@ class PimcoreProductResponseLine(models.Model):
                 "bom_line_ids": bom_lines,
                 "type": bom_type,
                 "bom_signature": self.bom,
+                "sequence": 10,
             }
         )
         self.write({"bom_import_done": True})
