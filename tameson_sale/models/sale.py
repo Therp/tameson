@@ -308,13 +308,13 @@ class SaleOrderLine(models.Model):
             self.customer_lead = 0
             return
         data = json.loads(data)
-        lead_time = 180
+        lead_time = data[-1]["lead_time"]
         for values in data:
             if self.product_uom_qty <= values["max_qty"]:
                 lead_time = values["lead_time"]
                 break
         self.customer_lead = lead_time
-        if lead_time == 180:
+        if self.product_uom_qty > data[-1]["lead_time"]:
             return {
                 "warning": {
                     "title": "Quantity Over Max Amount",
