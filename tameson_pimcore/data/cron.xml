@@ -27,6 +27,10 @@
             <field name="name">pimcore</field>
             <field name="parent_id" ref="queue_job.channel_root" />
         </record>
+        <record id="channel_pimcore_import_data" model="queue.job.channel">
+            <field name="name">pimcore_import_data</field>
+            <field name="parent_id" ref="channel_pimcore" />
+        </record>
         <record id="function_job_import_bom" model="queue.job.function">
             <field name="model_id" ref="model_pimcore_product_response" />
             <field name="method">job_import_bom</field>
@@ -35,7 +39,7 @@
         <record id="function_job_import_product_data" model="queue.job.function">
             <field name="model_id" ref="model_pimcore_product_response" />
             <field name="method">job_import_product_data</field>
-            <field name="channel_id" ref="channel_pimcore" />
+            <field name="channel_id" ref="channel_pimcore_import_data" />
         </record>
         <record id="function_request_products_data" model="queue.job.function">
             <field name="model_id" ref="model_pimcore_config" />
