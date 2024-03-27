@@ -12,7 +12,7 @@
     ],
     "assets": {
         "web.assets_frontend": [
-            "static/src/js/*",
+            "tameson_helpdesk/static/src/js/*",
         ]
     },
     "data": [
