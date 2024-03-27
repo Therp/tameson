@@ -30,8 +30,16 @@ class SaleOrder(models.Model):
     expected_date_warning = fields.Boolean(compute="get_expected_date_warning")
     payment_term_warning = fields.Boolean(compute="get_payment_term_warning")
     ecommerce_status_updated = fields.Boolean(default=False)
-    origin = fields.Char(copy=False)
+    origin = fields.Char(copy=False, index=True)
     workflow_process_id = fields.Many2one(copy=False)
+
+    _sql_constraints = [
+        (
+            "sale_order_origin_uniq",
+            "unique (origin)",
+            "Source document of Sale Order must be unique for each order!",
+        )
+    ]
 
     def copy(self):
         res = super().copy()
