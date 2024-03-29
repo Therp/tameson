@@ -218,7 +218,7 @@ class WebsiteTameson(Website):
                 lang_code = request.env["res.lang"]._lang_get_code(lang)
                 response.set_cookie("frontend_lang", lang_code)
         except Exception:
-            _logger.warn("Error setting website language.")
+            _logger.warning("Error setting website language.")
         return response
 
 
