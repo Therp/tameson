@@ -242,7 +242,7 @@ class SaleOrder(models.Model):
             wizard.button_confirm()
 
     @api.onchange("payment_term_id")
-    def _onchange_payment_term_id(self):
+    def _onchange_payment_term_workflow(self):
         self.workflow_process_id = self.payment_term_id.workflow_process_id
 
     @api.onchange("partner_id")
