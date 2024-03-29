@@ -275,6 +275,18 @@ class SaleOrder(models.Model):
                 name = "Tameson - Sales order confirmation (pre pay)"
         return Tmpl.search([("name", "ilike", name)], limit=1)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for order in res:
+            if order.payment_term_warning:
+                order.write(
+                    {
+                        "partner_id": order.partner_id.id,
+                    }
+                )
+        return res
+
 
 class WorkflowJob(models.Model):
     _inherit = "automatic.workflow.job"
