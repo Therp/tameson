@@ -518,7 +518,7 @@ class PimcoreProductResponseLine(models.Model):
             try:
                 (main_product.bom_ids - matched_bom).action_archive()
             except Exception as e:
-                _logger.warn(e)
+                _logger.warning(e)
             matched_bom.action_unarchive()
             return
         if main_product.bom_ids:
@@ -526,7 +526,7 @@ class PimcoreProductResponseLine(models.Model):
             try:
                 main_product.bom_ids.action_archive()
             except Exception as e:
-                _logger.warn(e)
+                _logger.warning(e)
         bom_elements = self.bom.split(",")
         bom_lines = []
         for i in range(0, len(bom_elements), 2):
