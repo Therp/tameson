@@ -23,7 +23,9 @@ class SalePriceHistory(models.Model):
         ondelete="restrict",
         related="product_tmpl_id.categ_id",
     )
-    sale_price = fields.Float()
+    sale_price = fields.Float(
+        digits="Product Price",
+    )
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,

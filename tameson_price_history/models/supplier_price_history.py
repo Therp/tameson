@@ -21,9 +21,15 @@ class SupplierPriceHistory(models.Model):
         comodel_name="res.partner",
         ondelete="restrict",
     )
-    list_price_eur = fields.Float()
-    supplier_price = fields.Float()
-    supplier_price_orig = fields.Float()
+    list_price_eur = fields.Float(
+        digits="Product Price",
+    )
+    supplier_price = fields.Float(
+        digits="Product Price",
+    )
+    supplier_price_orig = fields.Float(
+        digits="Product Price",
+    )
     supplier_currency_id = fields.Many2one(
         comodel_name="res.currency",
         ondelete="restrict",
