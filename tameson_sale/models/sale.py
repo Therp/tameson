@@ -43,7 +43,7 @@ class SaleOrder(models.Model):
 
     def copy(self):
         res = super().copy()
-        res._onchange_payment_term_id()
+        res._onchange_payment_term_workflow()
         return res
 
     @api.depends("partner_id", "payment_term_id")
