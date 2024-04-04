@@ -6,6 +6,7 @@
         "product",
         "tameson_base",
         "mrp",
+        "queue_job",
     ],
     "data": [
         "views/product_views.xml",
