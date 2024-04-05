@@ -161,7 +161,7 @@ class AAComm(models.Model):
 
     purchase_id = fields.Many2one(
         comodel_name="purchase.order",
-        ondelete="restrict",
+        ondelete="cascade",
     )
 
     def get_search_string(self):
