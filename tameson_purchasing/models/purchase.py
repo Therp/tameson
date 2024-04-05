@@ -37,7 +37,7 @@ class PurchaseOrder(models.Model):
     aa_comm_id = fields.Many2one(
         string="AA Communication",
         comodel_name="aa.comm",
-        ondelete="restrict",
+        ondelete="cascade",
         readonly=True,
     )
 
