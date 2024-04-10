@@ -183,7 +183,7 @@ class SaleOrder(models.Model):
             )
             all_invoice_paid = all(
                 r.invoice_ids.mapped(
-                    lambda i: i.payment_state in ("paid", "in_payment")
+                    lambda i: i.payment_state in ("paid", "in_payment", "reversed")
                 )
             )
             r.t_is_paid = full_invoiced and all_invoice_paid
