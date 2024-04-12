@@ -275,18 +275,6 @@ class SaleOrder(models.Model):
                 name = "Tameson - Sales order confirmation (pre pay)"
         return Tmpl.search([("name", "ilike", name)], limit=1)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        for order in res:
-            if order.payment_term_warning:
-                order.write(
-                    {
-                        "partner_id": order.partner_id.id,
-                    }
-                )
-        return res
-
 
 class WorkflowJob(models.Model):
     _inherit = "automatic.workflow.job"
@@ -324,7 +312,7 @@ class SaleOrderLine(models.Model):
     @api.onchange("product_id", "product_uom_qty")
     def onchange_product_id_set_customer_lead(self):
         data = self.product_id.max_qty_order_array
-        data = json.loads(data or "{}")
+        data = json.loads(data or "[]")
         if self.product_id.detailed_type != "product" or not data:
             self.customer_lead = 0
             return
