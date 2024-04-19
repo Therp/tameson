@@ -26,7 +26,7 @@ class StockPicking(models.Model):
     def get_t_aa_url(self):
         for record in self:
             record.t_aa_url = (
-                "https://maya.activeants.nl/en/client/order/detail/%s" % self.t_aa_id
+                "https://maya.activeants.nl/en/client/order/detail/%s" % record.t_aa_id
             )
 
     @api.depends("origin")
