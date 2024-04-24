@@ -82,17 +82,17 @@ class ProductTemplate(models.Model):
         # Store free qty on minimal_qty_available_stored
         min_grouped = []
         for pos in range(0, len(self), split):
-            job = self[pos : (pos + split)].delayable().update_min_qty()
+            job = self[pos : (pos + split)].delayable(priority=5).update_min_qty()
             min_grouped.append(job)
         # set bom product leads
         bom_grouped = []
         for pos in range(0, len(bom_ids), split):
-            job = bom_ids[pos : (pos + split)].delayable().set_bom_lead()
+            job = bom_ids[pos : (pos + split)].delayable(priority=5).set_bom_lead()
             bom_grouped.append(job)
         # non-bom-lead
         non_bom_grouped = []
         for pos in range(0, len(self), split):
-            job = self[pos : (pos + split)].delayable().set_non_bom_lead()
+            job = self[pos : (pos + split)].delayable(priority=5).set_non_bom_lead()
             non_bom_grouped.append(job)
         chain(group(*min_grouped), group(*non_bom_grouped), group(*bom_grouped)).delay()
 

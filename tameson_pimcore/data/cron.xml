@@ -10,6 +10,7 @@
             <field name="numbercall">-1</field>
             <field name="model_id" ref="model_pimcore_config" />
             <field name="state">code</field>
+            <field name="priority">10</field>
             <field name="code">model.action_cron_fetch_products()</field>
         </record>
         <record forcecreate="True" id="pimcore_import_data" model="ir.cron">
@@ -21,6 +22,7 @@
             <field name="numbercall">-1</field>
             <field name="model_id" ref="model_pimcore_product_response" />
             <field name="state">code</field>
+            <field name="priority">10</field>
             <field name="code">model.import_product_data()</field>
         </record>
         <record id="channel_pimcore" model="queue.job.channel">
