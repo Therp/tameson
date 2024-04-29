@@ -148,6 +148,7 @@ FROM pimcore_product_response_line rl
             if not row[1]:
                 line.sudo().create_product()
             else:
+                continue  # Disable product update temporary
                 line.sudo().update_product(row[1])
 
     def job_import_bom(self, lines=()):
