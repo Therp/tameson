@@ -47,9 +47,11 @@ class StockMove(models.Model):
         moves_to_cancel = self.filtered(
             lambda m: m.state != "cancel" and not (m.state == "done" and m.scrapped)
         )
+        mds = moves_to_cancel.mapped("move_dest_ids").filtered(
+            lambda m: m.state == "waiting"
+        )
         res = super()._action_cancel()
-        for move in moves_to_cancel:
-            mds = move.move_dest_ids.filtered(lambda m: m.state == "waiting")
-            for md in mds:
+        for md in mds:
+            if md.state == "waiting":
                 md.state = "confirmed"
         return res
