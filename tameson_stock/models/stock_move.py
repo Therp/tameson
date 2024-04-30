@@ -42,3 +42,14 @@ class StockMove(models.Model):
         notes = [note for note in self.mapped("sale_line_id.order_id.note") if note]
         vals["note"] = ", ".join(notes)
         return vals
+
+    def _action_cancel(self):
+        moves_to_cancel = self.filtered(
+            lambda m: m.state != "cancel" and not (m.state == "done" and m.scrapped)
+        )
+        res = super()._action_cancel()
+        for move in moves_to_cancel:
+            mds = move.move_dest_ids.filtered(lambda m: m.state == "waiting")
+            for md in mds:
+                md.state = "confirmed"
+        return res
