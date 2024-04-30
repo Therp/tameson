@@ -523,7 +523,8 @@ class PimcoreProductResponseLine(models.Model):
             matched_bom.action_unarchive()
             return
         if main_product.bom_ids:
-            main_product.bom_ids.write({"sequence": 1000})
+            for bom in main_product.bom_ids:
+                bom.sequence = 1000
             try:
                 main_product.bom_ids.action_archive()
             except Exception as e:
