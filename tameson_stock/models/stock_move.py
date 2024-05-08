@@ -52,6 +52,8 @@ class StockMove(models.Model):
         )
         res = super()._action_cancel()
         for md in mds:
+            if md.move_orig_ids:
+                md.move_orig_ids = False
             if md.state == "waiting":
                 md.state = "confirmed"
         return res
