@@ -396,7 +396,7 @@ class PimcoreProductResponseLine(models.Model):
 
     def update_product(self, product_id):
         product = self.env["product.template"].browse(product_id)
-        vals = self.get_product_vals()
+        vals = self.get_product_update_vals()
         product.update_field_translations(
             "name",
             {
@@ -406,10 +406,6 @@ class PimcoreProductResponseLine(models.Model):
                 "es_ES": self.name_es,
             },
         )
-        if product.categ_id.name != self.full_path.split("/")[-2]:
-            final_categ = create_or_find_categ(self.env, self.full_path)
-            vals.update(categ_id=final_categ.id)
-
         if self.supplier_email:
             seller_vals = self.get_supplier_info()
             seller = product.seller_ids.filtered(
@@ -418,29 +414,7 @@ class PimcoreProductResponseLine(models.Model):
             if not seller:
                 product.seller_ids.unlink()
                 vals.update(seller_ids=[(0, 0, seller_vals)])
-        if (
-            self.categories
-            and product.public_categ_ids[:1].name != self.categories.split("/")[-1]
-        ):
-            ecom_categ = create_or_find_categ(
-                self.env,
-                self.categories,
-                model="product.public.category",
-                start=2,
-                end=0,
-            )
-            vals.update(public_categ_ids=[(6, 0, ecom_categ.ids)])
         write_vals = {"state": "updated"}
-        barcode = self.ean
-        bproduct = self.env["product.product"].search(
-            [("barcode", "=", barcode), ("active", "in", (True, False))]
-        )
-        bproduct.write(
-            {
-                "barcode": False,
-                "modification_date": 0,
-            }
-        )
         product.write(vals)
         self.write(write_vals)
 
@@ -504,6 +478,27 @@ class PimcoreProductResponseLine(models.Model):
                     "supplier_shipping_type": self.supplier_shipping_type,
                 }
             )
+        return data
+
+    def get_product_update_vals(self):
+        data = {
+            "name": self.name or "No Name",
+            "barcode": self.ean,
+            "sticker_barcode": self.sticker_barcode,
+            "modification_date": self.modification_date,
+            "t_product_description_short": self.short_description,
+            "t_use_up": self.use_up,
+            "purchase_ok": not self.use_up,
+            "t_use_up_replacement_sku": self.replacement_sku,
+            "t_customer_backorder_allowed": self.backorder,
+            "non_returnable": self.non_returnable,
+            "oversized": self.oversized,
+            "imperial": self.imperial,
+            "t_web_sales": self.web_sales,
+            "published": self.published,
+            "supplier_shipping_type": self.supplier_shipping_type,
+            "additional_cost": self.additional_cost,
+        }
         return data
 
     def create_bom(self, bom_type="phantom"):
