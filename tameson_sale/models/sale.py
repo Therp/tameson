@@ -33,6 +33,10 @@ class SaleOrder(models.Model):
     origin = fields.Char(copy=False, index=True)
     workflow_process_id = fields.Many2one(copy=False)
 
+    arrival_min = fields.Integer()
+    arrival_max = fields.Integer()
+    shipped_days = fields.Integer()
+
     _sql_constraints = [
         (
             "sale_order_origin_uniq",

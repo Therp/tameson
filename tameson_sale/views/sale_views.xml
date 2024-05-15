@@ -87,6 +87,15 @@
                     Warning: Tameson warehouse selected as source
                 </h2>
             </xpath>
+            <page name="other_information" position="inside">
+                <group>
+                    <group string="Tameson">
+                        <field name="arrival_min" />
+                        <field name="arrival_max" />
+                        <field name="shipped_days" />
+                    </group>
+                </group>
+            </page>
             <field name="partner_shipping_id" position="after">
                 <field name="customer_child_count" invisible="True" />
                 <label for="customer_child_count" attrs="{'invisible': [('customer_child_count','&lt;',4)]}" />
