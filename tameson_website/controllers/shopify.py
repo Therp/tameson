@@ -116,18 +116,21 @@ class Shopify(Controller):
         methods=["POST", "OPTIONS"],
         cors="*",
     )
-    def check_email(self, email, **kw):
-        partner = (
-            request.env["res.partner"]
-            .sudo()
-            .search([("email", "=", email)], order="parent_id DESC", limit=1)
-        )
-        checkout = bool(partner) and (
-            partner.property_payment_term_id.t_invoice_delivered_quantities
-            or partner.property_product_pricelist.discount_policy == "without_discount"
-        )
+    def check_email(self, email=None, **kw):
+        checkout = False
+        if email:
+            partner = (
+                request.env["res.partner"]
+                .sudo()
+                .search([("email", "=", email)], order="parent_id DESC", limit=1)
+            )
+            checkout = bool(partner) and (
+                partner.property_payment_term_id.t_invoice_delivered_quantities
+                or partner.property_product_pricelist.discount_policy
+                == "without_discount"
+            )
         value = {
-            "email": email,
+            "email": email or "",
             "ODOO-checkout": checkout,
         }
         return value
