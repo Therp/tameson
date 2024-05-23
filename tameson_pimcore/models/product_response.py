@@ -406,14 +406,9 @@ class PimcoreProductResponseLine(models.Model):
                 "es_ES": self.name_es,
             },
         )
-        if self.supplier_email:
+        if self.supplier_email and not product.seller_ids:
             seller_vals = self.get_supplier_info()
-            seller = product.seller_ids.filtered(
-                lambda s: s.partner_id.id == seller_vals["partner_id"]
-            )
-            if not seller:
-                product.seller_ids.unlink()
-                vals.update(seller_ids=[(0, 0, seller_vals)])
+            vals.update(seller_ids=[(0, 0, seller_vals)])
         write_vals = {"state": "updated"}
         product.write(vals)
         self.write(write_vals)
