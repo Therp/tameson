@@ -230,7 +230,7 @@ class PimcoreConfig(models.Model):
                 pim_request.execute(query.get_query(params % (1, "DESC")))
             )[0]
             first_id = int(first_id["node"]["id"])
-            last_id = int(last_id["node"]["id"])
+            last_id = int(last_id["node"]["id"]) + 1
         except Exception:
             raise UserError("No valid first, last product ID from pimcore.") from None
         for pos in range(first_id, last_id, self.limit):
