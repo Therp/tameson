@@ -335,7 +335,7 @@
         </template>
         <template id="signup" inherit_id="auth_signup.signup">
             <xpath expr="//t[@t-esc='error']" position="replace">
-                <t t-raw="error" />
+                <t t-out="error" />
             </xpath>
         </template>
         <template id="portal_record_sidebar" inherit_id="portal.portal_record_sidebar">
