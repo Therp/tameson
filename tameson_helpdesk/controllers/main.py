@@ -7,7 +7,7 @@ from odoo.http import Controller, request, route
 
 
 class RMA(Controller):
-    @route("/rma/apply", type="http", auth="public", website=True)
+    @route("/rma/apply", type="http", auth="public", website=True, sitemap=True)
     def rma_apply(self, **kw):
         partner = request.env.user.partner_id
         if request.httprequest.method == "POST":
