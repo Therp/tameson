@@ -357,4 +357,9 @@
                 <attribute name="class">font-weight-bold d-lg-inline-block</attribute>
             </xpath>
         </template>
+        <template inherit_id="website_sale.payment_confirmation_status" id="payment_confirmation_status">
+            <xpath expr="//div/div[1]" position="attributes">
+                <attribute name="t-attf-class" />
+            </xpath>
+        </template>
 </odoo>
