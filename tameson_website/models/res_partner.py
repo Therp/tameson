@@ -62,9 +62,12 @@ class ResPartner(models.Model):
     def _get_shopify_partner_address(self):
         self.ensure_one()
         address = []
+        signatures = []
         childs = self.child_ids or self
-        count = 1
         for child in childs:
+            signature = child.street + child.city + child.name + child.zip
+            if signature in signatures:
+                continue
             address.append(
                 {
                     "address1": child.street,
@@ -74,8 +77,7 @@ class ResPartner(models.Model):
                     "first_name": child.name.split(" ")[0] if child.name else "",
                     "last_name": (
                         " ".join(child.name.split(" ")[1:]) if child.name else ""
-                    )
-                    + "(%d)" % count,
+                    ),
                     "company": child.parent_id.name or child.company_name or "",
                     "phone": child.phone,
                     "province": child.state_id.name or "",
@@ -85,7 +87,7 @@ class ResPartner(models.Model):
                     "default": False,
                 }
             )
-            count += 1
+            signatures.append(signature)
         return address
 
     def shopify_get_contact_data(self):
