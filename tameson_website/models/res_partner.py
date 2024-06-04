@@ -88,7 +88,7 @@ class ResPartner(models.Model):
                 }
             )
             signatures.append(signature)
-        return address
+        return address[:5]
 
     def shopify_get_contact_data(self):
         self.ensure_one()
