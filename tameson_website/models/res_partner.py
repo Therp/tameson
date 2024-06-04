@@ -65,7 +65,7 @@ class ResPartner(models.Model):
         signatures = []
         childs = self.child_ids or self
         for child in childs:
-            signature = child.street + child.city + child.name + child.zip
+            signature = child.street + child.name + child.zip
             if signature in signatures:
                 continue
             address.append(
