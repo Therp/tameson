@@ -118,6 +118,7 @@ class Shopify(Controller):
     )
     def check_email(self, email=None, **kw):
         checkout = False
+        vat = False
         if email:
             partner = (
                 request.env["res.partner"]
@@ -129,8 +130,10 @@ class Shopify(Controller):
                 or partner.property_product_pricelist.discount_policy
                 == "without_discount"
             )
+            vat = bool(partner) and bool(partner.vat)
         value = {
             "email": email or "",
             "ODOO-checkout": checkout,
+            "vat": vat,
         }
         return value
