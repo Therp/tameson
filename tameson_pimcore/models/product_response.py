@@ -227,6 +227,7 @@ FROM pimcore_product_response_line rl
                 ("published", "=", True),
                 ("active", "=", False),
                 ("pimcore_id", "!=", False),
+                ("t_use_up", "=", False),
             ]
         )
         split_size = 100
