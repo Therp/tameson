@@ -131,4 +131,10 @@ class ResPartner(models.Model):
                     "company_name": False,
                 }
             )
+        if vals.get("country_code", False):
+            country_id = self.env["res.country"].search(
+                [("code", "=ilike", vals["country_code"])], limit=1
+            )
+            vals["country_id"] = country_id.id
+            vals.pop("country_code")
         return super().write(vals)
