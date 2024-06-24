@@ -326,10 +326,3 @@ class SaleOrderLine(models.Model):
                 lead_time = values["lead_time"]
                 break
         self.customer_lead = lead_time
-        if self.product_uom_qty > data[-1]["lead_time"]:
-            return {
-                "warning": {
-                    "title": "Quantity Over Max Amount",
-                    "message": "Order amount is over the Max quantity to order amount.",
-                }
-            }
