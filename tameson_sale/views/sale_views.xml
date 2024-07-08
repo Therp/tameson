@@ -10,8 +10,14 @@
                 <button name="action_create_product" string="Create Custom Product" type="object" />
                 <button name="%(reshipment_wizard_form_action)d" string="Reshipment" type="action" attrs="{'invisible': [('state','not in',('sale','done'))] }" />
             </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('manager_user','!=',True)]}</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="payment_term_warning" invisible="True" />
+                <field name="manager_user" invisible="True" />
                 <label for="payment_term_warning" attrs="{'invisible': [('payment_term_warning','=',False)]}" />
                 <div class="alert alert-danger" role="alert" attrs="{'invisible': [('payment_term_warning','=',False)]}">
                     Notice: Payment term different than customer payment term.
