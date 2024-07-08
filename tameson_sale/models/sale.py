@@ -32,6 +32,7 @@ class SaleOrder(models.Model):
     ecommerce_status_updated = fields.Boolean(default=False)
     origin = fields.Char(copy=False, index=True)
     workflow_process_id = fields.Many2one(copy=False)
+    user_id = fields.Many2one(copy=False)
 
     arrival_min = fields.Integer()
     arrival_max = fields.Integer()
