@@ -1,6 +1,7 @@
 import json
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
 
 
@@ -233,7 +234,20 @@ class SaleOrder(models.Model):
             self.env["automatic.workflow.job"].sudo().run_with_workflow(
                 self.workflow_process_id
             )
+        if from_ui:
+            self.check_useup_availability()
         return ret
+
+    def check_useup_availability(self):
+        useup_lines = self.order_line.filtered(
+            lambda line: line.product_id.t_use_up
+            and line.product_uom_qty > line.product_id.minimal_qty_available_stored
+        )
+        if useup_lines:
+            raise ValidationError(
+                "Following Useup items have ordered quantity more than available quantity.\n%s"
+                % ",\n".join(useup_lines.mapped("product_id.default_code"))
+            )
 
     def get_skus_json(self):
         products = self.mapped("order_line.product_id.product_tmpl_id").filtered(
