@@ -70,13 +70,13 @@ testing:
     variables:
         SCRIPTS_REPO: git@gitlab.therp.nl:therp/therp-ci-templates
         SCRIPTS_BRANCH: ci-scripts
-        DEPLOY_BRANCH: build-16.0-test
+        DEPLOY_BRANCH: build-16.0-production
         MASTER_BRANCH: "16.0"
         ODOO_VERSION: "16.0"
     script:
       - |
         # =========================== CONFIGURATION AREA ============================
-        DEPLOY_BRANCH=build-16.0-test
+        DEPLOY_BRANCH=build-16.0-production
         BUILD_PYTHON_VER=3.8.15
         deployment_method=waft
         main_repo_alias_folder_in_yaml=therp/tameson
