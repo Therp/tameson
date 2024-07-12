@@ -1,8 +1,13 @@
 import json
+import logging
+
+import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -301,6 +306,10 @@ class SaleOrder(models.Model):
                 name = "Tameson - Sales order confirmation (pre pay)"
         return Tmpl.search([("name", "ilike", name)], limit=1)
 
+    def action_fetch_supplier_lead(self):
+        for line in self.order_line:
+            line.request_supplier_lead()
+
 
 class WorkflowJob(models.Model):
     _inherit = "automatic.workflow.job"
@@ -314,6 +323,8 @@ class WorkflowJob(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    supplier_lead_data = fields.Text()
+
     supplierinfo_name = fields.Char(
         related="product_id.supplierinfo_name", string="Supplier"
     )
@@ -323,17 +334,43 @@ class SaleOrderLine(models.Model):
         compute="get_current_max_data",
     )
 
-    @api.depends("product_id.max_qty_order_array")
+    def request_supplier_lead(self):
+        api = "https://n8n-dev.tameson.com/webhook/sku-qty"
+        data = {
+            "sku": self.product_id.default_code,
+            "quantity": self.product_uom_qty,
+            "range": False,
+        }
+        try:
+            response = requests.post(api, json=data).json()
+            if response.get("lead", False):
+                lead = response.get("lead", False)
+            else:
+                lead = [{"days": 0, "quantity": 2}]
+        except Exception as e:
+            _logger.info(e)
+            lead = False
+        if lead:
+            self.supplier_lead_data = json.dumps(lead)
+
+    @api.depends("product_id.max_qty_order_array", "supplier_lead_data")
     def get_current_max_data(self):
         for record in self:
             data = record.product_id.max_qty_order_array
+            lead_data = ""
             if record.product_id.detailed_type == "product" and data:
                 data = json.loads(data)
-                record.qty_order_data = "\n".join(
+                lead_data = "\n".join(
                     ["%dD: %d" % (i["lead_time"], i["max_qty"]) for i in data]
                 )
-            else:
-                record.qty_order_data = ""
+            if record.supplier_lead_data:
+                data = json.loads(record.supplier_lead_data)
+                lead_data = (
+                    lead_data
+                    + "\n\n"
+                    + "\n".join(["%dSD: %d" % (i["days"], i["quantity"]) for i in data])
+                )
+            record.qty_order_data = lead_data
 
     @api.onchange("product_id", "product_uom_qty")
     def onchange_product_id_set_customer_lead(self):

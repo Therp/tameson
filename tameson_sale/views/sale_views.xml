@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header/button[last()]" position="after">
                 <button name="action_create_product" string="Create Custom Product" type="object" />
+                <button name="action_fetch_supplier_lead" string="Suuplier Lead" type="object" />
                 <button name="%(reshipment_wizard_form_action)d" string="Reshipment" type="action" attrs="{'invisible': [('state','not in',('sale','done'))] }" />
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="attributes">
