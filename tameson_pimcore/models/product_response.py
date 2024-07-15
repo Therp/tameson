@@ -486,7 +486,6 @@ class PimcoreProductResponseLine(models.Model):
             "t_use_up": self.use_up,
             "purchase_ok": not self.use_up,
             "t_use_up_replacement_sku": self.replacement_sku,
-            "t_customer_backorder_allowed": self.backorder,
             "non_returnable": self.non_returnable,
             "oversized": self.oversized,
             "imperial": self.imperial,
