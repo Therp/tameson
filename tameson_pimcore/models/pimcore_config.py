@@ -87,7 +87,7 @@ product_nodes = {
     },
     "categories": {
         "field": "categories {... on object_ProductCategory {fullpath}}",
-        "getter": single_field_m2many,
+        "getter": static_getter,
     },
     "pack_model": {"field": "PackModel", "getter": static_getter},
     "pack_factor": {"field": "PackFactor", "getter": static_getter},
