@@ -358,7 +358,10 @@ class SaleOrderLine(models.Model):
             lead = False
         if lead:
             self.supplier_lead_data = json.dumps(lead)
-            self.order_id.message_post(body=pformat(lead))
+            self.order_id.message_post(
+                body="Supplier Lead for %s:\n%s"
+                % (self.product_id.default_code, pformat(lead))
+            )
         else:
             self.order_id.message_post(
                 body="Supplier Lead requested for %s, no data returned."
