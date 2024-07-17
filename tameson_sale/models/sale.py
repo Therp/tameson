@@ -1,5 +1,6 @@
 import json
 import logging
+from pprint import pformat
 
 import requests
 
@@ -308,7 +309,8 @@ class SaleOrder(models.Model):
 
     def action_fetch_supplier_lead(self):
         for line in self.order_line:
-            line.request_supplier_lead()
+            if line.product_id.detailed_type == "product":
+                line.with_delay().request_supplier_lead()
 
 
 class WorkflowJob(models.Model):
@@ -335,7 +337,11 @@ class SaleOrderLine(models.Model):
     )
 
     def request_supplier_lead(self):
-        api = "https://n8n-dev.tameson.com/webhook/sku-qty"
+        api = (
+            self.env["ir.config_parameter"].sudo().get_param("supplier_lead_api", False)
+        )
+        if not api:
+            return
         data = {
             "sku": self.product_id.default_code,
             "quantity": self.product_uom_qty,
@@ -346,12 +352,18 @@ class SaleOrderLine(models.Model):
             if response.get("lead", False):
                 lead = response.get("lead", False)
             else:
-                lead = [{"days": 0, "quantity": 2}]
+                lead = False
         except Exception as e:
             _logger.info(e)
             lead = False
         if lead:
             self.supplier_lead_data = json.dumps(lead)
+            self.order_id.message_post(body=pformat(lead))
+        else:
+            self.order_id.message_post(
+                body="Supplier Lead requested for %s, no data returned."
+                % self.product_id.default_code
+            )
 
     @api.depends("product_id.max_qty_order_array", "supplier_lead_data")
     def get_current_max_data(self):
@@ -365,6 +377,8 @@ class SaleOrderLine(models.Model):
                 )
             if record.supplier_lead_data:
                 data = json.loads(record.supplier_lead_data)
+                if not isinstance(data, list):
+                    data = [data]
                 lead_data = (
                     lead_data
                     + "\n\n"
