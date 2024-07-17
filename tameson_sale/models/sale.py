@@ -310,7 +310,7 @@ class SaleOrder(models.Model):
     def action_fetch_supplier_lead(self):
         for line in self.order_line:
             if line.product_id.detailed_type == "product":
-                line.request_supplier_lead()
+                line.with_delay().request_supplier_lead()
 
 
 class WorkflowJob(models.Model):
@@ -362,6 +362,7 @@ class SaleOrderLine(models.Model):
                 body="Supplier Lead for %s:\n%s"
                 % (self.product_id.default_code, pformat(lead))
             )
+            self.env.user.notify_success(message="Supplier lead receieved.")
         else:
             self.order_id.message_post(
                 body="Supplier Lead requested for %s, no data returned."
