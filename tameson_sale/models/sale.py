@@ -389,7 +389,6 @@ class SaleOrderLine(models.Model):
                     )
                 except Exception as e:
                     _logger.info(e)
-                    continue
             record.qty_order_data = lead_data
 
     @api.onchange("product_id", "product_uom_qty")
