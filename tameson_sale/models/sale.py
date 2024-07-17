@@ -345,7 +345,7 @@ class SaleOrderLine(models.Model):
         data = {
             "sku": self.product_id.default_code,
             "quantity": self.product_uom_qty,
-            "range": False,
+            "range": True,
         }
         try:
             response = requests.post(api, json=data).json()
@@ -384,7 +384,7 @@ class SaleOrderLine(models.Model):
                         lead_data
                         + "\n\n"
                         + "\n".join(
-                            ["%dSD: %d" % (i["days"], i["quantity"]) for i in data]
+                            ["%dSD: %d" % (i["days"] or 0, i["quantity"]) for i in data]
                         )
                     )
                 except Exception as e:
