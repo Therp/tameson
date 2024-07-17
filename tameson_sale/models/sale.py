@@ -310,7 +310,7 @@ class SaleOrder(models.Model):
     def action_fetch_supplier_lead(self):
         for line in self.order_line:
             if line.product_id.detailed_type == "product":
-                line.with_delay().request_supplier_lead()
+                line.request_supplier_lead()
 
 
 class WorkflowJob(models.Model):
@@ -376,14 +376,20 @@ class SaleOrderLine(models.Model):
                     ["%dD: %d" % (i["lead_time"], i["max_qty"]) for i in data]
                 )
             if record.supplier_lead_data:
-                data = json.loads(record.supplier_lead_data)
-                if not isinstance(data, list):
-                    data = [data]
-                lead_data = (
-                    lead_data
-                    + "\n\n"
-                    + "\n".join(["%dSD: %d" % (i["days"], i["quantity"]) for i in data])
-                )
+                try:
+                    data = json.loads(record.supplier_lead_data)
+                    if not isinstance(data, list):
+                        data = [data]
+                    lead_data = (
+                        lead_data
+                        + "\n\n"
+                        + "\n".join(
+                            ["%dSD: %d" % (i["days"], i["quantity"]) for i in data]
+                        )
+                    )
+                except Exception as e:
+                    _logger.info(e)
+                    continue
             record.qty_order_data = lead_data
 
     @api.onchange("product_id", "product_uom_qty")
