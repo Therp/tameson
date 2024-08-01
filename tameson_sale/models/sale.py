@@ -308,9 +308,7 @@ class SaleOrder(models.Model):
         return Tmpl.search([("name", "ilike", name)], limit=1)
 
     def action_fetch_supplier_lead(self):
-        for line in self.order_line:
-            if line.product_id.detailed_type == "product":
-                line.with_delay().request_supplier_lead()
+        self.order_line.request_supplier_lead()
 
 
 class WorkflowJob(models.Model):
@@ -342,32 +340,38 @@ class SaleOrderLine(models.Model):
         )
         if not api:
             return
-        data = {
-            "sku": self.product_id.default_code,
-            "quantity": self.product_uom_qty,
-            "range": True,
-        }
-        try:
-            response = requests.post(api, json=data).json()
-            if response.get("lead", False):
-                lead = response.get("lead", False)
-            else:
+        data = [
+            {
+                "sku": line.product_id.default_code,
+                "quantity": line.product_uom_qty,
+                "range": True,
+                "sale_line": line.id,
+            }
+            for line in self
+        ]
+        response = requests.post(api, json=data).json()
+        for resp_line in response:
+            try:
+                if resp_line.get("lead", False):
+                    lead = resp_line.get("lead", False)
+                    line_id = int(resp_line.get("sale_line", False))
+                else:
+                    lead = False
+            except Exception as e:
+                _logger.info(e)
                 lead = False
-        except Exception as e:
-            _logger.info(e)
-            lead = False
-        if lead:
-            self.supplier_lead_data = json.dumps(lead)
-            self.order_id.message_post(
-                body="Supplier Lead for %s:\n%s"
-                % (self.product_id.default_code, pformat(lead))
-            )
-            self.env.user.notify_success(message="Supplier lead receieved.")
-        else:
-            self.order_id.message_post(
-                body="Supplier Lead requested for %s, no data returned."
-                % self.product_id.default_code
-            )
+            if lead:
+                sale_line = self.browse(line_id)
+                sale_line.supplier_lead_data = json.dumps(lead)
+                sale_line.order_id.message_post(
+                    body="Supplier Lead for %s:\n%s"
+                    % (sale_line.product_id.default_code, pformat(lead))
+                )
+            else:
+                sale_line.order_id.message_post(
+                    body="Supplier Lead requested for %s, no data returned."
+                    % sale_line.product_id.default_code
+                )
 
     @api.depends("product_id.max_qty_order_array", "supplier_lead_data")
     def get_current_max_data(self):
