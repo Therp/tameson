@@ -352,9 +352,9 @@ class SaleOrderLine(models.Model):
         response = requests.post(api, json=data).json()
         for resp_line in response:
             try:
+                line_id = int(resp_line.get("sale_line", False))
                 if resp_line.get("lead", False):
                     lead = resp_line.get("lead", False)
-                    line_id = int(resp_line.get("sale_line", False))
                 else:
                     lead = False
             except Exception as e:
