@@ -308,7 +308,9 @@ class SaleOrder(models.Model):
         return Tmpl.search([("name", "ilike", name)], limit=1)
 
     def action_fetch_supplier_lead(self):
-        self.order_line.request_supplier_lead()
+        self.order_line.filtered(
+            lambda line: line.product_id.detailed_type == "product"
+        ).request_supplier_lead()
 
 
 class WorkflowJob(models.Model):
