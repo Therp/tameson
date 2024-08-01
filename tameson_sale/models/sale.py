@@ -360,8 +360,8 @@ class SaleOrderLine(models.Model):
             except Exception as e:
                 _logger.info(e)
                 lead = False
+            sale_line = self.browse(line_id)
             if lead:
-                sale_line = self.browse(line_id)
                 sale_line.supplier_lead_data = json.dumps(lead)
                 sale_line.order_id.message_post(
                     body="Supplier Lead for %s:\n%s"
