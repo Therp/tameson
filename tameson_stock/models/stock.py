@@ -58,7 +58,9 @@ class StockPicking(models.Model):
         )._compute_carrier_tracking_url()
 
     def action_reserve_force(self):
-        waiting = self.move_ids.filtered(lambda l: l.state == "waiting")
+        waiting = self.move_ids.filtered(
+            lambda line: line.state in ["waiting", "partially_available"]
+        )
         for move in waiting:
             if move.move_orig_ids:
                 move.move_orig_ids = False
