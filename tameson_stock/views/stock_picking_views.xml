@@ -28,7 +28,7 @@
             </field>
             <xpath expr="//header/button[@name='button_validate'][last()]" position="after">
                 <button name="action_mail_send" string="Send" type="object" class="oe_highlight" />
-                <button name="action_reserve_force" string="Force availability" type="object" attrs="{'invisible': ['|', ('state','not in',('waiting')), ('picking_type_code','!=','outgoing')]}" />
+                <button name="action_reserve_force" string="Force" type="object" />
             </xpath>
             <xpath expr="//label[@for='scheduled_date']" position="before">
                 <field name="picking_type_code" invisible="1" />

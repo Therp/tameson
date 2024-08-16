@@ -61,11 +61,7 @@ class StockPicking(models.Model):
         waiting = self.move_ids.filtered(lambda l: l.state == "waiting")
         for move in waiting:
             if move.move_orig_ids:
-                move.write(
-                    {
-                        "move_orig_ids": [(6, 0, [])],
-                    }
-                )
+                move.move_orig_ids = False
             else:
                 if move.created_purchase_line_id.state in ("draft", "sent"):
                     move.created_purchase_line_id = False
