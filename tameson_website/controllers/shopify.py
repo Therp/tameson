@@ -74,7 +74,7 @@ class Shopify(Controller):
                     ],
                     limit=1,
                 )
-                if "checkouts" in shopify_page:
+                if "checkouts" in shopify_page or "/account/login" in shopify_page:
                     shopify_page = "/cart"
             else:
                 shopify_page = False
