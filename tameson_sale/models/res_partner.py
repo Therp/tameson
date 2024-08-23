@@ -21,6 +21,15 @@ class ResPartner(models.Model):
                 )
         return partners
 
+    def write(self, vals):
+        res = super().write(vals)
+        if "country_id" in vals:
+            if not self.lang:
+                self.lang = self.country_id.select_lang or "en_US"
+            if not self.parent_id:
+                self.property_product_pricelist = self.country_id.select_pricelist_id
+        return res
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
