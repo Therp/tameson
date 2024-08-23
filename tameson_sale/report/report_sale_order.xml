@@ -47,5 +47,12 @@
         <xpath expr="//div[@t-if=&quot;doc.user_id.name&quot;]" position="attributes">
             <attribute name="style">display:none</attribute>
         </xpath>
+        <p name="order_note" position="after">
+            <div>
+                <p t-field="doc.warning_nr" t-if="doc.warning_nr" />
+                <p t-field="doc.warning_uu" t-if="doc.warning_uu" />
+                <p t-field="doc.warning_re" t-if="doc.warning_re" />
+            </div>
+        </p>
     </template>
 </odoo>

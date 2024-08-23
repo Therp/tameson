@@ -46,6 +46,18 @@ class SaleOrder(models.Model):
     shipped_days = fields.Integer()
 
     manager_user = fields.Boolean(compute="get_manager_user")
+    warning_nr = fields.Char(
+        string="Non Returnable Warning",
+        compute="get_warning_messages",
+    )
+    warning_uu = fields.Char(
+        string="Useup Warning",
+        compute="get_warning_messages",
+    )
+    warning_re = fields.Char(
+        string="Replacement SKU Warning",
+        compute="get_warning_messages",
+    )
 
     _sql_constraints = [
         (
@@ -146,28 +158,32 @@ class SaleOrder(models.Model):
                 >= 25.0
             )
 
-    @api.onchange("any_non_returnable", "any_use_up", "uu_replacement_skus")
-    def _onchange_warning(self):
-        self.env.context = dict(self.env.context, lang=self.partner_id.lang or "en_US")
-        exist_note = self.note or ""
-        note = ""
-        if self.any_non_returnable:
-            note = note + (
-                _("Warning: We kindly inform you that this item ")
-                + self.non_returnable_skus
-                + _(" cannot be returned. This is manufactured on demand for you.")
-                + "<br />"
+    @api.depends("any_non_returnable", "any_use_up", "uu_replacement_skus")
+    def get_warning_messages(self):
+        for record in self:
+            self.env.context = dict(
+                self.env.context, lang=record.partner_id.lang or "en_US"
             )
-        if self.any_use_up:
-            note = (
-                note
-                + (_("Warning: ") + self.uu_skus + _(" is being discontinued."))
-                + "<br />"
-            )
-        if self.uu_replacement_skus:
-            note = note + (_("Warning: ") + self.uu_replacement_skus) + "<br />"
-        if note:
-            self.note = exist_note + note
+            if record.any_non_returnable:
+                record.warning_nr = (
+                    _("Warning: We kindly inform you that this item ")
+                    + record.non_returnable_skus
+                    + _(" cannot be returned. This is manufactured on demand for you.")
+                )
+            else:
+                record.warning_nr = ""
+
+            if record.any_use_up:
+                record.warning_uu = (
+                    _("Warning: ") + record.uu_skus + _(" is being discontinued.")
+                )
+            else:
+                record.warning_uu = ""
+
+            if record.uu_replacement_skus:
+                record.warning_re = _("Warning: ") + record.uu_replacement_skus
+            else:
+                record.warning_re = ""
 
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty")
     def _compute_all_qty_delivered(self):

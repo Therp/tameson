@@ -103,6 +103,11 @@
                     </group>
                 </group>
             </page>
+            <!-- <field name="note" position="after">
+                <field name="warning_nr" nolabel="1" colspan="2" />
+                <field name="warning_uu" nolabel="1" colspan="2" />
+                <field name="warning_re" nolabel="1" colspan="2" />
+            </field> -->
             <field name="partner_shipping_id" position="after">
                 <field name="customer_child_count" invisible="True" />
                 <label for="customer_child_count" attrs="{'invisible': [('customer_child_count','&lt;',4)]}" />

@@ -1,0 +1,760 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* tameson_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 06:20+0000\n"
+"PO-Revision-Date: 2024-08-10 06:20+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: tameson_sale
+#. odoo-python
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " cannot be returned. This is manufactured on demand for you."
+msgstr "no se puede devolver. "
+
+#. module: tameson_sale
+#. odoo-python
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " is being discontinued."
+msgstr "está siendo descontinuado."
+
+#. module: tameson_sale
+#. odoo-python
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid " will be replaced by "
+msgstr "será reemplazado por "
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid ""
+"<br/> IBAN: <span>\n"
+"                            NL66INGB0007718965</span><br/> BIC/SWIFT: <span>INGBNL2A</span><br/>"
+msgstr "<br/> IBAN: <span>\n NL66INGB0007718965</span><br/> BIC/SWIFT: <span>INGBNL2A</span><br/>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Expected shipping date:</strong>"
+msgstr "<strong>Fecha de envío prevista:</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Invoicing Address:</strong>"
+msgstr "<strong>Dirección de facturación:</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Payment Terms:</strong>"
+msgstr "<strong>Condiciones de pago:</strong>"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "<strong>Shipping Address:</strong>"
+msgstr "<strong>Dirección de envío:</strong>"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_picking__t_aa_allow_cancel
+msgid "AA Allow Cancellation"
+msgstr "AA Permitir cancelación"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_picking__t_aa_create_date
+msgid "AA Create date"
+msgstr "AA Crear fecha"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_picking__t_aa_id
+msgid "Active Ant ID"
+msgstr "ID de hormiga activa"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_picking__t_aa_track_url
+msgid "Active Ant tracktraceUrl"
+msgstr "URL de seguimiento de hormiga activa"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_picking__t_aa_url
+msgid "ActiveAnt URL"
+msgstr "URL de hormiga activa"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.reshipment_wizard_form
+msgid "Add"
+msgstr "Agregar"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form_with_carrier
+msgid "Add Express shipping"
+msgstr "Añadir envío exprés"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__all_qty_delivered
+msgid "All quantities delivered"
+msgstr "Todas las cantidades entregadas"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__any_non_returnable
+msgid "Any Non Returnable"
+msgstr "Cualquier No Retornable"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__any_use_up
+msgid "Any Use Up"
+msgstr "Cualquier uso agotado"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__arrival_max
+msgid "Arrival Max"
+msgstr "Llegada máxima"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__arrival_min
+msgid "Arrival Min"
+msgstr "Llegada mínima"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__workflow_process_id
+msgid "Automatic Workflow"
+msgstr "Flujo de trabajo automático"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__barcode
+msgid "Barcode"
+msgstr "código de barras"
+
+#. module: tameson_sale
+#: model:ir.model.fields,help:tameson_sale.field_product_pricelist_item__base
+msgid ""
+"Base price for computation.\n"
+"Sales Price: The base price will be the Sales Price.\n"
+"Cost Price : The base price will be the cost price.\n"
+"Other Pricelist : Computation of the base price based on another Pricelist."
+msgstr "Precio base para el cálculo.\nPrecio de venta: El precio base será el Precio de venta.\nPrecio de costo: El precio base será el precio de costo.\nOtro Lista de precios: Cálculo del precio base en base a otra Lista de precios."
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_pricelist_item__base
+msgid "Based on"
+msgstr "Basado en"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__categ_id
+msgid "Category"
+msgstr "Categoría"
+
+#. module: tameson_sale
+#: model_terms:ir.actions.act_window,help:tameson_sale.action_product_creation_wizard_act_window
+msgid "Click to add new Product from wizard"
+msgstr "Haga clic para agregar un nuevo producto desde el asistente"
+
+#. module: tameson_sale
+#: model_terms:ir.actions.act_window,help:tameson_sale.reshipment_wizard_form_action
+msgid "Click to add new Reship"
+msgstr "Haga clic para agregar un nuevo reenvío"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_move__t_aa_comm_price
+msgid "Commercial Price"
+msgstr "Precio Comercial"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_pricelist__company_rate
+msgid "Company Rate"
+msgstr "Tarifa de empresa"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_res_country
+msgid "Country"
+msgstr "País"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__country_id
+msgid "Country of origin"
+msgstr "País de origen"
+
+#. module: tameson_sale
+#: model:ir.ui.menu,name:tameson_sale.menu_product_creation_wizard
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Create Custom Product"
+msgstr "Crear producto personalizado"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.product_creation_wizard_form
+msgid "Create Product"
+msgstr "Crear producto"
+
+#. module: tameson_sale
+#: model:ir.ui.menu,name:tameson_sale.menu_contact_creation_wizard
+msgid "Create contact"
+msgstr "Crear contacto"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__create_uid
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard__create_uid
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__create_date
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard__create_date
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_move__currency_id
+msgid "Currency"
+msgstr "moneda"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__customer_child_count
+msgid "Customer Child Count"
+msgstr "Recuento de hijos del cliente"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_country__customer_note
+msgid "Customer Note"
+msgstr "Nota al cliente"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__customer_ref_warning
+msgid "Customer Ref Warning"
+msgstr "Advertencia de referencia del cliente"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.report_saleorder_document
+msgid "Days"
+msgstr "Días"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_country__select_lang
+msgid "Default Language"
+msgstr "Idioma predeterminado"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_res_country__select_pricelist_id
+msgid "Default Pricelist"
+msgstr "Lista de precios predeterminada"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__discount
+msgid "Discount"
+msgstr "Descuento"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__display_name
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard__display_name
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__ecommerce_status_updated
+msgid "Ecommerce Status Updated"
+msgstr "Estado del comercio electrónico actualizado"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Edit help"
+msgstr "Editar ayuda"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__expected_date_warning
+msgid "Expected Date Warning"
+msgstr "Advertencia de fecha esperada"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Expected shipping date"
+msgstr "Fecha de envío prevista"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Expected:"
+msgstr "Esperado:"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_product__extra_shipping_fee_gbp
+#: model:ir.model.fields,field_description:tameson_sale.field_product_template__extra_shipping_fee_gbp
+msgid "Extra shipping fee GBP"
+msgstr "tarifa de envío adicional GBP"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_product__extra_shipping_fee_usd
+#: model:ir.model.fields,field_description:tameson_sale.field_product_template__extra_shipping_fee_usd
+msgid "Extra shipping fee USD"
+msgstr "tarifa de envío adicional USD"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_pricelist__rate_id
+msgid "Fixed rate"
+msgstr "Tasa fija"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__hs_code
+msgid "HS Code"
+msgstr "Código SA"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Help"
+msgstr "Ayuda"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__help_text
+msgid "Help Text"
+msgstr "Texto de ayuda"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__id
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard__id
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__id
+msgid "ID"
+msgstr "identificación"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__default_code
+msgid "Internal reference"
+msgstr "Referencia interna"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_account_payment_term__t_invoice_delivered_quantities
+msgid "Invoice delivered quantities"
+msgstr "Cantidades entregadas en factura"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_pricelist_item__is_usd_extra
+msgid "Is Usd Extra"
+msgstr "¿Hay dólares adicionales?"
+
+#. module: tameson_sale
+#. odoo-python
+#: code:addons/tameson_sale/models/sale.py:0
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__t_is_paid
+#, python-format
+msgid "Is order paid?"
+msgstr "¿Se paga el pedido?"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid ""
+"KVK: <span>72902531</span><br/>\n"
+"                                <span>+31 (0)40 750 5795</span><br/>\n"
+"                                <span>\n"
+"                                support@tameson.nl</span><br/>"
+msgstr "KVK: <span>72902531</span><br/>\n <span> 31 (0)40 750 5795</span><br/>\n <span>\n support@tameson.nl</ "
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard____last_update
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard____last_update
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__write_uid
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard__write_uid
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__write_date
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard__write_date
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard__line_ids
+msgid "Line"
+msgstr "Línea"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "Logo"
+msgstr "Logotipo"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "More than 3 addresses on this contact, please double check."
+msgstr "Más de 3 direcciones en este contacto, verifique nuevamente."
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__non_returnable_skus
+msgid "Non Returnable Skus"
+msgstr "Skus no retornables"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__warning_nr
+msgid "Non Returnable Warning"
+msgstr "Advertencia no retornable"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Notice: Payment term different than customer payment term."
+msgstr "Aviso: Plazo de pago diferente al plazo de pago del cliente."
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid ""
+"Notice: The lead time is &gt;4 days from now, review if customer is aware of"
+" this."
+msgstr "Aviso: El plazo de entrega es"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Notice: order does not have customer reference."
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__payment_term_warning
+msgid "Payment Term Warning"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_account_payment_term
+msgid "Payment Terms"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.reshipment_wizard_form
+msgid ""
+"Please set discount to 100% for items that should be reshipped for free.  "
+"Please add a comment on the SO with the reason."
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_product_pricelist
+msgid "Pricelist"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_product_template
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__product_id
+msgid "Product"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.actions.act_window,name:tameson_sale.action_product_creation_wizard_act_window
+#: model:ir.model,name:tameson_sale.model_product_creation_wizard
+msgid "Product Creation Wizard"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__purchase_price
+msgid "Purchase Price"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order_line__qty_order_data
+msgid "Qty to Order"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__quantity
+msgid "Quantity"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields,help:tameson_sale.field_sale_order__origin
+msgid "Reference of the document that generated this sales order request"
+msgstr ""
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid ""
+"Reg.: <span>72902531</span><br/>\n"
+"                                <span>+31 (0)40 750 5795</span><br/>\n"
+"                                <span>\n"
+"                                support@tameson.com</span><br/>"
+msgstr "Reg.: <span>72902531</span><br/>\n <span> 31 (0)40 750 5795</span><br/>\n <span>\n support@tameson.com< "
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid ""
+"Reg.: <span>72902531</span><br/>\n"
+"                                <span>+44 (0)330 8080 502</span><br/>\n"
+"                                <span>\n"
+"                                support@tameson.co.uk</span><br/>"
+msgstr "Reg.: <span>72902531</span><br/>\n <span> 44 (0)330 8080 502</span><br/>\n <span>\n support@tameson.co. "
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__warning_re
+msgid "Replacement SKU Warning"
+msgstr "Advertencia de SKU de reemplazo"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Reshipment"
+msgstr "Reenvío"
+
+#. module: tameson_sale
+#: model:ir.actions.act_window,name:tameson_sale.reshipment_wizard_form_action
+#: model:ir.model,name:tameson_sale.model_reshipment_wizard
+msgid "Reshipment Wizard"
+msgstr "Asistente de reenvío"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_reshipment_wizard_line
+msgid "Reshipment Wizard Line"
+msgstr "Línea del asistente de reenvío"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__sale_price
+msgid "Sale Price"
+msgstr "Precio de venta"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_product__sale_price_gbp
+#: model:ir.model.fields,field_description:tameson_sale.field_product_template__sale_price_gbp
+msgid "Sale Price GBP"
+msgstr "Precio de venta GBP"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_product__sale_price_usd
+#: model:ir.model.fields,field_description:tameson_sale.field_product_template__sale_price_usd
+msgid "Sale Price USD"
+msgstr "Precio de venta USD"
+
+#. module: tameson_sale
+#: model:ir.model.constraint,message:tameson_sale.constraint_product_creation_wizard_check_sale_purchase_price
+msgid "Sale price must be higher than 1.1 times of the purchase price."
+msgstr "El precio de venta debe ser superior a 1,1 veces el precio de compra."
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de venta"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de orden de venta"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_automatic_workflow_job
+msgid ""
+"Scheduler that will play automatically the validation of invoices, "
+"pickings..."
+msgstr "Programador que reproducirá automáticamente la validación de facturas, picks..."
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__shipped_days
+msgid "Shipped Days"
+msgstr "Días enviados"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_pricelist__shipping_fee_factor
+#: model:ir.model.fields,field_description:tameson_sale.field_product_pricelist_item__shipping_fee_factor
+msgid "Shipping Fee Factor"
+msgstr "Factor de tarifa de envío"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__warehouse_id
+msgid "Source"
+msgstr "Fuente"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__origin
+msgid "Source Document"
+msgstr "Documento fuente"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_picking__source_so_id
+msgid "Source So"
+msgstr "Fuente Entonces"
+
+#. module: tameson_sale
+#: model:ir.model.constraint,message:tameson_sale.constraint_sale_order_sale_order_origin_uniq
+msgid "Source document of Sale Order must be unique for each order!"
+msgstr "¡El documento fuente de la orden de venta debe ser único para cada orden!"
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de acciones"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order_line__supplierinfo_name
+msgid "Supplier"
+msgstr "Proveedor"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order_line__supplier_lead_data
+msgid "Supplier Lead Data"
+msgstr "Datos del cliente potencial del proveedor"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Suuplier Lead"
+msgstr "líder de proveedores"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Tameson"
+msgstr ""
+
+#. module: tameson_sale
+#: model:ir.model.fields.selection,name:tameson_sale.selection__product_pricelist_item__base__tameson
+msgid "Tameson Pricing"
+msgstr "Precios de Tameson"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_stock_move__t_aa_comm_taxrate
+msgid "Tax Rate"
+msgstr "Tasa impositiva"
+
+#. module: tameson_sale
+#: model:ir.model.fields,help:tameson_sale.field_product_pricelist__company_rate
+msgid "The currency of rate 1 to the rate of the currency."
+msgstr "La moneda del tipo 1 al tipo de cambio de la moneda."
+
+#. module: tameson_sale
+#: model:ir.model,name:tameson_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Transferencia"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_product__usd_extra_price_factor
+#: model:ir.model.fields,field_description:tameson_sale.field_product_template__usd_extra_price_factor
+msgid "Usd Extra Price Factor"
+msgstr "Factor de precio adicional en USD"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__warning_uu
+msgid "Useup Warning"
+msgstr "Advertencia de uso"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__uu_replacement_skus
+msgid "Uu Replacement Skus"
+msgstr "Códigos de repuesto Uu"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__uu_replacement_skus_en
+msgid "Uu Replacement Skus En"
+msgstr "Uu Reemplazo Skus En"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__uu_skus
+msgid "Uu Skus"
+msgstr "Uu Skús"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
+msgid "VAT:"
+msgstr "IVA:"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__vendor_id
+msgid "Vendor"
+msgstr "vendedor"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__vendor_code
+msgid "Vendor Code"
+msgstr "Código de proveedor"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_product_creation_wizard__vendor_lead_days
+msgid "Vendor Lead Days"
+msgstr "Días de entrega del proveedor"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Warning:"
+msgstr "Advertencia:"
+
+#. module: tameson_sale
+#. odoo-python
+#: code:addons/tameson_sale/models/sale.py:0
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid "Warning: "
+msgstr "Advertencia: "
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Warning: Order weight is over 25 KG."
+msgstr "Advertencia: El peso del pedido supera los 25 KG."
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "Warning: Tameson warehouse selected as source"
+msgstr "Advertencia: almacén de Tameson seleccionado como origen"
+
+#. module: tameson_sale
+#. odoo-python
+#: code:addons/tameson_sale/models/sale.py:0
+#, python-format
+msgid "Warning: We kindly inform you that this item "
+msgstr "Advertencia: Le informamos que este artículo "
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_sale_order__weight_over_25
+msgid "Weight Over 25"
+msgstr "Peso mayor de 25"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_reshipment_wizard_line__wizard_id
+msgid "Wizard"
+msgstr "Asistente"
+
+#. module: tameson_sale
+#: model:ir.model.fields,field_description:tameson_sale.field_account_payment_term__workflow_process_id
+msgid "Workflow"
+msgstr "flujo de trabajo"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "is non-returnable."
+msgstr "no es retornable."
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.product_creation_wizard_form
+#: model_terms:ir.ui.view,arch_db:tameson_sale.reshipment_wizard_form
+msgid "model_form"
+msgstr "modelo_formulario"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.product_creation_wizard_form
+msgid "name"
+msgstr "nombre"
+
+#. module: tameson_sale
+#: model_terms:ir.ui.view,arch_db:tameson_sale.view_order_form
+msgid "will be discontinued."
+msgstr "será descontinuado."
+
