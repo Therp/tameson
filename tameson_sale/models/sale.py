@@ -310,7 +310,6 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             line.onchange_product_id_set_customer_lead()
         self.onchange_partner_note()
-        self._onchange_warning()
 
     def _find_mail_template(self):
         Tmpl = self.env["mail.template"]
