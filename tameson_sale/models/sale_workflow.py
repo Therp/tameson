@@ -12,4 +12,5 @@ class Workflow(models.Model):
     def _prepare_dict_account_payment(self, invoice):
         res = super()._prepare_dict_account_payment(invoice)
         res["currency_id"] = invoice.currency_id.id
+        res["ref"] = invoice.payment_reference
         return res
