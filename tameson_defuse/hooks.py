@@ -118,8 +118,12 @@ def defuse_database(cr):
     anonymize_database(cr)
     mark_defused(cr)
 
-def mark_defused(cr):
-    cr.execute("UPDATE ir_config_parameter SET value = '1' WHERE key = 'tameson_defuse.is_defused'")
+def mark_defused(cr, defused):
+    cr.execute("""
+        INSERT INTO ir_config_parameter (key, value)
+        VALUES ('tameson_defuse.is_defused', '1')
+        ON CONFLICT(key) DO UPDATE SET value = '1'
+    """)
 
 def on_post_load(cr):
     stage = os.environ.get("ODOO_STAGE")
