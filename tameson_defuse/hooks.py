@@ -125,7 +125,7 @@ def mark_defused(cr, defused):
         ON CONFLICT(key) DO UPDATE SET value = '1'
     """)
 
-def on_post_load(cr):
+def on_post_init(cr):
     stage = os.environ.get("ODOO_STAGE")
     if stage != "production":
         defuse_database(cr)

@@ -9,7 +9,7 @@
     ],
     "application": False,
     "hooks": {
-        "post_load": "on_post_load"
+        "post_init": "on_post_init"
     },
     "installable": False,
     "license": "OPL-1",
