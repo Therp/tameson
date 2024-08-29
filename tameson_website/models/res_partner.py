@@ -63,8 +63,10 @@ class ResPartner(models.Model):
         self.ensure_one()
         address = []
         signatures = []
-        childs = self.child_ids or self
-        for child in childs:
+        sort_order = {"delivery": 0, "contact": 1}
+        contacts = self.child_ids + self
+        contacts = contacts.sorted(lambda ch: sort_order.get(ch.type, 10))
+        for child in contacts:
             signature = (child.street or "") + (child.name or "") + (child.zip or "")
             signature = signature.replace(" ", "").lower()
             if signature in signatures:
