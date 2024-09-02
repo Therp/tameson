@@ -1,22 +1,6 @@
 import os
 
 
-ANONYMIZATION_QUERIES = [
-    ""
-    "UPDATE account_move SET ref = ",
-    "UPDATE account_move_line SET amount_currency = 0.0",
-    "UPDATE account_move_line SET debit = 0.0",
-    "UPDATE account_move_line SET credit = 0.0",
-    "UPDATE account_move_line SET name = 'anonymized' || id",
-    "UPDATE account_move_line SET price_unit = 0.0",
-    "UPDATE product_template SET list_price = 0.0",
-    "UPDATE product_template SET sale_price_usd = 0.0",
-    "UPDATE product_template SET sale_price_gbp = 0.0",
-    "UPDATE purchase_order_line SET price_unit = 0.0",
-    "UPDATE purchase_order_line SET price_subtotal = 0.0",
-    "UPDATE purchase_order_line SET price_total = 0.0",
-]
-
 ANONYMIZATION_INFO = {
     "account_asset": {
         "book_value": "0.0",
@@ -92,40 +76,70 @@ ANONYMIZATION_INFO = {
 def anonymize_database(cr):
     for table_name, fields in ANONYMIZATION_INFO.items():
         for field_name, value in fields.items():
-            cr.execute("UPDATE \"%s\" SET \"%s\" = %s" % [table_name, field_name, value])
+            cr.execute(
+                """
+                DO $$
+                BEGIN
+                    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = '%s' AND column_name = '%s') THEN
+                        UPDATE \"%s\" SET \"%s\" = %s;
+                    END IF;
+                END;
+                $$
+            """
+                % (table_name, field_name, table_name, field_name, value)
+            )
+
 
 def check_if_defused(cr):
-    cr.execute("SELECT value FROM ir_config_parameter WHERE key = 'tameson_defuse.is_defused'")
+    cr.execute(
+        "SELECT value FROM ir_config_parameter WHERE key = 'tameson_defuse.is_defused'"
+    )
     res = cr.dictfetchone()
     if res:
         return res["value"].lower() in ["1", "true", "yes"]
     return False
 
+
 def defuse_database(cr):
-    if not check_if_defused(cr):
+    if check_if_defused(cr):
         return
 
-    queries = [
-        "UPDATE delivery_carrier SET active = FALSE WHERE name::text LIKE '%UPS%'",
-        "UPDATE shopify_instance_ept SET active = FALSE",
-        #"DELETE FROM account_online_link",
+    queries = {
+        "delivery_carrier": "UPDATE delivery_carrier SET active = FALSE WHERE name::text LIKE '%UPS%'",
+        "shopify_instance_ept": "UPDATE shopify_instance_ept SET active = FALSE",
+        # "DELETE FROM account_online_link",
         # Anonymization queries
-        "UPDATE account_move SET partner_id = 2 WHERE move_type = 'in_invoice'",
-    ]
-    for query in queries:
-        cr.execute(query)
+        "account_move": "UPDATE account_move SET partner_id = 2 WHERE move_type = 'in_invoice'",
+    }
+    for table_name, query in queries.items():
+        cr.execute(
+            """
+            DO $$
+            BEGIN
+                IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = '%s') THEN
+                    %s;
+                END IF;
+            END;
+            $$
+        """
+            % (table_name, query)
+        )
 
     anonymize_database(cr)
     mark_defused(cr)
 
-def mark_defused(cr, defused):
-    cr.execute("""
+
+def mark_defused(cr):
+    cr.execute(
+        """
         INSERT INTO ir_config_parameter (key, value)
         VALUES ('tameson_defuse.is_defused', '1')
         ON CONFLICT(key) DO UPDATE SET value = '1'
-    """)
+    """
+    )
 
-def on_post_init(cr):
+
+def on_load(cr):
     stage = os.environ.get("ODOO_STAGE")
-    if stage != "production":
+    if stage and stage != "production":
         defuse_database(cr)
