@@ -429,3 +429,9 @@ class SaleOrderLine(models.Model):
                 lead_time = values["lead_time"]
                 break
         self.customer_lead = lead_time
+
+
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    workflow_process_id = fields.Many2one(copy=False)
