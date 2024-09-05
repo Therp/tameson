@@ -125,6 +125,15 @@ class PurchaseOrderLine(models.Model):
     )
     origin_so_ids = fields.Many2many("sale.order", compute="_get_so_origins")
 
+    def action_open_origin_so(self):
+        action = self.env.ref("sale.action_orders").read()[0]
+        if len(self.origin_so_ids) == 1:
+            action["res_id"] = self.origin_so_ids[:1].id
+            action["views"] = [(False, "form")]
+        else:
+            action["domain"] = [("id", "in", self.origin_so_ids.ids)]
+        return action
+
     def _get_so_origins(self):
         for line in self:
             line.origin_so_ids = line.move_dest_ids.mapped("picking_id").mapped(
