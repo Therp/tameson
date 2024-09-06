@@ -32,7 +32,7 @@ class SaleOrder(models.Model):
     uu_replacement_skus = fields.Char(compute="_check_any_non_returnable")
     uu_replacement_skus_en = fields.Char(compute="_check_any_non_returnable")
     weight_over_25 = fields.Char(compute="_check_any_non_returnable")
-    customer_child_count = fields.Integer(compute="get_customer_child_count")
+    customer_child_count = fields.Boolean(compute="get_customer_child_count")
     customer_ref_warning = fields.Boolean(compute="get_customer_ref_warning")
     expected_date_warning = fields.Boolean(compute="get_expected_date_warning")
     payment_term_warning = fields.Boolean(compute="get_payment_term_warning")
@@ -102,7 +102,8 @@ class SaleOrder(models.Model):
     @api.depends("partner_id")
     def get_customer_child_count(self):
         for record in self:
-            record.customer_child_count = len(record.partner_id.child_ids)
+            non_invoice_childs = record.partner_id.child_ids.filtered(lambda child: child.type != 'invoice')
+            record.customer_child_count = len(record.partner_id.child_ids) > 3 or len(non_invoice_childs) > 1
 
     def _send_order_confirmation_mail(self):
         if self.env.context.get("skip_confirmation_email", False):

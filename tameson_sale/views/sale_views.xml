@@ -110,9 +110,9 @@
             </field> -->
             <field name="partner_shipping_id" position="after">
                 <field name="customer_child_count" invisible="True" />
-                <label for="customer_child_count" attrs="{'invisible': [('customer_child_count','&lt;',4)]}" />
-                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('customer_child_count','&lt;',4)]}">
-                    More than 3 addresses on this contact, please double check.
+                <label for="customer_child_count" attrs="{'invisible': [('customer_child_count','!=',True)]}" />
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('customer_child_count','!=',True)]}">
+                    Alternative addresses are available on this contact, please double check.
                 </div>
             </field>
         </field>
