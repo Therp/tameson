@@ -28,7 +28,7 @@
                             <field name="country" required="1" />
                             <field name="state" domain="[('country_id','=',country)]" />
                             <field name="vat_bypass" attrs="{'invisible': [('vat_required','=',False)]}" />
-                            <field name="vat" attrs="{'invisible': [('vat_bypass','=',True)], 'required': [('vat_bypass','=',False),('vat_required','=',True)]}" />
+                            <field name="vat" attrs="{'invisible': ['|',('vat_bypass','=',True),('is_individual','=',True)], 'required': [('vat_bypass','=',False),('vat_required','=',True)]}" />
                         </group>
                         <group>
                             <field name="no_house" />
@@ -50,6 +50,7 @@
                             <field name="shipping_city" />
                             <field name="shipping_zip_code" />
                             <field name="shipping_email" />
+                            <field name="shipping_phone" />
                         </group>
                         <group string="Invoice (optional)">
                             <field name="invoice_house" />
@@ -58,6 +59,7 @@
                             <field name="invoice_city" />
                             <field name="invoice_zip_code" />
                             <field name="invoice_email" />
+                            <field name="invoice_phone" />
                         </group>
                     </group>
                 </sheet>
