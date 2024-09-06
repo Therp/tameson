@@ -135,4 +135,16 @@
             </button>
         </field>
     </record>
+    <record id="view_order_form_risk" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_financial_risk_info.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='risk_info']" position="before">
+                <field name="risk_remaining_percentage" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='risk_info']" position="attributes">
+                <attribute name="attrs">{'invisible': [('risk_remaining_percentage','=',100)]}</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>
