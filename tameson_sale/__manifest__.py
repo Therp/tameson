@@ -12,8 +12,7 @@
         "delivery",
         "account",
         "sale_automatic_workflow",
-        "sale_financial_risk",
-        "web_notify",
+        "sale_financial_risk_info",
     ],
     "data": [
         "security/ir.model.access.csv",
