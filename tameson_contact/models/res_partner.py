@@ -6,7 +6,7 @@
 import copy
 import re
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -138,3 +138,20 @@ class ResPartner(models.Model):
             vals["country_id"] = country_id.id
             vals.pop("country_code")
         return super().write(vals)
+
+    @api.constrains("vat", "country_id")
+    def check_vat_vies(self):
+        eu_countries = self.env.ref("base.europe").country_ids
+        for eu_partner_company in self.filtered(
+            lambda partner: partner.country_id in eu_countries and partner.is_company
+        ):
+            if not eu_partner_company.vat or len(eu_partner_company.vat) == 1:
+                continue
+            country = eu_partner_company.country_id
+            if self._run_vies_test(eu_partner_company.vat, country) is False:
+                raise ValidationError(
+                    _(
+                        "The VAT number %s failed the VIES VAT validation check.",
+                        eu_partner_company.vat,
+                    )
+                )
