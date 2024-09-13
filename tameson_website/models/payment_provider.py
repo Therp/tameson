@@ -43,7 +43,9 @@ class PaymentTransaction(models.Model):
         :return: updated transactions.
         :rtype: `payment.transaction` recordset.
         """
-        txs_to_process = super()._set_pending(state_message=state_message)
+        txs_to_process = super(
+            PaymentTransaction, self.with_context(skip_confirmation_email=True)
+        )._set_pending(state_message=state_message)
 
         for (
             tx
