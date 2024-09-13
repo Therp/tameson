@@ -43,9 +43,11 @@ class PaymentTransaction(models.Model):
         :return: updated transactions.
         :rtype: `payment.transaction` recordset.
         """
-        txs_to_process = super(
-            PaymentTransaction, self.with_context(skip_confirmation_email=True)
-        )._set_pending(state_message=state_message)
+        if "tameson" in self.mapped("provider_id.custom_mode"):
+            self = self.with_context(skip_confirmation_email=True) # Skip payment pending email if tameson signature checkout flow
+        txs_to_process = super(PaymentTransaction, self)._set_pending(
+            state_message=state_message
+        )
 
         for (
             tx
