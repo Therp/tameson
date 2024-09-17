@@ -32,6 +32,7 @@
         "views/pricelist.xml",
         "views/payment_terms.xml",
         "views/risk.xml",
+        "report/statement_of_conformity.xml",
     ],
     "application": False,
     "license": "OPL-1",

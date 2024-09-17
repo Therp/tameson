@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_statement_of_conformity_doc">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2 class="mt-4"> Statement of Conformity</h2>
+                <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()" />
+                <table class="table table-sm o_main_table table-borderless mt-4">
+                    <thead>
+                        <tr>
+                            <th name="th_section_line" colspan="99">
+                                <span>SKU</span>
+                            </th>
+                            <th name="th_section_line" colspan="99">
+                                <span>Name</span>
+                            </th>
+                            <th name="th_quantity" class="text-end">
+                                <span>Quantity</span>
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="lines_to_report" t-as="line">
+                            <tr t-if="line.product_id.type == 'product'">
+                                <td name="td_section_line" colspan="99">
+                                    <span t-field="line.product_id.default_code" />
+                                </td>
+                                <td name="td_section_line" colspan="99">
+                                    <span t-field="line.name" />
+                                </td>
+                                <td name="td_quantity" class="text-end">
+                                    <span t-field="line.product_uom_qty" />
+                                    <span t-field="line.product_uom" />
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <h4 class="mt-4">Order# <span t-field="doc.name" /></h4>
+                <p>
+                    The materials used for the products of above mentioned order correspond to the conditions of contract base. The parts were designed according to the workshop drawings, based on the contractual terms considering the dimensions, exactness and surface conditions specified in the contract.					
+                </p>
+                <h5 class="mt-4"> <span t-esc="datetime.datetime.today().date()" /> Quality Assurance</h5>
+                <p class="mt-4">This declaration was provided electronical and is valid without signature</p>
+            </div>
+        </t>
+    </template>
+    <template id="report_statement_of_conformity">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="tameson_sale.report_statement_of_conformity_doc"
+                    t-lang="doc.partner_id.lang" />
+            </t>
+        </t>
+    </template>
+    <record id="action_report_statement_of_conformity" model="ir.actions.report">
+        <field name="name">Statement of Conformity</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tameson_sale.report_statement_of_conformity</field>
+        <field name="report_file">tameson_sale.report_statement_of_conformity</field>
+        <field name="print_report_name">'Statement of Conformity - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
