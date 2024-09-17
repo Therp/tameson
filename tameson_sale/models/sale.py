@@ -246,18 +246,19 @@ class SaleOrder(models.Model):
                         self.set_delivery_line(shipping, 0)
         from_ui = self.env.context.get("from_ui", False)
         if from_ui and self.payment_term_id.name == "Prepayment":
-            return (
-                self.env["partner.risk.exceeded.wiz"]
-                .create(
-                    {
-                        "exception_msg": "This is a prepayment term customer, do you want to continue?",
-                        "partner_id": self.partner_id.id,
-                        "origin_reference": "%s,%s" % ("sale.order", self.id),
-                        "continue_method": "action_confirm",
-                    }
+            if not self.env.context.get("bypass_risk", False):
+                return (
+                    self.env["partner.risk.exceeded.wiz"]
+                    .create(
+                        {
+                            "exception_msg": "This is a prepayment term customer, do you want to continue?",
+                            "partner_id": self.partner_id.id,
+                            "origin_reference": "%s,%s" % ("sale.order", self.id),
+                            "continue_method": "action_confirm",
+                        }
+                    )
+                    .action_show()
                 )
-                .action_show()
-            )
         if from_ui and self.workflow_process_id:
             self.env["automatic.workflow.job"].sudo().run_with_workflow(
                 self.workflow_process_id
