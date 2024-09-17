@@ -45,7 +45,6 @@ class SaleOrder(models.Model):
     arrival_max = fields.Integer()
     shipped_days = fields.Integer()
 
-    manager_user = fields.Boolean(compute="get_manager_user")
     warning_nr = fields.Char(
         string="Non Returnable Warning",
         compute="get_warning_messages",
@@ -71,11 +70,6 @@ class SaleOrder(models.Model):
         res = super().copy()
         res._onchange_payment_term_workflow()
         return res
-
-    @api.depends_context("uid")
-    def get_manager_user(self):
-        for record in self:
-            record.manager_user = self.user_has_groups("sales_team.group_sale_manager")
 
     @api.depends("partner_id", "payment_term_id")
     def get_payment_term_warning(self):
