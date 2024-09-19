@@ -54,6 +54,11 @@
                     </t>
                 </td>
             </xpath>
+            <xpath expr="//p[@name='note']" position="after">
+                <p t-if="o.move_type == 'out_refund'">
+                    <strong>Please note that this is a credit invoice</strong>
+                </p>
+            </xpath>
         </template>
         <template id="document_tax_totals_no_black_total" inherit_id="account.document_tax_totals">
             <xpath expr="//tr[hasclass('o_total')]" position="after">
