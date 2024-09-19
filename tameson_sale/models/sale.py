@@ -58,6 +58,9 @@ class SaleOrder(models.Model):
         compute="get_warning_messages",
     )
 
+    payment_term_id = fields.Many2one(copy=False)
+    note = fields.Html(copy=False)
+
     _sql_constraints = [
         (
             "sale_order_origin_uniq",
