@@ -338,6 +338,13 @@ class SaleOrder(models.Model):
             lambda line: line.product_id.detailed_type == "product"
         ).request_supplier_lead()
 
+    def _compute_partner_credit_warning(self):
+        show_warning = self.filtered(
+            lambda sale: sale.partner_id.commercial_partner_id.property_payment_term_id.t_invoice_delivered_quantities
+        )
+        super(SaleOrder, show_warning)._compute_partner_credit_warning()
+        (self - show_warning).update({"partner_credit_warning": ""})
+
 
 class WorkflowJob(models.Model):
     _inherit = "automatic.workflow.job"
