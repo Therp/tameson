@@ -106,6 +106,16 @@ class ResPartner(models.Model):
                 )
                 val["country_id"] = country_id.id
                 val.pop("country_code")
+            if val.get("state_code", False):
+                state = self.env["res.country.state"].search(
+                    [
+                        ("code", "=ilike", val["state_code"]),
+                        ("country_id", "=", val["country_id"]),
+                    ],
+                    limit=1,
+                )
+                val["state_id"] = state.id
+                val.pop("state_code")
         partners = super().create(vals_list)
         return partners
 
