@@ -33,4 +33,5 @@ class CustomController(Controller):
                 "workflow_process_id": wp_id.id,
             }
         )
+        order.with_delay(eta=60*60*6).action_send_signature_remaining()
         return request.redirect(order.get_portal_url())
