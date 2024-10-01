@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
             )
             if mail_template:
                 self.with_context(force_send=True).message_post_with_template(
-                    mail_template,
+                    mail_template.id,
                     composition_mode="comment",
                     email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
                 )
