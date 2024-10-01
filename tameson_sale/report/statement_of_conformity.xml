@@ -3,7 +3,9 @@
     <template id="report_statement_of_conformity_doc">
         <t t-call="web.external_layout">
             <div class="page">
-                <h2 class="mt-4"> Statement of Conformity</h2>
+                <h2 class="mt-4">
+                    <span>Statement of Conformity</span>
+                </h2>
                 <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()" />
                 <table class="table table-sm o_main_table table-borderless mt-4">
                     <thead>
@@ -37,12 +39,18 @@
                         </t>
                     </tbody>
                 </table>
-                <h4 class="mt-4">Order# <span t-field="doc.name" /></h4>
+                <h4 class="mt-4" style="color: black;">Order# <span t-field="doc.name" /></h4>
                 <p>
-                    The materials used for the products of above mentioned order correspond to the conditions of contract base. The parts were designed according to the workshop drawings, based on the contractual terms considering the dimensions, exactness and surface conditions specified in the contract.					
+                    The materials used for the products of above mentioned order correspond to the
+                    conditions of contract base. The parts were designed according to the workshop
+                    drawings, based on the contractual terms considering the dimensions, exactness
+                    and surface conditions specified in the contract.
                 </p>
-                <h5 class="mt-4"> <span t-esc="datetime.datetime.today().date()" /> Quality Assurance</h5>
-                <p class="mt-4">This declaration was provided electronical and is valid without signature</p>
+                <h5 class="mt-4" style="color: black;">
+                    <span style="margin-right: 20%;" t-esc="datetime.datetime.today().date()" />
+                    Quality Assurance</h5>
+                <p class="mt-4">This declaration was provided electronical and is valid without
+                    signature</p>
             </div>
         </t>
     </template>
