@@ -115,7 +115,7 @@ class ResPartner(models.Model):
                     limit=1,
                 )
                 val["state_id"] = state.id
-                val.pop("state_code")
+        val.pop("state_code", False)
         partners = super().create(vals_list)
         return partners
 
