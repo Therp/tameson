@@ -185,8 +185,9 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
-        if self.sale_id and self.sale_id.all_qty_delivered and self.sale_id.invoice_ids:
-            self.sale_id.invoice_ids.send_invoice_mail()
+        for picking in self:
+            if picking.sale_id and picking.sale_id.all_qty_delivered and picking.sale_id.invoice_ids:
+                picking.sale_id.invoice_ids.send_invoice_mail()
         return res
 
 
