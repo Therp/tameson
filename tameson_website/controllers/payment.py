@@ -22,6 +22,12 @@ class CustomController(Controller):
     def custom_process_transaction(self, **post):
         _logger.info("Handling custom processing with data:\n%s", pprint.pformat(post))
         order = request.website.sale_get_order()
+        if not order:
+            # from /payment/pay links, sale order is not found from website session
+            # get order from trasnaction reference
+            order = request.env["payment.transaction"].sudo().search(
+                [("reference", "=", post.get("reference"))]
+            ).sale_order_ids[:1].sudo()
         request.env["payment.transaction"].sudo()._handle_notification_data(
             "custom", post
         )
