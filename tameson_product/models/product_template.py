@@ -107,7 +107,7 @@ AND default_code IS NOT NULL""".format(
             else:
                 pt.t_aa_pack_size = 1
 
-    @api.depends("seller_ids.partner_id", "seller_ids.product_code", "seller_ids.delay")
+    @api.depends("seller_ids.partner_id", "seller_ids.product_code", "seller_ids.delay", "bom_ids.bom_line_ids.product_id")
     def _compute_supplierinfo_fields(self):
         for product in self:
             first_supplier = product.seller_ids.sorted()[:1]
@@ -115,6 +115,20 @@ AND default_code IS NOT NULL""".format(
                 product.supplierinfo_name = first_supplier.partner_id.name
                 product.supplierinfo_code = first_supplier.product_code
                 product.supplierinfo_delay = first_supplier.delay
+            elif product.bom_ids:
+                components_sellers = set(
+                    product.bom_ids[:1].bom_line_ids.mapped(
+                        "product_id.supplierinfo_name"
+                    )
+                )
+                product.supplierinfo_name = ','.join(list(components_sellers))
+                product.supplierinfo_code = ''
+                product.supplierinfo_delay = 0
+            else:
+                product.supplierinfo_name = ''
+                product.supplierinfo_code = ''
+                product.supplierinfo_delay = 0
+
 
     def set_updated_product_bom_price(self, split=2000):
         n_days = 2
