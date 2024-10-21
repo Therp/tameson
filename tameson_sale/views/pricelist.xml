@@ -8,6 +8,7 @@
             <field name="currency_id" position="after">
                 <field name="rate_id" groups="base.group_multi_currency" />
                 <field name="company_rate" groups="base.group_multi_currency" />
+                <button name="action_calculate_currency_prices" string="Calculate Currency Prices" type="object"/>
             </field>
         </field>
     </record>

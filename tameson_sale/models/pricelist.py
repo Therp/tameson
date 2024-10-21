@@ -20,6 +20,16 @@ class Pricelist(models.Model):
     )
     company_rate = fields.Float(related="rate_id.company_rate")
 
+    def action_calculate_currency_prices(self):
+        pos = 0
+        size = 1000
+        while True:
+            pts = self.env["product.template"].search([], limit=size, offset=pos)
+            offset += size
+            if not pts:
+                break
+            pts.with_delay().get_usd_pricelist_price()
+            pts.with_delay().get_gbp_pricelist_price
 
 class PricelistItem(models.Model):
     _inherit = "product.pricelist.item"
