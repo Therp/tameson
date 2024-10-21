@@ -30,7 +30,7 @@
     "depends": [
         "sale_stock",
         "tameson_sale",
-        "delivery",
+        "delivery_ups_rest",
         "stock_mts_mto_rule",
         "mrp",
         "queue_job",
