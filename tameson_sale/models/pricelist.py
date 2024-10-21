@@ -29,7 +29,7 @@ class Pricelist(models.Model):
             if not pts:
                 break
             pts.with_delay().get_usd_pricelist_price()
-            pts.with_delay().get_gbp_pricelist_price
+            pts.with_delay().get_gbp_pricelist_price()
 
 class PricelistItem(models.Model):
     _inherit = "product.pricelist.item"
