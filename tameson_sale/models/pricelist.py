@@ -25,7 +25,7 @@ class Pricelist(models.Model):
         size = 1000
         while True:
             pts = self.env["product.template"].search([], limit=size, offset=pos)
-            offset += size
+            pos += size
             if not pts:
                 break
             pts.with_delay().get_usd_pricelist_price()
