@@ -4,7 +4,7 @@ from odoo.addons.delivery_ups_rest.models.ups_request import UPSRequest
 
 original_set_package_details = UPSRequest._set_package_details
 
-
+# UPS requires for mexico always a description, otherwise its blocked by customs.  Temp override, preferably migrate to odoo
 def new_set_package_details(
     self, packages, carrier, ship_from, ship_to, cod_info, ship=False, is_return=False
 ):
