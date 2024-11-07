@@ -2,7 +2,7 @@
 
 import logging
 import pprint
-
+from odoo import SUPERUSER_ID
 from odoo.http import Controller, request, route
 
 _logger = logging.getLogger(__name__)
@@ -33,4 +33,7 @@ class CustomController(Controller):
                 "workflow_process_id": wp_id.id,
             }
         )
+        order.with_user(order.user_id or SUPERUSER_ID).with_delay(
+            eta=60 * 60 * 6
+        ).action_send_signature_remaining()
         return request.redirect(order.get_portal_url())

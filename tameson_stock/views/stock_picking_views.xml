@@ -65,6 +65,9 @@
             <xpath expr="//page[3]" position="attributes">
                 <attribute name="autofocus">autofocus</attribute>
             </xpath>
+            <xpath expr="//page[@name='operations']//tree/field[@name='product_id']" position="after">
+                <button name="open_product" icon="fa-arrow-right" type="object" help="Open Product" />
+            </xpath>
             <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="attributes">
                 <attribute name="options">{'no_create': True, 'no_open': True, 'no_create_edit': True}</attribute>
             </xpath>

@@ -15,6 +15,7 @@
         "payment_custom",
         "sale_stock",
         "sale",
+        "queue_job",
     ],
     "data": [
         "security/ir.model.access.csv",

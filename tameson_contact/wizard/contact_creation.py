@@ -36,11 +36,13 @@ class ContactCreationWizard(models.TransientModel):
     shipping_city = fields.Char()
     shipping_zip_code = fields.Char()
     shipping_email = fields.Char()
+    shipping_phone = fields.Char()
     invoice_street = fields.Char()
     invoice_street2 = fields.Char()
     invoice_house = fields.Char()
     invoice_city = fields.Char()
     invoice_email = fields.Char()
+    invoice_phone = fields.Char()
     invoice_zip_code = fields.Char()
     vat_required = fields.Boolean(compute="get_vat_required")
     vat_bypass = fields.Boolean("VAT Bypass")
@@ -93,7 +95,7 @@ class ContactCreationWizard(models.TransientModel):
                 "country_id": self.country.id,
                 "state_id": self.state.id,
                 "email": self.shipping_email or self.email,
-                "phone": self.phone,
+                "phone": self.shipping_phone or self.phone,
                 "type": "delivery",
                 "lang": False,
             }
@@ -111,7 +113,7 @@ class ContactCreationWizard(models.TransientModel):
                 "country_id": self.country.id,
                 "state_id": self.state.id,
                 "email": self.invoice_email or self.email,
-                "phone": self.phone,
+                "phone": self.invoice_phone or self.phone,
                 "type": "invoice",
                 "lang": False,
             }

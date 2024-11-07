@@ -45,7 +45,6 @@ class SaleOrder(models.Model):
     arrival_max = fields.Integer()
     shipped_days = fields.Integer()
 
-    manager_user = fields.Boolean(compute="get_manager_user")
     warning_nr = fields.Char(
         string="Non Returnable Warning",
         compute="get_warning_messages",
@@ -59,6 +58,9 @@ class SaleOrder(models.Model):
         compute="get_warning_messages",
     )
 
+    payment_term_id = fields.Many2one(copy=False)
+    note = fields.Html(copy=False)
+
     _sql_constraints = [
         (
             "sale_order_origin_uniq",
@@ -71,11 +73,6 @@ class SaleOrder(models.Model):
         res = super().copy()
         res._onchange_payment_term_workflow()
         return res
-
-    @api.depends_context("uid")
-    def get_manager_user(self):
-        for record in self:
-            record.manager_user = self.user_has_groups("sales_team.group_sale_manager")
 
     @api.depends("partner_id", "payment_term_id")
     def get_payment_term_warning(self):
@@ -251,15 +248,28 @@ class SaleOrder(models.Model):
                         self.carrier_id = shipping
                     else:
                         self.set_delivery_line(shipping, 0)
-        ret = super(SaleOrder, self).action_confirm()
         from_ui = self.env.context.get("from_ui", False)
+        if from_ui and self.payment_term_id.name == "Prepayment":
+            if not self.env.context.get("bypass_risk", False):
+                return (
+                    self.env["partner.risk.exceeded.wiz"]
+                    .create(
+                        {
+                            "exception_msg": "This is a prepayment term customer, do you want to continue?",
+                            "partner_id": self.partner_id.id,
+                            "origin_reference": "%s,%s" % ("sale.order", self.id),
+                            "continue_method": "action_confirm",
+                        }
+                    )
+                    .action_show()
+                )
         if from_ui and self.workflow_process_id:
             self.env["automatic.workflow.job"].sudo().run_with_workflow(
                 self.workflow_process_id
             )
         if from_ui:
             self.check_useup_availability()
-        return ret
+        return super(SaleOrder, self).action_confirm()
 
     def check_useup_availability(self):
         useup_lines = self.order_line.filtered(

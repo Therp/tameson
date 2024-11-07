@@ -15,6 +15,7 @@
         "base_address_extended",
         "sales_team",
         "contacts",
+        "tameson_base",
     ],
     "data": [
         "security/ir.model.access.csv",

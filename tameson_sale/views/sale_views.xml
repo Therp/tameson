@@ -11,14 +11,9 @@
                 <button name="action_fetch_supplier_lead" string="Supplier Lead" type="object" />
                 <button name="%(reshipment_wizard_form_action)d" string="Reshipment" type="action" attrs="{'invisible': [('state','not in',('sale','done'))] }" />
             </xpath>
-            <xpath expr="//field[@name='payment_term_id']" position="attributes">
-                <attribute name="attrs">{'readonly': [('manager_user','!=',True)]}</attribute>
-                <attribute name="force_save">1</attribute>
-            </xpath>
 
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="payment_term_warning" invisible="True" />
-                <field name="manager_user" invisible="True" />
                 <label for="payment_term_warning" attrs="{'invisible': [('payment_term_warning','=',False)]}" />
                 <div class="alert alert-danger" role="alert" attrs="{'invisible': [('payment_term_warning','=',False)]}">
                     Notice: Payment term different than customer payment term.
@@ -133,6 +128,18 @@
             <button name="action_open_delivery_wizard" position="before">
                 <button string="Add Express shipping" name="action_add_express_shipping" type="object" attrs="{'invisible': ['|', ('is_all_service', '=', True), ('order_line', '=', [])]}" />
             </button>
+        </field>
+    </record>
+    <record id="view_order_form_risk" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_financial_risk_info.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='risk_info']" position="before">
+                <field name="risk_remaining_percentage" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='risk_info']" position="attributes">
+                <attribute name="attrs">{'invisible': [('risk_remaining_percentage','=',100)]}</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

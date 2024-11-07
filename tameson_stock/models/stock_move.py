@@ -37,6 +37,15 @@ class StockMove(models.Model):
         # end
         return res
 
+    def open_product(self):
+        return {
+            "name": self.product_id.name,
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "product.product",
+            "res_id": self.product_id.id,
+        }
+
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
         notes = [note for note in self.mapped("sale_line_id.order_id.note") if note]

@@ -12,7 +12,7 @@
         "delivery",
         "account",
         "sale_automatic_workflow",
-        "sale_financial_risk",
+        "sale_financial_risk_info",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -32,6 +32,7 @@
         "views/pricelist.xml",
         "views/payment_terms.xml",
         "views/risk.xml",
+        "report/statement_of_conformity.xml",
     ],
     "application": False,
     "license": "OPL-1",

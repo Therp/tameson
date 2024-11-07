@@ -20,21 +20,21 @@ msgstr ""
 #: code:addons/tameson_sale/models/sale.py:0
 #, python-format
 msgid " cannot be returned. This is manufactured on demand for you."
-msgstr "kan niet geretourneerd worden. "
+msgstr " kan niet geretourneerd worden. "
 
 #. module: tameson_sale
 #. odoo-python
 #: code:addons/tameson_sale/models/sale.py:0
 #, python-format
 msgid " is being discontinued."
-msgstr "wordt stopgezet."
+msgstr " wordt stopgezet."
 
 #. module: tameson_sale
 #. odoo-python
 #: code:addons/tameson_sale/models/sale.py:0
 #, python-format
 msgid " will be replaced by "
-msgstr "wordt vervangen door "
+msgstr " wordt vervangen door "
 
 #. module: tameson_sale
 #: model_terms:ir.ui.view,arch_db:tameson_sale.external_layout_tameson
