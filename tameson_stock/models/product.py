@@ -34,6 +34,7 @@ class ProductTemplate(models.Model):
 
     minimal_qty_available_stored = fields.Float(
         digits="Product Unit of Measure",
+        default=0,
         string="Minimal QTY Available (Forcasted Qty)",
         help="Odoo Free Quantity field on Product variant, \
         stored on Product template for faster export",
